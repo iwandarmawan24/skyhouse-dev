@@ -71,6 +71,7 @@ docker compose -f docker-compose.prod.yml exec -T app php artisan view:cache
 echo ""
 echo "Setting permissions..."
 docker compose -f docker-compose.prod.yml exec -T app chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
+docker compose -f docker-compose.prod.yml exec -T app chmod -R 775 /var/www/storage /var/www/bootstrap/cache
 
 echo ""
 echo "======================================"
