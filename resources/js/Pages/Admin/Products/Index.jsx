@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Button } from "@/Components/ui/Button";
 import { Card } from "@/Components/ui/Card";
 import { Alert } from "@/Components/ui/Alert";
-import { Badge } from "@/Components/ui/badge";
+import { Badge } from "@/Components/ui/Badge";
 import { Pagination } from "@/Components/ui/Pagination";
 import {
     Table,
@@ -13,7 +13,7 @@ import {
     TableHead,
     TableRow,
     TableCell,
-} from "@/Components/ui/table";
+} from "@/Components/ui/Table";
 import {
     Dialog,
     DialogContent,
@@ -21,8 +21,8 @@ import {
     DialogTitle,
     DialogDescription,
     DialogFooter,
-} from "@/Components/ui/dialog";
-import { Input } from "@/Components/ui/input";
+} from "@/Components/ui/Dialog";
+import { Input } from "@/Components/ui/Input";
 import { Plus, Search, Package, Home, Image } from "lucide-react";
 
 export default function Index({ products, filters }) {
