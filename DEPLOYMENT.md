@@ -421,6 +421,27 @@ docker compose -f docker-compose.prod.yml exec app chown -R www-data:www-data st
 docker compose -f docker-compose.prod.yml exec app chmod -R 775 storage bootstrap/cache
 ```
 
+### Docker build fails with "Cannot find package 'laravel-vite-plugin'"
+
+**Error:**
+```
+Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'laravel-vite-plugin'
+```
+
+**Cause:** This happens during Docker build when npm tries to build assets without dev dependencies.
+
+**Solution:** This has been fixed in `docker/php/Dockerfile.prod`. The build process now:
+1. Installs all dependencies (including dev)
+2. Builds frontend assets
+3. Removes node_modules
+4. Reinstalls only production dependencies
+
+If you still see this error, pull the latest code:
+```bash
+git pull origin master
+docker compose -f docker-compose.prod.yml build --no-cache
+```
+
 ## 📞 Support
 
 Jika ada masalah, check:
