@@ -19,10 +19,6 @@ Route::get('/', function () {
     return Inertia::render('Welcome');
 })->name('home');
 
-Route::get('/coming-soon', function () {
-    return Inertia::render('ComingSoon');
-})->name('coming-soon');
-
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
     // Guest routes (login)
