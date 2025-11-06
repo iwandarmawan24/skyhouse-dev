@@ -51,6 +51,13 @@ echo "Installing Composer dependencies..."
 docker compose -f docker-compose.prod.yml exec -T app composer install --no-dev --optimize-autoloader
 
 echo ""
+echo "Building frontend assets..."
+docker compose -f docker-compose.prod.yml exec -T app npm ci
+docker compose -f docker-compose.prod.yml exec -T app npm run build
+docker compose -f docker-compose.prod.yml exec -T app rm -rf node_modules
+docker compose -f docker-compose.prod.yml exec -T app npm ci --omit=dev
+
+echo ""
 echo "Generating application key..."
 docker compose -f docker-compose.prod.yml exec -T app php artisan key:generate --force
 
