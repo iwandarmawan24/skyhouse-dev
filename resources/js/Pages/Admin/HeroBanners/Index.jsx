@@ -132,7 +132,7 @@ export default function Index({ banners }) {
                         </table>
 
                         {/* Pagination */}
-                        <Pagination links={banners.links} meta={banners.meta} />
+                        <Pagination data={banners} />
                     </div>
                 ) : (
                     <div className="text-center py-12">

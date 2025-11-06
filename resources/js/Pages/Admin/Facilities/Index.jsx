@@ -181,7 +181,7 @@ export default function Index({ facilities, filters }) {
                         </div>
 
                         {/* Pagination */}
-                        <Pagination links={facilities.links} meta={facilities.meta} />
+                        <Pagination data={facilities} />
                     </>
                 ) : (
                     <div className="text-center py-12">

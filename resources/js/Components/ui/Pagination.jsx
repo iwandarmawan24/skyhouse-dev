@@ -3,18 +3,18 @@ import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-r
 import { cn } from '@/lib/utils';
 import { Button } from './Button';
 
-export function Pagination({ links, meta, className }) {
-    if (!meta || meta.last_page <= 1) {
+export function Pagination({ data, className }) {
+    if (!data || data.last_page <= 1) {
         return null;
     }
 
-    const { current_page, last_page, from, to, total } = meta;
+    const { current_page, last_page, from, to, total, links, first_page_url, prev_page_url, next_page_url, last_page_url } = data;
 
     return (
         <div className={cn('flex items-center justify-between px-4 py-3 sm:px-6', className)}>
             <div className="flex flex-1 justify-between sm:hidden">
-                {links.prev ? (
-                    <Link href={links.prev} className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                {prev_page_url ? (
+                    <Link href={prev_page_url} className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                         Previous
                     </Link>
                 ) : (
@@ -22,8 +22,8 @@ export function Pagination({ links, meta, className }) {
                         Previous
                     </span>
                 )}
-                {links.next ? (
-                    <Link href={links.next} className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+                {next_page_url ? (
+                    <Link href={next_page_url} className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
                         Next
                     </Link>
                 ) : (
@@ -42,9 +42,9 @@ export function Pagination({ links, meta, className }) {
                 <div>
                     <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
                         {/* First Page */}
-                        {links.first && current_page > 1 ? (
+                        {first_page_url && current_page > 1 ? (
                             <Link
-                                href={links.first}
+                                href={first_page_url}
                                 className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             >
                                 <span className="sr-only">First</span>
@@ -57,9 +57,9 @@ export function Pagination({ links, meta, className }) {
                         )}
 
                         {/* Previous Page */}
-                        {links.prev ? (
+                        {prev_page_url ? (
                             <Link
-                                href={links.prev}
+                                href={prev_page_url}
                                 className="relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             >
                                 <span className="sr-only">Previous</span>
@@ -85,7 +85,7 @@ export function Pagination({ links, meta, className }) {
                             }
 
                             const isActive = page === current_page;
-                            const url = links.first.replace(/page=\d+/, `page=${page}`);
+                            const url = first_page_url.replace(/page=\d+/, `page=${page}`);
 
                             return isActive ? (
                                 <span
@@ -107,9 +107,9 @@ export function Pagination({ links, meta, className }) {
                         })}
 
                         {/* Next Page */}
-                        {links.next ? (
+                        {next_page_url ? (
                             <Link
-                                href={links.next}
+                                href={next_page_url}
                                 className="relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             >
                                 <span className="sr-only">Next</span>
@@ -122,9 +122,9 @@ export function Pagination({ links, meta, className }) {
                         )}
 
                         {/* Last Page */}
-                        {links.last && current_page < last_page ? (
+                        {last_page_url && current_page < last_page ? (
                             <Link
-                                href={links.last}
+                                href={last_page_url}
                                 className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
                             >
                                 <span className="sr-only">Last</span>

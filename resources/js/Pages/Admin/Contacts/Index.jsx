@@ -195,7 +195,7 @@ export default function Index({ contacts, filters }) {
                         </div>
 
                         {/* Pagination */}
-                        <Pagination links={contacts.links} meta={contacts.meta} />
+                        <Pagination data={contacts} />
                     </>
                 ) : (
                     <div className="text-center py-12">

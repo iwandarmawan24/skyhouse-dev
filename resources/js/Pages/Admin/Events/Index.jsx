@@ -215,7 +215,7 @@ export default function Index({ events, filters }) {
                         </div>
 
                         {/* Pagination */}
-                        <Pagination links={events.links} meta={events.meta} />
+                        <Pagination data={events} />
                     </>
                 ) : (
                     <div className="text-center py-12">

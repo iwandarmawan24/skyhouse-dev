@@ -258,7 +258,7 @@ export default function Index({ products, filters }) {
                         </div>
 
                         {/* Pagination */}
-                        <Pagination links={products.links} meta={products.meta} />
+                        <Pagination data={products} />
                     </>
                 ) : (
                     <div className="text-center py-12">

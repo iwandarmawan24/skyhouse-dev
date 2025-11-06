@@ -107,7 +107,7 @@ export default function Index({ policies }) {
                         </div>
 
                         {/* Pagination */}
-                        <Pagination links={policies.links} meta={policies.meta} />
+                        <Pagination data={policies} />
                     </>
                 ) : (
                     <div className="text-center py-12">
