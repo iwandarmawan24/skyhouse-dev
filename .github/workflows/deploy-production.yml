@@ -1,0 +1,64 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [ production ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to VPS
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+      - name: Add VPS to known hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.VPS_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy to VPS
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PATH: ${{ secrets.VPS_PATH }}
+        run: |
+          ssh $VPS_USER@$VPS_HOST << 'EOF'
+            set -e
+            cd ${{ secrets.VPS_PATH }}
+
+            echo "======================================"
+            echo "Starting deployment..."
+            echo "======================================"
+
+            # Pull latest code
+            echo "Pulling latest code..."
+            git fetch --all
+            git reset --hard origin/production
+
+            # Run deployment script
+            echo "Running deployment script..."
+            bash deploy.sh
+
+            echo "======================================"
+            echo "Deployment completed!"
+            echo "======================================"
+          EOF
+
+      - name: Notify on success
+        if: success()
+        run: |
+          echo "✅ Deployment to production successful!"
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Deployment to production failed!"
+          exit 1
