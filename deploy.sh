@@ -68,7 +68,8 @@ docker compose -f docker-compose.prod.yml exec -T app php artisan view:clear
 docker compose -f docker-compose.prod.yml exec -T app php artisan cache:clear
 
 docker compose -f docker-compose.prod.yml exec -T app php artisan config:cache
-docker compose -f docker-compose.prod.yml exec -T app php artisan route:cache
+# Skip route:cache due to Laravel 12 compatibility issue
+# docker compose -f docker-compose.prod.yml exec -T app php artisan route:cache
 docker compose -f docker-compose.prod.yml exec -T app php artisan view:cache
 
 # Restart queue workers
