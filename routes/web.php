@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\HeroBannerController;
 use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -66,5 +67,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Policies
         Route::resource('policies', PolicyController::class)->except(['show']);
+
+        // Users Management
+        Route::resource('users', UserController::class)->except(['show']);
     });
 });
