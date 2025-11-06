@@ -12,12 +12,16 @@ use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
 use Illuminate\Support\Facades\Route;
+use Inertia\Inertia;
 
-// Frontend Routes (will be built later)
-// Redirect root to admin panel for now
+// Frontend Routes
 Route::get('/', function () {
-    return redirect('/admin/dashboard');
-});
+    return Inertia::render('Welcome');
+})->name('home');
+
+Route::get('/coming-soon', function () {
+    return Inertia::render('ComingSoon');
+})->name('coming-soon');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
