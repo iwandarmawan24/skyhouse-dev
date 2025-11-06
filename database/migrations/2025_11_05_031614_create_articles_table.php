@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('articles', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('article_category_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->uuid('uid')->primary();
+            $table->uuid('article_category_uid');
+            $table->foreign('article_category_uid')->references('uid')->on('article_categories')->onDelete('cascade');
+            $table->uuid('user_uid');
+            $table->foreign('user_uid')->references('uid')->on('users')->onDelete('cascade');
             $table->string('title');
             $table->string('slug')->unique();
             $table->text('excerpt')->nullable();
@@ -30,7 +32,7 @@ return new class extends Migration
             $table->timestamp('published_at')->nullable();
             $table->timestamps();
 
-            $table->index(['article_category_id', 'is_published']);
+            $table->index(['article_category_uid', 'is_published']);
             $table->index('slug');
         });
     }

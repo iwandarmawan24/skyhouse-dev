@@ -34,8 +34,8 @@ export default function Index({ contacts, filters }) {
         search: filters.search || '',
     });
 
-    const handleDelete = (id) => {
-        router.delete(`/admin/contacts/${id}`, {
+    const handleDelete = (uid) => {
+        router.delete(`/admin/contacts/${uid}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
@@ -140,7 +140,7 @@ export default function Index({ contacts, filters }) {
                             <TableBody>
                                 {contacts.data.map((contact) => (
                                     <TableRow
-                                        key={contact.id}
+                                        key={contact.uid}
                                         className={!contact.is_read ? 'bg-blue-50/50' : ''}
                                     >
                                         <TableCell>
@@ -184,7 +184,7 @@ export default function Index({ contacts, filters }) {
                                                     size="sm"
                                                     asChild
                                                 >
-                                                    <Link href={`/admin/contacts/${contact.id}`}>
+                                                    <Link href={`/admin/contacts/${contact.uid}`}>
                                                         <Eye className="h-4 w-4 mr-1" />
                                                         View
                                                     </Link>
@@ -192,7 +192,7 @@ export default function Index({ contacts, filters }) {
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => setShowDeleteConfirm(contact.id)}
+                                                    onClick={() => setShowDeleteConfirm(contact.uid)}
                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                                 >
                                                     <Trash2 className="h-4 w-4 mr-1" />

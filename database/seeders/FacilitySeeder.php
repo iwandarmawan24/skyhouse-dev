@@ -40,7 +40,7 @@ class FacilitySeeder extends Seeder
             // Add gallery images
             for ($i = 1; $i <= 3; $i++) {
                 FacilityImage::create([
-                    'facility_id' => $facility->id,
+                    'facility_uid' => $facility->uid,
                     'image_path' => $facilityData['banner_image'],
                     'order' => $i,
                 ]);

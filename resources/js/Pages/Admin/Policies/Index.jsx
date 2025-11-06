@@ -20,8 +20,8 @@ export default function Index({ policies }) {
     const { flash } = usePage().props;
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
 
-    const handleDelete = (id) => {
-        router.delete(`/admin/policies/${id}`, {
+    const handleDelete = (uid) => {
+        router.delete(`/admin/policies/${uid}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
@@ -77,7 +77,7 @@ export default function Index({ policies }) {
                     <>
                         <div className="divide-y divide-gray-200">
                             {policies.data.map((policy) => (
-                            <div key={policy.id} className="p-6 hover:bg-gray-50 transition">
+                            <div key={policy.uid} className="p-6 hover:bg-gray-50 transition">
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1">
                                         <div className="flex items-center gap-3 mb-2">
@@ -95,7 +95,7 @@ export default function Index({ policies }) {
                                         </div>
                                     </div>
                                     <div className="flex items-center gap-2 ml-4">
-                                        <Link href={`/admin/policies/${policy.id}/edit`}>
+                                        <Link href={`/admin/policies/${policy.uid}/edit`}>
                                             <Button variant="ghost" size="sm">
                                                 Edit
                                             </Button>
@@ -103,7 +103,7 @@ export default function Index({ policies }) {
                                         <Button
                                             variant="ghost"
                                             size="sm"
-                                            onClick={() => setShowDeleteConfirm(policy.id)}
+                                            onClick={() => setShowDeleteConfirm(policy.uid)}
                                             className="text-red-600 hover:text-red-900"
                                         >
                                             Delete

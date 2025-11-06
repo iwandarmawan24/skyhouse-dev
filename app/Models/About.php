@@ -8,6 +8,10 @@ class About extends Model
 {
     protected $table = 'about';
 
+    protected $primaryKey = 'uid';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
         'opening_statement',
         'vision',
@@ -20,6 +24,17 @@ class About extends Model
         'milestones' => 'array',
         'team' => 'array',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uid)) {
+                $model->uid = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
 
     /**
      * Get the about page content (singleton pattern)

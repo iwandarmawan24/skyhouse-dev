@@ -35,8 +35,8 @@ export default function Index({ products, filters }) {
         search: filters.search || '',
     });
 
-    const handleDelete = (id) => {
-        router.delete(`/admin/products/${id}`, {
+    const handleDelete = (uid) => {
+        router.delete(`/admin/products/${uid}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
@@ -178,7 +178,7 @@ export default function Index({ products, filters }) {
                                 </TableHeader>
                                 <TableBody>
                                     {products.data.map((product) => (
-                                        <TableRow key={product.id}>
+                                        <TableRow key={product.uid}>
                                             <TableCell>
                                                 <div className="flex items-center">
                                                     <div className="flex-shrink-0 h-16 w-24">
@@ -239,14 +239,14 @@ export default function Index({ products, filters }) {
                                             <TableCell className="text-right">
                                                 <div className="flex items-center justify-end gap-2">
                                                     <Button variant="ghost" size="sm" asChild>
-                                                        <Link href={`/admin/products/${product.id}/edit`}>
+                                                        <Link href={`/admin/products/${product.uid}/edit`}>
                                                             Edit
                                                         </Link>
                                                     </Button>
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
-                                                        onClick={() => setShowDeleteConfirm(product.id)}
+                                                        onClick={() => setShowDeleteConfirm(product.uid)}
                                                         className="text-red-600 hover:text-red-900"
                                                     >
                                                         Delete

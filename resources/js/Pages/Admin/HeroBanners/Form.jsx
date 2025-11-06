@@ -33,7 +33,7 @@ export default function Form({ banner }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/admin/hero-banners/${banner.id}` : '/admin/hero-banners';
+        const url = isEdit ? `/admin/hero-banners/${banner.uid}` : '/admin/hero-banners';
         post(url);
     };
 

@@ -42,7 +42,7 @@ export default function Form({ article, categories }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/admin/articles/${article.id}` : '/admin/articles';
+        const url = isEdit ? `/admin/articles/${article.uid}` : '/admin/articles';
         post(url);
     };
 

@@ -8,6 +8,10 @@ use Illuminate\Support\Str;
 
 class Product extends Model
 {
+    protected $primaryKey = 'uid';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
         'name',
         'slug',
@@ -48,13 +52,16 @@ class Product extends Model
     ];
 
     /**
-     * Boot method to handle slug generation
+     * Boot method to handle slug generation and UUID
      */
     protected static function boot()
     {
         parent::boot();
 
         static::creating(function ($product) {
+            if (empty($product->uid)) {
+                $product->uid = (string) Str::uuid();
+            }
             if (empty($product->slug)) {
                 $product->slug = Str::slug($product->name);
             }
@@ -72,7 +79,7 @@ class Product extends Model
      */
     public function images(): HasMany
     {
-        return $this->hasMany(ProductImage::class)->orderBy('order');
+        return $this->hasMany(ProductImage::class, 'product_uid', 'uid')->orderBy('order');
     }
 
     /**

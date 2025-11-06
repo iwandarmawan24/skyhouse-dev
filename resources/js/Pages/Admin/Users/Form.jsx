@@ -17,7 +17,7 @@ export default function Form({ user }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/admin/users/${user.id}` : '/admin/users';
+        const url = isEdit ? `/admin/users/${user.uid}` : '/admin/users';
         post(url);
     };
 

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('hero_banners', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('uid')->primary();
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('image');

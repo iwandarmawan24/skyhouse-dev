@@ -26,8 +26,8 @@ export default function Index({ banners }) {
     const { flash } = usePage().props;
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
 
-    const handleDelete = (id) => {
-        router.delete(`/admin/hero-banners/${id}`, {
+    const handleDelete = (uid) => {
+        router.delete(`/admin/hero-banners/${uid}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
@@ -72,7 +72,7 @@ export default function Index({ banners }) {
                             </TableHeader>
                             <TableBody>
                                 {banners.data.map((banner) => (
-                                    <TableRow key={banner.id}>
+                                    <TableRow key={banner.uid}>
                                         <TableCell className="font-medium text-gray-900">
                                             {banner.order}
                                         </TableCell>
@@ -110,7 +110,7 @@ export default function Index({ banners }) {
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                <Link href={`/admin/hero-banners/${banner.id}/edit`}>
+                                                <Link href={`/admin/hero-banners/${banner.uid}/edit`}>
                                                     <Button variant="ghost" size="sm">
                                                         Edit
                                                     </Button>
@@ -118,7 +118,7 @@ export default function Index({ banners }) {
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => setShowDeleteConfirm(banner.id)}
+                                                    onClick={() => setShowDeleteConfirm(banner.uid)}
                                                     className="text-red-600 hover:text-red-900 hover:bg-red-50"
                                                 >
                                                     Delete

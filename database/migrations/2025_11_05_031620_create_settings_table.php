@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('settings', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('uid')->primary();
             $table->string('key')->unique();
             $table->text('value')->nullable();
             $table->string('type')->default('text'); // text, textarea, image, number, boolean

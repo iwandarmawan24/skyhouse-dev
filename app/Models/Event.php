@@ -6,6 +6,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Event extends Model
 {
+    protected $primaryKey = 'uid';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
         'title',
         'description',
@@ -22,6 +26,17 @@ class Event extends Model
         'event_date' => 'datetime',
         'is_active' => 'boolean',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uid)) {
+                $model->uid = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
 
     /**
      * Scope active events

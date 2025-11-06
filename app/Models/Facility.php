@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Facility extends Model
 {
+    protected $primaryKey = 'uid';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
         'name',
         'description',
@@ -19,12 +23,23 @@ class Facility extends Model
         'is_active' => 'boolean',
     ];
 
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uid)) {
+                $model->uid = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
+
     /**
      * Get facility images
      */
     public function images(): HasMany
     {
-        return $this->hasMany(FacilityImage::class)->orderBy('order');
+        return $this->hasMany(FacilityImage::class, 'facility_uid', 'uid')->orderBy('order');
     }
 
     /**

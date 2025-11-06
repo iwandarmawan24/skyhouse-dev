@@ -92,7 +92,7 @@ export default function Show({ contact }) {
                                     <h3 className="text-lg font-semibold text-gray-900">{contact.product.name}</h3>
                                     <p className="text-sm text-gray-600 mt-1">{contact.product.location}</p>
                                     <Link
-                                        href={`/admin/products/${contact.product.id}/edit`}
+                                        href={`/admin/products/${contact.product.uid}/edit`}
                                         className="text-sm text-blue-600 hover:text-blue-700 mt-2 inline-block"
                                     >
                                         View Product →

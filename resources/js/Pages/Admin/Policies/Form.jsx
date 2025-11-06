@@ -16,7 +16,7 @@ export default function Form({ policy }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/admin/policies/${policy.id}` : '/admin/policies';
+        const url = isEdit ? `/admin/policies/${policy.uid}` : '/admin/policies';
         post(url);
     };
 

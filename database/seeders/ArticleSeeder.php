@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Article;
+use App\Models\ArticleCategory;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -14,12 +15,13 @@ class ArticleSeeder extends Seeder
     public function run(): void
     {
         $user = User::first();
+        $categories = ArticleCategory::all()->keyBy('name');
 
         $articles = [
             // Tips Properti
             [
-                'article_category_id' => 1,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Tips Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => '10 Tips Memilih Rumah Idaman untuk Keluarga',
                 'excerpt' => 'Panduan lengkap memilih rumah yang tepat untuk keluarga Anda dengan budget yang sesuai',
                 'content' => '<p>Membeli rumah adalah investasi besar dalam hidup. Berikut 10 tips penting yang perlu Anda pertimbangkan saat memilih rumah idaman.</p><h2>1. Lokasi Strategis</h2><p>Lokasi adalah faktor terpenting. Pilih lokasi dekat dengan fasilitas umum seperti sekolah, rumah sakit, dan pusat perbelanjaan.</p><h2>2. Budget yang Realistis</h2><p>Hitung kemampuan finansial Anda dengan cermat. Pastikan cicilan tidak melebihi 30% dari pendapatan bulanan.</p>',
@@ -30,8 +32,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(25),
             ],
             [
-                'article_category_id' => 1,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Tips Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Cara Menghitung Biaya Renovasi Rumah',
                 'excerpt' => 'Panduan praktis menghitung budget renovasi agar tidak membengkak',
                 'content' => '<p>Renovasi rumah memerlukan perencanaan matang. Berikut cara menghitung biaya renovasi dengan tepat.</p><h2>Komponen Biaya</h2><ul><li>Material bangunan</li><li>Upah tukang</li><li>Desain arsitektur</li><li>Perizinan</li></ul>',
@@ -42,8 +44,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(23),
             ],
             [
-                'article_category_id' => 1,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Tips Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Checklist Penting Sebelum Membeli Rumah Second',
                 'excerpt' => 'Hal-hal yang wajib diperiksa sebelum membeli rumah bekas',
                 'content' => '<p>Membeli rumah second bisa jadi pilihan cerdas jika Anda tahu apa yang harus dicek.</p><h2>Dokumen Legal</h2><p>Pastikan sertifikat asli, IMB lengkap, dan tidak ada sengketa hukum.</p><h2>Kondisi Bangunan</h2><p>Periksa struktur, atap, plafon, dinding, dan instalasi listrik serta air.</p>',
@@ -54,8 +56,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(20),
             ],
             [
-                'article_category_id' => 1,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Tips Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Keuntungan Membeli Apartemen di Pusat Kota',
                 'excerpt' => 'Mengapa apartemen menjadi pilihan hunian modern yang praktis',
                 'content' => '<p>Apartemen di pusat kota menawarkan berbagai keuntungan untuk profesional muda dan keluarga kecil.</p><h2>Mobilitas Tinggi</h2><p>Akses mudah ke kantor, pusat perbelanjaan, dan transportasi umum.</p><h2>Fasilitas Lengkap</h2><p>Kolam renang, gym, keamanan 24 jam, dan area parkir yang memadai.</p>',
@@ -66,8 +68,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(18),
             ],
             [
-                'article_category_id' => 1,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Tips Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Tips Negosiasi Harga Properti yang Efektif',
                 'excerpt' => 'Strategi jitu untuk mendapatkan harga terbaik saat membeli properti',
                 'content' => '<p>Negosiasi adalah seni yang bisa dipelajari. Berikut tips untuk mendapatkan harga properti terbaik.</p><h2>Riset Harga Pasar</h2><p>Cari tahu harga properti sejenis di area yang sama untuk mengetahui harga wajar.</p><h2>Timing yang Tepat</h2><p>Beli saat pasar sedang lesu atau akhir tahun untuk mendapat penawaran lebih baik.</p>',
@@ -80,8 +82,8 @@ class ArticleSeeder extends Seeder
 
             // Berita Properti
             [
-                'article_category_id' => 2,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Berita Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Tren Properti 2025: Hunian Ramah Lingkungan',
                 'excerpt' => 'Green building dan eco-friendly menjadi tren utama properti tahun ini',
                 'content' => '<p>Industri properti Indonesia mengalami transformasi besar menuju hunian berkelanjutan.</p><h2>Konsep Green Building</h2><p>Pengembang mulai mengadopsi teknologi hemat energi, panel surya, dan sistem pengelolaan air yang efisien.</p><h2>Sertifikasi EDGE</h2><p>Semakin banyak proyek properti yang mengajukan sertifikasi EDGE untuk menarik pembeli yang peduli lingkungan.</p>',
@@ -92,8 +94,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(15),
             ],
             [
-                'article_category_id' => 2,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Berita Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Harga Properti Jakarta Naik 8% di Kuartal Pertama',
                 'excerpt' => 'Analisis kenaikan harga properti dan faktor-faktor penyebabnya',
                 'content' => '<p>Bank Indonesia melaporkan kenaikan signifikan pada harga properti residensial di Jakarta.</p><h2>Faktor Kenaikan</h2><p>Inflasi, kenaikan harga material, dan permintaan yang tinggi menjadi faktor utama kenaikan harga.</p><h2>Outlook 2025</h2><p>Diperkirakan harga akan terus naik 5-10% hingga akhir tahun.</p>',
@@ -104,8 +106,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(12),
             ],
             [
-                'article_category_id' => 2,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Berita Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Pemerintah Luncurkan Program KPR Subsidi Baru',
                 'excerpt' => 'Kemudahan akses kepemilikan rumah bagi masyarakat berpenghasilan rendah',
                 'content' => '<p>Kementerian PUPR meluncurkan program KPR subsidi dengan bunga 3% untuk MBR.</p><h2>Syarat dan Ketentuan</h2><p>Berlaku untuk rumah dengan harga maksimal Rp 350 juta dengan uang muka 5%.</p><h2>Cara Mengajukan</h2><p>Pendaftaran dapat dilakukan melalui bank penyalur yang telah ditunjuk.</p>',
@@ -116,8 +118,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(10),
             ],
             [
-                'article_category_id' => 2,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Berita Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Smart City: Kota Baru BSD Terapkan IoT di Perumahan',
                 'excerpt' => 'Teknologi Internet of Things mulai diterapkan di kompleks perumahan modern',
                 'content' => '<p>BSD City menjadi pelopor penerapan teknologi IoT dalam ekosistem hunian modern.</p><h2>Fitur Smart Home</h2><p>Integrasi smart lighting, smart security, dan energy management system dalam setiap unit.</p><h2>Manfaat Teknologi</h2><p>Efisiensi energi hingga 40% dan peningkatan keamanan signifikan.</p>',
@@ -128,8 +130,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(8),
             ],
             [
-                'article_category_id' => 2,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Berita Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Investasi Ruko Masih Menjanjikan di 2025',
                 'excerpt' => 'Analisis prospek investasi properti komersial untuk UMKM',
                 'content' => '<p>Sektor properti komersial menunjukkan recovery yang kuat pasca pandemi.</p><h2>ROI Menggiurkan</h2><p>Yield ruko di lokasi strategis mencapai 8-12% per tahun, lebih tinggi dari deposito.</p><h2>Lokasi Prime</h2><p>Ruko di area dengan traffic tinggi seperti dekat kampus dan perkantoran paling diminati.</p>',
@@ -142,8 +144,8 @@ class ArticleSeeder extends Seeder
 
             // Panduan Investasi
             [
-                'article_category_id' => 3,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Panduan Investasi']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Investasi Properti untuk Pemula: Mulai dari Mana?',
                 'excerpt' => 'Panduan lengkap memulai investasi properti dengan modal terbatas',
                 'content' => '<p>Investasi properti tidak selalu memerlukan modal besar. Berikut langkah-langkah untuk pemula.</p><h2>Mulai dengan Apartemen Studio</h2><p>Investasi paling terjangkau dengan harga mulai 300 jutaan dan permintaan sewa tinggi.</p><h2>Join Investment</h2><p>Patungan dengan teman atau keluarga untuk membeli properti pertama.</p><h2>KPR dengan DP Minimal</h2><p>Manfaatkan program KPR DP 0-5% dari developer.</p>',
@@ -154,8 +156,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(22),
             ],
             [
-                'article_category_id' => 3,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Panduan Investasi']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Strategi Buy and Hold dalam Investasi Properti',
                 'excerpt' => 'Cara mendapatkan passive income dari properti jangka panjang',
                 'content' => '<p>Buy and hold adalah strategi klasik yang terbukti menguntungkan dalam investasi properti.</p><h2>Pilih Lokasi Berkembang</h2><p>Cari area yang sedang berkembang dengan infrastruktur baru seperti tol, stasiun MRT, atau pusat bisnis.</p><h2>Cash Flow Positif</h2><p>Pastikan income dari sewa lebih besar dari cicilan dan biaya operasional.</p>',
@@ -166,8 +168,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(19),
             ],
             [
-                'article_category_id' => 3,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Panduan Investasi']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Flipping Properti: Untung Cepat atau High Risk?',
                 'excerpt' => 'Analisis strategi jual beli cepat properti untuk profit maksimal',
                 'content' => '<p>Flipping adalah strategi membeli properti dengan harga murah, merenovasi, lalu menjualnya dengan profit.</p><h2>Keuntungan Flipping</h2><p>Profit bisa didapat dalam 3-6 bulan jika eksekusi tepat. Return bisa mencapai 20-30%.</p><h2>Risiko yang Harus Diwaspadai</h2><p>Modal besar, risiko properti tidak laku, dan biaya renovasi yang membengkak.</p>',
@@ -178,8 +180,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(14),
             ],
             [
-                'article_category_id' => 3,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Panduan Investasi']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Menghitung ROI Properti dengan Tepat',
                 'excerpt' => 'Formula dan metode perhitungan return on investment properti',
                 'content' => '<p>ROI adalah indikator penting untuk menilai kelayakan investasi properti.</p><h2>Formula ROI</h2><p>ROI = (Keuntungan Bersih / Total Investasi) x 100%</p><h2>Komponen Biaya</h2><p>Hitung semua biaya: harga beli, notaris, pajak, renovasi, maintenance, dan biaya lain-lain.</p><h2>Target ROI Ideal</h2><p>ROI properti yang sehat minimal 8-10% per tahun untuk bersaing dengan instrumen investasi lain.</p>',
@@ -190,8 +192,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(11),
             ],
             [
-                'article_category_id' => 3,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Panduan Investasi']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Diversifikasi Portfolio Properti yang Cerdas',
                 'excerpt' => 'Strategi menyebarkan risiko dengan beragam jenis properti',
                 'content' => '<p>Jangan taruh semua telur dalam satu keranjang. Diversifikasi adalah kunci investasi properti yang aman.</p><h2>Mix Properti Residensial dan Komersial</h2><p>Kombinasi rumah, apartemen, dan ruko memberikan balance antara capital gain dan rental yield.</p><h2>Variasi Lokasi</h2><p>Investasi di berbagai kota mengurangi risiko regional.</p>',
@@ -202,8 +204,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(7),
             ],
             [
-                'article_category_id' => 3,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Panduan Investasi']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Investasi Tanah Kavling: Profit Jangka Panjang',
                 'excerpt' => 'Keuntungan dan strategi investasi tanah untuk masa depan',
                 'content' => '<p>Tanah adalah investasi yang tidak pernah menyusut nilainya.</p><h2>Keunggulan Investasi Tanah</h2><p>Tidak perlu maintenance, harga terus naik, dan fleksibel untuk dikembangkan.</p><h2>Lokasi Potensial</h2><p>Pilih area dekat dengan rencana pembangunan infrastruktur pemerintah seperti jalan tol atau bandara.</p><h2>Horizon Investasi</h2><p>Investasi tanah idealnya 5-10 tahun untuk mendapat capital gain optimal 100-300%.</p>',
@@ -216,8 +218,8 @@ class ArticleSeeder extends Seeder
 
             // Lifestyle
             [
-                'article_category_id' => 4,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Lifestyle']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Desain Interior Minimalis Modern untuk Rumah Kecil',
                 'excerpt' => 'Inspirasi desain yang membuat rumah mungil terlihat luas dan nyaman',
                 'content' => '<p>Desain minimalis modern semakin populer untuk rumah dengan luas terbatas.</p><h2>Prinsip Less is More</h2><p>Kurangi furniture dan dekorasi berlebihan. Fokus pada fungsi dan keindahan sederhana.</p><h2>Warna Netral</h2><p>Gunakan palet warna putih, krem, dan abu-abu untuk memberikan kesan luas.</p><h2>Multi-Functional Furniture</h2><p>Sofa bed, meja lipat, dan storage ottoman menghemat ruang.</p>',
@@ -228,8 +230,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(21),
             ],
             [
-                'article_category_id' => 4,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Lifestyle']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Taman Vertikal untuk Apartemen Modern',
                 'excerpt' => 'Cara membuat green wall di balkon apartemen Anda',
                 'content' => '<p>Hidup di apartemen bukan berarti tidak bisa punya taman hijau.</p><h2>Vertical Garden System</h2><p>Gunakan sistem pot gantung atau panel modular untuk memaksimalkan ruang vertikal.</p><h2>Tanaman yang Cocok</h2><p>Pilih tanaman low maintenance seperti sirih gading, lidah mertua, dan paku-pakuan.</p><h2>Manfaat Green Wall</h2><p>Menyaring udara, mengurangi polusi, dan memberikan suasana asri.</p>',
@@ -240,8 +242,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(17),
             ],
             [
-                'article_category_id' => 4,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Lifestyle']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Home Office Setup yang Produktif dan Stylish',
                 'excerpt' => 'Desain ruang kerja di rumah yang nyaman dan profesional',
                 'content' => '<p>Work from home memerlukan ruang kerja yang mendukung produktivitas.</p><h2>Pencahayaan yang Tepat</h2><p>Kombinasi natural light dan task lighting mengurangi eye strain dan meningkatkan fokus.</p><h2>Ergonomic Setup</h2><p>Investasi pada kursi ergonomis dan standing desk untuk kesehatan jangka panjang.</p><h2>Minimalist Aesthetic</h2><p>Ruang kerja yang bersih dan rapi meningkatkan konsentrasi.</p>',
@@ -252,8 +254,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(13),
             ],
             [
-                'article_category_id' => 4,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Lifestyle']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Feng Shui untuk Rumah Modern: Mitos atau Fakta?',
                 'excerpt' => 'Prinsip feng shui yang bisa diterapkan di hunian kontemporer',
                 'content' => '<p>Feng shui bukan hanya soal mistis, tapi juga tentang harmoni ruang dan energi positif.</p><h2>Prinsip Dasar</h2><p>Sirkulasi udara, pencahayaan alami, dan tata letak furniture yang baik menciptakan energi positif.</p><h2>Command Position</h2><p>Posisikan tempat tidur dan meja kerja menghadap pintu untuk rasa kontrol dan keamanan.</p><h2>Color Psychology</h2><p>Warna mempengaruhi mood - biru menenangkan, hijau menyegarkan, merah energizing.</p>',
@@ -264,8 +266,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(9),
             ],
             [
-                'article_category_id' => 4,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Lifestyle']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Smart Home Technology untuk Rumah Indonesia',
                 'excerpt' => 'Gadget dan sistem pintar yang sesuai dengan iklim tropis',
                 'content' => '<p>Teknologi smart home membuat hidup lebih nyaman dan efisien.</p><h2>Smart Lighting</h2><p>Lampu LED dengan WiFi control menghemat energi hingga 80% dan bisa diatur lewat smartphone.</p><h2>Smart AC & Thermostat</h2><p>Mengatur suhu otomatis sesuai jadwal dan cuaca, hemat listrik hingga 30%.</p><h2>Smart Security</h2><p>CCTV online, smart lock, dan motion sensor meningkatkan keamanan rumah.</p>',
@@ -276,8 +278,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(4),
             ],
             [
-                'article_category_id' => 4,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Lifestyle']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Dekorasi Bohemian Chic untuk Kamar Tidur',
                 'excerpt' => 'Gaya bohemian yang cozy dan instagrammable',
                 'content' => '<p>Bohemian style menggabungkan warna-warna earthy, tekstur natural, dan ecletic mix yang artistik.</p><h2>Layer Tekstur</h2><p>Kombinasi macrame, rattan, woven basket, dan cushion berbagai motif menciptakan depth.</p><h2>Warm Color Palette</h2><p>Terracotta, mustard, forest green, dan burgundy memberikan vibe hangat dan cozy.</p><h2>Plants Everywhere</h2><p>Tanaman hias dalam pot vintage melengkapi aesthetic bohemian.</p>',
@@ -290,8 +292,8 @@ class ArticleSeeder extends Seeder
 
             // Additional articles for more variety
             [
-                'article_category_id' => 1,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Tips Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Panduan Lengkap KPR: Dari Pengajuan hingga Akad',
                 'excerpt' => 'Step by step mengajukan Kredit Pemilikan Rumah dengan mudah',
                 'content' => '<p>KPR adalah solusi pembiayaan paling populer untuk membeli rumah.</p><h2>Syarat Dokumen</h2><ul><li>KTP & KK</li><li>NPWP</li><li>Slip gaji 3 bulan terakhir</li><li>Rekening koran 3 bulan</li></ul><h2>Proses Pengajuan</h2><p>Dari submission hingga approval biasanya 2-4 minggu.</p>',
@@ -302,8 +304,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subDays(2),
             ],
             [
-                'article_category_id' => 2,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Berita Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Properti di Area TOD Semakin Diminati',
                 'excerpt' => 'Transit Oriented Development meningkatkan nilai properti hingga 30%',
                 'content' => '<p>Kawasan TOD dekat stasiun MRT dan LRT mengalami lonjakan harga signifikan.</p><h2>Lokasi Potensial</h2><p>Lebak Bulus, Fatmawati, Cipete Raya menjadi area paling hot.</p><h2>Prediksi 2025</h2><p>Harga diperkirakan naik 15-30% seiring operasional full MRT fase 2.</p>',
@@ -314,8 +316,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subHours(36),
             ],
             [
-                'article_category_id' => 3,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Panduan Investasi']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Investasi Properti Syariah: Halal dan Menguntungkan',
                 'excerpt' => 'Panduan investasi properti tanpa riba sesuai syariat Islam',
                 'content' => '<p>Properti syariah menawarkan alternatif investasi yang sesuai dengan prinsip Islam.</p><h2>Skema Pembiayaan</h2><p>Menggunakan akad murabahah atau musyarakah mutanaqisah, bukan sistem bunga.</p><h2>Developer Terpercaya</h2><p>Pilih developer yang sudah tersertifikasi DSN-MUI.</p>',
@@ -326,8 +328,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subHours(24),
             ],
             [
-                'article_category_id' => 4,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Lifestyle']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Kolam Renang Mini untuk Halaman Rumah',
                 'excerpt' => 'Desain dan budget pembuatan pool di lahan terbatas',
                 'content' => '<p>Punya kolam renang di rumah bukan lagi kemewahan.</p><h2>Ukuran Ideal</h2><p>Pool ukuran 3x6 meter sudah cukup untuk keluarga kecil.</p><h2>Budget</h2><p>Biaya mulai dari 50 juta untuk pool sederhana tanpa water heater.</p><h2>Maintenance</h2><p>Perawatan rutin sebulan sekali untuk menjaga kualitas air.</p>',
@@ -338,8 +340,8 @@ class ArticleSeeder extends Seeder
                 'published_at' => now()->subHours(12),
             ],
             [
-                'article_category_id' => 1,
-                'user_id' => $user->id,
+                'article_category_uid' => $categories['Tips Properti']->uid,
+                'user_uid' => $user->uid,
                 'title' => 'Rumah Subsidi vs Non-Subsidi: Mana yang Lebih Baik?',
                 'excerpt' => 'Perbandingan keuntungan dan kekurangan kedua jenis rumah',
                 'content' => '<p>Memilih antara rumah subsidi dan non-subsidi perlu pertimbangan matang.</p><h2>Rumah Subsidi</h2><p>Harga terjangkau dengan bunga rendah, tapi lokasi biasanya di pinggiran dan luas terbatas.</p><h2>Rumah Non-Subsidi</h2><p>Lebih fleksibel dalam pemilihan lokasi dan spesifikasi, tapi harga lebih tinggi.</p>',

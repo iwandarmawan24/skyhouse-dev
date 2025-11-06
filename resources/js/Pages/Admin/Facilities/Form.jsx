@@ -54,7 +54,7 @@ export default function Form({ facility }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/admin/facilities/${facility.id}` : '/admin/facilities';
+        const url = isEdit ? `/admin/facilities/${facility.uid}` : '/admin/facilities';
         post(url);
     };
 

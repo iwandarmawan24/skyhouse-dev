@@ -34,7 +34,7 @@ export default function Form({ event }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/admin/events/${event.id}` : '/admin/events';
+        const url = isEdit ? `/admin/events/${event.uid}` : '/admin/events';
         post(url);
     };
 

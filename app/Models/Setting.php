@@ -7,12 +7,27 @@ use Illuminate\Support\Facades\Cache;
 
 class Setting extends Model
 {
+    protected $primaryKey = 'uid';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
         'key',
         'value',
         'type',
         'group',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            if (empty($model->uid)) {
+                $model->uid = (string) \Illuminate\Support\Str::uuid();
+            }
+        });
+    }
 
     /**
      * Get setting value by key

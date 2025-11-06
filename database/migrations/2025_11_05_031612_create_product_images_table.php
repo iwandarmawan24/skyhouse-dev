@@ -12,14 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('product_images', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->uuid('uid')->primary();
+            $table->uuid('product_uid');
+            $table->foreign('product_uid')->references('uid')->on('products')->onDelete('cascade');
             $table->string('image_path');
             $table->integer('order')->default(0);
             $table->boolean('is_primary')->default(false);
             $table->timestamps();
 
-            $table->index('product_id');
+            $table->index('product_uid');
         });
     }
 

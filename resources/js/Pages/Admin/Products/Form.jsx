@@ -70,7 +70,7 @@ export default function Form({ product }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/admin/products/${product.id}` : '/admin/products';
+        const url = isEdit ? `/admin/products/${product.uid}` : '/admin/products';
         post(url);
     };
 

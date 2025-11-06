@@ -32,8 +32,8 @@ export default function Index({ events, filters }) {
         search: filters.search || '',
     });
 
-    const handleDelete = (id) => {
-        router.delete(`/admin/events/${id}`, {
+    const handleDelete = (uid) => {
+        router.delete(`/admin/events/${uid}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
@@ -149,7 +149,7 @@ export default function Index({ events, filters }) {
                             </TableHeader>
                             <TableBody>
                                 {events.data.map((event) => (
-                                    <TableRow key={event.id}>
+                                    <TableRow key={event.uid}>
                                         <TableCell>
                                             <div className="flex items-center">
                                                 <div className="flex-shrink-0 h-16 w-24">
@@ -197,7 +197,7 @@ export default function Index({ events, filters }) {
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                <Link href={`/admin/events/${event.id}/edit`}>
+                                                <Link href={`/admin/events/${event.uid}/edit`}>
                                                     <Button variant="ghost" size="sm">
                                                         Edit
                                                     </Button>
@@ -205,7 +205,7 @@ export default function Index({ events, filters }) {
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => setShowDeleteConfirm(event.id)}
+                                                    onClick={() => setShowDeleteConfirm(event.uid)}
                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                                 >
                                                     Delete

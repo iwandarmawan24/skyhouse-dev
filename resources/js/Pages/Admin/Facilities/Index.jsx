@@ -26,8 +26,8 @@ export default function Index({ facilities, filters }) {
         search: filters.search || '',
     });
 
-    const handleDelete = (id) => {
-        router.delete(`/admin/facilities/${id}`, {
+    const handleDelete = (uid) => {
+        router.delete(`/admin/facilities/${uid}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
@@ -123,7 +123,7 @@ export default function Index({ facilities, filters }) {
                             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                                 {facilities.data.map((facility) => (
                                     <Card
-                                        key={facility.id}
+                                        key={facility.uid}
                                         className="overflow-hidden hover:shadow-md transition"
                                     >
                                         {/* Image Gallery Preview */}
@@ -173,7 +173,7 @@ export default function Index({ facilities, filters }) {
                                                         className="h-auto p-0"
                                                         asChild
                                                     >
-                                                        <Link href={`/admin/facilities/${facility.id}/edit`}>
+                                                        <Link href={`/admin/facilities/${facility.uid}/edit`}>
                                                             Edit
                                                         </Link>
                                                     </Button>
@@ -181,7 +181,7 @@ export default function Index({ facilities, filters }) {
                                                         variant="link"
                                                         size="sm"
                                                         className="h-auto p-0 text-red-600 hover:text-red-900"
-                                                        onClick={() => setShowDeleteConfirm(facility.id)}
+                                                        onClick={() => setShowDeleteConfirm(facility.uid)}
                                                     >
                                                         Delete
                                                     </Button>

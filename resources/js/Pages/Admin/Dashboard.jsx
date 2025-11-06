@@ -93,7 +93,7 @@ export default function Dashboard({ stats, recent_contacts, recent_products }) {
                     <div className="divide-y divide-gray-200">
                         {recent_contacts.length > 0 ? (
                             recent_contacts.map((contact) => (
-                                <div key={contact.id} className="p-6 hover:bg-gray-50 transition-colors">
+                                <div key={contact.uid} className="p-6 hover:bg-gray-50 transition-colors">
                                     <div className="flex items-start justify-between">
                                         <div className="flex-1">
                                             <div className="flex items-center gap-2">
@@ -139,7 +139,7 @@ export default function Dashboard({ stats, recent_contacts, recent_products }) {
                     <div className="divide-y divide-gray-200">
                         {recent_products.length > 0 ? (
                             recent_products.map((product) => (
-                                <div key={product.id} className="p-6 hover:bg-gray-50 transition-colors">
+                                <div key={product.uid} className="p-6 hover:bg-gray-50 transition-colors">
                                     <div className="flex items-center gap-4">
                                         {product.images && product.images[0] ? (
                                             <img

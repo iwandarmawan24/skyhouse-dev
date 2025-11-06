@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('policies', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('uid')->primary();
             $table->enum('type', ['terms', 'privacy'])->unique();
             $table->longText('content');
             $table->string('version')->default('1.0');

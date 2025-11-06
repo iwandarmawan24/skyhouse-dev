@@ -523,7 +523,7 @@ class ProductSeeder extends Seeder
 
             foreach ($imageUrls as $index => $url) {
                 ProductImage::create([
-                    'product_id' => $product->id,
+                    'product_uid' => $product->uid,
                     'image_path' => $url,
                     'order' => $index + 1,
                     'is_primary' => $index === 0,

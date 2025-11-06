@@ -28,8 +28,8 @@ export default function Index({ users, filters }) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [search, setSearch] = useState(filters.search || '');
 
-    const handleDelete = (id) => {
-        router.delete(`/admin/users/${id}`, {
+    const handleDelete = (uid) => {
+        router.delete(`/admin/users/${uid}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
@@ -115,7 +115,7 @@ export default function Index({ users, filters }) {
                             </TableHeader>
                             <TableBody>
                                 {users.data.map((user) => (
-                                    <TableRow key={user.id}>
+                                    <TableRow key={user.uid}>
                                         <TableCell>
                                             <div className="flex items-center gap-3">
                                                 <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shrink-0">
@@ -123,7 +123,7 @@ export default function Index({ users, filters }) {
                                                 </div>
                                                 <div className="flex items-center gap-2">
                                                     <span className="font-medium text-gray-900">{user.name}</span>
-                                                    {user.id === auth.user.id && (
+                                                    {user.uid === auth.user.uid && (
                                                         <Badge variant="default">You</Badge>
                                                     )}
                                                 </div>
@@ -139,16 +139,16 @@ export default function Index({ users, filters }) {
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                <Link href={`/admin/users/${user.id}/edit`}>
+                                                <Link href={`/admin/users/${user.uid}/edit`}>
                                                     <Button variant="ghost" size="sm">
                                                         Edit
                                                     </Button>
                                                 </Link>
-                                                {user.id !== auth.user.id && (
+                                                {user.uid !== auth.user.uid && (
                                                     <Button
                                                         variant="ghost"
                                                         size="sm"
-                                                        onClick={() => setShowDeleteConfirm(user.id)}
+                                                        onClick={() => setShowDeleteConfirm(user.uid)}
                                                         className="text-red-600 hover:text-red-900 hover:bg-red-50"
                                                     >
                                                         Delete

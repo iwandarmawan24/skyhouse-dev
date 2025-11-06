@@ -8,9 +8,13 @@ use Illuminate\Support\Str;
 
 class Article extends Model
 {
+    protected $primaryKey = 'uid';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
-        'article_category_id',
-        'user_id',
+        'article_category_uid',
+        'user_uid',
         'title',
         'slug',
         'excerpt',
@@ -38,6 +42,9 @@ class Article extends Model
         parent::boot();
 
         static::creating(function ($article) {
+            if (empty($article->uid)) {
+                $article->uid = (string) Str::uuid();
+            }
             if (empty($article->slug)) {
                 $article->slug = Str::slug($article->title);
             }
@@ -49,7 +56,7 @@ class Article extends Model
      */
     public function category(): BelongsTo
     {
-        return $this->belongsTo(ArticleCategory::class, 'article_category_id');
+        return $this->belongsTo(ArticleCategory::class, 'article_category_uid', 'uid');
     }
 
     /**
@@ -57,7 +64,7 @@ class Article extends Model
      */
     public function author(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_uid', 'uid');
     }
 
     /**

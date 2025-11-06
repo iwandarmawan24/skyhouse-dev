@@ -8,6 +8,10 @@ use Illuminate\Support\Str;
 
 class ArticleCategory extends Model
 {
+    protected $primaryKey = 'uid';
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
         'name',
         'slug',
@@ -24,6 +28,9 @@ class ArticleCategory extends Model
         parent::boot();
 
         static::creating(function ($category) {
+            if (empty($category->uid)) {
+                $category->uid = (string) Str::uuid();
+            }
             if (empty($category->slug)) {
                 $category->slug = Str::slug($category->name);
             }
@@ -35,7 +42,7 @@ class ArticleCategory extends Model
      */
     public function articles(): HasMany
     {
-        return $this->hasMany(Article::class);
+        return $this->hasMany(Article::class, 'article_category_uid', 'uid');
     }
 
     /**

@@ -35,8 +35,8 @@ export default function Index({ articles, categories, filters }) {
         search: filters.search || '',
     });
 
-    const handleDelete = (id) => {
-        router.delete(`/admin/articles/${id}`, {
+    const handleDelete = (uid) => {
+        router.delete(`/admin/articles/${uid}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
@@ -155,7 +155,7 @@ export default function Index({ articles, categories, filters }) {
                             </TableHeader>
                             <TableBody>
                                 {articles.data.map((article) => (
-                                    <TableRow key={article.id}>
+                                    <TableRow key={article.uid}>
                                         <TableCell>
                                             <div className="flex items-center">
                                                 {article.featured_image && (
@@ -204,7 +204,7 @@ export default function Index({ articles, categories, filters }) {
                                         <TableCell className="text-right">
                                             <div className="flex items-center justify-end gap-2">
                                                 <Button variant="ghost" size="sm" asChild>
-                                                    <Link href={`/admin/articles/${article.id}/edit`}>
+                                                    <Link href={`/admin/articles/${article.uid}/edit`}>
                                                         <Edit2 className="w-4 h-4 mr-1" />
                                                         Edit
                                                     </Link>
@@ -212,7 +212,7 @@ export default function Index({ articles, categories, filters }) {
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => setShowDeleteConfirm(article.id)}
+                                                    onClick={() => setShowDeleteConfirm(article.uid)}
                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                                 >
                                                     <Trash2 className="w-4 h-4 mr-1" />
