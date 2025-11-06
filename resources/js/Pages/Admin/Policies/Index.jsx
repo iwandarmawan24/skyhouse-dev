@@ -6,6 +6,7 @@ import { Button } from '@/Components/ui/Button';
 import { Card } from '@/Components/ui/Card';
 import { Badge } from '@/Components/ui/Badge';
 import { Alert } from '@/Components/ui/Alert';
+import { Pagination } from '@/Components/ui/Pagination';
 
 export default function Index({ policies }) {
     const { flash } = usePage().props;
@@ -64,9 +65,10 @@ export default function Index({ policies }) {
 
             {/* Policies List */}
             <Card>
-                {policies.length > 0 ? (
-                    <div className="divide-y divide-gray-200">
-                        {policies.map((policy) => (
+                {policies.data.length > 0 ? (
+                    <>
+                        <div className="divide-y divide-gray-200">
+                            {policies.data.map((policy) => (
                             <div key={policy.id} className="p-6 hover:bg-gray-50 transition">
                                 <div className="flex items-start justify-between">
                                     <div className="flex-1">
@@ -101,8 +103,12 @@ export default function Index({ policies }) {
                                     </div>
                                 </div>
                             </div>
-                        ))}
-                    </div>
+                            ))}
+                        </div>
+
+                        {/* Pagination */}
+                        <Pagination links={policies.links} meta={policies.meta} />
+                    </>
                 ) : (
                     <div className="text-center py-12">
                         <FileText className="mx-auto h-12 w-12 text-gray-400" />

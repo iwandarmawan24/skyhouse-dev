@@ -1,6 +1,7 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { Pagination } from '@/Components/ui';
 
 export default function Index({ banners }) {
     const { flash } = usePage().props;
@@ -40,7 +41,7 @@ export default function Index({ banners }) {
 
             {/* Banners List */}
             <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                {banners.length > 0 ? (
+                {banners.data.length > 0 ? (
                     <div className="overflow-x-auto">
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
@@ -66,7 +67,7 @@ export default function Index({ banners }) {
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
-                                {banners.map((banner) => (
+                                {banners.data.map((banner) => (
                                     <tr key={banner.id} className="hover:bg-gray-50">
                                         <td className="px-6 py-4 whitespace-nowrap">
                                             <span className="text-sm font-medium text-gray-900">
@@ -129,6 +130,9 @@ export default function Index({ banners }) {
                                 ))}
                             </tbody>
                         </table>
+
+                        {/* Pagination */}
+                        <Pagination links={banners.links} meta={banners.meta} />
                     </div>
                 ) : (
                     <div className="text-center py-12">

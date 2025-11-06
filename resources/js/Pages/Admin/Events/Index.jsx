@@ -1,6 +1,7 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { Pagination } from '@/Components/ui';
 
 export default function Index({ events, filters }) {
     const { flash } = usePage().props;
@@ -214,35 +215,7 @@ export default function Index({ events, filters }) {
                         </div>
 
                         {/* Pagination */}
-                        {events.links.length > 3 && (
-                            <div className="bg-white px-4 py-3 border-t border-gray-200 sm:px-6">
-                                <div className="flex items-center justify-between">
-                                    <div>
-                                        <p className="text-sm text-gray-700">
-                                            Showing <span className="font-medium">{events.from}</span> to{' '}
-                                            <span className="font-medium">{events.to}</span> of{' '}
-                                            <span className="font-medium">{events.total}</span> results
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px">
-                                            {events.links.map((link, index) => (
-                                                <Link
-                                                    key={index}
-                                                    href={link.url || '#'}
-                                                    className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium ${
-                                                        link.active
-                                                            ? 'z-10 bg-blue-50 border-blue-500 text-blue-600'
-                                                            : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
-                                                    } ${!link.url && 'cursor-not-allowed opacity-50'}`}
-                                                    dangerouslySetInnerHTML={{ __html: link.label }}
-                                                />
-                                            ))}
-                                        </nav>
-                                    </div>
-                                </div>
-                            </div>
-                        )}
+                        <Pagination links={events.links} meta={events.meta} />
                     </>
                 ) : (
                     <div className="text-center py-12">

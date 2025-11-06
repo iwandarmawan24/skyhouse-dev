@@ -15,7 +15,7 @@ class HeroBannerController extends Controller
      */
     public function index()
     {
-        $banners = HeroBanner::ordered()->get();
+        $banners = HeroBanner::ordered()->paginate(15);
 
         return Inertia::render('Admin/HeroBanners/Index', [
             'banners' => $banners,

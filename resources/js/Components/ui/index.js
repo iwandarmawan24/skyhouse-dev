@@ -7,3 +7,4 @@ export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
 export { Badge, badgeVariants } from './Badge';
 export { Alert, AlertTitle, AlertDescription } from './Alert';
 export { FormField, FormInput, FormTextarea, FormSelect } from './FormField';
+export { Pagination } from './Pagination';

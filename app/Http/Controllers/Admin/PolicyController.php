@@ -15,7 +15,7 @@ class PolicyController extends Controller
      */
     public function index()
     {
-        $policies = Policy::orderBy('type')->get();
+        $policies = Policy::orderBy('type')->paginate(15);
 
         return Inertia::render('Admin/Policies/Index', [
             'policies' => $policies,
