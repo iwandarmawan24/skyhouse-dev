@@ -442,6 +442,56 @@ git pull origin master
 docker compose -f docker-compose.prod.yml build --no-cache
 ```
 
+### Port 80 already in use
+
+**Error:**
+```
+Bind for 0.0.0.0:80 failed: port is already allocated
+```
+
+**Cause:** Port 80 is already being used by another service (usually Apache or Nginx).
+
+**Solution 1 (Recommended): Stop conflicting service**
+```bash
+# Check what's using port 80
+sudo lsof -i :80
+# or
+sudo netstat -tulpn | grep :80
+
+# If Apache is running
+sudo systemctl stop apache2
+sudo systemctl disable apache2
+
+# If Nginx is running
+sudo systemctl stop nginx
+sudo systemctl disable nginx
+
+# Verify port is free
+sudo lsof -i :80  # Should return nothing
+
+# Now start containers
+bash scripts/first-deploy.sh
+```
+
+**Solution 2: Use different port (temporary)**
+
+Edit `docker-compose.prod.yml` and change nginx ports:
+```yaml
+nginx:
+  ports:
+    - "8080:80"  # Changed from 80:80
+    - "443:443"
+```
+
+Then access application at `http://your-vps-ip:8080`
+
+**Solution 3: Remove conflicting package**
+```bash
+# If you don't need the existing web server
+sudo apt remove apache2  # or nginx
+sudo apt autoremove
+```
+
 ## 📞 Support
 
 Jika ada masalah, check:

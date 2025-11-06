@@ -421,14 +421,28 @@ sudo usermod -aG docker $USER
 exit
 ```
 
-### Port already in use
+### Port already in use (80 or 443)
+
+**Common during first deployment!** VPS sering sudah punya Apache/Nginx terinstall.
 
 ```bash
 # Check what's using port 80
 sudo lsof -i :80
 
 # Stop the service
-sudo systemctl stop apache2  # or nginx, etc
+sudo systemctl stop apache2
+sudo systemctl disable apache2  # Prevent auto-start
+
+# Or if Nginx
+sudo systemctl stop nginx
+sudo systemctl disable nginx
+
+# Verify port is free
+sudo lsof -i :80  # Should return nothing
+
+# Optional: Remove completely if not needed
+sudo apt remove apache2  # or nginx
+sudo apt autoremove
 ```
 
 ### Out of memory
