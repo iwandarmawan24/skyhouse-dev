@@ -1,14 +1,14 @@
 import { forwardRef } from 'react';
 import { cn } from '@/lib/utils';
 
-const Label = forwardRef(({ className, required, ...props }, ref) => {
+const Label = forwardRef(({ className, required, children, ...props }, ref) => {
     return (
         <label
             ref={ref}
-            className={cn('block text-sm font-medium text-gray-700 mb-2', className)}
+            className={cn('text-sm font-medium text-gray-900 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70', className)}
             {...props}
         >
-            {props.children}
+            {children}
             {required && <span className="text-red-500 ml-1">*</span>}
         </label>
     );

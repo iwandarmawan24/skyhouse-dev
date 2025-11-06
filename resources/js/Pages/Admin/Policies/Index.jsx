@@ -2,11 +2,19 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { Plus, FileText, Clock } from 'lucide-react';
-import { Button } from '@/Components/ui/Button';
-import { Card } from '@/Components/ui/Card';
-import { Badge } from '@/Components/ui/Badge';
-import { Alert } from '@/Components/ui/Alert';
-import { Pagination } from '@/Components/ui/Pagination';
+import {
+    Button,
+    Card,
+    Badge,
+    Alert,
+    Pagination,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter
+} from '@/Components/ui';
 
 export default function Index({ policies }) {
     const { flash } = usePage().props;
@@ -126,25 +134,25 @@ export default function Index({ policies }) {
                 )}
             </Card>
 
-            {/* Delete Confirmation Modal */}
-            {showDeleteConfirm && (
-                <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-                    <Card className="max-w-sm w-full mx-4 p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Policy</h3>
-                        <p className="text-gray-600 mb-6">
+            {/* Delete Confirmation Dialog */}
+            <Dialog open={!!showDeleteConfirm} onOpenChange={() => setShowDeleteConfirm(null)}>
+                <DialogContent onClose={() => setShowDeleteConfirm(null)}>
+                    <DialogHeader>
+                        <DialogTitle>Delete Policy</DialogTitle>
+                        <DialogDescription>
                             Are you sure you want to delete this policy? This action cannot be undone.
-                        </p>
-                        <div className="flex justify-end gap-3">
-                            <Button variant="secondary" onClick={() => setShowDeleteConfirm(null)}>
-                                Cancel
-                            </Button>
-                            <Button variant="destructive" onClick={() => handleDelete(showDeleteConfirm)}>
-                                Delete
-                            </Button>
-                        </div>
-                    </Card>
-                </div>
-            )}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="secondary" onClick={() => setShowDeleteConfirm(null)}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={() => handleDelete(showDeleteConfirm)}>
+                            Delete
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </AdminLayout>
     );
 }

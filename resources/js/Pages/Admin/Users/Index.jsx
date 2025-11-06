@@ -2,10 +2,26 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { Plus, Search, User } from 'lucide-react';
-import { Button } from '@/Components/ui/Button';
-import { Card } from '@/Components/ui/Card';
-import { Alert } from '@/Components/ui/Alert';
-import { Pagination } from '@/Components/ui/Pagination';
+import {
+    Button,
+    Card,
+    Alert,
+    Pagination,
+    Table,
+    TableHeader,
+    TableBody,
+    TableHead,
+    TableRow,
+    TableCell,
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+    Badge,
+    Input
+} from '@/Components/ui';
 
 export default function Index({ users, filters }) {
     const { flash, auth } = usePage().props;
@@ -66,13 +82,13 @@ export default function Index({ users, filters }) {
             <Card className="mb-6 p-4">
                 <form onSubmit={handleSearch} className="flex gap-4">
                     <div className="flex-1 relative">
-                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-                        <input
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
+                        <Input
                             type="text"
                             placeholder="Search by name or email..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
-                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="pl-10"
                         />
                     </div>
                     <Button type="submit">Search</Button>
@@ -88,82 +104,62 @@ export default function Index({ users, filters }) {
             <Card>
                 {users.data.length > 0 ? (
                     <>
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            User
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Email
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Created At
-                                        </th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {users.data.map((user) => (
-                                        <tr key={user.id} className="hover:bg-gray-50">
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="flex items-center">
-                                                    <div className="flex-shrink-0 h-10 w-10">
-                                                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold">
-                                                            {user.name.charAt(0).toUpperCase()}
-                                                        </div>
-                                                    </div>
-                                                    <div className="ml-4">
-                                                        <div className="text-sm font-medium text-gray-900 flex items-center gap-2">
-                                                            {user.name}
-                                                            {user.id === auth.user.id && (
-                                                                <span className="px-2 py-0.5 text-xs bg-blue-100 text-blue-800 rounded-full">
-                                                                    You
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    </div>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>User</TableHead>
+                                    <TableHead>Email</TableHead>
+                                    <TableHead>Created At</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {users.data.map((user) => (
+                                    <TableRow key={user.id}>
+                                        <TableCell>
+                                            <div className="flex items-center gap-3">
+                                                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shrink-0">
+                                                    {user.name.charAt(0).toUpperCase()}
                                                 </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-900">{user.email}</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-500">
-                                                    {new Date(user.created_at).toLocaleDateString('id-ID', {
-                                                        year: 'numeric',
-                                                        month: 'long',
-                                                        day: 'numeric'
-                                                    })}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <Link href={`/admin/users/${user.id}/edit`}>
-                                                        <Button variant="ghost" size="sm">
-                                                            Edit
-                                                        </Button>
-                                                    </Link>
-                                                    {user.id !== auth.user.id && (
-                                                        <Button
-                                                            variant="ghost"
-                                                            size="sm"
-                                                            onClick={() => setShowDeleteConfirm(user.id)}
-                                                            className="text-red-600 hover:text-red-900"
-                                                        >
-                                                            Delete
-                                                        </Button>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="font-medium text-gray-900">{user.name}</span>
+                                                    {user.id === auth.user.id && (
+                                                        <Badge variant="default">You</Badge>
                                                     )}
                                                 </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="text-gray-900">{user.email}</TableCell>
+                                        <TableCell className="text-gray-500">
+                                            {new Date(user.created_at).toLocaleDateString('id-ID', {
+                                                year: 'numeric',
+                                                month: 'long',
+                                                day: 'numeric'
+                                            })}
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <Link href={`/admin/users/${user.id}/edit`}>
+                                                    <Button variant="ghost" size="sm">
+                                                        Edit
+                                                    </Button>
+                                                </Link>
+                                                {user.id !== auth.user.id && (
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="sm"
+                                                        onClick={() => setShowDeleteConfirm(user.id)}
+                                                        className="text-red-600 hover:text-red-900 hover:bg-red-50"
+                                                    >
+                                                        Delete
+                                                    </Button>
+                                                )}
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
 
                         {/* Pagination */}
                         <Pagination data={users} />
@@ -189,25 +185,25 @@ export default function Index({ users, filters }) {
                 )}
             </Card>
 
-            {/* Delete Confirmation Modal */}
-            {showDeleteConfirm && (
-                <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-                    <Card className="max-w-sm w-full mx-4 p-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete User</h3>
-                        <p className="text-gray-600 mb-6">
+            {/* Delete Confirmation Dialog */}
+            <Dialog open={!!showDeleteConfirm} onOpenChange={() => setShowDeleteConfirm(null)}>
+                <DialogContent onClose={() => setShowDeleteConfirm(null)}>
+                    <DialogHeader>
+                        <DialogTitle>Delete User</DialogTitle>
+                        <DialogDescription>
                             Are you sure you want to delete this user? This action cannot be undone.
-                        </p>
-                        <div className="flex justify-end gap-3">
-                            <Button variant="secondary" onClick={() => setShowDeleteConfirm(null)}>
-                                Cancel
-                            </Button>
-                            <Button variant="destructive" onClick={() => handleDelete(showDeleteConfirm)}>
-                                Delete
-                            </Button>
-                        </div>
-                    </Card>
-                </div>
-            )}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button variant="secondary" onClick={() => setShowDeleteConfirm(null)}>
+                            Cancel
+                        </Button>
+                        <Button variant="destructive" onClick={() => handleDelete(showDeleteConfirm)}>
+                            Delete
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </AdminLayout>
     );
 }

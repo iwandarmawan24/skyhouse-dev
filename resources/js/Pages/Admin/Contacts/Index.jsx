@@ -1,7 +1,30 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import { Pagination } from '@/Components/ui';
+import { Button } from '@/Components/ui/Button';
+import { Card } from '@/Components/ui/Card';
+import { Alert } from '@/Components/ui/Alert';
+import { Badge } from '@/Components/ui/Badge';
+import { Input } from '@/Components/ui/Input';
+import { Select } from '@/Components/ui/Select';
+import { Pagination } from '@/Components/ui/Pagination';
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from '@/Components/ui/Table';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/Components/ui/Dialog';
+import { Search, Mail, Eye, Trash2 } from 'lucide-react';
 
 export default function Index({ contacts, filters }) {
     const { flash } = usePage().props;
@@ -54,185 +77,171 @@ export default function Index({ contacts, filters }) {
 
             {/* Success Message */}
             {flash.success && (
-                <div className="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
+                <Alert variant="success" className="mb-6">
                     {flash.success}
-                </div>
+                </Alert>
             )}
 
             {/* Filters */}
-            <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
+            <Card className="p-4 mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {/* Search */}
-                    <div>
-                        <input
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
+                        <Input
                             type="text"
                             placeholder="Search by name, email, or phone..."
                             value={localFilters.search}
                             onChange={(e) => handleFilterChange('search', e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                            className="pl-9"
                         />
                     </div>
 
                     {/* Status Filter */}
                     <div>
-                        <select
+                        <Select
                             value={localFilters.status}
                             onChange={(e) => handleFilterChange('status', e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                             <option value="">All Status</option>
                             <option value="unread">Unread</option>
                             <option value="read">Read</option>
-                        </select>
+                        </Select>
                     </div>
 
                     {/* Clear Filters */}
                     <div>
-                        <button
+                        <Button
                             onClick={clearFilters}
-                            className="w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition"
+                            variant="secondary"
+                            className="w-full"
                         >
                             Clear Filters
-                        </button>
+                        </Button>
                     </div>
                 </div>
-            </div>
+            </Card>
 
             {/* Contacts List */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <Card className="overflow-hidden">
                 {contacts.data.length > 0 ? (
                     <>
-                        <div className="overflow-x-auto">
-                            <table className="min-w-full divide-y divide-gray-200">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Contact Info
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Product
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Message
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Date
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Status
-                                        </th>
-                                        <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                            Actions
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {contacts.data.map((contact) => (
-                                        <tr
-                                            key={contact.id}
-                                            className={`hover:bg-gray-50 ${!contact.is_read && 'bg-blue-50'}`}
-                                        >
-                                            <td className="px-6 py-4">
-                                                <div>
-                                                    <div className="text-sm font-medium text-gray-900 flex items-center">
-                                                        {contact.name}
-                                                        {!contact.is_read && (
-                                                            <span className="ml-2 w-2 h-2 bg-blue-600 rounded-full"></span>
-                                                        )}
-                                                    </div>
-                                                    <div className="text-sm text-gray-500">{contact.email}</div>
-                                                    {contact.phone && (
-                                                        <div className="text-sm text-gray-500">{contact.phone}</div>
+                        <Table>
+                            <TableHeader>
+                                <TableRow>
+                                    <TableHead>Contact Info</TableHead>
+                                    <TableHead>Product</TableHead>
+                                    <TableHead>Message</TableHead>
+                                    <TableHead>Date</TableHead>
+                                    <TableHead>Status</TableHead>
+                                    <TableHead className="text-right">Actions</TableHead>
+                                </TableRow>
+                            </TableHeader>
+                            <TableBody>
+                                {contacts.data.map((contact) => (
+                                    <TableRow
+                                        key={contact.id}
+                                        className={!contact.is_read ? 'bg-blue-50/50' : ''}
+                                    >
+                                        <TableCell>
+                                            <div>
+                                                <div className="text-sm font-medium text-gray-900 flex items-center">
+                                                    {contact.name}
+                                                    {!contact.is_read && (
+                                                        <span className="ml-2 w-2 h-2 bg-blue-600 rounded-full"></span>
                                                     )}
                                                 </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                {contact.product ? (
-                                                    <div className="text-sm text-gray-900">{contact.product.name}</div>
-                                                ) : (
-                                                    <span className="text-sm text-gray-400">General Inquiry</span>
+                                                <div className="text-sm text-gray-500">{contact.email}</div>
+                                                {contact.phone && (
+                                                    <div className="text-sm text-gray-500">{contact.phone}</div>
                                                 )}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <div className="text-sm text-gray-900 line-clamp-2 max-w-md">
-                                                    {contact.message}
-                                                </div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <div className="text-sm text-gray-900">{formatDate(contact.created_at)}</div>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap">
-                                                <span
-                                                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                                                        contact.is_read
-                                                            ? 'bg-gray-100 text-gray-800'
-                                                            : 'bg-blue-100 text-blue-800'
-                                                    }`}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="whitespace-nowrap">
+                                            {contact.product ? (
+                                                <div className="text-sm text-gray-900">{contact.product.name}</div>
+                                            ) : (
+                                                <span className="text-sm text-gray-400">General Inquiry</span>
+                                            )}
+                                        </TableCell>
+                                        <TableCell>
+                                            <div className="text-sm text-gray-900 line-clamp-2 max-w-md">
+                                                {contact.message}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="whitespace-nowrap">
+                                            <div className="text-sm text-gray-900">{formatDate(contact.created_at)}</div>
+                                        </TableCell>
+                                        <TableCell className="whitespace-nowrap">
+                                            <Badge variant={contact.is_read ? 'secondary' : 'default'}>
+                                                {contact.is_read ? 'Read' : 'Unread'}
+                                            </Badge>
+                                        </TableCell>
+                                        <TableCell className="text-right">
+                                            <div className="flex items-center justify-end gap-2">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    asChild
                                                 >
-                                                    {contact.is_read ? 'Read' : 'Unread'}
-                                                </span>
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <div className="flex items-center justify-end gap-2">
-                                                    <Link
-                                                        href={`/admin/contacts/${contact.id}`}
-                                                        className="text-blue-600 hover:text-blue-900"
-                                                    >
+                                                    <Link href={`/admin/contacts/${contact.id}`}>
+                                                        <Eye className="h-4 w-4 mr-1" />
                                                         View
                                                     </Link>
-                                                    <button
-                                                        onClick={() => setShowDeleteConfirm(contact.id)}
-                                                        className="text-red-600 hover:text-red-900"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => setShowDeleteConfirm(contact.id)}
+                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                >
+                                                    <Trash2 className="h-4 w-4 mr-1" />
+                                                    Delete
+                                                </Button>
+                                            </div>
+                                        </TableCell>
+                                    </TableRow>
+                                ))}
+                            </TableBody>
+                        </Table>
 
                         {/* Pagination */}
                         <Pagination data={contacts} />
                     </>
                 ) : (
                     <div className="text-center py-12">
-                        <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                        </svg>
+                        <Mail className="mx-auto h-12 w-12 text-gray-400" />
                         <h3 className="mt-2 text-sm font-medium text-gray-900">No contact leads</h3>
                         <p className="mt-1 text-sm text-gray-500">Contact requests will appear here</p>
                     </div>
                 )}
-            </div>
+            </Card>
 
             {/* Delete Confirmation Modal */}
-            {showDeleteConfirm && (
-                <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
-                    <div className="bg-white rounded-lg p-6 max-w-sm w-full mx-4">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-2">Delete Contact</h3>
-                        <p className="text-gray-600 mb-6">
+            <Dialog open={!!showDeleteConfirm} onOpenChange={() => setShowDeleteConfirm(null)}>
+                <DialogContent onClose={() => setShowDeleteConfirm(null)}>
+                    <DialogHeader>
+                        <DialogTitle>Delete Contact</DialogTitle>
+                        <DialogDescription>
                             Are you sure you want to delete this contact? This action cannot be undone.
-                        </p>
-                        <div className="flex justify-end gap-3">
-                            <button
-                                onClick={() => setShowDeleteConfirm(null)}
-                                className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={() => handleDelete(showDeleteConfirm)}
-                                className="px-4 py-2 text-white bg-red-600 hover:bg-red-700 rounded-lg transition"
-                            >
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            onClick={() => setShowDeleteConfirm(null)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={() => handleDelete(showDeleteConfirm)}
+                        >
+                            Delete
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </AdminLayout>
     );
 }
