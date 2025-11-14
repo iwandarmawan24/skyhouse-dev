@@ -15,19 +15,30 @@ class Article extends Model
     protected $fillable = [
         'article_category_uid',
         'user_uid',
+        'author_uid',
+        'editor_uid',
         'title',
+        'subtitle',
         'slug',
         'excerpt',
         'content',
         'featured_image',
+        'video_url',
         'tags',
+        'meta_title',
         'meta_description',
+        'meta_keywords',
+        'focus_keywords',
+        'seo_score',
         'type',
         'external_url',
         'views',
         'is_featured',
         'is_published',
         'published_at',
+        'status',
+        'scheduled_at',
+        'last_edited_at',
     ];
 
     protected $casts = [
@@ -35,6 +46,8 @@ class Article extends Model
         'is_featured' => 'boolean',
         'is_published' => 'boolean',
         'published_at' => 'datetime',
+        'scheduled_at' => 'datetime',
+        'last_edited_at' => 'datetime',
     ];
 
     protected static function boot()
@@ -63,6 +76,22 @@ class Article extends Model
      * Get the author
      */
     public function author(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'author_uid', 'uid');
+    }
+
+    /**
+     * Get the editor
+     */
+    public function editor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'editor_uid', 'uid');
+    }
+
+    /**
+     * Get the user (creator)
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_uid', 'uid');
     }

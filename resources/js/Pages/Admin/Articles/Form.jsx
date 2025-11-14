@@ -1,22 +1,35 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, useForm } from '@inertiajs/react';
-import { useState } from 'react';
-import { ArrowLeft, Upload } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowLeft, Upload, Calendar, AlertCircle } from 'lucide-react';
 import { Button } from '@/Components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/Components/ui/Card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
 import { FormInput, FormSelect, FormTextarea } from '@/Components/ui/FormField';
 import { Label } from '@/Components/ui/Label';
+import { Alert } from '@/Components/ui/Alert';
+import RichTextEditor from '@/Components/RichTextEditor';
+import SeoAnalyzer from '@/Components/SeoAnalyzer';
 
-export default function Form({ article, categories }) {
+export default function Form({ article, categories, users }) {
     const isEdit = article !== null;
     const { data, setData, post, processing, errors } = useForm({
         title: article?.title || '',
-        category_id: article?.article_category_id || (categories.length > 0 ? categories[0].id : ''),
+        subtitle: article?.subtitle || '',
+        article_category_uid: article?.article_category_uid || (categories.length > 0 ? categories[0].uid : ''),
+        slug: article?.slug || '',
         excerpt: article?.excerpt || '',
         content: article?.content || '',
         featured_image: null,
+        video_url: article?.video_url || '',
+        tags: article?.tags || '',
+        author_uid: article?.author_uid || '',
+        editor_uid: article?.editor_uid || '',
+        meta_title: article?.meta_title || '',
         meta_description: article?.meta_description || '',
-        is_published: article?.is_published ?? false,
+        meta_keywords: article?.meta_keywords || '',
+        focus_keywords: article?.focus_keywords || '',
+        status: article?.status || 'draft',
+        scheduled_at: article?.scheduled_at ? article.scheduled_at.split('T')[0] + 'T' + article.scheduled_at.split('T')[1].substring(0, 5) : '',
         _method: isEdit ? 'PUT' : 'POST',
     });
 
@@ -27,6 +40,21 @@ export default function Form({ article, categories }) {
                 : `/storage/${article.featured_image}`
             : null
     );
+
+    // Auto-generate slug from title
+    useEffect(() => {
+        if (!isEdit && data.title && !data.slug) {
+            const slug = data.title
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/^-|-$/g, '');
+            setData('slug', slug);
+        }
+    }, [data.title]);
+
+    // Character counters
+    const titleLength = data.title.length;
+    const metaDescLength = data.meta_description.length;
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -59,181 +87,340 @@ export default function Form({ article, categories }) {
                     </h1>
                 </div>
                 <p className="text-gray-600 ml-10">
-                    {isEdit ? 'Update the article details below' : 'Fill in the form to create a new article'}
+                    {isEdit ? 'Update article information' : 'Create a new article with SEO optimization'}
                 </p>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Basic Information */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Basic Information</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-6">
-                        <FormInput
-                            label="Title"
-                            name="title"
-                            required
-                            value={data.title}
-                            onChange={(e) => setData('title', e.target.value)}
-                            error={errors.title}
-                            placeholder="Enter article title"
-                        />
-
-                        <FormSelect
-                            label="Category"
-                            name="category_id"
-                            required
-                            value={data.category_id}
-                            onChange={(e) => setData('category_id', e.target.value)}
-                            error={errors.category_id}
-                        >
-                            {categories.map((category) => (
-                                <option key={category.id} value={category.id}>
-                                    {category.name}
-                                </option>
-                            ))}
-                        </FormSelect>
-
-                        <FormTextarea
-                            label="Excerpt"
-                            name="excerpt"
-                            value={data.excerpt}
-                            onChange={(e) => setData('excerpt', e.target.value)}
-                            error={errors.excerpt}
-                            rows={3}
-                            placeholder="Short description of the article"
-                        />
-                    </CardContent>
-                </Card>
-
-                {/* Content */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Content</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <FormTextarea
-                            label="Article Content"
-                            name="content"
-                            required
-                            value={data.content}
-                            onChange={(e) => setData('content', e.target.value)}
-                            error={errors.content}
-                            rows={15}
-                            className="font-mono text-sm"
-                            placeholder="Write your article content here... You can use HTML tags for formatting."
-                        />
-                        <p className="mt-2 text-sm text-gray-500">
-                            💡 Tip: You can use basic HTML tags like &lt;p&gt;, &lt;h2&gt;, &lt;strong&gt;, &lt;em&gt;, &lt;ul&gt;, &lt;ol&gt;, &lt;li&gt;, etc.
-                        </p>
-                    </CardContent>
-                </Card>
-
-                {/* Featured Image */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Featured Image</CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {imagePreview && (
-                            <div className="relative w-full h-64 rounded-lg overflow-hidden bg-gray-100">
-                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                            </div>
-                        )}
-                        <div className="flex items-center justify-center w-full">
-                            <label
-                                htmlFor="featured_image"
-                                className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-                            >
-                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <Upload className="w-8 h-8 mb-4 text-gray-500" />
-                                    <p className="mb-2 text-sm text-gray-500">
-                                        <span className="font-semibold">Click to upload</span> or drag and drop
-                                    </p>
-                                    <p className="text-xs text-gray-500">PNG, JPG, JPEG or WEBP (MAX. 2MB)</p>
+            <form onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    {/* Main Content - Left & Center Column */}
+                    <div className="lg:col-span-2 space-y-6">
+                        {/* Basic Information */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Article Information</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                {/* Title with character counter */}
+                                <div>
+                                    <FormInput
+                                        label="Article Title"
+                                        name="title"
+                                        required
+                                        value={data.title}
+                                        onChange={(e) => setData('title', e.target.value)}
+                                        error={errors.title}
+                                        placeholder="Enter article title"
+                                    />
+                                    <div className="flex items-center justify-between mt-1 text-xs">
+                                        <span className={titleLength >= 55 && titleLength <= 60 ? 'text-green-600' : 'text-gray-500'}>
+                                            {titleLength} characters
+                                        </span>
+                                        <span className="text-gray-500">
+                                            Recommended: 55-60 characters
+                                        </span>
+                                    </div>
                                 </div>
-                                <input
-                                    id="featured_image"
-                                    type="file"
-                                    className="hidden"
-                                    accept="image/jpeg,image/png,image/jpg,image/webp"
-                                    onChange={handleImageChange}
+
+                                <FormInput
+                                    label="Subtitle"
+                                    name="subtitle"
+                                    value={data.subtitle}
+                                    onChange={(e) => setData('subtitle', e.target.value)}
+                                    error={errors.subtitle}
+                                    placeholder="Enter subtitle (optional)"
                                 />
-                            </label>
-                        </div>
-                        {errors.featured_image && (
-                            <p className="text-sm text-red-600">{errors.featured_image}</p>
-                        )}
-                        {isEdit && (
-                            <p className="text-sm text-gray-500">Leave empty to keep the current image</p>
-                        )}
-                    </CardContent>
-                </Card>
 
-                {/* SEO */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>SEO Settings</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <FormTextarea
-                            label="Meta Description"
-                            name="meta_description"
-                            value={data.meta_description}
-                            onChange={(e) => setData('meta_description', e.target.value)}
-                            rows={3}
-                            maxLength={160}
-                            placeholder="Brief description for search engines (max 160 characters)"
-                        />
-                        <p className="text-sm text-gray-500 -mt-4">
-                            {data.meta_description.length}/160 characters
-                        </p>
-                    </CardContent>
-                </Card>
+                                <FormSelect
+                                    label="Category"
+                                    name="article_category_uid"
+                                    required
+                                    value={data.article_category_uid}
+                                    onChange={(e) => setData('article_category_uid', e.target.value)}
+                                    error={errors.article_category_uid}
+                                >
+                                    {categories.map(cat => (
+                                        <option key={cat.uid} value={cat.uid}>{cat.name}</option>
+                                    ))}
+                                </FormSelect>
 
-                {/* Publish Status */}
-                <Card>
-                    <CardHeader>
-                        <CardTitle>Publish Status</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="flex items-center">
-                            <label className="relative inline-flex items-center cursor-pointer">
-                                <input
-                                    type="checkbox"
-                                    checked={data.is_published}
-                                    onChange={(e) => setData('is_published', e.target.checked)}
-                                    className="sr-only peer"
+                                <FormTextarea
+                                    label="Excerpt"
+                                    name="excerpt"
+                                    value={data.excerpt}
+                                    onChange={(e) => setData('excerpt', e.target.value)}
+                                    error={errors.excerpt}
+                                    placeholder="Brief summary of the article"
+                                    rows={3}
                                 />
-                                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
-                                <span className="ms-3 text-sm font-medium text-gray-700">
-                                    {data.is_published ? 'Published' : 'Draft'}
-                                </span>
-                            </label>
-                        </div>
-                        <p className="mt-2 text-sm text-gray-500">
-                            {data.is_published
-                                ? 'This article will be visible to the public'
-                                : 'This article will be saved as a draft'}
-                        </p>
-                    </CardContent>
-                </Card>
+                            </CardContent>
+                        </Card>
 
-                {/* Submit Buttons */}
-                <Card>
-                    <CardContent className="flex items-center justify-end gap-4 pt-6">
-                        <Link href="/admin/articles">
-                            <Button type="button" variant="secondary">
-                                Cancel
-                            </Button>
-                        </Link>
-                        <Button type="submit" disabled={processing}>
-                            {processing ? 'Saving...' : isEdit ? 'Update Article' : 'Create Article'}
-                        </Button>
-                    </CardContent>
-                </Card>
+                        {/* Content Editor */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Article Content</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                                <Label required>Content</Label>
+                                <div className="mt-2">
+                                    <RichTextEditor
+                                        value={data.content}
+                                        onChange={(content) => setData('content', content)}
+                                        placeholder="Start writing your article..."
+                                    />
+                                </div>
+                                {errors.content && (
+                                    <p className="text-sm text-red-600 mt-2">{errors.content}</p>
+                                )}
+                            </CardContent>
+                        </Card>
+
+                        {/* Media */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Media</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                {/* Featured Image */}
+                                <div>
+                                    <Label>Featured Image</Label>
+                                    <div className="mt-2">
+                                        {imagePreview && (
+                                            <div className="mb-4">
+                                                <img
+                                                    src={imagePreview}
+                                                    alt="Preview"
+                                                    className="w-full h-48 object-cover rounded-lg"
+                                                />
+                                            </div>
+                                        )}
+                                        <input
+                                            type="file"
+                                            id="featured_image"
+                                            accept="image/*"
+                                            onChange={handleImageChange}
+                                            className="hidden"
+                                        />
+                                        <label
+                                            htmlFor="featured_image"
+                                            className="inline-flex items-center justify-center gap-2 w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg cursor-pointer transition-colors font-medium text-sm"
+                                        >
+                                            <Upload className="w-4 h-4" />
+                                            {imagePreview ? 'Change Image' : 'Upload Image'}
+                                        </label>
+                                        {errors.featured_image && (
+                                            <p className="text-sm text-red-600 mt-2">{errors.featured_image}</p>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Video URL */}
+                                <FormInput
+                                    label="Video URL"
+                                    name="video_url"
+                                    type="url"
+                                    value={data.video_url}
+                                    onChange={(e) => setData('video_url', e.target.value)}
+                                    error={errors.video_url}
+                                    placeholder="https://youtube.com/watch?v=..."
+                                    helperText="YouTube or video URL"
+                                />
+                            </CardContent>
+                        </Card>
+
+                        {/* Tags & Authors */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Additional Information</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <FormInput
+                                    label="Tags"
+                                    name="tags"
+                                    value={data.tags}
+                                    onChange={(e) => setData('tags', e.target.value)}
+                                    error={errors.tags}
+                                    placeholder="tag1, tag2, tag3"
+                                    helperText="Separate tags with commas"
+                                />
+
+                                <FormSelect
+                                    label="Author"
+                                    name="author_uid"
+                                    value={data.author_uid}
+                                    onChange={(e) => setData('author_uid', e.target.value)}
+                                    error={errors.author_uid}
+                                >
+                                    <option value="">Select Author (Optional)</option>
+                                    {users.map(user => (
+                                        <option key={user.uid} value={user.uid}>{user.full_name}</option>
+                                    ))}
+                                </FormSelect>
+
+                                <FormSelect
+                                    label="Editor"
+                                    name="editor_uid"
+                                    value={data.editor_uid}
+                                    onChange={(e) => setData('editor_uid', e.target.value)}
+                                    error={errors.editor_uid}
+                                >
+                                    <option value="">Select Editor (Optional)</option>
+                                    {users.map(user => (
+                                        <option key={user.uid} value={user.uid}>{user.full_name}</option>
+                                    ))}
+                                </FormSelect>
+                            </CardContent>
+                        </Card>
+
+                        {/* SEO Configuration */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>SEO Configuration</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <div>
+                                    <FormInput
+                                        label="URL Slug"
+                                        name="slug"
+                                        value={data.slug}
+                                        onChange={(e) => setData('slug', e.target.value)}
+                                        error={errors.slug}
+                                        placeholder="article-url-slug"
+                                        helperText="Auto-generated from title, but you can customize it"
+                                    />
+                                </div>
+
+                                <FormInput
+                                    label="SEO Meta Title"
+                                    name="meta_title"
+                                    value={data.meta_title}
+                                    onChange={(e) => setData('meta_title', e.target.value)}
+                                    error={errors.meta_title}
+                                    placeholder="Custom title for search engines"
+                                />
+
+                                <div>
+                                    <FormTextarea
+                                        label="SEO Meta Description"
+                                        name="meta_description"
+                                        value={data.meta_description}
+                                        onChange={(e) => setData('meta_description', e.target.value)}
+                                        error={errors.meta_description}
+                                        placeholder="Description for search engines"
+                                        rows={3}
+                                    />
+                                    <div className="flex items-center justify-between mt-1 text-xs">
+                                        <span className={metaDescLength >= 110 && metaDescLength <= 155 ? 'text-green-600' : 'text-gray-500'}>
+                                            {metaDescLength} characters
+                                        </span>
+                                        <span className="text-gray-500">
+                                            Recommended: 110-155 characters
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <FormInput
+                                    label="SEO Meta Keywords"
+                                    name="meta_keywords"
+                                    value={data.meta_keywords}
+                                    onChange={(e) => setData('meta_keywords', e.target.value)}
+                                    error={errors.meta_keywords}
+                                    placeholder="keyword1, keyword2, keyword3"
+                                />
+
+                                <FormInput
+                                    label="Focus Keyword"
+                                    name="focus_keywords"
+                                    value={data.focus_keywords}
+                                    onChange={(e) => setData('focus_keywords', e.target.value)}
+                                    error={errors.focus_keywords}
+                                    placeholder="Main keyword for SEO analysis"
+                                    helperText="Primary keyword you want to rank for"
+                                />
+                            </CardContent>
+                        </Card>
+
+                        {/* Publishing Options */}
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Publishing Options</CardTitle>
+                            </CardHeader>
+                            <CardContent className="space-y-6">
+                                <FormSelect
+                                    label="Status"
+                                    name="status"
+                                    required
+                                    value={data.status}
+                                    onChange={(e) => setData('status', e.target.value)}
+                                    error={errors.status}
+                                >
+                                    <option value="draft">Draft</option>
+                                    <option value="published">Publish Now</option>
+                                    <option value="scheduled">Schedule</option>
+                                </FormSelect>
+
+                                {data.status === 'scheduled' && (
+                                    <div>
+                                        <Label required>Scheduled Date & Time</Label>
+                                        <div className="mt-2">
+                                            <input
+                                                type="datetime-local"
+                                                value={data.scheduled_at}
+                                                onChange={(e) => setData('scheduled_at', e.target.value)}
+                                                className="flex h-10 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm"
+                                            />
+                                        </div>
+                                        {errors.scheduled_at && (
+                                            <p className="text-sm text-red-600 mt-2">{errors.scheduled_at}</p>
+                                        )}
+                                    </div>
+                                )}
+
+                                {data.status === 'published' && (
+                                    <Alert variant="default" className="bg-green-50 border-green-200">
+                                        <AlertCircle className="h-4 w-4 text-green-600" />
+                                        <p className="text-sm text-green-800">
+                                            This article will be published immediately upon saving.
+                                        </p>
+                                    </Alert>
+                                )}
+                            </CardContent>
+                        </Card>
+
+                        {/* Submit Buttons */}
+                        <Card>
+                            <CardContent className="flex items-center justify-end gap-4 pt-6">
+                                <Link href="/admin/articles">
+                                    <Button type="button" variant="secondary">
+                                        Cancel
+                                    </Button>
+                                </Link>
+                                <Button type="submit" disabled={processing}>
+                                    {processing ? 'Saving...' : isEdit ? 'Update Article' : 'Create Article'}
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    </div>
+
+                    {/* SEO Analyzer Sidebar - Right Column */}
+                    <div className="lg:col-span-1">
+                        <div className="sticky top-6">
+                            <SeoAnalyzer
+                                title={data.title}
+                                subtitle={data.subtitle}
+                                slug={data.slug}
+                                content={data.content}
+                                metaTitle={data.meta_title}
+                                metaDescription={data.meta_description}
+                                metaKeywords={data.meta_keywords}
+                                focusKeyword={data.focus_keywords}
+                                tags={data.tags}
+                            />
+                        </div>
+                    </div>
+                </div>
             </form>
         </AdminLayout>
     );

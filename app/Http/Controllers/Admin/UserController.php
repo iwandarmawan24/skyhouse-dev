@@ -18,20 +18,31 @@ class UserController extends Controller
     {
         $query = User::latest();
 
-        // Search by name or email
+        // Search by name, email, or username
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'ilike', "%{$search}%")
-                    ->orWhere('email', 'ilike', "%{$search}%");
+                $q->where('full_name', 'ilike', "%{$search}%")
+                    ->orWhere('email', 'ilike', "%{$search}%")
+                    ->orWhere('username', 'ilike', "%{$search}%");
             });
+        }
+
+        // Filter by role
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        // Filter by status
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
         }
 
         $users = $query->paginate(15)->withQueryString();
 
         return Inertia::render('Admin/Users/Index', [
             'users' => $users,
-            'filters' => $request->only(['search']),
+            'filters' => $request->only(['search', 'role', 'status']),
         ]);
     }
 
@@ -51,9 +62,12 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Password::min(8)],
+            'username' => 'required|string|max:255|unique:users|regex:/^[a-z0-9_]+$/',
+            'full_name' => 'required|string|max:255',
+            'role' => 'required|in:staff,superadmin',
+            'status' => 'required|in:active,inactive',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
@@ -80,9 +94,12 @@ class UserController extends Controller
     public function update(Request $request, User $user)
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->uid . ',uid',
             'password' => ['nullable', 'confirmed', Password::min(8)],
+            'username' => 'required|string|max:255|unique:users,username,' . $user->uid . ',uid|regex:/^[a-z0-9_]+$/',
+            'full_name' => 'required|string|max:255',
+            'role' => 'required|in:staff,superadmin',
+            'status' => 'required|in:active,inactive',
         ]);
 
         // Only update password if provided
@@ -104,7 +121,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         // Prevent deleting own account
-        if ($user->id === auth()->id()) {
+        if ($user->uid === auth()->id()) {
             return back()->with('error', 'You cannot delete your own account.');
         }
 

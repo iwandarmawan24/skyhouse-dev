@@ -1,7 +1,7 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import { Plus, Search, User } from 'lucide-react';
+import { Plus, Search, Newspaper } from 'lucide-react';
 import {
     Button,
     Card,
@@ -23,20 +23,20 @@ import {
     Input
 } from '@/Components/ui';
 
-export default function Index({ users, filters }) {
-    const { flash, auth } = usePage().props;
+export default function Index({ media, filters }) {
+    const { flash } = usePage().props;
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [search, setSearch] = useState(filters.search || '');
 
     const handleDelete = (uid) => {
-        router.delete(`/admin/users/${uid}`, {
+        router.delete(`/admin/media/${uid}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
 
     const handleSearch = (e) => {
         e.preventDefault();
-        router.get('/admin/users', { search }, {
+        router.get('/admin/media', { search }, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -44,7 +44,7 @@ export default function Index({ users, filters }) {
 
     const clearSearch = () => {
         setSearch('');
-        router.get('/admin/users', {}, {
+        router.get('/admin/media', {}, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -55,13 +55,13 @@ export default function Index({ users, filters }) {
             {/* Page Header */}
             <div className="mb-6 flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Users Management</h1>
-                    <p className="text-gray-600 mt-1">Manage admin users and their access</p>
+                    <h1 className="text-2xl font-bold text-gray-900">Media Outlets</h1>
+                    <p className="text-gray-600 mt-1">Manage media outlets and news sources</p>
                 </div>
-                <Link href="/admin/users/create">
+                <Link href="/admin/media/create">
                     <Button>
                         <Plus className="w-5 h-5 mr-2" />
-                        Add New User
+                        Add Media
                     </Button>
                 </Link>
             </div>
@@ -85,7 +85,7 @@ export default function Index({ users, filters }) {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                         <Input
                             type="text"
-                            placeholder="Search by name or email..."
+                            placeholder="Search media outlets..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="pl-10"
@@ -100,66 +100,63 @@ export default function Index({ users, filters }) {
                 </form>
             </Card>
 
-            {/* Users Table */}
+            {/* Media Table */}
             <Card>
-                {users.data.length > 0 ? (
+                {media.data.length > 0 ? (
                     <>
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>User</TableHead>
-                                    <TableHead>Username</TableHead>
-                                    <TableHead>Email</TableHead>
-                                    <TableHead>Role</TableHead>
+                                    <TableHead>Media Outlet</TableHead>
+                                    <TableHead>Highlights</TableHead>
                                     <TableHead>Status</TableHead>
                                     <TableHead className="text-right">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {users.data.map((user) => (
-                                    <TableRow key={user.uid}>
+                                {media.data.map((medium) => (
+                                    <TableRow key={medium.uid}>
                                         <TableCell>
                                             <div className="flex items-center gap-3">
-                                                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shrink-0">
-                                                    {user.full_name.charAt(0).toUpperCase()}
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-medium text-gray-900">{user.full_name}</span>
-                                                    {user.uid === auth.user.uid && (
-                                                        <Badge variant="default">You</Badge>
-                                                    )}
-                                                </div>
+                                                {medium.logo ? (
+                                                    <img
+                                                        src={medium.logo.startsWith('http') ? medium.logo : `/storage/${medium.logo}`}
+                                                        alt={medium.name}
+                                                        className="h-10 w-10 rounded object-contain bg-gray-50 border border-gray-200"
+                                                    />
+                                                ) : (
+                                                    <div className="h-10 w-10 rounded bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center text-white font-semibold shrink-0">
+                                                        {medium.name.charAt(0).toUpperCase()}
+                                                    </div>
+                                                )}
+                                                <span className="font-medium text-gray-900">{medium.name}</span>
                                             </div>
                                         </TableCell>
-                                        <TableCell className="text-gray-600">@{user.username}</TableCell>
-                                        <TableCell className="text-gray-900">{user.email}</TableCell>
                                         <TableCell>
-                                            <Badge variant={user.role === 'superadmin' ? 'default' : 'secondary'}>
-                                                {user.role === 'superadmin' ? 'Super Admin' : 'Staff'}
+                                            <Badge variant="secondary">
+                                                {medium.highlights_count} {medium.highlights_count === 1 ? 'highlight' : 'highlights'}
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
-                                            <Badge variant={user.status === 'active' ? 'success' : 'destructive'}>
-                                                {user.status === 'active' ? 'Active' : 'Inactive'}
+                                            <Badge variant={medium.is_active ? 'success' : 'destructive'}>
+                                                {medium.is_active ? 'Active' : 'Inactive'}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                <Link href={`/admin/users/${user.uid}/edit`}>
+                                                <Link href={`/admin/media/${medium.uid}/edit`}>
                                                     <Button variant="ghost" size="sm">
                                                         Edit
                                                     </Button>
                                                 </Link>
-                                                {user.uid !== auth.user.uid && (
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => setShowDeleteConfirm(user.uid)}
-                                                        className="text-red-600 hover:text-red-900 hover:bg-red-50"
-                                                    >
-                                                        Delete
-                                                    </Button>
-                                                )}
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => setShowDeleteConfirm(medium.uid)}
+                                                    className="text-red-600 hover:text-red-900 hover:bg-red-50"
+                                                >
+                                                    Delete
+                                                </Button>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -168,21 +165,21 @@ export default function Index({ users, filters }) {
                         </Table>
 
                         {/* Pagination */}
-                        <Pagination data={users} />
+                        <Pagination data={media} />
                     </>
                 ) : (
                     <div className="text-center py-12">
-                        <User className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">No users found</h3>
+                        <Newspaper className="mx-auto h-12 w-12 text-gray-400" />
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">No media outlets found</h3>
                         <p className="mt-1 text-sm text-gray-500">
-                            {search ? 'Try adjusting your search' : 'Get started by creating a new user.'}
+                            {search ? 'Try adjusting your search' : 'Get started by adding a media outlet.'}
                         </p>
                         {!search && (
                             <div className="mt-6">
-                                <Link href="/admin/users/create">
+                                <Link href="/admin/media/create">
                                     <Button>
                                         <Plus className="w-5 h-5 mr-2" />
-                                        Add New User
+                                        Add Media
                                     </Button>
                                 </Link>
                             </div>
@@ -195,9 +192,9 @@ export default function Index({ users, filters }) {
             <Dialog open={!!showDeleteConfirm} onOpenChange={() => setShowDeleteConfirm(null)}>
                 <DialogContent onClose={() => setShowDeleteConfirm(null)}>
                     <DialogHeader>
-                        <DialogTitle>Delete User</DialogTitle>
+                        <DialogTitle>Delete Media Outlet</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete this user? This action cannot be undone.
+                            Are you sure you want to delete this media outlet? This action cannot be undone. Highlights from this media will not be deleted.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>

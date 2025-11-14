@@ -22,9 +22,13 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
+        'username',
+        'full_name',
         'email',
         'password',
+        'role',
+        'status'
+        
     ];
 
     /**
@@ -38,9 +42,29 @@ class User extends Authenticatable
     ];
 
     /**
+     * Check if user is a superadmin.
+     *
+     * @return bool
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->role === 'superadmin';
+    }
+
+    /**
+     * Check if user is active.
+     *
+     * @return bool
+     */
+    public function isActive(): bool
+    {
+        return $this->status === 'active';
+    }
+
+    /**
      * Boot method
      */
-    protected static function boot()
+    protected static function boot()/*  */
     {
         parent::boot();
 

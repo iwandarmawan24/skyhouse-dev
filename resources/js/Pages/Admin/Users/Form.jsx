@@ -3,15 +3,18 @@ import { Link, useForm } from '@inertiajs/react';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from '@/Components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
-import { FormInput } from '@/Components/ui/FormField';
+import { FormInput, FormSelect } from '@/Components/ui/FormField';
 
 export default function Form({ user }) {
     const isEdit = user !== null;
     const { data, setData, post, processing, errors } = useForm({
-        name: user?.name || '',
         email: user?.email || '',
         password: '',
         password_confirmation: '',
+        username: user?.username || '',
+        full_name: user?.full_name || '',
+        role: user?.role || 'staff',
+        status: user?.status || 'active',
         _method: isEdit ? 'PUT' : 'POST',
     });
 
@@ -47,16 +50,6 @@ export default function Form({ user }) {
                     </CardHeader>
                     <CardContent className="space-y-6">
                         <FormInput
-                            label="Full Name"
-                            name="name"
-                            required
-                            value={data.name}
-                            onChange={(e) => setData('name', e.target.value)}
-                            error={errors.name}
-                            placeholder="Enter full name"
-                        />
-
-                        <FormInput
                             label="Email Address"
                             name="email"
                             type="email"
@@ -66,6 +59,51 @@ export default function Form({ user }) {
                             error={errors.email}
                             placeholder="email@example.com"
                         />
+
+                        <FormInput
+                            label="Username"
+                            name="username"
+                            required
+                            value={data.username}
+                            onChange={(e) => setData('username', e.target.value)}
+                            error={errors.username}
+                            placeholder="username (lowercase, numbers, underscore only)"
+                            helperText="Only lowercase letters, numbers, and underscores allowed"
+                        />
+
+                        <FormInput
+                            label="Full Name"
+                            name="full_name"
+                            required
+                            value={data.full_name}
+                            onChange={(e) => setData('full_name', e.target.value)}
+                            error={errors.full_name}
+                            placeholder="Enter full name"
+                        />
+
+                        <FormSelect
+                            label="Role"
+                            name="role"
+                            required
+                            value={data.role}
+                            onChange={(e) => setData('role', e.target.value)}
+                            error={errors.role}
+                        >
+                            <option value="staff">Staff</option>
+                            <option value="superadmin">Super Admin</option>
+                        </FormSelect>
+
+                        <FormSelect
+                            label="Status"
+                            name="status"
+                            required
+                            value={data.status}
+                            onChange={(e) => setData('status', e.target.value)}
+                            error={errors.status}
+                        >
+                            <option value="active">Active</option>
+                            <option value="inactive">Not Active</option>
+                        </FormSelect>
                     </CardContent>
                 </Card>
 
@@ -78,7 +116,7 @@ export default function Form({ user }) {
                     </CardHeader>
                     <CardContent className="space-y-6">
                         {isEdit && (
-                            <p className="text-sm text-gray-600 -mt-2">
+                            <p className="text-sm text-gray-600">
                                 Leave password fields empty to keep the current password
                             </p>
                         )}
@@ -91,7 +129,7 @@ export default function Form({ user }) {
                             value={data.password}
                             onChange={(e) => setData('password', e.target.value)}
                             error={errors.password}
-                            placeholder={isEdit ? 'Enter new password to change' : 'Minimum 8 characters'}
+                            placeholder={isEdit ? 'Leave empty to keep current password' : 'Minimum 8 characters'}
                         />
 
                         <FormInput

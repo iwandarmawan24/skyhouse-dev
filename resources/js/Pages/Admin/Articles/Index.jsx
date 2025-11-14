@@ -189,7 +189,9 @@ export default function Index({ articles, categories, filters }) {
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
-                                            <div className="text-sm text-gray-900">{article.author.name}</div>
+                                            <div className="text-sm text-gray-900">
+                                                {article.author?.full_name || article.user?.full_name || '-'}
+                                            </div>
                                         </TableCell>
                                         <TableCell>
                                             <div className="text-sm text-gray-900">

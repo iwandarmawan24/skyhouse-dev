@@ -1,9 +1,21 @@
 import { Link, usePage, router } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 export default function AdminLayout({ children }) {
     const { auth } = usePage().props;
     const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const isArticleSubmenuActive = () => {
+        const articlePaths = ['/admin/articles', '/admin/article-categories', '/admin/media', '/admin/media-highlights'];
+        return articlePaths.some(path => window.location.pathname.startsWith(path));
+    };
+
+    const [articlesOpen, setArticlesOpen] = useState(isArticleSubmenuActive());
+
+    useEffect(() => {
+        setArticlesOpen(isArticleSubmenuActive());
+    }, []);
 
     const navigation = [
         {
@@ -35,12 +47,30 @@ export default function AdminLayout({ children }) {
         },
         {
             name: 'Articles',
-            href: '/admin/articles',
+            hasSubmenu: true,
             icon: (
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                 </svg>
             ),
+            submenu: [
+                {
+                    name: 'All Articles',
+                    href: '/admin/articles',
+                },
+                {
+                    name: 'Categories',
+                    href: '/admin/article-categories',
+                },
+                {
+                    name: 'Media Outlets',
+                    href: '/admin/media',
+                },
+                {
+                    name: 'Media Highlights',
+                    href: '/admin/media-highlights',
+                },
+            ],
         },
         {
             name: 'Events',
@@ -94,6 +124,10 @@ export default function AdminLayout({ children }) {
         router.post('/admin/logout');
     };
 
+    const isActiveUrl = (href) => {
+        return window.location.pathname === href || window.location.pathname.startsWith(href + '/');
+    };
+
     return (
         <div className="min-h-screen bg-gray-100">
             {/* Mobile Sidebar Backdrop */}
@@ -127,18 +161,63 @@ export default function AdminLayout({ children }) {
                     {/* Navigation */}
                     <nav className="flex-1 px-4 py-6 space-y-1 overflow-y-auto">
                         {navigation.map((item) => (
-                            <Link
-                                key={item.name}
-                                href={item.href}
-                                className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
-                                    window.location.pathname === item.href
-                                        ? 'bg-blue-600 text-white'
-                                        : 'text-gray-300 hover:bg-gray-800 hover:text-white'
-                                }`}
-                            >
-                                {item.icon}
-                                <span className="ml-3">{item.name}</span>
-                            </Link>
+                            <div key={item.name}>
+                                {item.hasSubmenu ? (
+                                    <>
+                                        {/* Parent Menu with Submenu */}
+                                        <button
+                                            onClick={() => setArticlesOpen(!articlesOpen)}
+                                            className={`w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors ${
+                                                isArticleSubmenuActive()
+                                                    ? 'bg-blue-600 text-white'
+                                                    : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                            }`}
+                                        >
+                                            <div className="flex items-center">
+                                                {item.icon}
+                                                <span className="ml-3">{item.name}</span>
+                                            </div>
+                                            {articlesOpen ? (
+                                                <ChevronDown className="w-4 h-4" />
+                                            ) : (
+                                                <ChevronRight className="w-4 h-4" />
+                                            )}
+                                        </button>
+
+                                        {/* Submenu */}
+                                        {articlesOpen && (
+                                            <div className="ml-4 mt-1 space-y-1">
+                                                {item.submenu.map((subitem) => (
+                                                    <Link
+                                                        key={subitem.name}
+                                                        href={subitem.href}
+                                                        className={`flex items-center px-4 py-2 rounded-lg text-sm transition-colors ${
+                                                            isActiveUrl(subitem.href)
+                                                                ? 'bg-blue-500 text-white'
+                                                                : 'text-gray-400 hover:bg-gray-800 hover:text-white'
+                                                        }`}
+                                                    >
+                                                        <span className="ml-3">{subitem.name}</span>
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        )}
+                                    </>
+                                ) : (
+                                    /* Regular Menu Item */
+                                    <Link
+                                        href={item.href}
+                                        className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
+                                            isActiveUrl(item.href)
+                                                ? 'bg-blue-600 text-white'
+                                                : 'text-gray-300 hover:bg-gray-800 hover:text-white'
+                                        }`}
+                                    >
+                                        {item.icon}
+                                        <span className="ml-3">{item.name}</span>
+                                    </Link>
+                                )}
+                            </div>
                         ))}
                     </nav>
 
@@ -147,11 +226,11 @@ export default function AdminLayout({ children }) {
                         <div className="flex items-center mb-3">
                             <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center">
                                 <span className="text-sm font-medium">
-                                    {auth.user?.name?.charAt(0) || 'A'}
+                                    {auth.user?.full_name?.charAt(0) || auth.user?.name?.charAt(0) || 'A'}
                                 </span>
                             </div>
                             <div className="ml-3">
-                                <p className="text-sm font-medium">{auth.user?.name}</p>
+                                <p className="text-sm font-medium">{auth.user?.full_name || auth.user?.name}</p>
                                 <p className="text-xs text-gray-400">{auth.user?.email}</p>
                             </div>
                         </div>

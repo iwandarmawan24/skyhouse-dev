@@ -1,7 +1,7 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
-import { Plus, Search, User } from 'lucide-react';
+import { Plus, Search, FolderOpen } from 'lucide-react';
 import {
     Button,
     Card,
@@ -23,20 +23,20 @@ import {
     Input
 } from '@/Components/ui';
 
-export default function Index({ users, filters }) {
-    const { flash, auth } = usePage().props;
+export default function Index({ categories, filters }) {
+    const { flash } = usePage().props;
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [search, setSearch] = useState(filters.search || '');
 
     const handleDelete = (uid) => {
-        router.delete(`/admin/users/${uid}`, {
+        router.delete(`/admin/article-categories/${uid}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
 
     const handleSearch = (e) => {
         e.preventDefault();
-        router.get('/admin/users', { search }, {
+        router.get('/admin/article-categories', { search }, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -44,7 +44,7 @@ export default function Index({ users, filters }) {
 
     const clearSearch = () => {
         setSearch('');
-        router.get('/admin/users', {}, {
+        router.get('/admin/article-categories', {}, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -55,13 +55,13 @@ export default function Index({ users, filters }) {
             {/* Page Header */}
             <div className="mb-6 flex items-center justify-between">
                 <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Users Management</h1>
-                    <p className="text-gray-600 mt-1">Manage admin users and their access</p>
+                    <h1 className="text-2xl font-bold text-gray-900">Article Categories</h1>
+                    <p className="text-gray-600 mt-1">Manage article categories</p>
                 </div>
-                <Link href="/admin/users/create">
+                <Link href="/admin/article-categories/create">
                     <Button>
                         <Plus className="w-5 h-5 mr-2" />
-                        Add New User
+                        Add Category
                     </Button>
                 </Link>
             </div>
@@ -85,7 +85,7 @@ export default function Index({ users, filters }) {
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                         <Input
                             type="text"
-                            placeholder="Search by name or email..."
+                            placeholder="Search categories..."
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             className="pl-10"
@@ -100,66 +100,66 @@ export default function Index({ users, filters }) {
                 </form>
             </Card>
 
-            {/* Users Table */}
+            {/* Categories Table */}
             <Card>
-                {users.data.length > 0 ? (
+                {categories.data.length > 0 ? (
                     <>
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHead>User</TableHead>
-                                    <TableHead>Username</TableHead>
-                                    <TableHead>Email</TableHead>
-                                    <TableHead>Role</TableHead>
+                                    <TableHead>Category Name</TableHead>
+                                    <TableHead>Description</TableHead>
+                                    <TableHead>Articles</TableHead>
                                     <TableHead>Status</TableHead>
                                     <TableHead className="text-right">Actions</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {users.data.map((user) => (
-                                    <TableRow key={user.uid}>
+                                {categories.data.map((category) => (
+                                    <TableRow key={category.uid}>
                                         <TableCell>
                                             <div className="flex items-center gap-3">
-                                                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-semibold shrink-0">
-                                                    {user.full_name.charAt(0).toUpperCase()}
+                                                <div className="h-10 w-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-white font-semibold shrink-0">
+                                                    {category.name.charAt(0).toUpperCase()}
                                                 </div>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="font-medium text-gray-900">{user.full_name}</span>
-                                                    {user.uid === auth.user.uid && (
-                                                        <Badge variant="default">You</Badge>
-                                                    )}
+                                                <div>
+                                                    <span className="font-medium text-gray-900">{category.name}</span>
+                                                    <p className="text-xs text-gray-500">/{category.slug}</p>
                                                 </div>
                                             </div>
                                         </TableCell>
-                                        <TableCell className="text-gray-600">@{user.username}</TableCell>
-                                        <TableCell className="text-gray-900">{user.email}</TableCell>
+                                        <TableCell className="text-gray-600">
+                                            {category.description ? (
+                                                <span className="line-clamp-2">{category.description}</span>
+                                            ) : (
+                                                <span className="text-gray-400 italic">No description</span>
+                                            )}
+                                        </TableCell>
                                         <TableCell>
-                                            <Badge variant={user.role === 'superadmin' ? 'default' : 'secondary'}>
-                                                {user.role === 'superadmin' ? 'Super Admin' : 'Staff'}
+                                            <Badge variant="secondary">
+                                                {category.articles_count} {category.articles_count === 1 ? 'article' : 'articles'}
                                             </Badge>
                                         </TableCell>
                                         <TableCell>
-                                            <Badge variant={user.status === 'active' ? 'success' : 'destructive'}>
-                                                {user.status === 'active' ? 'Active' : 'Inactive'}
+                                            <Badge variant={category.is_active ? 'success' : 'destructive'}>
+                                                {category.is_active ? 'Active' : 'Inactive'}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-right">
                                             <div className="flex items-center justify-end gap-2">
-                                                <Link href={`/admin/users/${user.uid}/edit`}>
+                                                <Link href={`/admin/article-categories/${category.uid}/edit`}>
                                                     <Button variant="ghost" size="sm">
                                                         Edit
                                                     </Button>
                                                 </Link>
-                                                {user.uid !== auth.user.uid && (
-                                                    <Button
-                                                        variant="ghost"
-                                                        size="sm"
-                                                        onClick={() => setShowDeleteConfirm(user.uid)}
-                                                        className="text-red-600 hover:text-red-900 hover:bg-red-50"
-                                                    >
-                                                        Delete
-                                                    </Button>
-                                                )}
+                                                <Button
+                                                    variant="ghost"
+                                                    size="sm"
+                                                    onClick={() => setShowDeleteConfirm(category.uid)}
+                                                    className="text-red-600 hover:text-red-900 hover:bg-red-50"
+                                                >
+                                                    Delete
+                                                </Button>
                                             </div>
                                         </TableCell>
                                     </TableRow>
@@ -168,21 +168,21 @@ export default function Index({ users, filters }) {
                         </Table>
 
                         {/* Pagination */}
-                        <Pagination data={users} />
+                        <Pagination data={categories} />
                     </>
                 ) : (
                     <div className="text-center py-12">
-                        <User className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">No users found</h3>
+                        <FolderOpen className="mx-auto h-12 w-12 text-gray-400" />
+                        <h3 className="mt-2 text-sm font-medium text-gray-900">No categories found</h3>
                         <p className="mt-1 text-sm text-gray-500">
-                            {search ? 'Try adjusting your search' : 'Get started by creating a new user.'}
+                            {search ? 'Try adjusting your search' : 'Get started by creating a new category.'}
                         </p>
                         {!search && (
                             <div className="mt-6">
-                                <Link href="/admin/users/create">
+                                <Link href="/admin/article-categories/create">
                                     <Button>
                                         <Plus className="w-5 h-5 mr-2" />
-                                        Add New User
+                                        Add Category
                                     </Button>
                                 </Link>
                             </div>
@@ -195,9 +195,9 @@ export default function Index({ users, filters }) {
             <Dialog open={!!showDeleteConfirm} onOpenChange={() => setShowDeleteConfirm(null)}>
                 <DialogContent onClose={() => setShowDeleteConfirm(null)}>
                     <DialogHeader>
-                        <DialogTitle>Delete User</DialogTitle>
+                        <DialogTitle>Delete Category</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete this user? This action cannot be undone.
+                            Are you sure you want to delete this category? This action cannot be undone. Articles in this category will not be deleted.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
