@@ -12,16 +12,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create admin user
-        User::factory()->create([
-            'name' => 'Admin SkyHouse',
-            'username' => 'admin',
-            'full_name' => 'Admin SkyHouse',
-            'email' => 'admin@skyhouse.com',
-            'password' => bcrypt('password'),
-            'role' => 'superadmin',
-            'status' => 'active',
-        ]);
+        // Create admin user (skip if already exists)
+        User::firstOrCreate(
+            ['email' => 'admin@skyhouse.com'],
+            [
+                'name' => 'Admin SkyHouse',
+                'username' => 'admin',
+                'full_name' => 'Admin SkyHouse',
+                'password' => bcrypt('password'),
+                'role' => 'superadmin',
+                'status' => 'active',
+            ]
+        );
 
         // Run all seeders
         $this->call([
