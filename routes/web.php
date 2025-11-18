@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\RegisterController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -25,10 +26,14 @@ Route::get('/', function () {
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
-    // Guest routes (login)
+    // Guest routes (login & register)
     Route::middleware('guest')->group(function () {
         Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
         Route::post('/login', [AuthController::class, 'login']);
+
+        // Hidden registration endpoint (no UI link)
+        Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
+        Route::post('/register', [RegisterController::class, 'register']);
     });
 
     // Authenticated admin routes
