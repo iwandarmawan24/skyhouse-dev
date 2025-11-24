@@ -36,24 +36,31 @@ A comprehensive property management CMS built with Laravel 11, React 19, Inertia
 - **Authentication System** - Secure login/logout with Laravel Sanctum
 - **Dashboard** - Overview statistics and recent activities
 - **Hero Banners Management** - Homepage slideshow banners
-- **Products Management** - Property listings with multiple images and gallery
-- **Articles Management** - Blog/news with categories and SEO
+- **Products Management** - Property listings with multiple images, pricing, specs, and gallery
+- **Articles Management** - Blog/news with rich text editor, SEO analyzer (12 checks), categories, and tags
+- **Article Categories** - Organize articles into categories
 - **Events Management** - Property events and open houses
 - **Facilities Management** - Property amenities with image galleries
+- **Media Management** - Gallery system for images
+- **Media Highlights** - Featured media highlights
 - **Contact/Leads Management** - Inquiry form submissions with status tracking
 - **About Us Management** - Company information editor
 - **Settings Management** - Key-value configuration system
 - **Policy Management** - Legal policies (Privacy, Terms, Refund, Shipping)
+- **Users Management** - User profiles and role management
 
 ### Technical Features
-- 🎨 **Shadcn-style UI Components** - Reusable, accessible components
-- 🖼️ **Image Upload & Management** - Multiple image support with ordering
+- 🎨 **Shadcn-style UI Components** - Reusable, accessible components (13+ base components)
+- 📝 **Rich Text Editor** - TipTap WYSIWYG with image upload, links, and YouTube embedding
+- 📊 **SEO Analyzer** - Real-time SEO scoring with 12 comprehensive checks
+- 🖼️ **Image Upload & Management** - Multiple image support with drag-to-reorder
 - 🔍 **Search & Filters** - Powerful search across all modules
 - 📄 **Pagination** - Efficient data loading
-- 🎯 **Form Validation** - Client and server-side validation
+- 🎯 **Form Validation** - Client (React Hook Form) and server-side validation
 - 📱 **Responsive Design** - Mobile-friendly admin panel
 - ⚡ **Fast Navigation** - SPA experience with Inertia.js
 - 🔐 **Secure** - CSRF protection, XSS prevention, SQL injection safe
+- 🔔 **Toast Notifications** - User feedback system
 
 ## 🛠️ Tech Stack
 
@@ -66,10 +73,12 @@ A comprehensive property management CMS built with Laravel 11, React 19, Inertia
 ### Frontend
 - **React 19** - UI library
 - **Tailwind CSS v4** - Utility-first CSS framework
+- **TipTap v3** - WYSIWYG rich text editor
+- **React Hook Form v7** - Efficient form state management
 - **Lucide React** - Icon library
-- **Vite** - Frontend build tool
-- **Headless UI** - Unstyled accessible components
-- **Framer Motion** - Animation library
+- **Vite v7** - Frontend build tool
+- **Headless UI v2** - Unstyled accessible components
+- **Framer Motion v12** - Animation library
 
 ### Development Tools
 - **Docker Sail** - Local development environment
@@ -558,6 +567,7 @@ skyhouse-dev/
 │   │   ├── Controllers/
 │   │   │   └── Admin/
 │   │   │       ├── AboutController.php
+│   │   │       ├── ArticleCategoryController.php
 │   │   │       ├── ArticleController.php
 │   │   │       ├── AuthController.php
 │   │   │       ├── ContactController.php
@@ -565,9 +575,12 @@ skyhouse-dev/
 │   │   │       ├── EventController.php
 │   │   │       ├── FacilityController.php
 │   │   │       ├── HeroBannerController.php
+│   │   │       ├── MediaController.php
+│   │   │       ├── MediaHighlightController.php
 │   │   │       ├── PolicyController.php
 │   │   │       ├── ProductController.php
-│   │   │       └── SettingController.php
+│   │   │       ├── SettingController.php
+│   │   │       └── UserController.php
 │   │   └── Middleware/
 │   │       └── HandleInertiaRequests.php
 │   ├── Models/
@@ -579,13 +592,17 @@ skyhouse-dev/
 │   │   ├── Facility.php
 │   │   ├── FacilityImage.php
 │   │   ├── HeroBanner.php
+│   │   ├── Media.php
+│   │   ├── MediaHighlight.php
 │   │   ├── Policy.php
 │   │   ├── Product.php
 │   │   ├── ProductImage.php
 │   │   ├── Setting.php
 │   │   └── User.php
-│   └── Providers/
-│       └── AppServiceProvider.php
+│   ├── Providers/
+│   │   └── AppServiceProvider.php
+│   └── Services/
+│       └── SeoScoreCalculator.php
 ├── database/
 │   ├── migrations/
 │   │   ├── 0001_01_01_000000_create_users_table.php
@@ -621,28 +638,40 @@ skyhouse-dev/
 │   │   └── app.css
 │   ├── js/
 │   │   ├── Components/
+│   │   │   ├── RichTextEditor.jsx
+│   │   │   ├── SeoAnalyzer.jsx
+│   │   │   ├── Admin/
 │   │   │   └── ui/
 │   │   │       ├── Alert.jsx
 │   │   │       ├── Badge.jsx
 │   │   │       ├── Button.jsx
 │   │   │       ├── Card.jsx
+│   │   │       ├── Dialog.jsx
+│   │   │       ├── Form.jsx
 │   │   │       ├── FormField.jsx
 │   │   │       ├── Input.jsx
 │   │   │       ├── Label.jsx
+│   │   │       ├── Pagination.jsx
 │   │   │       ├── Select.jsx
+│   │   │       ├── Table.jsx
 │   │   │       ├── Textarea.jsx
 │   │   │       └── index.js
 │   │   ├── Layouts/
 │   │   │   └── AdminLayout.jsx
 │   │   ├── Pages/
+│   │   │   ├── Welcome.jsx
 │   │   │   └── Admin/
 │   │   │       ├── About/
 │   │   │       │   └── Edit.jsx
+│   │   │       ├── ArticleCategories/
+│   │   │       │   ├── Form.jsx
+│   │   │       │   └── Index.jsx
 │   │   │       ├── Articles/
 │   │   │       │   ├── Form.jsx
 │   │   │       │   └── Index.jsx
 │   │   │       ├── Auth/
-│   │   │       │   └── Login.jsx
+│   │   │       │   ├── Login.jsx
+│   │   │       │   └── Register.jsx
 │   │   │       ├── Contacts/
 │   │   │       │   ├── Index.jsx
 │   │   │       │   └── Show.jsx
@@ -655,6 +684,12 @@ skyhouse-dev/
 │   │   │       ├── HeroBanners/
 │   │   │       │   ├── Form.jsx
 │   │   │       │   └── Index.jsx
+│   │   │       ├── Media/
+│   │   │       │   ├── Form.jsx
+│   │   │       │   └── Index.jsx
+│   │   │       ├── MediaHighlights/
+│   │   │       │   ├── Form.jsx
+│   │   │       │   └── Index.jsx
 │   │   │       ├── Policies/
 │   │   │       │   ├── Form.jsx
 │   │   │       │   └── Index.jsx
@@ -662,6 +697,9 @@ skyhouse-dev/
 │   │   │       │   ├── Form.jsx
 │   │   │       │   └── Index.jsx
 │   │   │       ├── Settings/
+│   │   │       │   └── Index.jsx
+│   │   │       ├── Users/
+│   │   │       │   ├── Form.jsx
 │   │   │       │   └── Index.jsx
 │   │   │       └── Dashboard.jsx
 │   │   ├── lib/

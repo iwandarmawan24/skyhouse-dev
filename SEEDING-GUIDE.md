@@ -64,6 +64,7 @@ Project ini punya seeders lengkap untuk semua data:
 | `ArticleSeeder` | Blog articles lengkap dengan content | 15 articles |
 | `EventSeeder` | Events & promo | 5 events |
 | `FacilitySeeder` | Facilities dengan images | 8 facilities |
+| `MediaSeeder` | Media outlets & highlights | 6 media + highlights |
 | `ContactSeeder` | Sample contact form submissions | 10 contacts |
 | `AboutSeeder` | About Us page content | 1 record |
 | `SettingSeeder` | Site settings | 8 settings |
@@ -215,26 +216,38 @@ User::create([
 
 Each with icon, description, and gallery images.
 
-### 8. Contact Submissions (10 items)
+### 8. Media & Media Highlights
+
+**Media Outlets (6 items):**
+- Kompas.com
+- Detik.com
+- CNN Indonesia
+- Tempo.co
+- Bisnis.com
+- Kontan.co.id
+
+Each media outlet has multiple highlights (press coverage articles).
+
+### 9. Contact Submissions (10 items)
 
 - Sample leads/inquiries
 - Various statuses (unread/read)
 - Different property types interests
 
-### 9. About Us
+### 10. About Us
 
 - Company description
 - Vision & mission
 - Contact information
 
-### 10. Settings (8 items)
+### 11. Settings (8 items)
 
 - Site name, tagline
 - Contact email, phone
 - Social media links
 - Business hours
 
-### 11. Policies (2 items)
+### 12. Policies (2 items)
 
 - Privacy Policy
 - Terms of Service
