@@ -61,11 +61,11 @@ docker stats --no-stream --format "table {{.Container}}\t{{.MemUsage}}\t{{.CPUPe
 
 echo ""
 echo -e "${YELLOW}🛑 Stopping containers...${NC}"
-docker-compose -f docker-compose.prod.yml down
+docker compose -f docker-compose.prod.yml down
 
 echo ""
 echo -e "${YELLOW}🔄 Starting optimized containers...${NC}"
-docker-compose -f docker-compose.prod.optimized.yml up -d --build
+docker compose -f docker-compose.prod.optimized.yml up -d --build
 
 # Wait for services to be healthy
 echo ""
@@ -134,8 +134,8 @@ echo "  1. Backup docker-compose.prod.yml"
 echo "  2. cp docker-compose.prod.optimized.yml docker-compose.prod.yml"
 echo ""
 echo "📝 To revert back:"
-echo "  docker-compose -f docker-compose.prod.yml down"
-echo "  docker-compose -f docker-compose.prod.yml up -d"
+echo "  docker compose -f docker-compose.prod.yml down"
+echo "  docker compose -f docker-compose.prod.yml up -d"
 echo ""
 echo "💾 Database backup saved at: $BACKUP_FILE"
 echo ""
