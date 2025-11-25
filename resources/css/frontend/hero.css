@@ -78,9 +78,9 @@
   height: 15%;
   background: linear-gradient(180deg,
     transparent 0%,
-    rgba(251, 247, 240, 0.2) 40%,
-    rgba(251, 247, 240, 0.6) 70%,
-    #FBF7F0 100%
+    rgba(253, 254, 240, 0.2) 40%,
+    rgba(253, 254, 240, 0.6) 70%,
+    #FDFEF0 100%
   );
   z-index: 10;
   pointer-events: none;
@@ -163,14 +163,14 @@
 
 /* Button Style Override for Hero */
 .button.is-icon {
-  background-color: #F5D87F;
-  border-color: #F5D87F;
-  color: #483B32;
+  background-color: var(--color-secondary);
+  border-color: var(--color-secondary);
+  color: var(--color-text-primary);
 }
 
 .button.is-icon:hover {
   background-color: transparent;
-  color: #F5D87F;
+  color: var(--color-secondary);
 }
 
 /* ========================================

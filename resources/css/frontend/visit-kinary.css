@@ -5,7 +5,7 @@
 .visit-kinary-section {
   position: relative;
   padding: 6rem 5%;
-  background-color: #FBF7F0;
+  background-color: #FDFEF0;
   min-height: 100vh;
   display: flex;
   align-items: center;
@@ -31,13 +31,13 @@
   font-weight: 700;
   line-height: 1.1;
   margin-bottom: 2rem;
-  color: #483B32;
+  color: var(--color-text-primary);
 }
 
 .visit-kinary-content p {
   font-size: 1.125rem;
   line-height: 1.8;
-  color: #483B32;
+  color: var(--color-text-primary);
   margin-bottom: 0;
 }
 
@@ -93,8 +93,8 @@
   bottom: 3rem;
   right: 3rem;
   padding: 1rem 2rem;
-  background-color: #F5D87F;
-  color: #483B32;
+  background-color: var(--color-secondary);
+  color: var(--color-text-primary);
   font-size: 1rem;
   font-weight: 600;
   border-radius: 3rem;
@@ -106,7 +106,8 @@
 }
 
 .visit-kinary-button:hover {
-  background-color: #FFE5A3;
+  background-color: var(--color-btn-primary);
+  color: white;
   transform: scale(1.05);
 }
 

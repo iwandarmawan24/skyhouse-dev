@@ -1,0 +1,139 @@
+/* Quiz Section Styles - Discover Your Dream Home */
+
+.section_quiz {
+  position: relative;
+  background: var(--color-brown);
+  overflow: hidden;
+}
+
+.section_quiz.is-bottom-rounded {
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
+
+.quiz_bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: linear-gradient(rgba(139, 69, 19, 0.7), rgba(139, 69, 19, 0.7)),
+                    url('https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1600');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.3;
+  z-index: 0;
+}
+
+.section_quiz .padding-section-medium {
+  position: relative;
+  z-index: 1;
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.section_quiz .text-align-center {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.section_quiz h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  line-height: 1.2;
+}
+
+.section_quiz .text-size-medium {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin-bottom: 0;
+}
+
+.section_quiz .margin-top {
+  margin-top: 2.5rem;
+}
+
+.section_quiz .button {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.section_quiz .button.is-terracota {
+  background: #E07A5F;
+  color: white;
+}
+
+.section_quiz .button.is-terracota:hover {
+  background: #d06950;
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(224, 122, 95, 0.3);
+}
+
+/* Text Colors */
+.text-color-white {
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+  .section_quiz .padding-section-medium {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .section_quiz h2 {
+    font-size: 2.5rem;
+  }
+
+  .section_quiz .text-size-medium {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .section_quiz.is-bottom-rounded {
+    border-bottom-left-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+  }
+
+  .section_quiz .padding-section-medium {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .section_quiz h2 {
+    font-size: 2rem;
+  }
+
+  .section_quiz .text-size-medium {
+    font-size: 1rem;
+  }
+
+  .section_quiz .button {
+    padding: 0.875rem 2rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 479px) {
+  .section_quiz.is-bottom-rounded {
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+
+  .section_quiz h2 {
+    font-size: 1.75rem;
+  }
+
+  .section_quiz .margin-top {
+    margin-top: 2rem;
+  }
+}

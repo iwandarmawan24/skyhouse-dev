@@ -35,10 +35,8 @@ export default function Home() {
         <Benefits />
         <Projects />
         <ShowMoreBanner />
-        <div className="stack_section">
-          <Quiz />
-          <Characters />
-        </div>
+        <Quiz />
+        <Characters />
         <News />
         <CTA />
       </main>

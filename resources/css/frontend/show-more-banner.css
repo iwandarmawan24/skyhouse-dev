@@ -1,0 +1,155 @@
+/* Show More Banner Styles */
+
+.section_show-more {
+  position: relative;
+}
+
+.show-more-wrapper {
+  padding: 3rem 0;
+}
+
+.banner_component {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--color-brown);
+  padding: 2.5rem 3.5rem;
+  margin: 0 auto;
+  border-radius: 1.5rem;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.banner_component::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s ease;
+}
+
+.banner_component:hover::before {
+  left: 100%;
+}
+
+.banner_component:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.project_button-text {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.project_button-text h3 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.project_arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  color: white;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.banner_component:hover .project_arrow {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateX(8px);
+}
+
+.project_arrow svg {
+  width: 30px;
+  height: auto;
+  color: white;
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+  .show-more-wrapper {
+    padding: 2.5rem 0;
+  }
+
+  .banner_component {
+    padding: 2rem 2.5rem;
+  }
+
+  .project_button-text h3 {
+    font-size: 1.5rem;
+  }
+
+  .project_arrow {
+    width: 50px;
+    height: 50px;
+  }
+
+  .project_arrow svg {
+    width: 25px;
+  }
+}
+
+@media (max-width: 767px) {
+  .show-more-wrapper {
+    padding: 2rem 0;
+  }
+
+  .banner_component {
+    padding: 1.75rem 2rem;
+    border-radius: 1rem;
+  }
+
+  .project_button-text h3 {
+    font-size: 1.25rem;
+  }
+
+  .project_arrow {
+    width: 45px;
+    height: 45px;
+  }
+
+  .project_arrow svg {
+    width: 22px;
+  }
+}
+
+@media (max-width: 479px) {
+  .show-more-wrapper {
+    padding: 1.5rem 0;
+  }
+
+  .banner_component {
+    padding: 1.5rem 1.5rem;
+    border-radius: 0.75rem;
+  }
+
+  .project_button-text h3 {
+    font-size: 1.125rem;
+  }
+
+  .project_arrow {
+    width: 40px;
+    height: 40px;
+  }
+
+  .project_arrow svg {
+    width: 20px;
+  }
+}

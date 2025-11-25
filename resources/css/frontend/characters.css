@@ -1,0 +1,123 @@
+/* Characters Section Styles - Meet the Characters */
+
+.section_character {
+  position: relative;
+  overflow: hidden;
+}
+
+.section_character.is-bottom-rounded {
+  border-bottom-left-radius: 2rem;
+  border-bottom-right-radius: 2rem;
+}
+
+.section_character .padding-section-large {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+.character_component {
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.character_component h2 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.2;
+  color: var(--color-brown);
+}
+
+.character_component .text-size-medium {
+  font-size: 1.25rem;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--color-brown);
+  opacity: 0.9;
+}
+
+.character_component .button {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  background: var(--color-brown);
+  color: white;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  margin-top: 1rem;
+}
+
+.character_component .button:hover {
+  background: rgba(139, 69, 19, 0.9);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(139, 69, 19, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 991px) {
+  .section_character .padding-section-large {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .character_component h2 {
+    font-size: 2.5rem;
+  }
+
+  .character_component .text-size-medium {
+    font-size: 1.125rem;
+  }
+}
+
+@media (max-width: 767px) {
+  .section_character.is-bottom-rounded {
+    border-bottom-left-radius: 1.5rem;
+    border-bottom-right-radius: 1.5rem;
+  }
+
+  .section_character .padding-section-large {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .character_component {
+    gap: 1.25rem;
+  }
+
+  .character_component h2 {
+    font-size: 2rem;
+  }
+
+  .character_component .text-size-medium {
+    font-size: 1rem;
+  }
+
+  .character_component .button {
+    padding: 0.875rem 2rem;
+    font-size: 0.9375rem;
+  }
+}
+
+@media (max-width: 479px) {
+  .section_character.is-bottom-rounded {
+    border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem;
+  }
+
+  .character_component h2 {
+    font-size: 1.75rem;
+  }
+
+  .character_component {
+    gap: 1rem;
+  }
+}

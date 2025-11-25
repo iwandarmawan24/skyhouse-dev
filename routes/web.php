@@ -24,6 +24,18 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
 
+Route::get('/project', function () {
+    return Inertia::render('Project');
+})->name('project');
+
+Route::get('/news', function () {
+    return Inertia::render('News');
+})->name('news');
+
+Route::get('/about', function () {
+    return Inertia::render('About');
+})->name('about');
+
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
     // Guest routes (login & register)
