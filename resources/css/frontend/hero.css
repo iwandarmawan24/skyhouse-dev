@@ -1,0 +1,229 @@
+/* ========================================
+   HERO SECTION - Simple & Clean
+   ======================================== */
+
+.section_hero {
+  position: relative;
+  min-height: 200vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow: hidden;
+  padding-top: 80px;
+}
+
+/* Hero Wrapper - Background Container */
+.hero_wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 200vh;
+  z-index: 1;
+}
+
+/* Sky Background - Layer 1 */
+.hero_sky {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('https://cdn.prod.website-files.com/6507e5069d2b6119052df387/651124747de1ae08741ac4bd_hero-sky2a-edit.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+/* Trees Container - Layer 2 (DISABLED) */
+/* .hero_trees {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  height: 350px;
+  background-image: url('https://cdn.prod.website-files.com/6507e5069d2b6119052df387/650fef9811166ec76094059f_hero-tree.webp');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  z-index: 2;
+  pointer-events: none;
+} */
+
+/* Houses Container - Layer 3 (DISABLED) */
+/* .hero_houses {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 1000px;
+  height: 400px;
+  background-image: url('https://cdn.prod.website-files.com/6507e5069d2b6119052df387/65100d8f3dc1ee510c05d5b2_hero-home1.webp');
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-position: center bottom;
+  z-index: 3;
+  pointer-events: none;
+} */
+
+/* Ground Overlay */
+.hero_bg {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 15%;
+  background: linear-gradient(180deg,
+    transparent 0%,
+    rgba(251, 247, 240, 0.2) 40%,
+    rgba(251, 247, 240, 0.6) 70%,
+    #FBF7F0 100%
+  );
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Hero Content */
+.header26_component {
+  position: relative;
+  z-index: 15;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 200vh;
+  padding-top: 3rem;
+}
+
+/* Hero Text */
+.text-align-center.is-center {
+  order: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-text {
+  opacity: 1;
+}
+
+/* Logo Section */
+.logo_box {
+  order: 2;
+  margin-bottom: 2rem;
+  padding-top: 2rem;
+}
+
+.logo_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+.logo_img-wrapper {
+  height: 2.5rem;
+  display: flex;
+  align-items: center;
+}
+
+.logo_img-wrapper.is-medium {
+  height: 2rem;
+}
+
+.logo_img-wrapper.is-small {
+  height: 1.75rem;
+}
+
+.logo_img-wrapper.is-xsmall {
+  height: 1.5rem;
+}
+
+.logo_img-wrapper.is-potrait {
+  height: 3rem;
+}
+
+.logo_arsitek {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(1.2);
+}
+
+.is-home {
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Button Style Override for Hero */
+.button.is-icon {
+  background-color: #F5D87F;
+  border-color: #F5D87F;
+  color: #483B32;
+}
+
+.button.is-icon:hover {
+  background-color: transparent;
+  color: #F5D87F;
+}
+
+/* ========================================
+   RESPONSIVE
+   ======================================== */
+
+@media (max-width: 991px) {
+  .section_hero {
+    min-height: 200vh;
+  }
+
+  .logo_wrapper {
+    gap: 1.5rem;
+  }
+
+  .text-align-center.is-center {
+    min-height: 90vh;
+  }
+}
+
+@media (max-width: 767px) {
+  .section_hero {
+    min-height: 200vh;
+    padding-top: 70px;
+  }
+
+  .logo_box {
+    margin-bottom: 2rem;
+  }
+
+  .logo_wrapper {
+    gap: 1rem;
+  }
+
+  .logo_img-wrapper {
+    height: 1.75rem;
+  }
+
+  .text-align-center.is-center {
+    min-height: 80vh;
+  }
+}
+
+@media (max-width: 479px) {
+  .section_hero {
+    min-height: 200vh;
+  }
+
+  h1.is-home {
+    font-size: 2rem;
+  }
+
+  .text-align-center.is-center {
+    min-height: 75vh;
+  }
+}

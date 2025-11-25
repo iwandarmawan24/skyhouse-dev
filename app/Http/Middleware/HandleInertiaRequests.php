@@ -17,6 +17,19 @@ class HandleInertiaRequests extends Middleware
     protected $rootView = 'app';
 
     /**
+     * Determine the root view for the request.
+     */
+    public function rootView(Request $request): string
+    {
+        // Use 'frontend' layout for public pages (non-admin routes)
+        if (! $request->is('admin/*') && ! $request->is('admin')) {
+            return 'frontend';
+        }
+
+        return $this->rootView;
+    }
+
+    /**
      * Determines the current asset version.
      *
      * @see https://inertiajs.com/asset-versioning

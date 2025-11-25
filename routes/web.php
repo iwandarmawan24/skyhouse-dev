@@ -21,7 +21,7 @@ use Inertia\Inertia;
 
 // Frontend Routes
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    return Inertia::render('Home');
 })->name('home');
 
 // Admin Routes

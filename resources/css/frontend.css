@@ -1,0 +1,11 @@
+/* Frontend CSS Entry Point - No Tailwind */
+/* Import all Easton CSS files in correct order */
+
+/* 1. Global styles first */
+@import './frontend/globals.css';
+
+/* 2. Component styles */
+@import './frontend/navigation.css';
+@import './frontend/hero.css';
+@import './frontend/visit-kinary.css';
+@import './frontend/about.css';

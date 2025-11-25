@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMax slice">
+  <defs>
+    <filter id="treeShadow">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="3" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.25"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- Tree 1 - Left -->
+  <g filter="url(#treeShadow)">
+    <!-- Trunk -->
+    <rect x="80" y="280" width="30" height="80" fill="#78350F" stroke="#451A03" stroke-width="2" rx="3"/>
+    <!-- Leaves - Bottom Layer -->
+    <ellipse cx="95" cy="300" rx="60" ry="50" fill="#15803D"/>
+    <ellipse cx="75" cy="310" rx="45" ry="40" fill="#16A34A"/>
+    <ellipse cx="115" cy="310" rx="45" ry="40" fill="#16A34A"/>
+    <!-- Leaves - Middle Layer -->
+    <ellipse cx="95" cy="270" rx="55" ry="45" fill="#16A34A"/>
+    <ellipse cx="75" cy="280" rx="40" ry="35" fill="#22C55E"/>
+    <ellipse cx="115" cy="280" rx="40" ry="35" fill="#22C55E"/>
+    <!-- Leaves - Top Layer -->
+    <ellipse cx="95" cy="240" rx="45" ry="40" fill="#22C55E"/>
+    <ellipse cx="85" cy="250" rx="30" ry="28" fill="#4ADE80"/>
+    <ellipse cx="105" cy="250" rx="30" ry="28" fill="#4ADE80"/>
+  </g>
+
+  <!-- Tree 2 - Center Left -->
+  <g filter="url(#treeShadow)">
+    <!-- Trunk -->
+    <rect x="350" y="270" width="35" height="90" fill="#78350F" stroke="#451A03" stroke-width="2" rx="3"/>
+    <!-- Leaves - Bottom Layer -->
+    <ellipse cx="367" cy="290" rx="70" ry="55" fill="#15803D"/>
+    <ellipse cx="340" cy="300" rx="50" ry="45" fill="#16A34A"/>
+    <ellipse cx="394" cy="300" rx="50" ry="45" fill="#16A34A"/>
+    <!-- Leaves - Middle Layer -->
+    <ellipse cx="367" cy="255" rx="60" ry="50" fill="#16A34A"/>
+    <ellipse cx="345" cy="265" rx="45" ry="40" fill="#22C55E"/>
+    <ellipse cx="389" cy="265" rx="45" ry="40" fill="#22C55E"/>
+    <!-- Leaves - Top Layer -->
+    <ellipse cx="367" cy="220" rx="50" ry="45" fill="#22C55E"/>
+    <ellipse cx="355" cy="230" rx="35" ry="32" fill="#4ADE80"/>
+    <ellipse cx="379" cy="230" rx="35" ry="32" fill="#4ADE80"/>
+  </g>
+
+  <!-- Tree 3 - Center -->
+  <g filter="url(#treeShadow)">
+    <!-- Trunk -->
+    <rect x="575" y="290" width="28" height="70" fill="#78350F" stroke="#451A03" stroke-width="2" rx="3"/>
+    <!-- Leaves - Bottom Layer -->
+    <ellipse cx="589" cy="310" rx="55" ry="48" fill="#15803D"/>
+    <ellipse cx="570" cy="318" rx="42" ry="38" fill="#16A34A"/>
+    <ellipse cx="608" cy="318" rx="42" ry="38" fill="#16A34A"/>
+    <!-- Leaves - Middle Layer -->
+    <ellipse cx="589" cy="280" rx="50" ry="42" fill="#16A34A"/>
+    <ellipse cx="572" cy="288" rx="38" ry="33" fill="#22C55E"/>
+    <ellipse cx="606" cy="288" rx="38" ry="33" fill="#22C55E"/>
+    <!-- Leaves - Top Layer -->
+    <ellipse cx="589" cy="252" rx="42" ry="38" fill="#22C55E"/>
+    <ellipse cx="580" cy="260" rx="28" ry="25" fill="#4ADE80"/>
+    <ellipse cx="598" cy="260" rx="28" ry="25" fill="#4ADE80"/>
+  </g>
+
+  <!-- Tree 4 - Center Right -->
+  <g filter="url(#treeShadow)">
+    <!-- Trunk -->
+    <rect x="825" y="275" width="32" height="85" fill="#78350F" stroke="#451A03" stroke-width="2" rx="3"/>
+    <!-- Leaves - Bottom Layer -->
+    <ellipse cx="841" cy="295" rx="65" ry="52" fill="#15803D"/>
+    <ellipse cx="815" cy="305" rx="48" ry="42" fill="#16A34A"/>
+    <ellipse cx="867" cy="305" rx="48" ry="42" fill="#16A34A"/>
+    <!-- Leaves - Middle Layer -->
+    <ellipse cx="841" cy="262" rx="58" ry="48" fill="#16A34A"/>
+    <ellipse cx="820" cy="272" rx="42" ry="37" fill="#22C55E"/>
+    <ellipse cx="862" cy="272" rx="42" ry="37" fill="#22C55E"/>
+    <!-- Leaves - Top Layer -->
+    <ellipse cx="841" cy="228" rx="48" ry="42" fill="#22C55E"/>
+    <ellipse cx="830" cy="238" rx="32" ry="30" fill="#4ADE80"/>
+    <ellipse cx="852" cy="238" rx="32" ry="30" fill="#4ADE80"/>
+  </g>
+
+  <!-- Tree 5 - Right -->
+  <g filter="url(#treeShadow)">
+    <!-- Trunk -->
+    <rect x="1090" y="285" width="30" height="75" fill="#78350F" stroke="#451A03" stroke-width="2" rx="3"/>
+    <!-- Leaves - Bottom Layer -->
+    <ellipse cx="1105" cy="305" rx="58" ry="50" fill="#15803D"/>
+    <ellipse cx="1085" cy="313" rx="43" ry="40" fill="#16A34A"/>
+    <ellipse cx="1125" cy="313" rx="43" ry="40" fill="#16A34A"/>
+    <!-- Leaves - Middle Layer -->
+    <ellipse cx="1105" cy="275" rx="52" ry="45" fill="#16A34A"/>
+    <ellipse cx="1087" cy="283" rx="38" ry="35" fill="#22C55E"/>
+    <ellipse cx="1123" cy="283" rx="38" ry="35" fill="#22C55E"/>
+    <!-- Leaves - Top Layer -->
+    <ellipse cx="1105" cy="245" rx="43" ry="40" fill="#22C55E"/>
+    <ellipse cx="1095" cy="253" rx="28" ry="27" fill="#4ADE80"/>
+    <ellipse cx="1115" cy="253" rx="28" ry="27" fill="#4ADE80"/>
+  </g>
+</svg>
