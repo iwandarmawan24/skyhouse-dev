@@ -79,7 +79,7 @@ REDIS_PASSWORD=YOUR_REDIS_PASSWORD     # Opsional tapi disarankan
 
 ```bash
 # Jalankan first deployment script
-bash scripts/first-deploy.sh
+bash scripts/deployment/first-deploy.sh
 ```
 
 Script ini akan:
@@ -207,10 +207,10 @@ docker compose -f docker-compose.prod.yml restart nginx
 
 ```bash
 # Backup database
-bash scripts/backup-database.sh
+bash scripts/backup/backup-database.sh
 
 # Backup uploaded files
-bash scripts/backup-files.sh
+bash scripts/backup/backup-files.sh
 ```
 
 ### Automatic Daily Backup
@@ -219,7 +219,7 @@ Setup cron job untuk backup otomatis setiap hari jam 2 pagi:
 
 ```bash
 # Setup auto backup (run as root)
-sudo bash scripts/setup-cron-backup.sh
+sudo bash scripts/backup/setup-cron-backup.sh
 ```
 
 Backup akan disimpan di:
@@ -470,7 +470,7 @@ sudo systemctl disable nginx
 sudo lsof -i :80  # Should return nothing
 
 # Now start containers
-bash scripts/first-deploy.sh
+bash scripts/deployment/first-deploy.sh
 ```
 
 **Solution 2: Use different port (temporary)**

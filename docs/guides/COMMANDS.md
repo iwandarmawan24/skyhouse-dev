@@ -217,7 +217,7 @@ php artisan up
 
 ```bash
 # Run first deployment script
-bash scripts/first-deploy.sh
+bash scripts/deployment/first-deploy.sh
 ```
 
 ### Update Deployment

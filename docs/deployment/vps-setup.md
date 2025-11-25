@@ -200,7 +200,7 @@ REDIS_PASSWORD=CHANGE_THIS_IF_NEEDED
 
 ```bash
 # Run first deployment
-bash scripts/first-deploy.sh
+bash scripts/deployment/first-deploy.sh
 ```
 
 **Script akan memakan waktu 5-10 menit** dan akan:

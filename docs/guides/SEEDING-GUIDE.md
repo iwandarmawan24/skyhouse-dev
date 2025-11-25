@@ -566,7 +566,7 @@ php artisan db:seed --class=ProductSeeder
 
 ```bash
 # 1. Deploy application
-bash scripts/first-deploy.sh
+bash scripts/deployment/first-deploy.sh
 
 # 2. Customize seeders for production
 # Edit database/seeders/*.php files

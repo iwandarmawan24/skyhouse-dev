@@ -10,7 +10,8 @@
       "Bash(git commit:*)",
       "Bash(git push:*)",
       "Bash(cat:*)",
-      "Bash(./vendor/bin/sail npm install:*)"
+      "Bash(./vendor/bin/sail npm install:*)",
+      "Bash(docs/deployment/lightweight-deployment.md)"
     ],
     "deny": [],
     "ask": []

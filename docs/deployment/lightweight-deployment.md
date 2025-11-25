@@ -42,13 +42,13 @@ Karena resource terbatas, kita akan:
 ```bash
 # Di mesin development
 npm run build
-bash scripts/deploy-to-docker.sh
+bash scripts/deployment/deploy-to-docker.sh
 ```
 
 **2. Optimize Docker (one-time):**
 ```bash
 # Di server
-bash scripts/optimize-docker.sh
+bash scripts/docker/optimize-docker.sh
 ```
 
 Script akan:
@@ -67,7 +67,7 @@ Script akan:
 ```bash
 # Di local
 npm run build
-bash scripts/deploy-to-docker.sh
+bash scripts/deployment/deploy-to-docker.sh
 ```
 
 ### Resource Limits Detail
@@ -128,7 +128,7 @@ docker exec -i skyhouse-postgres psql -U skyhouse skyhouse < backup-YYYYMMDD-HHM
 ssh root@your-vps-ip
 
 # Install LEMP Stack
-bash <(curl -s https://raw.githubusercontent.com/your-repo/skyhouse/master/scripts/install-lemp.sh)
+bash <(curl -s https://raw.githubusercontent.com/your-repo/skyhouse/master/scripts/server-setup/install-lemp.sh)
 ```
 
 Script akan install:
@@ -154,7 +154,7 @@ npm install
 npm run build
 
 # Create deployment package
-bash scripts/build-for-deployment.sh
+bash scripts/deployment/build-for-deployment.sh
 ```
 
 Ini akan menghasilkan `skyhouse-deploy.tar.gz` yang sudah include:
@@ -202,7 +202,7 @@ chown -R www-data:www-data storage bootstrap/cache
 chmod -R 775 storage bootstrap/cache
 
 # Setup Nginx
-bash scripts/setup-nginx.sh
+bash scripts/server-setup/setup-nginx.sh
 ```
 
 ### Step 5: Setup Supervisor (for Queue)
@@ -233,7 +233,7 @@ Untuk shared hosting (cPanel/Plesk/DirectAdmin):
 cd skyhouse
 
 # Build deployment package
-bash scripts/build-for-shared-hosting.sh
+bash scripts/deployment/build-for-shared-hosting.sh
 ```
 
 Output: `skyhouse-shared-hosting.zip`
@@ -301,7 +301,7 @@ cPanel → Cron Jobs → Add:
 # Di local machine
 git pull origin master
 npm run build
-bash scripts/build-for-deployment.sh
+bash scripts/deployment/build-for-deployment.sh
 
 # Upload ke server
 scp skyhouse-deploy.tar.gz root@your-vps-ip:/var/www/
@@ -325,7 +325,7 @@ Downtime: ~30 detik
 
 ## 📝 Scripts yang Dibutuhkan
 
-### 1. `scripts/build-for-deployment.sh`
+### 1. `scripts/deployment/build-for-deployment.sh`
 
 ```bash
 #!/bin/bash
@@ -368,7 +368,7 @@ echo "✅ Deployment package created: skyhouse-deploy.tar.gz"
 echo "📤 Upload to server: scp skyhouse-deploy.tar.gz root@your-server:/var/www/"
 ```
 
-### 2. `scripts/build-for-shared-hosting.sh`
+### 2. `scripts/deployment/build-for-shared-hosting.sh`
 
 ```bash
 #!/bin/bash
@@ -417,7 +417,7 @@ echo "✅ Shared hosting package created: skyhouse-shared-hosting.zip"
 echo "📤 Upload via cPanel File Manager"
 ```
 
-### 3. `scripts/install-lemp.sh`
+### 3. `scripts/server-setup/install-lemp.sh`
 
 ```bash
 #!/bin/bash
@@ -495,7 +495,7 @@ echo "✅ LEMP Stack installed successfully!"
 echo "📝 Next: Upload your application to /var/www/skyhouse"
 ```
 
-### 4. `scripts/setup-nginx.sh`
+### 4. `scripts/server-setup/setup-nginx.sh`
 
 ```bash
 #!/bin/bash
