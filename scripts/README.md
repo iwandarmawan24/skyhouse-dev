@@ -22,7 +22,10 @@ Scripts untuk deployment dan build process.
 |--------|-------------|-------|
 | `first-deploy.sh` | First-time Docker deployment | `bash scripts/deployment/first-deploy.sh` |
 | `deploy-to-docker.sh` | Deploy updates to running Docker | `bash scripts/deployment/deploy-to-docker.sh` |
+| `deploy-to-sail.sh` | Deploy updates to Sail (local dev) | `bash scripts/deployment/deploy-to-sail.sh` |
 | `quick-deploy.sh` | Quick update for LEMP stack | `bash scripts/deployment/quick-deploy.sh` |
+| `build-vite.sh` | Build Vite assets only (with error handling) | `bash scripts/deployment/build-vite.sh` |
+| `build-vite-sail.sh` | Build Vite assets in Sail environment | `bash scripts/deployment/build-vite-sail.sh` |
 | `build-for-deployment.sh` | Build tar.gz for VPS | `bash scripts/deployment/build-for-deployment.sh` |
 | `build-for-shared-hosting.sh` | Build ZIP for cPanel | `bash scripts/deployment/build-for-shared-hosting.sh` |
 
