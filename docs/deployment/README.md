@@ -1,6 +1,10 @@
 # 🚀 SkyHouse CMS - Deployment Guide
 
-Panduan deployment SkyHouse CMS untuk berbagai skenario infrastruktur.
+Panduan deployment SkyHouse CMS untuk **production server**.
+
+> **💡 For local development**, see [Local Setup Guide](../development/LOCAL-SETUP.md) instead.
+>
+> This guide covers production deployment to VPS/servers.
 
 ## 📊 Pilih Deployment Method
 

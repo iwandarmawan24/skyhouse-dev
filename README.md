@@ -9,13 +9,48 @@ Modern property management CMS built with Laravel 11, React 19, and PostgreSQL.
 
 ## Quick Start
 
-### Local Development
+### Local Development (Docker Sail - Recommended)
+
+**Prerequisites:** Docker Desktop installed
 
 ```bash
 # Clone repository
 git clone <repository-url>
 cd skyhouse
 
+# Install PHP dependencies
+composer install
+# OR if no local PHP: docker run --rm -v $(pwd):/app composer install
+
+# Setup environment
+cp .env.example .env
+
+# Start Docker services (PostgreSQL, Redis, etc)
+./vendor/bin/sail up -d
+
+# Generate app key & run migrations
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate --seed
+
+# Install frontend dependencies & build
+./vendor/bin/sail npm install
+./vendor/bin/sail npm run dev
+```
+
+Visit: `http://localhost/admin/dashboard`
+Login: `admin@skyhouse.com` / `password`
+
+**Tip:** Create alias for easier commands:
+```bash
+alias sail='./vendor/bin/sail'
+# Then use: sail up, sail artisan migrate, etc.
+```
+
+### Local Development (Manual - Without Docker)
+
+If you prefer not to use Docker:
+
+```bash
 # Install dependencies
 composer install
 npm install
@@ -24,29 +59,32 @@ npm install
 cp .env.example .env
 php artisan key:generate
 
+# Configure .env for local database
+# DB_HOST=127.0.0.1 (not 'pgsql')
+
 # Run migrations
 php artisan migrate --seed
 
-# Start development server
-php artisan serve
-npm run dev
+# Start servers (2 terminals)
+php artisan serve    # Terminal 1
+npm run dev          # Terminal 2
 ```
 
 Visit: `http://localhost:8000/admin/dashboard`
-Login: `admin@skyhouse.com` / `password`
 
 ## Documentation
 
-### 📖 Guides
+### 💻 Local Development
+- **[Local Setup Guide](docs/development/LOCAL-SETUP.md)** - Docker Sail or Manual setup
+- **[Frontend Development](docs/development/FRONTEND-GUIDE.md)** - React components & styling
+- **[Seeding Guide](docs/guides/SEEDING-GUIDE.md)** - Database seeding
+- **[Commands Reference](docs/guides/COMMANDS.md)** - Available artisan commands
+
+### 🚀 Production Deployment
 - **[Deployment Guide](docs/deployment/)** - Production deployment options
   - [Docker Deployment](docs/deployment/docker-deployment.md) - Full Docker stack
   - [Lightweight Deployment](docs/deployment/lightweight-deployment.md) - Resource-limited VPS
   - [VPS Setup Guide](docs/deployment/vps-setup.md) - Server setup from scratch
-
-### 💻 Development
-- **[Frontend Development](docs/development/FRONTEND-GUIDE.md)** - React components & styling
-- **[Seeding Guide](docs/guides/SEEDING-GUIDE.md)** - Database seeding
-- **[Commands Reference](docs/guides/COMMANDS.md)** - Available artisan commands
 
 ### 🛠️ Scripts
 All deployment and utility scripts are organized in `scripts/`:

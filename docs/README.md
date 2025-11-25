@@ -34,9 +34,11 @@ Production deployment guides untuk berbagai skenario.
 
 Guides untuk development dan customization.
 
+- **[Local Setup Guide](development/LOCAL-SETUP.md)** - Docker Sail vs Manual setup
 - **[Frontend Development Guide](development/FRONTEND-GUIDE.md)** - React, Tailwind, components
 
 **Topics covered:**
+- Local environment setup (Docker Sail / Manual)
 - Component structure
 - Styling with Tailwind CSS
 - State management
@@ -67,13 +69,16 @@ Implementation notes dan historical documentation. Useful untuk reference tapi b
 
 ### I want to...
 
+**Setup local development**
+- → See [Local Setup Guide](development/LOCAL-SETUP.md) - Docker Sail or Manual setup
+- → Quick start in [README.md](../README.md#quick-start)
+
 **Deploy to production**
 - → See [Deployment Overview](deployment/README.md)
 - → Use [Docker Deployment](deployment/docker-deployment.md) if you have 2GB+ RAM
 - → Use [Lightweight Deployment](deployment/lightweight-deployment.md) if resource-limited
 
-**Develop locally**
-- → Check [README.md](../README.md#quick-start) for quick start
+**Develop React components**
 - → See [Frontend Guide](development/FRONTEND-GUIDE.md) for component development
 
 **Seed database**

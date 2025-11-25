@@ -1,6 +1,10 @@
 # 🚀 SkyHouse CMS - Production Deployment Guide
 
-Panduan lengkap untuk deploy SkyHouse CMS ke VPS menggunakan Docker.
+Panduan lengkap untuk deploy SkyHouse CMS ke **production VPS** menggunakan Docker.
+
+> **💡 For local development**, use Laravel Sail instead. See [Local Setup Guide](../development/LOCAL-SETUP.md).
+>
+> This guide is for production server deployment.
 
 ## 📋 Prerequisites
 

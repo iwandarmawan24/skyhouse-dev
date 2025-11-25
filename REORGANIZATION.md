@@ -15,6 +15,7 @@ docs/
 │   ├── lightweight-deployment.md      # Resource-limited options
 │   └── vps-setup.md                   # VPS setup from scratch
 ├── development/                        # Development guides
+│   ├── LOCAL-SETUP.md                 # Local dev setup (Docker Sail/Manual)
 │   └── FRONTEND-GUIDE.md              # React & Tailwind guide
 ├── guides/                            # How-to guides
 │   ├── SEEDING-GUIDE.md               # Database seeding
@@ -114,6 +115,7 @@ scripts/
 
 - `docs/README.md` - Documentation index
 - `docs/deployment/README.md` - Deployment decision tree
+- `docs/development/LOCAL-SETUP.md` - Local development setup guide (Docker Sail/Manual)
 - `scripts/README.md` - Scripts index
 
 ## 🔗 Quick Links
