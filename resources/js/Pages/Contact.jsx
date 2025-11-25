@@ -3,7 +3,7 @@ import Navigation from "@/Components/Frontend/Navigation";
 import Footer from "@/Components/Frontend/Footer";
 import { CTA } from "@/Components/Frontend/AllComponents";
 import "@css/frontend.css";
-// import '@css/frontend/contact-page.css';
+import '@css/frontend/contact-page.css';
 
 export default function Contact() {
     const [formData, setFormData] = useState({

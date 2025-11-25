@@ -36,6 +36,10 @@ Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
 
+Route::get('/contact-us', function () {
+    return Inertia::render('Contact');
+})->name('contact');
+
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
     // Guest routes (login & register)
