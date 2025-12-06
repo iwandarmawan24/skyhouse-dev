@@ -3,7 +3,7 @@
 .section_cta {
     position: relative;
     overflow: hidden;
-    margin-bottom: 4rem;
+    margin-bottom: -30px;
 }
 
 .section_cta.is-bottom-rounded {
