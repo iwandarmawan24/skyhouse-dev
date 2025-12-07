@@ -15,10 +15,12 @@ class HeroBannerController extends Controller
      */
     public function index()
     {
-        $banners = HeroBanner::ordered()->paginate(15);
+        $banners = HeroBanner::ordered()->get();
 
         return Inertia::render('Admin/HeroBanners/Index', [
-            'banners' => $banners,
+            'banners' => [
+                'data' => $banners
+            ],
         ]);
     }
 
@@ -43,7 +45,6 @@ class HeroBannerController extends Controller
             'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
             'button_text' => 'nullable|string|max:100',
             'button_link' => 'nullable|string|max:255',
-            'order' => 'required|integer|min:0',
             'is_active' => 'required|boolean',
         ]);
 
@@ -80,22 +81,33 @@ class HeroBannerController extends Controller
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'button_text' => 'nullable|string|max:100',
             'button_link' => 'nullable|string|max:255',
-            'order' => 'required|integer|min:0',
             'is_active' => 'required|boolean',
         ]);
 
         // Handle image upload
         if ($request->hasFile('image')) {
-            // Delete old image
-            if ($heroBanner->image) {
-                Storage::disk('public')->delete($heroBanner->image);
-            }
-
+            // Store new image first
             $imagePath = $request->file('image')->store('hero-banners', 'public');
-            $validated['image'] = $imagePath;
-        }
 
-        $heroBanner->update($validated);
+            // Only delete old image after new one is successfully stored
+            $oldImage = $heroBanner->image;
+
+            $validated['image'] = $imagePath;
+
+            // Update the record
+            $heroBanner->update($validated);
+
+            // Delete old image after successful update
+            if ($oldImage) {
+                Storage::disk('public')->delete($oldImage);
+            }
+        } else {
+            // Remove image from validated data if no new file uploaded
+            unset($validated['image']);
+
+            // Update the record
+            $heroBanner->update($validated);
+        }
 
         return redirect()->route('admin.hero-banners.index')
             ->with('success', 'Hero banner updated successfully.');
@@ -115,5 +127,51 @@ class HeroBannerController extends Controller
 
         return redirect()->route('admin.hero-banners.index')
             ->with('success', 'Hero banner deleted successfully.');
+    }
+
+    /**
+     * Bulk delete hero banners.
+     */
+    public function bulkDelete(Request $request)
+    {
+        $validated = $request->validate([
+            'uids' => 'required|array',
+            'uids.*' => 'required|string|exists:hero_banners,uid',
+        ]);
+
+        $banners = HeroBanner::whereIn('uid', $validated['uids'])->get();
+
+        $deletedCount = 0;
+        foreach ($banners as $banner) {
+            // Delete image
+            if ($banner->image) {
+                Storage::disk('public')->delete($banner->image);
+            }
+
+            $banner->delete();
+            $deletedCount++;
+        }
+
+        return redirect()->route('admin.hero-banners.index')
+            ->with('success', $deletedCount . ' banner(s) deleted successfully.');
+    }
+
+    /**
+     * Update banner order.
+     */
+    public function updateOrder(Request $request)
+    {
+        $validated = $request->validate([
+            'updates' => 'required|array',
+            'updates.*.uid' => 'required|string|exists:hero_banners,uid',
+            'updates.*.order' => 'required|integer',
+        ]);
+
+        foreach ($validated['updates'] as $update) {
+            HeroBanner::where('uid', $update['uid'])->update(['order' => $update['order']]);
+        }
+
+        return redirect()->route('admin.hero-banners.index')
+            ->with('success', 'Banner order updated successfully.');
     }
 }

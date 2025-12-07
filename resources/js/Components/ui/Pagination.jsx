@@ -1,177 +1,100 @@
-import { Link } from '@inertiajs/react';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from './Button';
+import * as React from "react"
+import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 
-export function Pagination({ data, className }) {
-    if (!data || data.last_page <= 1) {
-        return null;
-    }
+import { cn } from "@/lib/utils"
+import { buttonVariants } from "@/Components/ui/button";
 
-    const { current_page, last_page, from, to, total, links, first_page_url, prev_page_url, next_page_url, last_page_url } = data;
+const Pagination = ({
+  className,
+  ...props
+}) => (
+  <nav
+    role="navigation"
+    aria-label="pagination"
+    className={cn("mx-auto flex w-full justify-center", className)}
+    {...props} />
+)
+Pagination.displayName = "Pagination"
 
-    return (
-        <div className={cn('flex items-center justify-between px-4 py-3 sm:px-6', className)}>
-            <div className="flex flex-1 justify-between sm:hidden">
-                {prev_page_url ? (
-                    <Link href={prev_page_url} className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Previous
-                    </Link>
-                ) : (
-                    <span className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">
-                        Previous
-                    </span>
-                )}
-                {next_page_url ? (
-                    <Link href={next_page_url} className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
-                        Next
-                    </Link>
-                ) : (
-                    <span className="relative ml-3 inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-400 cursor-not-allowed">
-                        Next
-                    </span>
-                )}
-            </div>
-            <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between">
-                <div>
-                    <p className="text-sm text-gray-700">
-                        Showing <span className="font-medium">{from}</span> to <span className="font-medium">{to}</span> of{' '}
-                        <span className="font-medium">{total}</span> results
-                    </p>
-                </div>
-                <div>
-                    <nav className="isolate inline-flex -space-x-px rounded-md shadow-sm" aria-label="Pagination">
-                        {/* First Page */}
-                        {first_page_url && current_page > 1 ? (
-                            <Link
-                                href={first_page_url}
-                                className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                            >
-                                <span className="sr-only">First</span>
-                                <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
-                            </Link>
-                        ) : (
-                            <span className="relative inline-flex items-center rounded-l-md px-2 py-2 text-gray-300 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
-                                <ChevronsLeft className="h-5 w-5" aria-hidden="true" />
-                            </span>
-                        )}
+const PaginationContent = React.forwardRef(({ className, ...props }, ref) => (
+  <ul
+    ref={ref}
+    className={cn("flex flex-row items-center gap-1", className)}
+    {...props} />
+))
+PaginationContent.displayName = "PaginationContent"
 
-                        {/* Previous Page */}
-                        {prev_page_url ? (
-                            <Link
-                                href={prev_page_url}
-                                className="relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                            >
-                                <span className="sr-only">Previous</span>
-                                <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                            </Link>
-                        ) : (
-                            <span className="relative inline-flex items-center px-2 py-2 text-gray-300 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
-                                <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-                            </span>
-                        )}
+const PaginationItem = React.forwardRef(({ className, ...props }, ref) => (
+  <li ref={ref} className={cn("", className)} {...props} />
+))
+PaginationItem.displayName = "PaginationItem"
 
-                        {/* Page Numbers */}
-                        {generatePageNumbers(current_page, last_page).map((page, index) => {
-                            if (page === '...') {
-                                return (
-                                    <span
-                                        key={`ellipsis-${index}`}
-                                        className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300"
-                                    >
-                                        ...
-                                    </span>
-                                );
-                            }
+const PaginationLink = ({
+  className,
+  isActive,
+  size = "icon",
+  ...props
+}) => (
+  <a
+    aria-current={isActive ? "page" : undefined}
+    className={cn(buttonVariants({
+      variant: isActive ? "outline" : "ghost",
+      size,
+    }), className)}
+    {...props} />
+)
+PaginationLink.displayName = "PaginationLink"
 
-                            const isActive = page === current_page;
-                            const url = first_page_url.replace(/page=\d+/, `page=${page}`);
+const PaginationPrevious = ({
+  className,
+  ...props
+}) => (
+  <PaginationLink
+    aria-label="Go to previous page"
+    size="default"
+    className={cn("gap-1 pl-2.5", className)}
+    {...props}>
+    <ChevronLeft className="h-4 w-4" />
+    <span>Previous</span>
+  </PaginationLink>
+)
+PaginationPrevious.displayName = "PaginationPrevious"
 
-                            return isActive ? (
-                                <span
-                                    key={page}
-                                    aria-current="page"
-                                    className="relative z-10 inline-flex items-center bg-blue-600 px-4 py-2 text-sm font-semibold text-white focus:z-20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-                                >
-                                    {page}
-                                </span>
-                            ) : (
-                                <Link
-                                    key={page}
-                                    href={url}
-                                    className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                                >
-                                    {page}
-                                </Link>
-                            );
-                        })}
+const PaginationNext = ({
+  className,
+  ...props
+}) => (
+  <PaginationLink
+    aria-label="Go to next page"
+    size="default"
+    className={cn("gap-1 pr-2.5", className)}
+    {...props}>
+    <span>Next</span>
+    <ChevronRight className="h-4 w-4" />
+  </PaginationLink>
+)
+PaginationNext.displayName = "PaginationNext"
 
-                        {/* Next Page */}
-                        {next_page_url ? (
-                            <Link
-                                href={next_page_url}
-                                className="relative inline-flex items-center px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                            >
-                                <span className="sr-only">Next</span>
-                                <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                            </Link>
-                        ) : (
-                            <span className="relative inline-flex items-center px-2 py-2 text-gray-300 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
-                                <ChevronRight className="h-5 w-5" aria-hidden="true" />
-                            </span>
-                        )}
+const PaginationEllipsis = ({
+  className,
+  ...props
+}) => (
+  <span
+    aria-hidden
+    className={cn("flex h-9 w-9 items-center justify-center", className)}
+    {...props}>
+    <MoreHorizontal className="h-4 w-4" />
+    <span className="sr-only">More pages</span>
+  </span>
+)
+PaginationEllipsis.displayName = "PaginationEllipsis"
 
-                        {/* Last Page */}
-                        {last_page_url && current_page < last_page ? (
-                            <Link
-                                href={last_page_url}
-                                className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0"
-                            >
-                                <span className="sr-only">Last</span>
-                                <ChevronsRight className="h-5 w-5" aria-hidden="true" />
-                            </Link>
-                        ) : (
-                            <span className="relative inline-flex items-center rounded-r-md px-2 py-2 text-gray-300 ring-1 ring-inset ring-gray-300 cursor-not-allowed">
-                                <ChevronsRight className="h-5 w-5" aria-hidden="true" />
-                            </span>
-                        )}
-                    </nav>
-                </div>
-            </div>
-        </div>
-    );
-}
-
-function generatePageNumbers(currentPage, lastPage) {
-    const pages = [];
-    const delta = 2; // Number of pages to show on each side of current page
-
-    // Always show first page
-    pages.push(1);
-
-    // Calculate range around current page
-    const rangeStart = Math.max(2, currentPage - delta);
-    const rangeEnd = Math.min(lastPage - 1, currentPage + delta);
-
-    // Add ellipsis after first page if needed
-    if (rangeStart > 2) {
-        pages.push('...');
-    }
-
-    // Add pages around current page
-    for (let i = rangeStart; i <= rangeEnd; i++) {
-        pages.push(i);
-    }
-
-    // Add ellipsis before last page if needed
-    if (rangeEnd < lastPage - 1) {
-        pages.push('...');
-    }
-
-    // Always show last page if there's more than 1 page
-    if (lastPage > 1) {
-        pages.push(lastPage);
-    }
-
-    return pages;
+export {
+  Pagination,
+  PaginationContent,
+  PaginationLink,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
 }

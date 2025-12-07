@@ -58,6 +58,8 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // Hero Banners
+        Route::post('/hero-banners/bulk-delete', [HeroBannerController::class, 'bulkDelete'])->name('hero-banners.bulk-delete');
+        Route::post('/hero-banners/update-order', [HeroBannerController::class, 'updateOrder'])->name('hero-banners.update-order');
         Route::resource('hero-banners', HeroBannerController::class)->except(['show']);
 
         // Products

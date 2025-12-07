@@ -1,6 +1,13 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
+import { ChevronLeft, Upload, X, ZoomIn, ZoomOut } from 'lucide-react';
+import { Button } from '@/Components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card';
+import { Input } from '@/Components/ui/input';
+import { Label } from '@/Components/ui/label';
+import { Textarea } from '@/Components/ui/textarea';
+import { Switch } from '@/Components/ui/switch';
 
 export default function Form({ banner }) {
     const isEdit = banner !== null;
@@ -10,7 +17,6 @@ export default function Form({ banner }) {
         image: null,
         button_text: banner?.button_text || '',
         button_link: banner?.button_link || '',
-        order: banner?.order || 0,
         is_active: banner?.is_active ?? true,
         _method: isEdit ? 'PUT' : 'POST',
     });
@@ -18,6 +24,8 @@ export default function Form({ banner }) {
     const [imagePreview, setImagePreview] = useState(
         banner?.image ? (banner.image.startsWith('http') ? banner.image : `/storage/${banner.image}`) : null
     );
+    const [showImageModal, setShowImageModal] = useState(false);
+    const [imageScale, setImageScale] = useState(1);
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -31,6 +39,11 @@ export default function Form({ banner }) {
         }
     };
 
+    const removeImage = () => {
+        setData('image', null);
+        setImagePreview(null);
+    };
+
     const handleSubmit = (e) => {
         e.preventDefault();
         const url = isEdit ? `/admin/hero-banners/${banner.uid}` : '/admin/hero-banners';
@@ -39,233 +52,265 @@ export default function Form({ banner }) {
 
     return (
         <AdminLayout>
-            {/* Page Header */}
-            <div className="mb-6">
-                <div className="flex items-center gap-4 mb-2">
-                    <Link
-                        href="/admin/hero-banners"
-                        className="text-gray-600 hover:text-gray-900"
-                    >
-                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                        </svg>
-                    </Link>
-                    <h1 className="text-2xl font-bold text-gray-900">
-                        {isEdit ? 'Edit Hero Banner' : 'Create New Hero Banner'}
-                    </h1>
-                </div>
-                <p className="text-gray-600 ml-10">
-                    {isEdit ? 'Update the hero banner details below' : 'Fill in the form to add a new hero banner'}
-                </p>
-            </div>
-
-            {/* Form */}
-            <div className="bg-white rounded-xl shadow-sm p-6">
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    {/* Title */}
-                    <div>
-                        <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-                            Title <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                            id="title"
-                            type="text"
-                            value={data.title}
-                            onChange={(e) => setData('title', e.target.value)}
-                            className={`w-full px-4 py-2 rounded-lg border ${
-                                errors.title ? 'border-red-500' : 'border-gray-300'
-                            } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                            placeholder="Enter banner title"
-                        />
-                        {errors.title && (
-                            <p className="mt-1 text-sm text-red-600">{errors.title}</p>
-                        )}
-                    </div>
-
-                    {/* Description */}
-                    <div>
-                        <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-                            Description
-                        </label>
-                        <textarea
-                            id="description"
-                            value={data.description}
-                            onChange={(e) => setData('description', e.target.value)}
-                            rows={4}
-                            className={`w-full px-4 py-2 rounded-lg border ${
-                                errors.description ? 'border-red-500' : 'border-gray-300'
-                            } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                            placeholder="Enter banner description"
-                        />
-                        {errors.description && (
-                            <p className="mt-1 text-sm text-red-600">{errors.description}</p>
-                        )}
-                    </div>
-
-                    {/* Image Upload */}
-                    <div>
-                        <label htmlFor="image" className="block text-sm font-medium text-gray-700 mb-2">
-                            Banner Image {!isEdit && <span className="text-red-500">*</span>}
-                        </label>
-                        <div className="space-y-4">
-                            {imagePreview && (
-                                <div className="relative w-full h-64 rounded-lg overflow-hidden bg-gray-100">
-                                    <img
-                                        src={imagePreview}
-                                        alt="Preview"
-                                        className="w-full h-full object-cover"
-                                    />
-                                </div>
-                            )}
-                            <div className="flex items-center justify-center w-full">
-                                <label
-                                    htmlFor="image"
-                                    className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-                                >
-                                    <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                        <svg
-                                            className="w-8 h-8 mb-4 text-gray-500"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                                            />
-                                        </svg>
-                                        <p className="mb-2 text-sm text-gray-500">
-                                            <span className="font-semibold">Click to upload</span> or drag and drop
-                                        </p>
-                                        <p className="text-xs text-gray-500">PNG, JPG, JPEG or WEBP (MAX. 2MB)</p>
-                                    </div>
-                                    <input
-                                        id="image"
-                                        type="file"
-                                        className="hidden"
-                                        accept="image/jpeg,image/png,image/jpg,image/webp"
-                                        onChange={handleImageChange}
-                                    />
-                                </label>
-                            </div>
-                        </div>
-                        {errors.image && (
-                            <p className="mt-1 text-sm text-red-600">{errors.image}</p>
-                        )}
-                        {isEdit && (
-                            <p className="mt-1 text-sm text-gray-500">
-                                Leave empty to keep the current image
-                            </p>
-                        )}
-                    </div>
-
-                    {/* Button Text & Link */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label htmlFor="button_text" className="block text-sm font-medium text-gray-700 mb-2">
-                                Button Text
-                            </label>
-                            <input
-                                id="button_text"
-                                type="text"
-                                value={data.button_text}
-                                onChange={(e) => setData('button_text', e.target.value)}
-                                className={`w-full px-4 py-2 rounded-lg border ${
-                                    errors.button_text ? 'border-red-500' : 'border-gray-300'
-                                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                                placeholder="e.g., Learn More"
-                            />
-                            {errors.button_text && (
-                                <p className="mt-1 text-sm text-red-600">{errors.button_text}</p>
-                            )}
-                        </div>
-
-                        <div>
-                            <label htmlFor="button_link" className="block text-sm font-medium text-gray-700 mb-2">
-                                Button Link
-                            </label>
-                            <input
-                                id="button_link"
-                                type="text"
-                                value={data.button_link}
-                                onChange={(e) => setData('button_link', e.target.value)}
-                                className={`w-full px-4 py-2 rounded-lg border ${
-                                    errors.button_link ? 'border-red-500' : 'border-gray-300'
-                                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                                placeholder="e.g., /products"
-                            />
-                            {errors.button_link && (
-                                <p className="mt-1 text-sm text-red-600">{errors.button_link}</p>
-                            )}
-                        </div>
-                    </div>
-
-                    {/* Order & Status */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label htmlFor="order" className="block text-sm font-medium text-gray-700 mb-2">
-                                Display Order <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                id="order"
-                                type="number"
-                                min="0"
-                                value={data.order}
-                                onChange={(e) => setData('order', parseInt(e.target.value))}
-                                className={`w-full px-4 py-2 rounded-lg border ${
-                                    errors.order ? 'border-red-500' : 'border-gray-300'
-                                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                            />
-                            {errors.order && (
-                                <p className="mt-1 text-sm text-red-600">{errors.order}</p>
-                            )}
-                            <p className="mt-1 text-sm text-gray-500">
-                                Lower numbers appear first
-                            </p>
-                        </div>
-
-                        <div>
-                            <label htmlFor="is_active" className="block text-sm font-medium text-gray-700 mb-2">
-                                Status
-                            </label>
-                            <div className="flex items-center h-10">
-                                <label className="relative inline-flex items-center cursor-pointer">
-                                    <input
-                                        id="is_active"
-                                        type="checkbox"
-                                        checked={data.is_active}
-                                        onChange={(e) => setData('is_active', e.target.checked)}
-                                        className="sr-only peer"
-                                    />
-                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                                    <span className="ms-3 text-sm font-medium text-gray-700">
-                                        {data.is_active ? 'Active' : 'Inactive'}
-                                    </span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Submit Buttons */}
-                    <div className="flex items-center justify-end gap-4 pt-6 border-t">
-                        <Link
-                            href="/admin/hero-banners"
-                            className="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
-                        >
-                            Cancel
+            <div className="max-w-4xl mx-auto space-y-6">
+                {/* Page Header */}
+                <div className="flex items-center gap-4">
+                    <Button variant="ghost" size="icon" asChild>
+                        <Link href="/admin/hero-banners">
+                            <ChevronLeft className="h-5 w-5" />
                         </Link>
-                        <button
-                            type="submit"
-                            disabled={processing}
-                            className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-lg transition disabled:opacity-50 disabled:cursor-not-allowed"
-                        >
+                    </Button>
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight">
+                            {isEdit ? 'Edit Hero Banner' : 'Create Hero Banner'}
+                        </h1>
+                        <p className="text-muted-foreground">
+                            {isEdit ? 'Update banner details' : 'Add a new banner to the homepage carousel'}
+                        </p>
+                    </div>
+                </div>
+
+                {/* Form Card */}
+                <form onSubmit={handleSubmit}>
+                    <Card>
+                        <CardHeader>
+                            <CardTitle>Banner Details</CardTitle>
+                            <CardDescription>
+                                Fill in the information below to {isEdit ? 'update' : 'create'} a hero banner
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="space-y-6">
+                            {/* Title */}
+                            <div className="space-y-2">
+                                <Label htmlFor="title">
+                                    Title <span className="text-destructive">*</span>
+                                </Label>
+                                <Input
+                                    id="title"
+                                    value={data.title}
+                                    onChange={(e) => setData('title', e.target.value)}
+                                    placeholder="Enter banner title"
+                                    className={errors.title ? 'border-destructive' : ''}
+                                />
+                                {errors.title && (
+                                    <p className="text-sm text-destructive">{errors.title}</p>
+                                )}
+                            </div>
+
+                            {/* Description */}
+                            <div className="space-y-2">
+                                <Label htmlFor="description">Description</Label>
+                                <Textarea
+                                    id="description"
+                                    value={data.description}
+                                    onChange={(e) => setData('description', e.target.value)}
+                                    placeholder="Enter banner description"
+                                    rows={4}
+                                    className={errors.description ? 'border-destructive' : ''}
+                                />
+                                {errors.description && (
+                                    <p className="text-sm text-destructive">{errors.description}</p>
+                                )}
+                            </div>
+
+                            {/* Image Upload */}
+                            <div className="space-y-2">
+                                <Label htmlFor="image">
+                                    Banner Image {!isEdit && <span className="text-destructive">*</span>}
+                                </Label>
+
+                                {imagePreview ? (
+                                    <div className="space-y-4">
+                                        <div className="relative group rounded-lg overflow-hidden border">
+                                            <img
+                                                src={imagePreview}
+                                                alt="Preview"
+                                                className="w-full h-64 object-cover cursor-pointer transition-transform group-hover:scale-105"
+                                                onClick={() => {
+                                                    setShowImageModal(true);
+                                                    setImageScale(1);
+                                                }}
+                                            />
+                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
+                                                <ZoomIn className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            </div>
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                                size="icon"
+                                                className="absolute top-2 right-2"
+                                                onClick={removeImage}
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="relative">
+                                        <input
+                                            id="image"
+                                            type="file"
+                                            className="sr-only"
+                                            accept="image/jpeg,image/png,image/jpg,image/webp"
+                                            onChange={handleImageChange}
+                                        />
+                                        <Label
+                                            htmlFor="image"
+                                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-muted/50 hover:bg-muted transition-colors"
+                                        >
+                                            <Upload className="w-10 h-10 text-muted-foreground mb-4" />
+                                            <span className="text-sm font-medium text-foreground mb-1">
+                                                Click to upload
+                                            </span>
+                                            <span className="text-xs text-muted-foreground">
+                                                PNG, JPG, JPEG or WEBP (MAX. 2MB)
+                                            </span>
+                                        </Label>
+                                    </div>
+                                )}
+
+                                {errors.image && (
+                                    <p className="text-sm text-destructive">{errors.image}</p>
+                                )}
+                                {isEdit && !imagePreview && (
+                                    <p className="text-sm text-muted-foreground">
+                                        Leave empty to keep the current image
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Button Text & Link */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-2">
+                                    <Label htmlFor="button_text">Button Text</Label>
+                                    <Input
+                                        id="button_text"
+                                        value={data.button_text}
+                                        onChange={(e) => setData('button_text', e.target.value)}
+                                        placeholder="e.g., Learn More"
+                                        className={errors.button_text ? 'border-destructive' : ''}
+                                    />
+                                    {errors.button_text && (
+                                        <p className="text-sm text-destructive">{errors.button_text}</p>
+                                    )}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <Label htmlFor="button_link">Button Link</Label>
+                                    <Input
+                                        id="button_link"
+                                        value={data.button_link}
+                                        onChange={(e) => setData('button_link', e.target.value)}
+                                        placeholder="e.g., /products"
+                                        className={errors.button_link ? 'border-destructive' : ''}
+                                    />
+                                    {errors.button_link && (
+                                        <p className="text-sm text-destructive">{errors.button_link}</p>
+                                    )}
+                                </div>
+                            </div>
+
+                            {/* Status Toggle */}
+                            <div className="flex items-center justify-between rounded-lg border p-4">
+                                <div className="space-y-0.5">
+                                    <Label htmlFor="is_active" className="text-base">Active Status</Label>
+                                    <p className="text-sm text-muted-foreground">
+                                        {data.is_active ? 'Banner is visible on the website' : 'Banner is hidden from the website'}
+                                    </p>
+                                </div>
+                                <Switch
+                                    id="is_active"
+                                    checked={data.is_active}
+                                    onCheckedChange={(checked) => setData('is_active', checked)}
+                                />
+                            </div>
+                        </CardContent>
+                    </Card>
+
+                    {/* Form Actions */}
+                    <div className="flex items-center justify-end gap-4 mt-6">
+                        <Button variant="outline" asChild>
+                            <Link href="/admin/hero-banners">Cancel</Link>
+                        </Button>
+                        <Button type="submit" disabled={processing}>
                             {processing ? 'Saving...' : (isEdit ? 'Update Banner' : 'Create Banner')}
-                        </button>
+                        </Button>
                     </div>
                 </form>
             </div>
+
+            {/* Image Preview Modal */}
+            {showImageModal && imagePreview && (
+                <div
+                    className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
+                    onClick={() => setShowImageModal(false)}
+                >
+                    <div className="relative max-w-7xl max-h-screen">
+                        {/* Close Button */}
+                        <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={() => setShowImageModal(false)}
+                            className="absolute top-4 right-4 z-10 text-white hover:text-white hover:bg-white/20 rounded-full"
+                        >
+                            <X className="h-6 w-6" />
+                        </Button>
+
+                        {/* Zoom Controls */}
+                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 flex items-center gap-2 bg-black/50 rounded-full px-4 py-2">
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setImageScale(Math.max(0.5, imageScale - 0.25));
+                                }}
+                                className="text-white hover:text-white hover:bg-white/20 h-8 w-8"
+                            >
+                                <ZoomOut className="h-4 w-4" />
+                            </Button>
+                            <span className="text-white font-medium min-w-[4rem] text-center text-sm">
+                                {Math.round(imageScale * 100)}%
+                            </span>
+                            <Button
+                                variant="ghost"
+                                size="icon"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setImageScale(Math.min(3, imageScale + 0.25));
+                                }}
+                                className="text-white hover:text-white hover:bg-white/20 h-8 w-8"
+                            >
+                                <ZoomIn className="h-4 w-4" />
+                            </Button>
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    setImageScale(1);
+                                }}
+                                className="text-white hover:text-white hover:bg-white/20 h-8 px-3 text-sm"
+                            >
+                                Reset
+                            </Button>
+                        </div>
+
+                        {/* Image */}
+                        <div className="overflow-auto max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
+                            <img
+                                src={imagePreview}
+                                alt="Preview"
+                                style={{
+                                    transform: `scale(${imageScale})`,
+                                    transition: 'transform 0.2s ease-in-out',
+                                }}
+                                className="max-w-full h-auto"
+                            />
+                        </div>
+                    </div>
+                </div>
+            )}
         </AdminLayout>
     );
 }
