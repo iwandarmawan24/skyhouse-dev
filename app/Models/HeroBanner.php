@@ -16,8 +16,8 @@ class HeroBanner extends Model
         'image',
         'button_text',
         'button_link',
-        'order',
         'is_active',
+        'order',
     ];
 
     protected $casts = [
@@ -44,7 +44,7 @@ class HeroBanner extends Model
     }
 
     /**
-     * Scope a query to order by order column.
+     * Scope a query to order by order field.
      */
     public function scopeOrdered($query)
     {

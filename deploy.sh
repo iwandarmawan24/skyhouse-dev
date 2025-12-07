@@ -51,7 +51,7 @@ docker compose -f docker-compose.prod.yml exec -T app composer install --no-dev 
 # Install/update npm dependencies and build assets
 echo ""
 echo "Building frontend assets..."
-docker compose -f docker-compose.prod.yml exec -T app npm ci --only=production
+docker compose -f docker-compose.prod.yml exec -T app npm ci
 docker compose -f docker-compose.prod.yml exec -T app npm run build
 
 # Run database migrations
