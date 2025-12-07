@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const Navigation = () => {
+const Navigation = ({ isHomePage = false }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -21,23 +21,16 @@ const Navigation = () => {
     <nav
       className={`navbar_component ${isScrolled ? 'is-scrolled' : ''}`}
       style={{
-        backgroundColor: isScrolled ? 'rgba(245, 216, 127, 0.95)' : 'transparent',
-        backdropFilter: isScrolled ? 'blur(10px)' : 'none',
+        backgroundColor: isScrolled ? 'rgba(17, 83, 189, 0.85)' : 'transparent',
+        backdropFilter: isScrolled ? 'blur(12px)' : 'none',
+        WebkitBackdropFilter: isScrolled ? 'blur(12px)' : 'none',
         boxShadow: isScrolled ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none',
+        transition: 'all 0.3s ease-in-out',
       }}
     >
-      <div className="navbar_container">
-        {/* Logo */}
-        <a href="/" className="navbar_logo-link" aria-label="home">
-          <img
-            src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
-            alt="Skyhouse Alamsutera"
-            className="navbar_logo"
-          />
-        </a>
-
-        {/* Desktop Menu */}
-        <div className="navbar_menu">
+      <div className="navbar_container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
+        {/* Left: Desktop Menu */}
+        <div className="navbar_menu" style={{ flex: '1', justifyContent: 'flex-start' }}>
           <div className="navbar-menu_wrapper">
             {/* Projects Link */}
             <a href="/project" className="navbar2_link">
@@ -54,14 +47,42 @@ const Navigation = () => {
               News
             </a>
           </div>
+        </div>
 
-          {/* Contact Button */}
-          <div className="navbar_button-wrapper">
-            <div className="button-squash">
-              <a href="/contact-us" className="button is-navbar2-button">
-                Contact us
-              </a>
-            </div>
+        {/* Center: Logo */}
+        <a 
+          href="/" 
+          className="navbar_logo-link" 
+          aria-label="home" 
+          style={{ 
+            position: 'absolute', 
+            left: '50%', 
+            transform: 'translateX(-50%)',
+            opacity: isHomePage && !isScrolled ? 0 : 1,
+            visibility: isHomePage && !isScrolled ? 'hidden' : 'visible',
+            transition: 'opacity 0.3s ease-in-out, visibility 0.3s ease-in-out'
+          }}
+        >
+          <img
+            src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
+            alt="Skyhouse Alamsutera"
+            className="navbar_logo"
+          />
+        </a>
+
+        {/* Right: Contact Button */}
+        <div className="navbar_button-wrapper" style={{ flex: '1', display: 'flex', justifyContent: 'flex-end' }}>
+          <div className="button-squash">
+            <a 
+              href="/contact-us" 
+              className="button is-icon"
+              style={{
+                padding: '0.5rem 1rem',
+                fontSize: '0.875rem'
+              }}
+            >
+              Contact us
+            </a>
           </div>
         </div>
 
