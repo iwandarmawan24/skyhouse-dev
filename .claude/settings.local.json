@@ -4,7 +4,8 @@
       "Bash(for component in table input label textarea select pagination badge alert card dialog form)",
       "Bash(do)",
       "Bash({} ;)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(npx eslint:*)"
     ],
     "deny": [],
     "ask": []

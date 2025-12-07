@@ -24,4 +24,24 @@ export default defineConfig({
             '@css': path.resolve(__dirname, './resources/css'),
         },
     },
+    build: {
+        // Optimize untuk VPS dengan RAM terbatas
+        rollupOptions: {
+            output: {
+                // Batasi chunk size untuk mengurangi memory usage saat build
+                manualChunks(id) {
+                    // Pisahkan vendor dependencies
+                    if (id.includes('node_modules')) {
+                        return 'vendor';
+                    }
+                }
+            }
+        },
+        // Naikkan limit warning (opsional)
+        chunkSizeWarningLimit: 1000,
+        // Gunakan esbuild (lebih hemat memory dari terser)
+        minify: 'esbuild',
+        // Kurangi sourcemap di production untuk hemat memory
+        sourcemap: false,
+    },
 });

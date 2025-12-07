@@ -4,7 +4,8 @@
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "build:prod": "npm run lint:imports && vite build",
+        "build:prod": "npm run lint:imports && vite build --mode production",
+        "build:vps": "NODE_OPTIONS='--max-old-space-size=1536' vite build --mode production",
         "dev": "vite",
         "lint": "eslint resources/js --ext .js,.jsx,.ts,.tsx",
         "lint:imports": "eslint resources/js --ext .js,.jsx,.ts,.tsx --no-eslintrc --config eslint.config.js --rule '{\"import/no-unresolved\": [\"error\", {\"caseSensitive\": true}]}' --quiet"
@@ -15,6 +16,7 @@
         "axios": "^1.13.1",
         "concurrently": "^9.0.1",
         "eslint": "^9.39.1",
+        "eslint-import-resolver-alias": "^1.1.2",
         "eslint-import-resolver-typescript": "^4.4.4",
         "eslint-import-resolver-vite": "^2.1.0",
         "eslint-plugin-import": "^2.32.0",
