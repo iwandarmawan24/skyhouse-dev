@@ -8,11 +8,12 @@
   left: 0;
   width: 100%;
   height: 100vh;
-  background: #1153BD;
+  background: transparent;
   z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
+  pointer-events: none;
 }
 
 /* Logo Container */
@@ -68,29 +69,29 @@
   transition: none;
 }
 
-/* Different blue shades for layered effect */
+/* Different blue and yellow shades for layered effect */
 .curtain-1 {
-  background: #0F3A7A;
+  background: #1e3a8a;
   z-index: 99995;
 }
 
 .curtain-2 {
-  background: #1153BD;
+  background: #F5D87F;
   z-index: 99994;
 }
 
 .curtain-3 {
-  background: #2563EB;
+  background: #5a87e9;
   z-index: 99993;
 }
 
 .curtain-4 {
-  background: #3B82F6;
+  background: #F4C542;
   z-index: 99992;
 }
 
 .curtain-5 {
-  background: #60A5FA;
+  background: #3B82F6;
   z-index: 99991;
 }
 

@@ -53,7 +53,7 @@ const Hero = () => {
       {/* Hero Content */}
       <div className="padding-global">
         <div className="container-large">
-          <div className="padding-section-large">
+          <div className="padding-section-large" style={{ paddingTop: '2rem' }}>
             <div className="header26_component">
 
               {/* Hero Text */}

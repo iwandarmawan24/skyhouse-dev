@@ -58,6 +58,11 @@ const PageLoader = ({ children }) => {
 
   return (
     <>
+      {/* Page Content - Always visible behind curtains */}
+      <div style={{ opacity: 1, visibility: 'visible' }}>
+        {children}
+      </div>
+
       {/* Loading Screen */}
       {showLoader && (
         <div className={`page-loader ${isClosing ? 'is-closing' : ''}`}>
@@ -74,15 +79,8 @@ const PageLoader = ({ children }) => {
           <div className="curtain curtain-1"></div>
           <div className="curtain curtain-2"></div>
           <div className="curtain curtain-3"></div>
-          <div className="curtain curtain-4"></div>
-          <div className="curtain curtain-5"></div>
         </div>
       )}
-
-      {/* Page Content */}
-      <div className={showLoader && !isClosing ? 'content-hidden' : 'content-visible'}>
-        {children}
-      </div>
     </>
   );
 };

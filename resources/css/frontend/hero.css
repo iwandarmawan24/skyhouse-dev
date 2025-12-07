@@ -72,6 +72,7 @@
 
 @media (min-width: 1024px) and (max-width: 1439px) {
   .hero_houses {
+    bottom: 5vh;
     margin-bottom: 0;
   }
 }
@@ -241,6 +242,14 @@
 /* ========================================
    RESPONSIVE
    ======================================== */
+
+/* For 1366x768 and similar smaller desktop screens */
+@media (max-width: 1440px) and (max-height: 900px) {
+  h1.is-home {
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    padding: 0 8rem;
+  }
+}
 
 @media (max-width: 991px) {
   .section_hero {
