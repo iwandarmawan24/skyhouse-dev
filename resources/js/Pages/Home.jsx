@@ -27,7 +27,7 @@ export default function Home() {
 
   return (
     <div className="page-wrapper">
-      <Navigation />
+      <Navigation isHomePage={true} />
       <main className="main-wrapper">
         <Hero />
         <LaunchProjects />

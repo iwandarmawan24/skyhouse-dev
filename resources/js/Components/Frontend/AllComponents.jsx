@@ -2,7 +2,7 @@
 // REMAINING COMPONENTS
 // ==================================
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation } from 'swiper/modules';
 import ProjectCard from './ProjectCard';
@@ -17,11 +17,11 @@ export const LaunchProjects = () => {
       <div className="visit-kinary-container">
         {/* Left Content */}
         <div className="visit-kinary-content">
-          <h2>
-            Visit<br />
-            Kinary<br />
-            House
+          <h2 style={{ marginBottom: "24px" }}>
+            <span className="italic font-bodoni"><i>Visit</i></span><br />
+            Kinary House
           </h2>
+          <div style={{ width: "80px", height: "4px", backgroundColor: '#1E3A8A', marginBottom: "24px" }}></div>
           <p>
             Hi, skyhousefam! We're excited to share that Kinary House finally has its own show unit.
             Make sure to book an appointment with our skyhouseteam before stopping by.
@@ -260,14 +260,34 @@ export const ShowMoreBanner = () => {
 
 // Quiz Component
 export const Quiz = () => {
+  const quizBgRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (quizBgRef.current) {
+        const scrollY = window.scrollY;
+        const rect = quizBgRef.current.getBoundingClientRect();
+        const elementTop = rect.top + scrollY;
+        const offset = scrollY - elementTop;
+        
+        // Apply parallax effect (move slower than scroll)
+        quizBgRef.current.style.transform = `translateY(${offset * 0.6}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   return (
     <section className="section_quiz is-bottom-rounded">
-      <div className="quiz_bg"></div>
+      <div ref={quizBgRef} className="quiz_bg"></div>
+      <div className="quiz_overlay"></div>
       <div className="padding-global">
         <div className="padding-section-medium">
           <div className="text-align-center">
-            <h2 className="text-color-white">Discover Your Dream Home</h2>
-            <p className="text-size-medium text-color-white">
+            <h2 className="text-color-primary" style={{ margin: 0 }}>Discover Your Dream Home</h2>
+            <p className="text-size-medium text-color-primary">
               Let Skyhouse turn your dream home wish into a wonderful reality!
             </p>
             <div className="margin-top margin-medium">
@@ -339,7 +359,7 @@ export const News = () => {
     <section className="section_news background-color-cream is-20">
       <div className="padding-global">
         <div className="container-large">
-          <div className="padding-section-large">
+          <div className="padding-section-large" style={{ display: 'flex', gap: '40px' }}>
             <div className="news-header">
               <div className="news-header-content">
                 <h2>News</h2>

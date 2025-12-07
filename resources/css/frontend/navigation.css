@@ -36,7 +36,7 @@
 }
 
 .navbar_logo {
-  height: 2.5rem;
+  height: 2.8rem;
   width: auto;
   display: block;
 }
@@ -57,13 +57,13 @@
 }
 
 .navbar2_link {
-  color: var(--color-text-primary);
-  font-size: 1rem;
-  font-weight: 700;
+  color: white;
+  font-size: 14px;
+  font-weight: 300;
   padding: 0.5rem 0;
   position: relative;
   transition: all 0.3s ease;
-  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8);
+  /* text-shadow: 0 2px 4px rgba(255, 255, 255, 0.8); */
 }
 
 .navbar2_link::after {
@@ -73,12 +73,8 @@
   left: 0;
   width: 0;
   height: 2px;
-  background-color: var(--color-text-primary);
+  background-color: white;
   transition: width 0.3s ease;
-}
-
-.navbar2_link:hover {
-  opacity: 0.7;
 }
 
 .navbar2_link:hover::after {
