@@ -15,9 +15,9 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/Components/ui/table";
-import { Button } from "@/Components/ui/button";
-import { Input } from "@/Components/ui/input";
+} from "@/Components/ui/Table";
+import { Button } from "@/Components/ui/Button";
+import { Input } from "@/Components/ui/Input";
 import {
     Pagination,
     PaginationContent,
@@ -25,7 +25,7 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "@/Components/ui/pagination";
+} from "@/Components/ui/Pagination";
 
 export function DataTable({ columns, data, searchKey, searchPlaceholder = "Search..." }) {
     const [sorting, setSorting] = useState([]);

@@ -1,7 +1,7 @@
 import { Link } from "@inertiajs/react";
 import { ArrowUpDown, Pencil, Trash2 } from "lucide-react";
-import { Button } from "@/Components/ui/button";
-import { Badge } from "@/Components/ui/badge";
+import { Button } from "@/Components/ui/Button";
+import { Badge } from "@/Components/ui/Badge";
 import { Checkbox } from "@/Components/ui/checkbox";
 
 export const createColumns = (setShowDeleteConfirm, handleImageClick, selectedRows, toggleSelectRow) => [

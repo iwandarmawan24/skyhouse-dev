@@ -2,7 +2,7 @@ import * as React from "react"
 import { ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 
 import { cn } from "@/lib/utils"
-import { buttonVariants } from "@/Components/ui/button";
+import { buttonVariants } from "@/Components/ui/Button";
 
 const Pagination = ({
   className,

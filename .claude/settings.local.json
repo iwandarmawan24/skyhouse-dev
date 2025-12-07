@@ -1,25 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(./vendor/bin/sail artisan:*)",
-      "Bash(./vendor/bin/sail artisan make:seeder:*)",
-      "Bash(./vendor/bin/sail npm run build:*)",
-      "Bash(git init:*)",
-      "Bash(git remote add:*)",
-      "Bash(git add:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(cat:*)",
-      "Bash(./vendor/bin/sail npm install:*)",
-      "Bash(docs/deployment/lightweight-deployment.md)",
-      "Bash(tree:*)",
-      "Bash(npx shadcn@latest add:*)",
-      "Bash(yes:*)",
-      "Bash(npm run build:*)",
-      "Bash(npm install:*)",
-      "Bash(php artisan:*)",
-      "Bash(grep:*)",
-      "Bash(./vendor/bin/sail npm:*)"
+      "Bash(for component in table input label textarea select pagination badge alert card dialog form)",
+      "Bash(do)",
+      "Bash({} ;)",
+      "Bash(done)"
     ],
     "deny": [],
     "ask": []

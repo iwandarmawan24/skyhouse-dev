@@ -11,6 +11,11 @@ export default [
         languageOptions: {
             ecmaVersion: "latest",
             sourceType: "module",
+            parserOptions: {
+                ecmaFeatures: {
+                    jsx: true,
+                },
+            },
             globals: {
                 ...globals.browser,
                 ...globals.node,
@@ -19,6 +24,13 @@ export default [
         plugins: {
             react,
             import: importPlugin,
+        },
+        settings: {
+            "import/resolver": {
+                vite: {
+                    viteConfig: "./vite.config.js",
+                },
+            },
         },
         rules: {
             "import/no-unresolved": ["error", { caseSensitive: true }],

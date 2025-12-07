@@ -7,7 +7,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Com
 import { Input } from '@/Components/ui/Input';
 import { Label } from '@/Components/ui/Label';
 import { Textarea } from '@/Components/ui/Textarea';
-import { Switch } from '@/Components/ui/Switch';
+import { Switch } from '@/Components/ui/switch';
 
 export default function Form({ banner }) {
     const isEdit = banner !== null;
