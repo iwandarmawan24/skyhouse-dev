@@ -2,12 +2,12 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { ChevronLeft, Upload, X, ZoomIn, ZoomOut } from 'lucide-react';
-import { Button } from '@/Components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/card';
-import { Input } from '@/Components/ui/input';
-import { Label } from '@/Components/ui/label';
-import { Textarea } from '@/Components/ui/textarea';
-import { Switch } from '@/Components/ui/switch';
+import { Button } from '@/Components/ui/Button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/Card';
+import { Input } from '@/Components/ui/Input';
+import { Label } from '@/Components/ui/Label';
+import { Textarea } from '@/Components/ui/Textarea';
+import { Switch } from '@/Components/ui/Switch';
 
 export default function Form({ banner }) {
     const isEdit = banner !== null;

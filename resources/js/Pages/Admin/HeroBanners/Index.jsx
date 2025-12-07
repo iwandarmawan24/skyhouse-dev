@@ -2,8 +2,8 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { Plus, Image as ImageIcon, Pencil, Trash2, GripVertical, ArrowUp, ArrowDown } from 'lucide-react';
-import { Button } from '@/Components/ui/button';
-import { Card, CardContent } from '@/Components/ui/card';
+import { Button } from '@/Components/ui/Button';
+import { Card, CardContent } from '@/Components/ui/Card';
 import {
     Dialog,
     DialogContent,
@@ -11,7 +11,7 @@ import {
     DialogTitle,
     DialogDescription,
     DialogFooter
-} from '@/Components/ui/dialog';
+} from '@/Components/ui/Dialog';
 import {
     Table,
     TableBody,
@@ -19,8 +19,8 @@ import {
     TableHead,
     TableHeader,
     TableRow,
-} from "@/Components/ui/table";
-import { Badge } from "@/Components/ui/badge";
+} from "@/Components/ui/Table";
+import { Badge } from "@/Components/ui/Badge";
 
 export default function Index({ banners }) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
