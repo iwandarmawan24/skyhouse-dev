@@ -27,7 +27,7 @@ import {
     PaginationPrevious,
 } from "@/Components/ui/Pagination";
 
-export function DataTable({ columns, data, searchKey, searchPlaceholder = "Search..." }) {
+export function DataTable({ columns, data, searchKey, searchPlaceholder = "Search...", showPagination = false }) {
     const [sorting, setSorting] = useState([]);
     const [columnFilters, setColumnFilters] = useState([]);
 
@@ -35,15 +35,15 @@ export function DataTable({ columns, data, searchKey, searchPlaceholder = "Searc
         data,
         columns,
         getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
+        getPaginationRowModel: showPagination ? getPaginationRowModel() : undefined,
         onSortingChange: setSorting,
         getSortedRowModel: getSortedRowModel(),
         onColumnFiltersChange: setColumnFilters,
         getFilteredRowModel: getFilteredRowModel(),
         initialState: {
-            pagination: {
-                pageSize: 5,
-            },
+            pagination: showPagination ? {
+                pageSize: 10,
+            } : undefined,
         },
         state: {
             sorting,
@@ -115,45 +115,47 @@ export function DataTable({ columns, data, searchKey, searchPlaceholder = "Searc
                     </TableBody>
                 </Table>
             </div>
-            <div className="flex items-center justify-between">
-                <div className="text-sm text-muted-foreground">
-                    Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{" "}
-                    {Math.min(
-                        (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
-                        table.getFilteredRowModel().rows.length
-                    )}{" "}
-                    of {table.getFilteredRowModel().rows.length} results
-                </div>
-                <Pagination>
-                    <PaginationContent>
-                        <PaginationItem>
-                            <PaginationPrevious
-                                onClick={() => table.previousPage()}
-                                disabled={!table.getCanPreviousPage()}
-                                className={!table.getCanPreviousPage() ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                            />
-                        </PaginationItem>
-                        {Array.from({ length: table.getPageCount() }, (_, i) => i).map((pageIndex) => (
-                            <PaginationItem key={pageIndex}>
-                                <PaginationLink
-                                    onClick={() => table.setPageIndex(pageIndex)}
-                                    isActive={table.getState().pagination.pageIndex === pageIndex}
-                                    className="cursor-pointer"
-                                >
-                                    {pageIndex + 1}
-                                </PaginationLink>
+            {showPagination && (
+                <div className="flex items-center justify-between">
+                    <div className="text-sm text-muted-foreground">
+                        Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{" "}
+                        {Math.min(
+                            (table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize,
+                            table.getFilteredRowModel().rows.length
+                        )}{" "}
+                        of {table.getFilteredRowModel().rows.length} results
+                    </div>
+                    <Pagination>
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() => table.previousPage()}
+                                    disabled={!table.getCanPreviousPage()}
+                                    className={!table.getCanPreviousPage() ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
                             </PaginationItem>
-                        ))}
-                        <PaginationItem>
-                            <PaginationNext
-                                onClick={() => table.nextPage()}
-                                disabled={!table.getCanNextPage()}
-                                className={!table.getCanNextPage() ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                            />
-                        </PaginationItem>
-                    </PaginationContent>
-                </Pagination>
-            </div>
+                            {Array.from({ length: table.getPageCount() }, (_, i) => i).map((pageIndex) => (
+                                <PaginationItem key={pageIndex}>
+                                    <PaginationLink
+                                        onClick={() => table.setPageIndex(pageIndex)}
+                                        isActive={table.getState().pagination.pageIndex === pageIndex}
+                                        className="cursor-pointer"
+                                    >
+                                        {pageIndex + 1}
+                                    </PaginationLink>
+                                </PaginationItem>
+                            ))}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() => table.nextPage()}
+                                    disabled={!table.getCanNextPage()}
+                                    className={!table.getCanNextPage() ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            )}
         </div>
     );
 }

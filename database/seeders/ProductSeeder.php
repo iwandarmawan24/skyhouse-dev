@@ -13,6 +13,10 @@ class ProductSeeder extends Seeder
      */
     public function run(): void
     {
+        // Clean up existing products to avoid duplicates
+        Product::query()->delete();
+        ProductImage::query()->delete();
+
         $products = [
             [
                 'name' => 'Rumah Mewah Bintaro',

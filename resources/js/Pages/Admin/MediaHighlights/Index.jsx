@@ -1,31 +1,30 @@
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Link, router, usePage } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { Plus, Search, Sparkles, ExternalLink } from 'lucide-react';
+import { Button } from '@/Components/ui/Button';
+import { Card } from '@/Components/ui/Card';
+import { Input } from '@/Components/ui/Input';
 import {
-    Button,
-    Card,
-    Alert,
-    Pagination,
     Table,
     TableHeader,
     TableBody,
     TableHead,
     TableRow,
     TableCell,
+} from '@/Components/ui/Table';
+import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
     DialogDescription,
     DialogFooter,
-    Badge,
-    Input
-} from '@/Components/ui';
+} from '@/Components/ui/Dialog';
 import { FormSelect } from '@/Components/ui/FormField';
+import LaravelPagination from '@/Components/LaravelPagination';
 
 export default function Index({ highlights, mediaList, filters }) {
-    const { flash } = usePage().props;
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [search, setSearch] = useState(filters.search || '');
     const [mediaFilter, setMediaFilter] = useState(filters.media || '');
@@ -68,18 +67,6 @@ export default function Index({ highlights, mediaList, filters }) {
                     </Button>
                 </Link>
             </div>
-
-            {/* Success/Error Message */}
-            {flash.success && (
-                <Alert variant="success" className="mb-6">
-                    {flash.success}
-                </Alert>
-            )}
-            {flash.error && (
-                <Alert variant="destructive" className="mb-6">
-                    {flash.error}
-                </Alert>
-            )}
 
             {/* Search & Filter */}
             <Card className="mb-6 p-4">
@@ -202,7 +189,7 @@ export default function Index({ highlights, mediaList, filters }) {
                         </Table>
 
                         {/* Pagination */}
-                        <Pagination data={highlights} />
+                        <LaravelPagination data={highlights} />
                     </>
                 ) : (
                     <div className="text-center py-12">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\HeroBannerResource;
 use App\Models\HeroBanner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -18,9 +19,7 @@ class HeroBannerController extends Controller
         $banners = HeroBanner::ordered()->get();
 
         return Inertia::render('Admin/HeroBanners/Index', [
-            'banners' => [
-                'data' => $banners
-            ],
+            'banners' => HeroBannerResource::collection($banners)->resolve(),
         ]);
     }
 
@@ -66,7 +65,7 @@ class HeroBannerController extends Controller
     public function edit(HeroBanner $heroBanner)
     {
         return Inertia::render('Admin/HeroBanners/Form', [
-            'banner' => $heroBanner,
+            'banner' => (new HeroBannerResource($heroBanner))->resolve(),
         ]);
     }
 

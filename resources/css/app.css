@@ -12,6 +12,7 @@
 @theme {
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-nunito: 'Nunito', 'Inter', ui-sans-serif, system-ui, sans-serif;
     --font-bodoni: 'Bodoni Moda', serif;
 
     /* Color Palette untuk Property CMS */
@@ -134,6 +135,15 @@
   body {
     @apply bg-background text-foreground;
     }
+}
+
+/* Admin Dashboard - Nunito Font */
+#app:has([data-page^="Admin"]) {
+    font-family: 'Nunito', 'Inter', ui-sans-serif, system-ui, sans-serif;
+}
+
+#app:has([data-page^="Admin"]) * {
+    font-family: inherit;
 }
 
 /* Container queries support for Main component */

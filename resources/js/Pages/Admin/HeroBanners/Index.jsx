@@ -43,7 +43,7 @@ export default function Index({ banners }) {
     const handleMoveUp = (banner, index) => {
         if (index === 0) return;
 
-        const prevBanner = banners.data[index - 1];
+        const prevBanner = banners[index - 1];
         router.post('/admin/hero-banners/update-order', {
             updates: [
                 { uid: banner.uid, order: prevBanner.order },
@@ -55,9 +55,9 @@ export default function Index({ banners }) {
     };
 
     const handleMoveDown = (banner, index) => {
-        if (index === banners.data.length - 1) return;
+        if (index === banners.length - 1) return;
 
-        const nextBanner = banners.data[index + 1];
+        const nextBanner = banners[index + 1];
         router.post('/admin/hero-banners/update-order', {
             updates: [
                 { uid: banner.uid, order: nextBanner.order },
@@ -90,7 +90,7 @@ export default function Index({ banners }) {
                 {/* Data Table */}
                 <Card>
                     <CardContent className="p-6">
-                        {banners.data.length > 0 ? (
+                        {banners.length > 0 ? (
                             <div className="rounded-md border">
                                 <Table>
                                     <TableHeader>
@@ -104,7 +104,7 @@ export default function Index({ banners }) {
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
-                                        {banners.data.map((banner, index) => {
+                                        {banners.map((banner, index) => {
                                             const imageUrl = banner.image.startsWith('http')
                                                 ? banner.image
                                                 : `/storage/${banner.image}`;
@@ -128,7 +128,7 @@ export default function Index({ banners }) {
                                                                 size="icon"
                                                                 className="h-6 w-6"
                                                                 onClick={() => handleMoveDown(banner, index)}
-                                                                disabled={index === banners.data.length - 1}
+                                                                disabled={index === banners.length - 1}
                                                             >
                                                                 <ArrowDown className="h-3 w-3" />
                                                             </Button>

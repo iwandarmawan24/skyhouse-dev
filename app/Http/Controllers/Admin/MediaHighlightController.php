@@ -24,7 +24,7 @@ class MediaHighlightController extends Controller
             $query->where('media_uid', $request->media);
         }
 
-        $highlights = $query->paginate(15)->withQueryString();
+        $highlights = $query->paginate(5)->withQueryString();
         $mediaList = Media::active()->orderBy('name')->get();
 
         return Inertia::render('Admin/MediaHighlights/Index', [

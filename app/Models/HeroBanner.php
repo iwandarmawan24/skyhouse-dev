@@ -32,6 +32,12 @@ class HeroBanner extends Model
             if (empty($model->uid)) {
                 $model->uid = (string) \Illuminate\Support\Str::uuid();
             }
+
+            // Auto-assign order if not set
+            if (empty($model->order)) {
+                $maxOrder = static::max('order') ?? 0;
+                $model->order = $maxOrder + 1;
+            }
         });
     }
 

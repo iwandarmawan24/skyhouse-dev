@@ -6,7 +6,6 @@ import {
     ChevronRight,
     LayoutDashboard,
     Image as ImageIcon,
-    Building2,
     Newspaper,
     FolderOpen,
     Megaphone,
@@ -18,6 +17,7 @@ import {
     ExternalLink,
     LogOut,
     Home,
+    Package,
 } from "lucide-react";
 
 import {
@@ -46,6 +46,9 @@ import { Toaster } from "@/Components/ui/sonner";
 export default function AdminLayout({ children }) {
     const { auth, flash } = usePage().props;
 
+    // Initialize state before any functions that use it
+    const [articlesOpen, setArticlesOpen] = useState(false);
+
     // Show toast notifications for flash messages
     useEffect(() => {
         if (flash.success) {
@@ -59,6 +62,20 @@ export default function AdminLayout({ children }) {
         }
     }, [flash]);
 
+    // Set articlesOpen based on current path
+    useEffect(() => {
+        const articlePaths = [
+            "/admin/articles",
+            "/admin/article-categories",
+            "/admin/media",
+            "/admin/media-highlights",
+        ];
+        const isActive = articlePaths.some((path) =>
+            window.location.pathname.startsWith(path)
+        );
+        setArticlesOpen(isActive);
+    }, []);
+
     const isArticleSubmenuActive = () => {
         const articlePaths = [
             "/admin/articles",
@@ -70,8 +87,6 @@ export default function AdminLayout({ children }) {
             window.location.pathname.startsWith(path)
         );
     };
-
-    const [articlesOpen, setArticlesOpen] = useState(isArticleSubmenuActive());
 
     const handleLogout = () => {
         router.post("/admin/logout");
@@ -99,7 +114,7 @@ export default function AdminLayout({ children }) {
             {
                 name: "Products",
                 href: "/admin/products",
-                icon: Building2,
+                icon: Package,
             },
         ],
         content: [
@@ -158,11 +173,19 @@ export default function AdminLayout({ children }) {
 
     const AppSidebar = () => (
         <Sidebar collapsible="none" className="border-r">
-            <SidebarHeader>
-                <div className="flex h-16 items-center gap-2 px-4 border-b">
-                    <Building2 className="h-6 w-6 shrink-0" />
-                    <span className="text-lg font-bold">SkyHouse Admin</span>
-                </div>
+            <SidebarHeader className="bg-[#1153bdd9]">
+                <Link href="/admin/dashboard" className="block">
+                    <div className="flex h-16 items-center gap-3 px-4 border-b hover:bg-accent/50 transition-colors">
+                        <img
+                            src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
+                            alt="SkyHouse Property Logo"
+                            className="h-10 w-auto"
+                            onError={(e) => {
+                                e.target.style.display = "none";
+                            }}
+                        />
+                    </div>
+                </Link>
             </SidebarHeader>
 
             <SidebarContent className="gap-0">
@@ -305,7 +328,10 @@ export default function AdminLayout({ children }) {
                         </div>
                     </SidebarMenuItem>
                     <SidebarMenuItem>
-                        <SidebarMenuButton onClick={handleLogout} className="w-full">
+                        <SidebarMenuButton
+                            onClick={handleLogout}
+                            className="w-full"
+                        >
                             <LogOut className="h-4 w-4" />
                             <span>Logout</span>
                         </SidebarMenuButton>
@@ -318,37 +344,41 @@ export default function AdminLayout({ children }) {
     // Get current page title from URL
     const getPageTitle = () => {
         const path = window.location.pathname;
-        const segments = path.split('/').filter(Boolean);
+        const segments = path.split("/").filter(Boolean);
 
-        if (segments.length === 2 && segments[1] === 'dashboard') {
-            return 'Dashboard';
+        if (segments.length === 2 && segments[1] === "dashboard") {
+            return "Dashboard";
         }
 
         // Convert path segments to title
         const lastSegment = segments[segments.length - 1];
         return lastSegment
-            .split('-')
-            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-            .join(' ');
+            .split("-")
+            .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(" ");
     };
 
     const getBreadcrumbs = () => {
         const path = window.location.pathname;
-        const segments = path.split('/').filter(Boolean);
+        const segments = path.split("/").filter(Boolean);
 
-        if (segments.length === 2 && segments[1] === 'dashboard') {
-            return [{ label: 'Dashboard', href: '/admin/dashboard', current: true }];
+        if (segments.length === 2 && segments[1] === "dashboard") {
+            return [
+                { label: "Dashboard", href: "/admin/dashboard", current: true },
+            ];
         }
 
-        const breadcrumbs = [{ label: 'Dashboard', href: '/admin/dashboard', current: false }];
+        const breadcrumbs = [
+            { label: "Dashboard", href: "/admin/dashboard", current: false },
+        ];
 
         segments.slice(1).forEach((segment, index) => {
             const label = segment
-                .split('-')
-                .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-                .join(' ');
+                .split("-")
+                .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+                .join(" ");
 
-            const href = '/' + segments.slice(0, index + 2).join('/');
+            const href = "/" + segments.slice(0, index + 2).join("/");
             const current = index === segments.length - 2;
 
             breadcrumbs.push({ label, href, current });
@@ -361,9 +391,7 @@ export default function AdminLayout({ children }) {
         <SidebarProvider defaultOpen={true}>
             <div className="flex h-screen w-full overflow-hidden">
                 <AppSidebar />
-                <main className="flex-1 overflow-auto p-6">
-                    {children}
-                </main>
+                <main className="flex-1 overflow-auto p-6">{children}</main>
             </div>
             <Toaster />
         </SidebarProvider>

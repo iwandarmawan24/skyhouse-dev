@@ -20,17 +20,33 @@ class ArticleController extends Controller
     {
         $query = Article::with(['category', 'author'])->latest();
 
-        // Filter by category
-        if ($request->filled('category')) {
-            $query->where('category_id', $request->category);
+        // Filter by multiple categories
+        if ($request->filled('categories')) {
+            $categories = is_array($request->categories)
+                ? $request->categories
+                : array_filter(explode(',', $request->categories));
+
+            if (!empty($categories)) {
+                $query->whereIn('article_category_uid', $categories);
+            }
         }
 
-        // Filter by status
-        if ($request->filled('status')) {
-            if ($request->status === 'published') {
-                $query->published();
-            } elseif ($request->status === 'draft') {
-                $query->where('is_published', false);
+        // Filter by multiple statuses
+        if ($request->filled('statuses')) {
+            $statuses = is_array($request->statuses)
+                ? $request->statuses
+                : array_filter(explode(',', $request->statuses));
+
+            if (!empty($statuses)) {
+                $query->where(function ($q) use ($statuses) {
+                    foreach ($statuses as $status) {
+                        if ($status === 'published') {
+                            $q->orWhere('is_published', true);
+                        } elseif ($status === 'draft') {
+                            $q->orWhere('is_published', false);
+                        }
+                    }
+                });
             }
         }
 
@@ -43,13 +59,14 @@ class ArticleController extends Controller
             });
         }
 
-        $articles = $query->paginate(10)->withQueryString();
+        // Server-side pagination (5 items per page)
+        $articles = $query->paginate(5)->withQueryString();
         $categories = ArticleCategory::all();
 
         return Inertia::render('Admin/Articles/Index', [
             'articles' => $articles,
             'categories' => $categories,
-            'filters' => $request->only(['category', 'status', 'search']),
+            'filters' => $request->only(['categories', 'statuses', 'search']),
         ]);
     }
 

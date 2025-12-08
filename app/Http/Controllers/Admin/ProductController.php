@@ -19,19 +19,71 @@ class ProductController extends Controller
     {
         $query = Product::with('images')->latest();
 
-        // Filter by type
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
+        // Filter by multiple types
+        if ($request->filled('types')) {
+            $types = is_array($request->types)
+                ? $request->types
+                : array_filter(explode(',', $request->types));
+
+            if (!empty($types)) {
+                $query->whereIn('type', $types);
+            }
         }
 
-        // Filter by status
-        if ($request->filled('status')) {
-            if ($request->status === 'active') {
-                $query->active();
-            } elseif ($request->status === 'sold') {
-                $query->where('is_sold', true);
-            } elseif ($request->status === 'inactive') {
-                $query->where('is_active', false);
+        // Filter by multiple statuses
+        if ($request->filled('statuses')) {
+            $statuses = is_array($request->statuses)
+                ? $request->statuses
+                : array_filter(explode(',', $request->statuses));
+
+            if (!empty($statuses)) {
+                $query->where(function ($q) use ($statuses) {
+                    foreach ($statuses as $status) {
+                        if ($status === 'active') {
+                            $q->orWhere(function ($subQ) {
+                                $subQ->where('is_active', true)
+                                     ->where('is_sold', false);
+                            });
+                        } elseif ($status === 'sold') {
+                            $q->orWhere('is_sold', true);
+                        } elseif ($status === 'inactive') {
+                            $q->orWhere(function ($subQ) {
+                                $subQ->where('is_active', false)
+                                     ->where('is_sold', false);
+                            });
+                        }
+                    }
+                });
+            }
+        }
+
+        // Filter by price range
+        if ($request->filled('min_price')) {
+            $query->where('price', '>=', $request->min_price);
+        }
+        if ($request->filled('max_price')) {
+            $query->where('price', '<=', $request->max_price);
+        }
+
+        // Filter by multiple cities
+        if ($request->filled('cities')) {
+            $cities = is_array($request->cities)
+                ? $request->cities
+                : array_filter(explode(',', $request->cities));
+
+            if (!empty($cities)) {
+                $query->whereIn('city', $cities);
+            }
+        }
+
+        // Filter by multiple provinces
+        if ($request->filled('provinces')) {
+            $provinces = is_array($request->provinces)
+                ? $request->provinces
+                : array_filter(explode(',', $request->provinces));
+
+            if (!empty($provinces)) {
+                $query->whereIn('province', $provinces);
             }
         }
 
@@ -50,11 +102,27 @@ class ProductController extends Controller
             });
         }
 
+        // Server-side pagination (10 items per page)
         $products = $query->paginate(10)->withQueryString();
+
+        // Get unique cities and provinces for filter dropdowns
+        $cities = Product::select('city')->distinct()->orderBy('city')->pluck('city');
+        $provinces = Product::select('province')->distinct()->orderBy('province')->pluck('province');
+
+        // Get price range
+        $priceRange = [
+            'min' => Product::min('price') ?? 0,
+            'max' => Product::max('price') ?? 100000000000,
+        ];
 
         return Inertia::render('Admin/Products/Index', [
             'products' => $products,
-            'filters' => $request->only(['type', 'status', 'featured', 'search']),
+            'filters' => $request->only(['types', 'statuses', 'featured', 'search', 'min_price', 'max_price', 'cities', 'provinces']),
+            'filterOptions' => [
+                'cities' => $cities,
+                'provinces' => $provinces,
+                'priceRange' => $priceRange,
+            ],
         ]);
     }
 
@@ -114,7 +182,7 @@ class ProductController extends Controller
                 $imagePath = $image->store('products', 'public');
 
                 ProductImage::create([
-                    'product_id' => $product->id,
+                    'product_uid' => $product->uid,
                     'image_path' => $imagePath,
                     'order' => $index + 1,
                     'is_primary' => $index === 0, // First image is primary
@@ -168,7 +236,7 @@ class ProductController extends Controller
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
             'deleted_images' => 'nullable|array',
-            'deleted_images.*' => 'integer|exists:product_images,id',
+            'deleted_images.*' => 'string|exists:product_images,uid',
         ]);
 
         // Update slug if name changed
@@ -190,8 +258,8 @@ class ProductController extends Controller
 
         // Delete removed images
         if (!empty($deletedImages)) {
-            $imagesToDelete = ProductImage::whereIn('id', $deletedImages)
-                ->where('product_id', $product->id)
+            $imagesToDelete = ProductImage::whereIn('uid', $deletedImages)
+                ->where('product_uid', $product->uid)
                 ->get();
 
             foreach ($imagesToDelete as $image) {
@@ -199,24 +267,42 @@ class ProductController extends Controller
                 $image->delete();
             }
 
+            // Refresh the relationship after deletion
+            $product->load('images');
+
             // Reorder remaining images
             $product->images()->orderBy('order')->get()->each(function ($image, $index) {
                 $image->update(['order' => $index + 1]);
             });
+
+            // If no images remain, we need to handle this
+            if ($product->images()->count() === 0) {
+                // No primary image exists anymore
+                $product->update(['is_primary' => null]);
+            } else {
+                // Ensure at least one image is primary
+                $hasPrimary = $product->images()->where('is_primary', true)->exists();
+                if (!$hasPrimary) {
+                    $product->images()->orderBy('order')->first()->update(['is_primary' => true]);
+                }
+            }
         }
 
         // Handle new image uploads
         if ($request->hasFile('images')) {
+            // Refresh to get the latest count after deletions
+            $product->refresh();
             $currentMaxOrder = $product->images()->max('order') ?? 0;
+            $currentImageCount = $product->images()->count();
 
             foreach ($request->file('images') as $index => $image) {
                 $imagePath = $image->store('products', 'public');
 
                 ProductImage::create([
-                    'product_id' => $product->id,
+                    'product_uid' => $product->uid,
                     'image_path' => $imagePath,
                     'order' => $currentMaxOrder + $index + 1,
-                    'is_primary' => $product->images()->count() === 0 && $index === 0,
+                    'is_primary' => $currentImageCount === 0 && $index === 0,
                 ]);
             }
         }
@@ -249,13 +335,13 @@ class ProductController extends Controller
     {
         $validated = $request->validate([
             'images' => 'required|array',
-            'images.*.id' => 'required|integer|exists:product_images,id',
+            'images.*.uid' => 'required|string|exists:product_images,uid',
             'images.*.order' => 'required|integer|min:1',
         ]);
 
         foreach ($validated['images'] as $imageData) {
-            ProductImage::where('id', $imageData['id'])
-                ->where('product_id', $product->id)
+            ProductImage::where('uid', $imageData['uid'])
+                ->where('product_uid', $product->uid)
                 ->update(['order' => $imageData['order']]);
         }
 
@@ -268,15 +354,15 @@ class ProductController extends Controller
     public function setPrimaryImage(Request $request, Product $product)
     {
         $validated = $request->validate([
-            'image_id' => 'required|integer|exists:product_images,id',
+            'image_uid' => 'required|string|exists:product_images,uid',
         ]);
 
         // Remove primary from all images
         $product->images()->update(['is_primary' => false]);
 
         // Set new primary
-        ProductImage::where('id', $validated['image_id'])
-            ->where('product_id', $product->id)
+        ProductImage::where('uid', $validated['image_uid'])
+            ->where('product_uid', $product->uid)
             ->update(['is_primary' => true]);
 
         return response()->json(['message' => 'Primary image updated successfully.']);

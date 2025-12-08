@@ -1,21 +1,10 @@
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Link, router, usePage } from '@inertiajs/react';
+import { Link, router } from '@inertiajs/react';
 import { useState } from 'react';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
-import { Select } from '@/Components/ui/Select';
-import { Alert } from '@/Components/ui/Alert';
 import { Badge } from '@/Components/ui/Badge';
-import { Card } from '@/Components/ui/Card';
-import { Pagination } from '@/Components/ui/Pagination';
-import {
-    Table,
-    TableHeader,
-    TableBody,
-    TableHead,
-    TableRow,
-    TableCell,
-} from '@/Components/ui/Table';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
 import {
     Dialog,
     DialogContent,
@@ -24,15 +13,25 @@ import {
     DialogDescription,
     DialogFooter,
 } from '@/Components/ui/Dialog';
-import { Plus, Search, FileText, Edit2, Trash2 } from 'lucide-react';
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from '@/Components/ui/dropdown-menu';
+import { DataTable } from '@/Components/DataTable';
+import LaravelPagination from '@/Components/LaravelPagination';
+import { createColumns } from './columns';
+import { Plus, Search, Filter, X } from 'lucide-react';
 
 export default function Index({ articles, categories, filters }) {
-    const { flash } = usePage().props;
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [localFilters, setLocalFilters] = useState({
-        category: filters.category || '',
-        status: filters.status || '',
-        search: filters.search || '',
+        categories: filters?.categories ? filters.categories.split(',').filter(Boolean) : [],
+        statuses: filters?.statuses ? filters.statuses.split(',').filter(Boolean) : [],
+        search: filters?.search || '',
     });
 
     const handleDelete = (uid) => {
@@ -44,208 +43,213 @@ export default function Index({ articles, categories, filters }) {
     const handleFilterChange = (key, value) => {
         const newFilters = { ...localFilters, [key]: value };
         setLocalFilters(newFilters);
-        router.get('/admin/articles', newFilters, {
+
+        // Convert arrays to comma-separated strings for URL
+        const filterParams = {
+            search: newFilters.search,
+            categories: newFilters.categories.join(','),
+            statuses: newFilters.statuses.join(','),
+        };
+
+        router.get('/admin/articles', filterParams, {
             preserveState: true,
             preserveScroll: true,
         });
     };
 
+    const toggleFilter = (key, value) => {
+        const currentValues = localFilters[key];
+        const newValues = currentValues.includes(value)
+            ? currentValues.filter(v => v !== value)
+            : [...currentValues, value];
+
+        handleFilterChange(key, newValues);
+    };
+
+    const removeFilter = (key, value) => {
+        const newValues = localFilters[key].filter(v => v !== value);
+        handleFilterChange(key, newValues);
+    };
+
     const clearFilters = () => {
-        setLocalFilters({ category: '', status: '', search: '' });
+        setLocalFilters({
+            categories: [],
+            statuses: [],
+            search: '',
+        });
         router.get('/admin/articles', {}, {
             preserveState: true,
             preserveScroll: true,
         });
     };
 
-    const formatDate = (date) => {
-        return new Date(date).toLocaleDateString('id-ID', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-        });
-    };
+    const columns = createColumns(setShowDeleteConfirm);
 
     return (
         <AdminLayout>
-            {/* Page Header */}
-            <div className="mb-6 flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Articles</h1>
-                    <p className="text-gray-600 mt-1">Manage blog articles and content</p>
-                </div>
-                <Button asChild>
-                    <Link href="/admin/articles/create">
-                        <Plus className="w-5 h-5 mr-2" />
-                        Add New Article
-                    </Link>
-                </Button>
-            </div>
-
-            {/* Success Message */}
-            {flash.success && (
-                <Alert variant="success" className="mb-6">
-                    {flash.success}
-                </Alert>
-            )}
-
-            {/* Filters */}
-            <Card className="p-4 mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    {/* Search */}
-                    <div className="md:col-span-2 relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                        <Input
-                            type="text"
-                            placeholder="Search by title or excerpt..."
-                            value={localFilters.search}
-                            onChange={(e) => handleFilterChange('search', e.target.value)}
-                            className="pl-9"
-                        />
-                    </div>
-
-                    {/* Category Filter */}
+            <div className="space-y-6">
+                {/* Page Header */}
+                <div className="flex items-center justify-between">
                     <div>
-                        <Select
-                            value={localFilters.category}
-                            onChange={(e) => handleFilterChange('category', e.target.value)}
-                        >
-                            <option value="">All Categories</option>
-                            {categories.map((category) => (
-                                <option key={category.id} value={category.id}>
-                                    {category.name}
-                                </option>
-                            ))}
-                        </Select>
+                        <h1 className="text-3xl font-bold tracking-tight">Articles</h1>
+                        <p className="text-muted-foreground mt-1">
+                            Manage blog articles and content
+                        </p>
                     </div>
-
-                    {/* Status Filter */}
-                    <div>
-                        <Select
-                            value={localFilters.status}
-                            onChange={(e) => handleFilterChange('status', e.target.value)}
-                        >
-                            <option value="">All Status</option>
-                            <option value="published">Published</option>
-                            <option value="draft">Draft</option>
-                        </Select>
-                    </div>
-                </div>
-                <div className="mt-4">
-                    <Button variant="secondary" size="sm" onClick={clearFilters}>
-                        Clear Filters
+                    <Button asChild>
+                        <Link href="/admin/articles/create">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add Article
+                        </Link>
                     </Button>
                 </div>
-            </Card>
 
-            {/* Articles List */}
-            <Card className="overflow-hidden">
-                {articles.data.length > 0 ? (
-                    <>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Article</TableHead>
-                                    <TableHead>Category</TableHead>
-                                    <TableHead>Author</TableHead>
-                                    <TableHead>Date</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {articles.data.map((article) => (
-                                    <TableRow key={article.uid}>
-                                        <TableCell>
-                                            <div className="flex items-center">
-                                                {article.featured_image && (
-                                                    <div className="flex-shrink-0 h-16 w-24 mr-4">
-                                                        <img
-                                                            src={
-                                                                article.featured_image.startsWith('http')
-                                                                    ? article.featured_image
-                                                                    : `/storage/${article.featured_image}`
-                                                            }
-                                                            alt={article.title}
-                                                            className="h-16 w-24 object-cover rounded-lg"
-                                                        />
-                                                    </div>
-                                                )}
-                                                <div>
-                                                    <div className="text-sm font-medium text-gray-900">
-                                                        {article.title}
-                                                    </div>
-                                                    {article.excerpt && (
-                                                        <div className="text-sm text-gray-500 line-clamp-1">
-                                                            {article.excerpt}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge variant="default">
-                                                {article.category.name}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="text-sm text-gray-900">
-                                                {article.author?.full_name || article.user?.full_name || '-'}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="text-sm text-gray-900">
-                                                {article.published_at ? formatDate(article.published_at) : '-'}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge variant={article.is_published ? 'success' : 'secondary'}>
-                                                {article.is_published ? 'Published' : 'Draft'}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <Button variant="ghost" size="sm" asChild>
-                                                    <Link href={`/admin/articles/${article.uid}/edit`}>
-                                                        <Edit2 className="w-4 h-4 mr-1" />
-                                                        Edit
-                                                    </Link>
-                                                </Button>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() => setShowDeleteConfirm(article.uid)}
-                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                {/* Filters Card */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Filters</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            {/* Search and Filter Buttons */}
+                            <div className="flex flex-col md:flex-row gap-3">
+                                {/* Search */}
+                                <div className="flex-1">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                        <Input
+                                            type="text"
+                                            placeholder="Search by title or excerpt..."
+                                            value={localFilters.search}
+                                            onChange={(e) =>
+                                                handleFilterChange("search", e.target.value)
+                                            }
+                                            className="pl-10"
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Category Filter Dropdown */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline" className="gap-2">
+                                            <Filter className="h-4 w-4" />
+                                            Category
+                                            {localFilters.categories.length > 0 && (
+                                                <Badge variant="secondary" className="ml-1 rounded-full px-1.5 py-0">
+                                                    {localFilters.categories.length}
+                                                </Badge>
+                                            )}
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="w-48">
+                                        <DropdownMenuLabel>Filter by Category</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        {categories.map((category) => (
+                                            <DropdownMenuCheckboxItem
+                                                key={category.uid}
+                                                checked={localFilters.categories.includes(category.uid)}
+                                                onCheckedChange={() => toggleFilter('categories', category.uid)}
+                                            >
+                                                {category.name}
+                                            </DropdownMenuCheckboxItem>
+                                        ))}
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+
+                                {/* Status Filter Dropdown */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline" className="gap-2">
+                                            <Filter className="h-4 w-4" />
+                                            Status
+                                            {localFilters.statuses.length > 0 && (
+                                                <Badge variant="secondary" className="ml-1 rounded-full px-1.5 py-0">
+                                                    {localFilters.statuses.length}
+                                                </Badge>
+                                            )}
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="w-48">
+                                        <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuCheckboxItem
+                                            checked={localFilters.statuses.includes('published')}
+                                            onCheckedChange={() => toggleFilter('statuses', 'published')}
+                                        >
+                                            Published
+                                        </DropdownMenuCheckboxItem>
+                                        <DropdownMenuCheckboxItem
+                                            checked={localFilters.statuses.includes('draft')}
+                                            onCheckedChange={() => toggleFilter('statuses', 'draft')}
+                                        >
+                                            Draft
+                                        </DropdownMenuCheckboxItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
+
+                            {/* Active Filters */}
+                            {(localFilters.categories.length > 0 || localFilters.statuses.length > 0 || localFilters.search) && (
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <span className="text-sm text-muted-foreground">Active filters:</span>
+
+                                    {/* Category badges */}
+                                    {localFilters.categories.map((categoryUid) => {
+                                        const category = categories.find(c => c.uid === categoryUid);
+                                        return category ? (
+                                            <Badge key={categoryUid} variant="secondary" className="gap-1">
+                                                Category: {category.name}
+                                                <button
+                                                    onClick={() => removeFilter('categories', categoryUid)}
+                                                    className="ml-1 hover:text-destructive"
                                                 >
-                                                    <Trash2 className="w-4 h-4 mr-1" />
-                                                    Delete
-                                                </Button>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                                    <X className="h-3 w-3" />
+                                                </button>
+                                            </Badge>
+                                        ) : null;
+                                    })}
 
-                        {/* Pagination */}
-                        <Pagination data={articles} />
-                    </>
-                ) : (
-                    <div className="text-center py-12">
-                        <FileText className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">No articles</h3>
-                        <p className="mt-1 text-sm text-gray-500">Get started by creating a new article.</p>
-                        <div className="mt-6">
-                            <Button asChild>
-                                <Link href="/admin/articles/create">
-                                    <Plus className="w-5 h-5 mr-2" />
-                                    Add New Article
-                                </Link>
-                            </Button>
+                                    {/* Status badges */}
+                                    {localFilters.statuses.map((status) => (
+                                        <Badge key={status} variant="secondary" className="gap-1">
+                                            Status: {status.charAt(0).toUpperCase() + status.slice(1)}
+                                            <button
+                                                onClick={() => removeFilter('statuses', status)}
+                                                className="ml-1 hover:text-destructive"
+                                            >
+                                                <X className="h-3 w-3" />
+                                            </button>
+                                        </Badge>
+                                    ))}
+
+                                    {/* Clear all button */}
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={clearFilters}
+                                        className="h-6 px-2 text-xs"
+                                    >
+                                        Clear all
+                                    </Button>
+                                </div>
+                            )}
                         </div>
-                    </div>
+                    </CardContent>
+                </Card>
+
+                {/* Articles DataTable */}
+                <Card>
+                    <CardContent className="pt-6">
+                        <DataTable columns={columns} data={articles.data || []} />
+                    </CardContent>
+                </Card>
+
+                {/* Pagination */}
+                {articles.data && articles.data.length > 0 && (
+                    <LaravelPagination data={articles} />
                 )}
-            </Card>
+            </div>
 
             {/* Delete Confirmation Modal */}
             <Dialog open={!!showDeleteConfirm} onOpenChange={(open) => !open && setShowDeleteConfirm(null)}>

@@ -5,7 +5,9 @@
       "Bash(do)",
       "Bash({} ;)",
       "Bash(done)",
-      "Bash(npx eslint:*)"
+      "Bash(npx eslint:*)",
+      "Bash(find:*)",
+      "Bash(php artisan:*)"
     ],
     "deny": [],
     "ask": []

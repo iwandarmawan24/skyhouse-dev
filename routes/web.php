@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\HeroBannerController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\MediaLibraryController;
 use App\Http\Controllers\Admin\MediaHighlightController;
 use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\ProductController;
@@ -76,6 +77,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Media
         Route::resource('media', MediaController::class)->except(['show']);
+
+        // Media Library (WordPress-like media management)
+        Route::prefix('media-library')->name('media-library.')->group(function () {
+            Route::get('/', [MediaLibraryController::class, 'index'])->name('index');
+            Route::post('/upload', [MediaLibraryController::class, 'upload'])->name('upload');
+            Route::get('/picker', [MediaLibraryController::class, 'picker'])->name('picker');
+            Route::get('/{media}', [MediaLibraryController::class, 'show'])->name('show');
+            Route::patch('/{media}', [MediaLibraryController::class, 'update'])->name('update');
+            Route::post('/{media}/replace', [MediaLibraryController::class, 'replace'])->name('replace');
+            Route::delete('/{media}', [MediaLibraryController::class, 'destroy'])->name('destroy');
+            Route::post('/bulk-delete', [MediaLibraryController::class, 'bulkDelete'])->name('bulk-delete');
+        });
 
         // Media Highlights
         Route::resource('media-highlights', MediaHighlightController::class)->except(['show']);
