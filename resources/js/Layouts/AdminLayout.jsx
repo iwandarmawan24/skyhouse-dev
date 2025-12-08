@@ -112,6 +112,11 @@ export default function AdminLayout({ children }) {
                 icon: ImageIcon,
             },
             {
+                name: "Media Library",
+                href: "/admin/media-library",
+                icon: FolderOpen,
+            },
+            {
                 name: "Products",
                 href: "/admin/products",
                 icon: Package,
