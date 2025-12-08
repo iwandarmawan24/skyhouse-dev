@@ -135,11 +135,12 @@ export function MediaPicker({
     const toggleMediaSelection = (mediaItem) => {
         if (multiple) {
             setSelectedMedia(prev => {
-                const isSelected = prev.some(m => m.uid === mediaItem.uid);
+                const prevArray = Array.isArray(prev) ? prev : [];
+                const isSelected = prevArray.some(m => m.uid === mediaItem.uid);
                 if (isSelected) {
-                    return prev.filter(m => m.uid !== mediaItem.uid);
+                    return prevArray.filter(m => m.uid !== mediaItem.uid);
                 } else {
-                    return [...prev, mediaItem];
+                    return [...prevArray, mediaItem];
                 }
             });
         } else {
@@ -149,7 +150,7 @@ export function MediaPicker({
 
     const isSelected = (mediaItem) => {
         if (multiple) {
-            return selectedMedia.some(m => m.uid === mediaItem.uid);
+            return Array.isArray(selectedMedia) && selectedMedia.some(m => m.uid === mediaItem.uid);
         }
         return selectedMedia?.uid === mediaItem.uid;
     };
@@ -322,7 +323,7 @@ export function MediaPicker({
                 <DialogFooter className="px-6 py-4 border-t">
                     <div className="flex items-center justify-between w-full">
                         <div className="text-sm text-muted-foreground">
-                            {multiple && selectedMedia.length > 0 && (
+                            {multiple && Array.isArray(selectedMedia) && selectedMedia.length > 0 && (
                                 <span>{selectedMedia.length} item(s) selected</span>
                             )}
                         </div>
@@ -332,7 +333,7 @@ export function MediaPicker({
                             </Button>
                             <Button
                                 onClick={handleInsert}
-                                disabled={multiple ? selectedMedia.length === 0 : !selectedMedia}
+                                disabled={multiple ? (Array.isArray(selectedMedia) ? selectedMedia.length === 0 : true) : !selectedMedia}
                             >
                                 Insert Selected
                             </Button>

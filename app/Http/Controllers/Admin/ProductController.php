@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Services\MediaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -12,6 +13,12 @@ use Inertia\Inertia;
 
 class ProductController extends Controller
 {
+    protected MediaService $mediaService;
+
+    public function __construct(MediaService $mediaService)
+    {
+        $this->mediaService = $mediaService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -199,7 +206,10 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load('images');
+        $product->load(['images', 'featuredImage']);
+
+        // Load gallery images
+        $product->gallery_images = $product->gallery_images;
 
         return Inertia::render('Admin/Products/Form', [
             'product' => $product,

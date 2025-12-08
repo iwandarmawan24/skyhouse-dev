@@ -33,6 +33,8 @@ class Product extends Model
         'video_url',
         'video_360_url',
         'primary_image',
+        'featured_image_uid',
+        'gallery_uids',
         'views',
         'is_featured',
         'is_sold',
@@ -46,6 +48,7 @@ class Product extends Model
         'latitude' => 'decimal:8',
         'longitude' => 'decimal:8',
         'facilities' => 'array',
+        'gallery_uids' => 'array',
         'is_featured' => 'boolean',
         'is_sold' => 'boolean',
         'is_active' => 'boolean',
@@ -75,11 +78,36 @@ class Product extends Model
     }
 
     /**
-     * Get product images
+     * Get product images (old way - ProductImage table)
      */
     public function images(): HasMany
     {
         return $this->hasMany(ProductImage::class, 'product_uid', 'uid')->orderBy('order');
+    }
+
+    /**
+     * Get featured image from media library
+     */
+    public function featuredImage()
+    {
+        return $this->belongsTo(MediaLibrary::class, 'featured_image_uid', 'uid');
+    }
+
+    /**
+     * Get gallery images from media library
+     */
+    public function getGalleryImagesAttribute()
+    {
+        if (empty($this->gallery_uids) || !is_array($this->gallery_uids)) {
+            return collect();
+        }
+
+        return MediaLibrary::whereIn('uid', $this->gallery_uids)
+            ->get()
+            ->sortBy(function ($media) {
+                return array_search($media->uid, $this->gallery_uids);
+            })
+            ->values();
     }
 
     /**

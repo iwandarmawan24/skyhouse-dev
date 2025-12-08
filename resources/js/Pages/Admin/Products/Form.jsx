@@ -1,6 +1,8 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
+import { MediaPicker } from '@/Components/MediaPicker';
+import { Upload, X, Plus, Image as ImageIcon } from 'lucide-react';
 
 export default function Form({ product }) {
     const isEdit = product !== null;
@@ -26,6 +28,8 @@ export default function Form({ product }) {
         is_featured: product?.is_featured ?? false,
         is_sold: product?.is_sold ?? false,
         is_active: product?.is_active ?? true,
+        featured_image_uid: product?.featured_image_uid || null,
+        gallery_uids: product?.gallery_uids || [],
         images: [],
         deleted_images: [],
         _method: isEdit ? 'PUT' : 'POST',
@@ -33,6 +37,14 @@ export default function Form({ product }) {
 
     const [existingImages, setExistingImages] = useState(product?.images || []);
     const [newImagePreviews, setNewImagePreviews] = useState([]);
+
+    // MediaPicker state
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
+    const [mediaPickerMode, setMediaPickerMode] = useState('featured'); // 'featured' or 'gallery'
+
+    // Preview state for MediaLibrary images
+    const [featuredImagePreview, setFeaturedImagePreview] = useState(product?.featured_image || null);
+    const [galleryPreviews, setGalleryPreviews] = useState(product?.gallery_images || []);
 
     const handleImageChange = (e) => {
         const files = Array.from(e.target.files);
@@ -363,9 +375,100 @@ export default function Form({ product }) {
                     </div>
                 </div>
 
-                {/* Images */}
+                {/* Media Library Images (NEW) */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Images</h2>
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg font-semibold text-gray-900">Media Library</h2>
+                        <span className="text-sm text-blue-600 bg-blue-50 px-2 py-1 rounded">New Feature</span>
+                    </div>
+
+                    {/* Featured Image */}
+                    <div className="mb-6">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Featured Image
+                        </label>
+                        {featuredImagePreview ? (
+                            <div className="relative inline-block">
+                                <img
+                                    src={featuredImagePreview.url || featuredImagePreview.thumbnail_url}
+                                    alt={featuredImagePreview.alt_text || 'Featured Image'}
+                                    className="w-48 h-48 object-cover rounded-lg border-2 border-gray-300"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setFeaturedImagePreview(null);
+                                        setData('featured_image_uid', null);
+                                    }}
+                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition"
+                                >
+                                    <X className="h-4 w-4" />
+                                </button>
+                            </div>
+                        ) : (
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMediaPickerMode('featured');
+                                    setShowMediaPicker(true);
+                                }}
+                                className="border-2 border-dashed border-gray-300 rounded-lg p-8 w-48 h-48 flex flex-col items-center justify-center hover:border-blue-500 transition-colors group"
+                            >
+                                <ImageIcon className="h-12 w-12 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                                <p className="mt-2 text-sm text-gray-600 group-hover:text-blue-600">Select Image</p>
+                            </button>
+                        )}
+                    </div>
+
+                    {/* Gallery Images */}
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                            Gallery Images
+                        </label>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {galleryPreviews.map((image, index) => (
+                                <div key={image.uid || index} className="relative group">
+                                    <img
+                                        src={image.thumbnail_url || image.url}
+                                        alt={image.alt_text || `Gallery ${index + 1}`}
+                                        className="w-full aspect-square object-cover rounded-lg border-2 border-gray-300"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            const newGallery = galleryPreviews.filter((_, i) => i !== index);
+                                            setGalleryPreviews(newGallery);
+                                            setData('gallery_uids', newGallery.map(img => img.uid));
+                                        }}
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 opacity-0 group-hover:opacity-100 transition"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            ))}
+
+                            {/* Add More Button */}
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setMediaPickerMode('gallery');
+                                    setShowMediaPicker(true);
+                                }}
+                                className="aspect-square border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center hover:border-blue-500 transition-colors group"
+                            >
+                                <Plus className="h-8 w-8 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                                <p className="text-xs text-gray-600 group-hover:text-blue-600 mt-1">Add Images</p>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Images (OLD WAY - Keep for backward compatibility) */}
+                <div className="bg-white rounded-xl shadow-sm p-6">
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg font-semibold text-gray-900">Images (Old Upload)</h2>
+                        <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">Legacy</span>
+                    </div>
 
                     {/* Existing Images */}
                     {isEdit && existingImages.length > 0 && (
@@ -564,6 +667,29 @@ export default function Form({ product }) {
                     </div>
                 </div>
             </form>
+
+            {/* MediaPicker Modal */}
+            <MediaPicker
+                open={showMediaPicker}
+                onClose={() => setShowMediaPicker(false)}
+                onSelect={(media) => {
+                    if (mediaPickerMode === 'featured') {
+                        // Single image for featured
+                        setFeaturedImagePreview(media);
+                        setData('featured_image_uid', media.uid);
+                    } else {
+                        // Multiple images for gallery
+                        const mediaArray = Array.isArray(media) ? media : [media];
+                        const newGallery = [...galleryPreviews, ...mediaArray];
+                        setGalleryPreviews(newGallery);
+                        setData('gallery_uids', newGallery.map(img => img.uid));
+                    }
+                    setShowMediaPicker(false);
+                }}
+                multiple={mediaPickerMode === 'gallery'}
+                accept="image"
+                folder="products"
+            />
         </AdminLayout>
     );
 }
