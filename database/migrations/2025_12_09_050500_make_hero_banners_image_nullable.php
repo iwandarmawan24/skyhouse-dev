@@ -12,12 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('hero_banners', function (Blueprint $table) {
-            // Make image column nullable to support both direct upload and media library
+            // Make image column nullable to support media library usage
             $table->string('image')->nullable()->change();
-
-            // Add image from media library
-            $table->uuid('image_uid')->nullable()->after('image');
-            $table->foreign('image_uid')->references('uid')->on('media_library')->nullOnDelete();
         });
     }
 
@@ -27,9 +23,6 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('hero_banners', function (Blueprint $table) {
-            $table->dropForeign(['image_uid']);
-            $table->dropColumn('image_uid');
-
             // Revert image column back to not nullable
             $table->string('image')->nullable(false)->change();
         });

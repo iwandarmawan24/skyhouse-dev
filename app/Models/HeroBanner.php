@@ -14,6 +14,7 @@ class HeroBanner extends Model
         'title',
         'description',
         'image',
+        'image_uid',
         'button_text',
         'button_link',
         'is_active',
@@ -55,5 +56,13 @@ class HeroBanner extends Model
     public function scopeOrdered($query)
     {
         return $query->orderBy('order', 'asc');
+    }
+
+    /**
+     * Get the banner image from media library.
+     */
+    public function bannerImage()
+    {
+        return $this->belongsTo(MediaLibrary::class, 'image_uid', 'uid');
     }
 }

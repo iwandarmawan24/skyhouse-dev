@@ -1,52 +1,59 @@
-import AdminLayout from '@/Layouts/AdminLayout';
-import { Link, router, useForm } from '@inertiajs/react';
-import { useState } from 'react';
-import { ChevronLeft, Upload, X, ZoomIn, ZoomOut } from 'lucide-react';
-import { Button } from '@/Components/ui/Button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/Components/ui/Card';
-import { Input } from '@/Components/ui/Input';
-import { Label } from '@/Components/ui/Label';
-import { Textarea } from '@/Components/ui/Textarea';
-import { Switch } from '@/Components/ui/switch';
+import AdminLayout from "@/Layouts/AdminLayout";
+import { Link, router, useForm } from "@inertiajs/react";
+import { useState } from "react";
+import { ChevronLeft, Upload, X, ZoomIn, ZoomOut } from "lucide-react";
+import { Button } from "@/Components/ui/Button";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/Components/ui/Card";
+import { Input } from "@/Components/ui/Input";
+import { Label } from "@/Components/ui/Label";
+import { Textarea } from "@/Components/ui/Textarea";
+import { Switch } from "@/Components/ui/switch";
+import { MediaPicker } from "@/Components/MediaPicker";
 
 export default function Form({ banner }) {
     const isEdit = banner !== null;
     const { data, setData, post, processing, errors } = useForm({
-        title: banner?.title || '',
-        description: banner?.description || '',
+        title: banner?.title || "",
+        description: banner?.description || "",
         image: null,
-        button_text: banner?.button_text || '',
-        button_link: banner?.button_link || '',
+        image_uid: banner?.image_uid || null,
+        button_text: banner?.button_text || "",
+        button_link: banner?.button_link || "",
         is_active: banner?.is_active ?? true,
-        _method: isEdit ? 'PUT' : 'POST',
+        _method: isEdit ? "PUT" : "POST",
     });
 
-    const [imagePreview, setImagePreview] = useState(
-        banner?.image ? (banner.image.startsWith('http') ? banner.image : `/storage/${banner.image}`) : null
+    // MediaPicker state
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
+    const [selectedMedia, setSelectedMedia] = useState(
+        banner?.banner_image || null
     );
+
+    // Image preview and modal state
+    const [imagePreview, setImagePreview] = useState(() => {
+        // Priority: use banner.image if exists, otherwise use banner.image_url
+        if (banner?.image) {
+            return banner.image.startsWith("http")
+                ? banner.image
+                : `/storage/${banner.image}`;
+        }
+        return banner?.image_url || null;
+    });
     const [showImageModal, setShowImageModal] = useState(false);
     const [imageScale, setImageScale] = useState(1);
 
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setData('image', file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const removeImage = () => {
-        setData('image', null);
-        setImagePreview(null);
-    };
-
     const handleSubmit = (e) => {
         e.preventDefault();
-        const url = isEdit ? `/admin/hero-banners/${banner.uid}` : '/admin/hero-banners';
+        const url = isEdit
+            ? `/admin/hero-banners/${banner.uid}`
+            : "/admin/hero-banners";
+        console.log("Submitting to URL:", url);
         post(url);
     };
 
@@ -62,10 +69,12 @@ export default function Form({ banner }) {
                     </Button>
                     <div>
                         <h1 className="text-3xl font-bold tracking-tight">
-                            {isEdit ? 'Edit Hero Banner' : 'Create Hero Banner'}
+                            {isEdit ? "Edit Hero Banner" : "Create Hero Banner"}
                         </h1>
                         <p className="text-muted-foreground">
-                            {isEdit ? 'Update banner details' : 'Add a new banner to the homepage carousel'}
+                            {isEdit
+                                ? "Update banner details"
+                                : "Add a new banner to the homepage carousel"}
                         </p>
                     </div>
                 </div>
@@ -76,24 +85,32 @@ export default function Form({ banner }) {
                         <CardHeader>
                             <CardTitle>Banner Details</CardTitle>
                             <CardDescription>
-                                Fill in the information below to {isEdit ? 'update' : 'create'} a hero banner
+                                Fill in the information below to{" "}
+                                {isEdit ? "update" : "create"} a hero banner
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                             {/* Title */}
                             <div className="space-y-2">
                                 <Label htmlFor="title">
-                                    Title <span className="text-destructive">*</span>
+                                    Title{" "}
+                                    <span className="text-destructive">*</span>
                                 </Label>
                                 <Input
                                     id="title"
                                     value={data.title}
-                                    onChange={(e) => setData('title', e.target.value)}
+                                    onChange={(e) =>
+                                        setData("title", e.target.value)
+                                    }
                                     placeholder="Enter banner title"
-                                    className={errors.title ? 'border-destructive' : ''}
+                                    className={
+                                        errors.title ? "border-destructive" : ""
+                                    }
                                 />
                                 {errors.title && (
-                                    <p className="text-sm text-destructive">{errors.title}</p>
+                                    <p className="text-sm text-destructive">
+                                        {errors.title}
+                                    </p>
                                 )}
                             </div>
 
@@ -103,27 +120,44 @@ export default function Form({ banner }) {
                                 <Textarea
                                     id="description"
                                     value={data.description}
-                                    onChange={(e) => setData('description', e.target.value)}
+                                    onChange={(e) =>
+                                        setData("description", e.target.value)
+                                    }
                                     placeholder="Enter banner description"
                                     rows={4}
-                                    className={errors.description ? 'border-destructive' : ''}
+                                    className={
+                                        errors.description
+                                            ? "border-destructive"
+                                            : ""
+                                    }
                                 />
                                 {errors.description && (
-                                    <p className="text-sm text-destructive">{errors.description}</p>
+                                    <p className="text-sm text-destructive">
+                                        {errors.description}
+                                    </p>
                                 )}
                             </div>
 
-                            {/* Image Upload */}
+                            {/* Image Upload - Media Library */}
                             <div className="space-y-2">
                                 <Label htmlFor="image">
-                                    Banner Image {!isEdit && <span className="text-destructive">*</span>}
+                                    Banner Image{" "}
+                                    {!isEdit && (
+                                        <span className="text-destructive">
+                                            *
+                                        </span>
+                                    )}
                                 </Label>
 
-                                {imagePreview ? (
+                                {selectedMedia || imagePreview ? (
                                     <div className="space-y-4">
                                         <div className="relative group rounded-lg overflow-hidden border">
                                             <img
-                                                src={imagePreview}
+                                                src={
+                                                    selectedMedia?.url ||
+                                                    selectedMedia?.thumbnail_url ||
+                                                    imagePreview
+                                                }
                                                 alt="Preview"
                                                 className="w-full h-64 object-cover cursor-pointer transition-transform group-hover:scale-105"
                                                 onClick={() => {
@@ -139,40 +173,58 @@ export default function Form({ banner }) {
                                                 variant="destructive"
                                                 size="icon"
                                                 className="absolute top-2 right-2"
-                                                onClick={removeImage}
+                                                onClick={() => {
+                                                    setSelectedMedia(null);
+                                                    setImagePreview(null);
+                                                    setData("image_uid", null);
+                                                    setData("image", null);
+                                                }}
                                             >
                                                 <X className="h-4 w-4" />
                                             </Button>
                                         </div>
+                                        {selectedMedia && (
+                                            <p className="text-sm text-muted-foreground">
+                                                Selected from Media Library:{" "}
+                                                {selectedMedia.filename}
+                                            </p>
+                                        )}
                                     </div>
                                 ) : (
-                                    <div className="relative">
-                                        <input
-                                            id="image"
-                                            type="file"
-                                            className="sr-only"
-                                            accept="image/jpeg,image/png,image/jpg,image/webp"
-                                            onChange={handleImageChange}
-                                        />
-                                        <Label
-                                            htmlFor="image"
-                                            className="flex flex-col items-center justify-center w-full h-64 border-2 border-dashed rounded-lg cursor-pointer bg-muted/50 hover:bg-muted transition-colors"
+                                    <div className="space-y-3">
+                                        {/* Media Library Button */}
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() =>
+                                                setShowMediaPicker(true)
+                                            }
+                                            className="w-full h-64 border-2 border-dashed hover:border-primary transition-colors"
                                         >
-                                            <Upload className="w-10 h-10 text-muted-foreground mb-4" />
-                                            <span className="text-sm font-medium text-foreground mb-1">
-                                                Click to upload
-                                            </span>
-                                            <span className="text-xs text-muted-foreground">
-                                                PNG, JPG, JPEG or WEBP (MAX. 2MB)
-                                            </span>
-                                        </Label>
+                                            <div className="flex flex-col items-center justify-center">
+                                                <Upload className="w-10 h-10 text-muted-foreground mb-4" />
+                                                <span className="text-sm font-medium text-foreground mb-1">
+                                                    Select from Media Library
+                                                </span>
+                                                <span className="text-xs text-muted-foreground">
+                                                    Or upload a new image
+                                                </span>
+                                            </div>
+                                        </Button>
                                     </div>
                                 )}
 
                                 {errors.image && (
-                                    <p className="text-sm text-destructive">{errors.image}</p>
+                                    <p className="text-sm text-destructive">
+                                        {errors.image}
+                                    </p>
                                 )}
-                                {isEdit && !imagePreview && (
+                                {errors.image_uid && (
+                                    <p className="text-sm text-destructive">
+                                        {errors.image_uid}
+                                    </p>
+                                )}
+                                {isEdit && !selectedMedia && !imagePreview && (
                                     <p className="text-sm text-muted-foreground">
                                         Leave empty to keep the current image
                                     </p>
@@ -182,30 +234,56 @@ export default function Form({ banner }) {
                             {/* Button Text & Link */}
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 <div className="space-y-2">
-                                    <Label htmlFor="button_text">Button Text</Label>
+                                    <Label htmlFor="button_text">
+                                        Button Text
+                                    </Label>
                                     <Input
                                         id="button_text"
                                         value={data.button_text}
-                                        onChange={(e) => setData('button_text', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "button_text",
+                                                e.target.value
+                                            )
+                                        }
                                         placeholder="e.g., Learn More"
-                                        className={errors.button_text ? 'border-destructive' : ''}
+                                        className={
+                                            errors.button_text
+                                                ? "border-destructive"
+                                                : ""
+                                        }
                                     />
                                     {errors.button_text && (
-                                        <p className="text-sm text-destructive">{errors.button_text}</p>
+                                        <p className="text-sm text-destructive">
+                                            {errors.button_text}
+                                        </p>
                                     )}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label htmlFor="button_link">Button Link</Label>
+                                    <Label htmlFor="button_link">
+                                        Button Link
+                                    </Label>
                                     <Input
                                         id="button_link"
                                         value={data.button_link}
-                                        onChange={(e) => setData('button_link', e.target.value)}
+                                        onChange={(e) =>
+                                            setData(
+                                                "button_link",
+                                                e.target.value
+                                            )
+                                        }
                                         placeholder="e.g., /products"
-                                        className={errors.button_link ? 'border-destructive' : ''}
+                                        className={
+                                            errors.button_link
+                                                ? "border-destructive"
+                                                : ""
+                                        }
                                     />
                                     {errors.button_link && (
-                                        <p className="text-sm text-destructive">{errors.button_link}</p>
+                                        <p className="text-sm text-destructive">
+                                            {errors.button_link}
+                                        </p>
                                     )}
                                 </div>
                             </div>
@@ -213,15 +291,24 @@ export default function Form({ banner }) {
                             {/* Status Toggle */}
                             <div className="flex items-center justify-between rounded-lg border p-4">
                                 <div className="space-y-0.5">
-                                    <Label htmlFor="is_active" className="text-base">Active Status</Label>
+                                    <Label
+                                        htmlFor="is_active"
+                                        className="text-base"
+                                    >
+                                        Active Status
+                                    </Label>
                                     <p className="text-sm text-muted-foreground">
-                                        {data.is_active ? 'Banner is visible on the website' : 'Banner is hidden from the website'}
+                                        {data.is_active
+                                            ? "Banner is visible on the website"
+                                            : "Banner is hidden from the website"}
                                     </p>
                                 </div>
                                 <Switch
                                     id="is_active"
                                     checked={data.is_active}
-                                    onCheckedChange={(checked) => setData('is_active', checked)}
+                                    onCheckedChange={(checked) =>
+                                        setData("is_active", checked)
+                                    }
                                 />
                             </div>
                         </CardContent>
@@ -233,14 +320,18 @@ export default function Form({ banner }) {
                             <Link href="/admin/hero-banners">Cancel</Link>
                         </Button>
                         <Button type="submit" disabled={processing}>
-                            {processing ? 'Saving...' : (isEdit ? 'Update Banner' : 'Create Banner')}
+                            {processing
+                                ? "Saving..."
+                                : isEdit
+                                ? "Update Banner"
+                                : "Create Banner"}
                         </Button>
                     </div>
                 </form>
             </div>
 
             {/* Image Preview Modal */}
-            {showImageModal && imagePreview && (
+            {showImageModal && (selectedMedia || imagePreview) && (
                 <div
                     className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
                     onClick={() => setShowImageModal(false)}
@@ -263,7 +354,9 @@ export default function Form({ banner }) {
                                 size="icon"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setImageScale(Math.max(0.5, imageScale - 0.25));
+                                    setImageScale(
+                                        Math.max(0.5, imageScale - 0.25)
+                                    );
                                 }}
                                 className="text-white hover:text-white hover:bg-white/20 h-8 w-8"
                             >
@@ -277,7 +370,9 @@ export default function Form({ banner }) {
                                 size="icon"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setImageScale(Math.min(3, imageScale + 0.25));
+                                    setImageScale(
+                                        Math.min(3, imageScale + 0.25)
+                                    );
                                 }}
                                 className="text-white hover:text-white hover:bg-white/20 h-8 w-8"
                             >
@@ -297,13 +392,16 @@ export default function Form({ banner }) {
                         </div>
 
                         {/* Image */}
-                        <div className="overflow-auto max-h-[90vh]" onClick={(e) => e.stopPropagation()}>
+                        <div
+                            className="overflow-auto max-h-[90vh]"
+                            onClick={(e) => e.stopPropagation()}
+                        >
                             <img
-                                src={imagePreview}
+                                src={selectedMedia?.url || imagePreview}
                                 alt="Preview"
                                 style={{
                                     transform: `scale(${imageScale})`,
-                                    transition: 'transform 0.2s ease-in-out',
+                                    transition: "transform 0.2s ease-in-out",
                                 }}
                                 className="max-w-full h-auto"
                             />
@@ -311,6 +409,21 @@ export default function Form({ banner }) {
                     </div>
                 </div>
             )}
+
+            {/* MediaPicker Modal */}
+            <MediaPicker
+                open={showMediaPicker}
+                onClose={() => setShowMediaPicker(false)}
+                onSelect={(media) => {
+                    setSelectedMedia(media);
+                    console.log("Selected media:", media);
+                    setData("image_uid", media.uid);
+                    setImagePreview(null); // Clear old preview if switching to media library
+                    setShowMediaPicker(false);
+                }}
+                accept="image"
+                folder="hero-banners"
+            />
         </AdminLayout>
     );
 }

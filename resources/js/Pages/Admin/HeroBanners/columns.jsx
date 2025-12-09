@@ -32,9 +32,16 @@ export const createColumns = (setShowDeleteConfirm, handleImageClick, selectedRo
         header: "Image",
         cell: ({ row }) => {
             const banner = row.original;
-            const imageUrl = banner.image.startsWith('http')
-                ? banner.image
-                : `/storage/${banner.image}`;
+
+            // Priority: use banner.image if exists, otherwise use banner.image_url
+            let imageUrl;
+            if (banner.image) {
+                imageUrl = banner.image.startsWith('http')
+                    ? banner.image
+                    : `/storage/${banner.image}`;
+            } else {
+                imageUrl = banner.image_url;
+            }
 
             return (
                 <div
