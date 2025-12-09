@@ -36,9 +36,11 @@ class MediaUsage extends Model
     /**
      * Update last used timestamp
      */
-    public function touch()
+    public function touch($attribute = null)
     {
         $this->last_used_at = now();
         $this->save();
+
+        return parent::touch($attribute);
     }
 }

@@ -32,7 +32,7 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
-        $recent_products = Product::with('images')
+        $recent_products = Product::with('featuredImage')
             ->latest()
             ->limit(5)
             ->get();

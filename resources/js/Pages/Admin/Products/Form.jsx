@@ -30,13 +30,8 @@ export default function Form({ product }) {
         is_active: product?.is_active ?? true,
         featured_image_uid: product?.featured_image_uid || null,
         gallery_uids: product?.gallery_uids || [],
-        images: [],
-        deleted_images: [],
         _method: isEdit ? 'PUT' : 'POST',
     });
-
-    const [existingImages, setExistingImages] = useState(product?.images || []);
-    const [newImagePreviews, setNewImagePreviews] = useState([]);
 
     // MediaPicker state
     const [showMediaPicker, setShowMediaPicker] = useState(false);
@@ -45,40 +40,6 @@ export default function Form({ product }) {
     // Preview state for MediaLibrary images
     const [featuredImagePreview, setFeaturedImagePreview] = useState(product?.featured_image || null);
     const [galleryPreviews, setGalleryPreviews] = useState(product?.gallery_images || []);
-
-    const handleImageChange = (e) => {
-        const files = Array.from(e.target.files);
-        if (files.length > 0) {
-            setData('images', [...data.images, ...files]);
-
-            const previews = files.map((file) => {
-                return new Promise((resolve) => {
-                    const reader = new FileReader();
-                    reader.onloadend = () => resolve(reader.result);
-                    reader.readAsDataURL(file);
-                });
-            });
-
-            Promise.all(previews).then((results) => {
-                setNewImagePreviews([...newImagePreviews, ...results]);
-            });
-        }
-    };
-
-    const removeNewImage = (index) => {
-        const newImages = [...data.images];
-        newImages.splice(index, 1);
-        setData('images', newImages);
-
-        const newPreviews = [...newImagePreviews];
-        newPreviews.splice(index, 1);
-        setNewImagePreviews(newPreviews);
-    };
-
-    const removeExistingImage = (imageId) => {
-        setExistingImages(existingImages.filter((img) => img.id !== imageId));
-        setData('deleted_images', [...data.deleted_images, imageId]);
-    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -375,12 +336,9 @@ export default function Form({ product }) {
                     </div>
                 </div>
 
-                {/* Media Library Images (NEW) */}
+                {/* Media Library Images */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-semibold text-gray-900">Media Library</h2>
-                        <span className="text-sm text-blue-600 bg-blue-50 px-2 py-1 rounded">New Feature</span>
-                    </div>
+                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Images</h2>
 
                     {/* Featured Image */}
                     <div className="mb-6">
@@ -461,104 +419,6 @@ export default function Form({ product }) {
                             </button>
                         </div>
                     </div>
-                </div>
-
-                {/* Images (OLD WAY - Keep for backward compatibility) */}
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-semibold text-gray-900">Images (Old Upload)</h2>
-                        <span className="text-sm text-gray-500 bg-gray-100 px-2 py-1 rounded">Legacy</span>
-                    </div>
-
-                    {/* Existing Images */}
-                    {isEdit && existingImages.length > 0 && (
-                        <div className="mb-6">
-                            <h3 className="text-sm font-medium text-gray-700 mb-3">Current Images</h3>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                {existingImages.map((image) => (
-                                    <div key={image.id} className="relative group">
-                                        <img
-                                            src={
-                                                image.image_path.startsWith('http')
-                                                    ? image.image_path
-                                                    : `/storage/${image.image_path}`
-                                            }
-                                            alt="Product"
-                                            className="w-full h-32 object-cover rounded-lg"
-                                        />
-                                        {image.is_primary && (
-                                            <span className="absolute top-2 left-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded">
-                                                Primary
-                                            </span>
-                                        )}
-                                        <button
-                                            type="button"
-                                            onClick={() => removeExistingImage(image.id)}
-                                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* New Images Preview */}
-                    {newImagePreviews.length > 0 && (
-                        <div className="mb-6">
-                            <h3 className="text-sm font-medium text-gray-700 mb-3">New Images</h3>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                {newImagePreviews.map((preview, index) => (
-                                    <div key={index} className="relative group">
-                                        <img
-                                            src={preview}
-                                            alt={`Preview ${index + 1}`}
-                                            className="w-full h-32 object-cover rounded-lg"
-                                        />
-                                        <button
-                                            type="button"
-                                            onClick={() => removeNewImage(index)}
-                                            className="absolute top-2 right-2 bg-red-500 hover:bg-red-600 text-white p-1 rounded opacity-0 group-hover:opacity-100 transition"
-                                        >
-                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
-
-                    {/* Upload Area */}
-                    <div className="flex items-center justify-center w-full">
-                        <label
-                            htmlFor="images"
-                            className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-                        >
-                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                <svg className="w-8 h-8 mb-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                                </svg>
-                                <p className="mb-2 text-sm text-gray-500">
-                                    <span className="font-semibold">Click to upload</span> or drag and drop
-                                </p>
-                                <p className="text-xs text-gray-500">PNG, JPG, JPEG or WEBP (MAX. 2MB each)</p>
-                            </div>
-                            <input
-                                id="images"
-                                type="file"
-                                className="hidden"
-                                accept="image/jpeg,image/png,image/jpg,image/webp"
-                                multiple
-                                onChange={handleImageChange}
-                            />
-                        </label>
-                    </div>
-                    {errors.images && <p className="mt-1 text-sm text-red-600">{errors.images}</p>}
                 </div>
 
                 {/* Media Links */}

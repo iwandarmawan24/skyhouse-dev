@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Product extends Model
@@ -32,7 +31,6 @@ class Product extends Model
         'facilities',
         'video_url',
         'video_360_url',
-        'primary_image',
         'featured_image_uid',
         'gallery_uids',
         'views',
@@ -52,6 +50,10 @@ class Product extends Model
         'is_featured' => 'boolean',
         'is_sold' => 'boolean',
         'is_active' => 'boolean',
+    ];
+
+    protected $appends = [
+        'gallery_images',
     ];
 
     /**
@@ -75,14 +77,6 @@ class Product extends Model
                 $product->slug = Str::slug($product->name);
             }
         });
-    }
-
-    /**
-     * Get product images (old way - ProductImage table)
-     */
-    public function images(): HasMany
-    {
-        return $this->hasMany(ProductImage::class, 'product_uid', 'uid')->orderBy('order');
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\MediaLibrary;
 use App\Services\MediaService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class MediaLibraryController extends Controller
@@ -160,14 +161,33 @@ class MediaLibraryController extends Controller
     {
         $force = $request->boolean('force', false);
 
+        Log::info('Media deletion requested', [
+            'media_uid' => $media->uid,
+            'filename' => $media->filename,
+            'force' => $force,
+            'user_id' => auth()->id(),
+        ]);
+
         try {
             $this->mediaService->delete($media, $force);
+
+            Log::info('Media deleted successfully', [
+                'media_uid' => $media->uid,
+                'filename' => $media->filename,
+            ]);
 
             return response()->json([
                 'success' => true,
                 'message' => 'Media deleted successfully',
             ]);
         } catch (\Exception $e) {
+            Log::error('Media deletion failed', [
+                'media_uid' => $media->uid,
+                'filename' => $media->filename,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             return response()->json([
                 'success' => false,
                 'message' => $e->getMessage(),

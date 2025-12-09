@@ -40,12 +40,8 @@ export const createColumns = (setShowDeleteConfirm, setViewProduct) => [
         },
         cell: ({ row }) => {
             const product = row.original;
-            const firstImage = product.images?.[0];
-            const imageSrc = firstImage?.image_path?.startsWith("http")
-                ? firstImage.image_path
-                : firstImage?.image_path
-                ? `/storage/${firstImage.image_path}`
-                : null;
+            // Use featured image from Media Library
+            const imageSrc = product.featured_image?.thumbnail_url || product.featured_image?.url || null;
 
             return (
                 <div className="flex items-center gap-3">
@@ -219,15 +215,17 @@ export function ViewProductDialog({ product, open, onOpenChange }) {
         }).format(price);
     };
 
-    const getImageSrc = (image) => {
-        if (!image) return null;
-        return image.image_path?.startsWith("http")
-            ? image.image_path
-            : `/storage/${image.image_path}`;
-    };
+    // Combine featured image and gallery images
+    const allImages = [];
+    if (product.featured_image) {
+        allImages.push(product.featured_image);
+    }
+    if (product.gallery_images && product.gallery_images.length > 0) {
+        allImages.push(...product.gallery_images);
+    }
 
-    const mainImage = product.images?.[selectedImageIndex];
-    const mainImageSrc = getImageSrc(mainImage);
+    const mainImage = allImages[selectedImageIndex];
+    const mainImageSrc = mainImage?.url || null;
 
     return (
         <>
@@ -277,7 +275,7 @@ export function ViewProductDialog({ product, open, onOpenChange }) {
                         </div>
 
                         {/* Main Image with Gallery Thumbnails */}
-                        {product.images && product.images.length > 0 && (
+                        {allImages.length > 0 && (
                             <div className="space-y-3">
                                 <div
                                     className="aspect-video w-full overflow-hidden rounded-xl border-2 border-border cursor-pointer group relative"
@@ -304,13 +302,13 @@ export function ViewProductDialog({ product, open, onOpenChange }) {
                                 </div>
 
                                 {/* Thumbnail Gallery */}
-                                {product.images.length > 1 && (
+                                {allImages.length > 1 && (
                                     <div className="flex gap-2 overflow-x-auto pb-2">
-                                        {product.images.map((image, index) => {
-                                            const thumbSrc = getImageSrc(image);
+                                        {allImages.map((image, index) => {
+                                            const thumbSrc = image?.thumbnail_url || image?.url;
                                             return (
                                                 <button
-                                                    key={index}
+                                                    key={image.uid || index}
                                                     onClick={() => setSelectedImageIndex(index)}
                                                     className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
                                                         selectedImageIndex === index

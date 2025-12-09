@@ -4,10 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use App\Models\ProductImage;
 use App\Services\MediaService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
 
@@ -24,7 +22,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with('images')->latest();
+        $query = Product::with('featuredImage')->latest();
 
         // Filter by multiple types
         if ($request->filled('types')) {
@@ -169,8 +167,9 @@ class ProductController extends Controller
             'video_360_url' => 'nullable|url|max:255',
             'is_featured' => 'required|boolean',
             'is_active' => 'required|boolean',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'featured_image_uid' => 'nullable|exists:media_library,uid',
+            'gallery_uids' => 'nullable|array',
+            'gallery_uids.*' => 'exists:media_library,uid',
         ]);
 
         // Generate slug
@@ -183,20 +182,6 @@ class ProductController extends Controller
 
         $product = Product::create($validated);
 
-        // Handle image uploads
-        if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $index => $image) {
-                $imagePath = $image->store('products', 'public');
-
-                ProductImage::create([
-                    'product_uid' => $product->uid,
-                    'image_path' => $imagePath,
-                    'order' => $index + 1,
-                    'is_primary' => $index === 0, // First image is primary
-                ]);
-            }
-        }
-
         return redirect()->route('admin.products.index')
             ->with('success', 'Product created successfully.');
     }
@@ -206,7 +191,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load(['images', 'featuredImage']);
+        $product->load('featuredImage');
 
         // Load gallery images
         $product->gallery_images = $product->gallery_images;
@@ -243,10 +228,9 @@ class ProductController extends Controller
             'is_featured' => 'required|boolean',
             'is_sold' => 'required|boolean',
             'is_active' => 'required|boolean',
-            'images' => 'nullable|array',
-            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
-            'deleted_images' => 'nullable|array',
-            'deleted_images.*' => 'string|exists:product_images,uid',
+            'featured_image_uid' => 'nullable|exists:media_library,uid',
+            'gallery_uids' => 'nullable|array',
+            'gallery_uids.*' => 'exists:media_library,uid',
         ]);
 
         // Update slug if name changed
@@ -259,63 +243,7 @@ class ProductController extends Controller
             $validated['facilities'] = json_encode($validated['facilities']);
         }
 
-        // Remove images and deleted_images from validated data
-        $imageData = $validated['images'] ?? [];
-        $deletedImages = $validated['deleted_images'] ?? [];
-        unset($validated['images'], $validated['deleted_images']);
-
         $product->update($validated);
-
-        // Delete removed images
-        if (!empty($deletedImages)) {
-            $imagesToDelete = ProductImage::whereIn('uid', $deletedImages)
-                ->where('product_uid', $product->uid)
-                ->get();
-
-            foreach ($imagesToDelete as $image) {
-                Storage::disk('public')->delete($image->image_path);
-                $image->delete();
-            }
-
-            // Refresh the relationship after deletion
-            $product->load('images');
-
-            // Reorder remaining images
-            $product->images()->orderBy('order')->get()->each(function ($image, $index) {
-                $image->update(['order' => $index + 1]);
-            });
-
-            // If no images remain, we need to handle this
-            if ($product->images()->count() === 0) {
-                // No primary image exists anymore
-                $product->update(['is_primary' => null]);
-            } else {
-                // Ensure at least one image is primary
-                $hasPrimary = $product->images()->where('is_primary', true)->exists();
-                if (!$hasPrimary) {
-                    $product->images()->orderBy('order')->first()->update(['is_primary' => true]);
-                }
-            }
-        }
-
-        // Handle new image uploads
-        if ($request->hasFile('images')) {
-            // Refresh to get the latest count after deletions
-            $product->refresh();
-            $currentMaxOrder = $product->images()->max('order') ?? 0;
-            $currentImageCount = $product->images()->count();
-
-            foreach ($request->file('images') as $index => $image) {
-                $imagePath = $image->store('products', 'public');
-
-                ProductImage::create([
-                    'product_uid' => $product->uid,
-                    'image_path' => $imagePath,
-                    'order' => $currentMaxOrder + $index + 1,
-                    'is_primary' => $currentImageCount === 0 && $index === 0,
-                ]);
-            }
-        }
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product updated successfully.');
@@ -326,55 +254,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        // Delete all images
-        foreach ($product->images as $image) {
-            Storage::disk('public')->delete($image->image_path);
-            $image->delete();
-        }
-
         $product->delete();
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product deleted successfully.');
-    }
-
-    /**
-     * Update image order.
-     */
-    public function updateImageOrder(Request $request, Product $product)
-    {
-        $validated = $request->validate([
-            'images' => 'required|array',
-            'images.*.uid' => 'required|string|exists:product_images,uid',
-            'images.*.order' => 'required|integer|min:1',
-        ]);
-
-        foreach ($validated['images'] as $imageData) {
-            ProductImage::where('uid', $imageData['uid'])
-                ->where('product_uid', $product->uid)
-                ->update(['order' => $imageData['order']]);
-        }
-
-        return response()->json(['message' => 'Image order updated successfully.']);
-    }
-
-    /**
-     * Set primary image.
-     */
-    public function setPrimaryImage(Request $request, Product $product)
-    {
-        $validated = $request->validate([
-            'image_uid' => 'required|string|exists:product_images,uid',
-        ]);
-
-        // Remove primary from all images
-        $product->images()->update(['is_primary' => false]);
-
-        // Set new primary
-        ProductImage::where('uid', $validated['image_uid'])
-            ->where('product_uid', $product->uid)
-            ->update(['is_primary' => true]);
-
-        return response()->json(['message' => 'Primary image updated successfully.']);
     }
 }
