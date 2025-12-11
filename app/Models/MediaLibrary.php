@@ -44,6 +44,14 @@ class MediaLibrary extends Model
     protected $appends = ['url', 'thumbnail_url', 'file_size_human'];
 
     /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName()
+    {
+        return 'uid';
+    }
+
+    /**
      * Get the user who uploaded this media
      */
     public function uploader()
