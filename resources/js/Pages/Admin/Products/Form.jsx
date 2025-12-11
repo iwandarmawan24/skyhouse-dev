@@ -2,6 +2,7 @@ import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, useForm } from '@inertiajs/react';
 import { useState } from 'react';
 import { MediaPicker } from '@/Components/MediaPicker';
+import RichTextEditor from '@/Components/RichTextEditor';
 import { Upload, X, Plus, Image as ImageIcon } from 'lucide-react';
 
 export default function Form({ product }) {
@@ -142,17 +143,12 @@ export default function Form({ product }) {
                             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
                                 Description <span className="text-red-500">*</span>
                             </label>
-                            <textarea
-                                id="description"
+                            <RichTextEditor
                                 value={data.description}
-                                onChange={(e) => setData('description', e.target.value)}
-                                rows={6}
-                                className={`w-full px-4 py-2 rounded-lg border ${
-                                    errors.description ? 'border-red-500' : 'border-gray-300'
-                                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                                onChange={(content) => setData('description', content)}
                                 placeholder="Enter property description"
+                                error={errors.description}
                             />
-                            {errors.description && <p className="mt-1 text-sm text-red-600">{errors.description}</p>}
                         </div>
                     </div>
                 </div>

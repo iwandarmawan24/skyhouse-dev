@@ -1,340 +1,203 @@
-import { useEditor, EditorContent } from '@tiptap/react';
-import StarterKit from '@tiptap/starter-kit';
-import Image from '@tiptap/extension-image';
-import Link from '@tiptap/extension-link';
-import Youtube from '@tiptap/extension-youtube';
-import Placeholder from '@tiptap/extension-placeholder';
-import Underline from '@tiptap/extension-underline';
-import { useEffect, useState } from 'react';
-import {
-    Bold, Italic, List, ListOrdered, Heading2, Heading3,
-    Link as LinkIcon, Image as ImageIcon, Youtube as YoutubeIcon,
-    Undo, Redo, Underline as UnderlineIcon
-} from 'lucide-react';
-import { Button } from '@/Components/ui/Button';
+import { useRef, useEffect, useState } from "react";
+import Quill from "quill";
+import "quill/dist/quill.snow.css";
+import { MediaPicker } from "./MediaPicker";
 
-export default function RichTextEditor({ value, onChange, placeholder = 'Start writing your article...' }) {
-    const [showLinkInput, setShowLinkInput] = useState(false);
-    const [showImageInput, setShowImageInput] = useState(false);
-    const [showVideoInput, setShowVideoInput] = useState(false);
-    const [linkUrl, setLinkUrl] = useState('');
-    const [imageUrl, setImageUrl] = useState('');
-    const [videoUrl, setVideoUrl] = useState('');
+export default function RichTextEditor({
+    value,
+    onChange,
+    placeholder = "Start writing...",
+    className = "",
+    error,
+}) {
+    const editorRef = useRef(null);
+    const quillRef = useRef(null);
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
 
-    const editor = useEditor({
-        extensions: [
-            StarterKit.configure({
-                heading: {
-                    levels: [2, 3],
-                },
-            }),
-            Underline,
-            Image.configure({
-                HTMLAttributes: {
-                    class: 'rounded-lg max-w-full h-auto my-4',
-                },
-            }),
-            Link.configure({
-                openOnClick: false,
-                HTMLAttributes: {
-                    class: 'text-blue-600 underline hover:text-blue-800',
-                },
-            }),
-            Youtube.configure({
-                HTMLAttributes: {
-                    class: 'rounded-lg my-4',
-                },
-                width: 640,
-                height: 360,
-            }),
-            Placeholder.configure({
-                placeholder,
-            }),
-        ],
-        content: value || '',
-        editorProps: {
-            attributes: {
-                class: 'focus:outline-none min-h-[300px] p-4 text-gray-800',
-            },
-        },
-        onUpdate: ({ editor }) => {
-            onChange(editor.getHTML());
-        },
-    });
+    // Handle media selection from MediaPicker
+    const handleMediaSelect = (selectedMedia) => {
+        if (selectedMedia && quillRef.current) {
+            const range = quillRef.current.getSelection(true);
+
+            // Insert image at current cursor position
+            quillRef.current.insertEmbed(
+                range.index,
+                "image",
+                selectedMedia.url
+            );
+
+            // Move cursor after the image
+            quillRef.current.setSelection(range.index + 1);
+        }
+        setShowMediaPicker(false);
+    };
 
     useEffect(() => {
-        if (editor && value !== editor.getHTML()) {
-            editor.commands.setContent(value || '');
+        if (!editorRef.current) return;
+
+        // Image handler for uploading images
+        const imageHandler = function () {
+            // Open MediaPicker dialog
+            setShowMediaPicker(true);
+        };
+
+        // Initialize Quill
+        const quill = new Quill(editorRef.current, {
+            theme: "snow",
+            placeholder: placeholder,
+            modules: {
+                toolbar: {
+                    container: [
+                        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                        ["bold", "italic", "underline", "strike"],
+                        [{ list: "ordered" }, { list: "bullet" }],
+                        [{ indent: "-1" }, { indent: "+1" }],
+                        [{ align: [] }],
+                        ["link", "image", "video"],
+                        [{ color: [] }, { background: [] }],
+                        ["blockquote", "code-block"],
+                        ["clean"],
+                    ],
+                    handlers: {
+                        image: imageHandler,
+                    },
+                },
+                clipboard: {
+                    matchVisual: false,
+                },
+            },
+        });
+
+        quillRef.current = quill;
+
+        // Set initial value
+        if (value) {
+            quill.root.innerHTML = value;
         }
-    }, [value, editor]);
 
-    if (!editor) {
-        return null;
-    }
+        // Listen for text changes
+        quill.on("text-change", () => {
+            const html = quill.root.innerHTML;
+            if (onChange) {
+                onChange(html);
+            }
+        });
 
-    const addLink = () => {
-        if (linkUrl) {
-            editor.chain().focus().setLink({ href: linkUrl }).run();
-            setLinkUrl('');
-            setShowLinkInput(false);
+        // Cleanup
+        return () => {
+            quillRef.current = null;
+        };
+    }, []);
+
+    // Update content when value changes externally
+    useEffect(() => {
+        if (quillRef.current && value !== quillRef.current.root.innerHTML) {
+            const selection = quillRef.current.getSelection();
+            quillRef.current.root.innerHTML = value || "";
+            if (selection) {
+                quillRef.current.setSelection(selection);
+            }
         }
-    };
-
-    const addImage = () => {
-        if (imageUrl) {
-            editor.chain().focus().setImage({ src: imageUrl }).run();
-            setImageUrl('');
-            setShowImageInput(false);
-        }
-    };
-
-    const addVideo = () => {
-        if (videoUrl) {
-            editor.commands.setYoutubeVideo({ src: videoUrl });
-            setVideoUrl('');
-            setShowVideoInput(false);
-        }
-    };
-
-    const MenuButton = ({ onClick, active, children, title }) => (
-        <button
-            type="button"
-            onClick={onClick}
-            className={`p-2 rounded hover:bg-gray-200 transition ${
-                active ? 'bg-gray-300 text-blue-600' : 'text-gray-700'
-            }`}
-            title={title}
-        >
-            {children}
-        </button>
-    );
+    }, [value]);
 
     return (
-        <div className="border border-gray-300 rounded-lg overflow-hidden bg-white">
-            {/* Custom Styles for Editor */}
+        <div className={className}>
+            <div
+                ref={editorRef}
+                className={error ? "border-red-500 rounded-lg" : ""}
+            />
+            {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
+
+            {/* MediaPicker Dialog */}
+            <MediaPicker
+                open={showMediaPicker}
+                onClose={() => setShowMediaPicker(false)}
+                onSelect={handleMediaSelect}
+                multiple={false}
+                accept="image"
+                folder="articles"
+            />
+
             <style>{`
-                .tiptap h2 {
+                .quill {
+                    background: white;
+                }
+                .ql-container {
+                    min-height: 300px;
+                    font-size: 16px;
+                    font-family: inherit;
+                }
+                .ql-editor {
+                    min-height: 300px;
+                }
+                .ql-editor.ql-blank::before {
+                    color: #9ca3af;
+                    font-style: normal;
+                }
+                .ql-toolbar {
+                    background: #f9fafb;
+                    border-top-left-radius: 0.5rem;
+                    border-top-right-radius: 0.5rem;
+                }
+                .ql-container {
+                    border-bottom-left-radius: 0.5rem;
+                    border-bottom-right-radius: 0.5rem;
+                }
+                .ql-editor img {
+                    max-width: 100%;
+                    height: auto;
+                    border-radius: 0.5rem;
+                    margin: 1rem 0;
+                }
+                .ql-editor h1 {
+                    font-size: 2rem;
+                    font-weight: 700;
+                    margin: 1.5rem 0 1rem;
+                }
+                .ql-editor h2 {
                     font-size: 1.75rem;
                     font-weight: 700;
-                    line-height: 2rem;
-                    margin-top: 1.5rem;
-                    margin-bottom: 1rem;
-                    color: #1f2937;
+                    margin: 1.25rem 0 0.75rem;
                 }
-                .tiptap h3 {
-                    font-size: 1.375rem;
+                .ql-editor h3 {
+                    font-size: 1.5rem;
                     font-weight: 700;
-                    line-height: 1.75rem;
-                    margin-top: 1.25rem;
-                    margin-bottom: 0.75rem;
-                    color: #374151;
+                    margin: 1rem 0 0.5rem;
                 }
-                .tiptap ul {
-                    list-style-type: disc;
-                    padding-left: 1.5rem;
-                    margin-top: 1rem;
-                    margin-bottom: 1rem;
+                .ql-editor h4 {
+                    font-size: 1.25rem;
+                    font-weight: 700;
+                    margin: 1rem 0 0.5rem;
                 }
-                .tiptap ol {
-                    list-style-type: decimal;
-                    padding-left: 1.5rem;
-                    margin-top: 1rem;
-                    margin-bottom: 1rem;
-                }
-                .tiptap li {
-                    margin-top: 0.5rem;
-                    margin-bottom: 0.5rem;
-                    padding-left: 0.25rem;
-                    line-height: 1.625;
-                }
-                .tiptap p {
+                .ql-editor p {
                     margin-bottom: 1rem;
                     line-height: 1.75;
                 }
-                .tiptap strong {
-                    font-weight: 700;
-                    color: #111827;
+                .ql-editor ul,
+                .ql-editor ol {
+                    margin-bottom: 1rem;
                 }
-                .tiptap em {
-                    font-style: italic;
+                .ql-editor li {
+                    line-height: 1.75;
                 }
-                .tiptap u {
-                    text-decoration: underline;
+                .ql-editor blockquote {
+                    border-left: 4px solid #e5e7eb;
+                    padding-left: 1rem;
+                    margin: 1rem 0;
+                    color: #6b7280;
                 }
-                .tiptap p.is-editor-empty:first-child::before {
-                    color: #9ca3af;
-                    content: attr(data-placeholder);
-                    float: left;
-                    height: 0;
-                    pointer-events: none;
+                .ql-editor pre.ql-syntax {
+                    background: #1f2937;
+                    color: #f9fafb;
+                    padding: 1rem;
+                    border-radius: 0.5rem;
+                    overflow-x: auto;
+                    margin: 1rem 0;
+                }
+                .ql-snow .ql-picker.ql-header {
+                    width: 100px;
                 }
             `}</style>
-
-            {/* Toolbar */}
-            <div className="border-b border-gray-300 bg-gray-50 p-2 flex flex-wrap gap-1">
-                {/* Text Formatting */}
-                <div className="flex gap-1 border-r border-gray-300 pr-2 mr-2">
-                    <MenuButton
-                        onClick={() => editor.chain().focus().toggleBold().run()}
-                        active={editor.isActive('bold')}
-                        title="Bold (Ctrl+B)"
-                    >
-                        <Bold className="w-4 h-4" />
-                    </MenuButton>
-                    <MenuButton
-                        onClick={() => editor.chain().focus().toggleItalic().run()}
-                        active={editor.isActive('italic')}
-                        title="Italic (Ctrl+I)"
-                    >
-                        <Italic className="w-4 h-4" />
-                    </MenuButton>
-                    <MenuButton
-                        onClick={() => editor.chain().focus().toggleUnderline().run()}
-                        active={editor.isActive('underline')}
-                        title="Underline (Ctrl+U)"
-                    >
-                        <UnderlineIcon className="w-4 h-4" />
-                    </MenuButton>
-                </div>
-
-                {/* Headings */}
-                <div className="flex gap-1 border-r border-gray-300 pr-2 mr-2">
-                    <MenuButton
-                        onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-                        active={editor.isActive('heading', { level: 2 })}
-                        title="Heading 2"
-                    >
-                        <Heading2 className="w-4 h-4" />
-                    </MenuButton>
-                    <MenuButton
-                        onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
-                        active={editor.isActive('heading', { level: 3 })}
-                        title="Heading 3"
-                    >
-                        <Heading3 className="w-4 h-4" />
-                    </MenuButton>
-                </div>
-
-                {/* Lists */}
-                <div className="flex gap-1 border-r border-gray-300 pr-2 mr-2">
-                    <MenuButton
-                        onClick={() => editor.chain().focus().toggleBulletList().run()}
-                        active={editor.isActive('bulletList')}
-                        title="Bullet List"
-                    >
-                        <List className="w-4 h-4" />
-                    </MenuButton>
-                    <MenuButton
-                        onClick={() => editor.chain().focus().toggleOrderedList().run()}
-                        active={editor.isActive('orderedList')}
-                        title="Numbered List"
-                    >
-                        <ListOrdered className="w-4 h-4" />
-                    </MenuButton>
-                </div>
-
-                {/* Insert Elements */}
-                <div className="flex gap-1 border-r border-gray-300 pr-2 mr-2">
-                    <MenuButton
-                        onClick={() => setShowLinkInput(!showLinkInput)}
-                        active={editor.isActive('link')}
-                        title="Insert Link"
-                    >
-                        <LinkIcon className="w-4 h-4" />
-                    </MenuButton>
-                    <MenuButton
-                        onClick={() => setShowImageInput(!showImageInput)}
-                        title="Insert Image"
-                    >
-                        <ImageIcon className="w-4 h-4" />
-                    </MenuButton>
-                    <MenuButton
-                        onClick={() => setShowVideoInput(!showVideoInput)}
-                        title="Embed YouTube Video"
-                    >
-                        <YoutubeIcon className="w-4 h-4" />
-                    </MenuButton>
-                </div>
-
-                {/* History */}
-                <div className="flex gap-1">
-                    <MenuButton
-                        onClick={() => editor.chain().focus().undo().run()}
-                        title="Undo (Ctrl+Z)"
-                    >
-                        <Undo className="w-4 h-4" />
-                    </MenuButton>
-                    <MenuButton
-                        onClick={() => editor.chain().focus().redo().run()}
-                        title="Redo (Ctrl+Y)"
-                    >
-                        <Redo className="w-4 h-4" />
-                    </MenuButton>
-                </div>
-            </div>
-
-            {/* Link Input */}
-            {showLinkInput && (
-                <div className="border-b border-gray-300 bg-blue-50 p-3 flex gap-2">
-                    <input
-                        type="url"
-                        placeholder="Enter URL (e.g., https://example.com)"
-                        value={linkUrl}
-                        onChange={(e) => setLinkUrl(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && addLink()}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                    />
-                    <Button type="button" onClick={addLink} size="sm">
-                        Add Link
-                    </Button>
-                    <Button type="button" onClick={() => setShowLinkInput(false)} variant="secondary" size="sm">
-                        Cancel
-                    </Button>
-                </div>
-            )}
-
-            {/* Image Input */}
-            {showImageInput && (
-                <div className="border-b border-gray-300 bg-blue-50 p-3 flex gap-2">
-                    <input
-                        type="url"
-                        placeholder="Enter image URL"
-                        value={imageUrl}
-                        onChange={(e) => setImageUrl(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && addImage()}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                    />
-                    <Button type="button" onClick={addImage} size="sm">
-                        Add Image
-                    </Button>
-                    <Button type="button" onClick={() => setShowImageInput(false)} variant="secondary" size="sm">
-                        Cancel
-                    </Button>
-                </div>
-            )}
-
-            {/* Video Input */}
-            {showVideoInput && (
-                <div className="border-b border-gray-300 bg-blue-50 p-3 flex gap-2">
-                    <input
-                        type="url"
-                        placeholder="Enter YouTube URL"
-                        value={videoUrl}
-                        onChange={(e) => setVideoUrl(e.target.value)}
-                        onKeyPress={(e) => e.key === 'Enter' && addVideo()}
-                        className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm"
-                    />
-                    <Button type="button" onClick={addVideo} size="sm">
-                        Embed Video
-                    </Button>
-                    <Button type="button" onClick={() => setShowVideoInput(false)} variant="secondary" size="sm">
-                        Cancel
-                    </Button>
-                </div>
-            )}
-
-            {/* Editor Content */}
-            <EditorContent editor={editor} />
         </div>
     );
 }
