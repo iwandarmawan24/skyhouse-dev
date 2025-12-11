@@ -16,6 +16,7 @@ class Media extends Model
     protected $fillable = [
         'name',
         'logo',
+        'logo_uid',
         'is_active',
     ];
 

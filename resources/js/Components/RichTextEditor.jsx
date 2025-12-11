@@ -2,6 +2,10 @@ import { useRef, useEffect, useState } from "react";
 import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import { MediaPicker } from "./MediaPicker";
+import ImageResize from "quill-resize-module";
+
+// Register ImageResize module
+Quill.register("modules/resize", ImageResize);
 
 export default function RichTextEditor({
     value,
@@ -33,7 +37,7 @@ export default function RichTextEditor({
     };
 
     useEffect(() => {
-        if (!editorRef.current) return;
+        if (!editorRef.current || quillRef.current) return;
 
         // Image handler for uploading images
         const imageHandler = function () {
@@ -41,7 +45,7 @@ export default function RichTextEditor({
             setShowMediaPicker(true);
         };
 
-        // Initialize Quill
+        // Initialize Quill with ImageResize module
         const quill = new Quill(editorRef.current, {
             theme: "snow",
             placeholder: placeholder,
@@ -61,6 +65,9 @@ export default function RichTextEditor({
                     handlers: {
                         image: imageHandler,
                     },
+                },
+                resize: {
+                    locale: {},
                 },
                 clipboard: {
                     matchVisual: false,

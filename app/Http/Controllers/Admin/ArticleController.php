@@ -98,6 +98,7 @@ class ArticleController extends Controller
             'excerpt' => 'nullable|string',
             'content' => 'required|string',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'featured_image_uid' => 'nullable|exists:media,uid',
             'video_url' => 'nullable|url|max:500',
             'tags' => 'nullable|string',
             'author_uid' => 'nullable|exists:users,uid',
@@ -144,10 +145,18 @@ class ArticleController extends Controller
             $validated['is_published'] = false;
         }
 
-        // Handle image upload
+        // Handle image upload or media library selection
         if ($request->hasFile('featured_image')) {
+            // Direct file upload
             $imagePath = $request->file('featured_image')->store('articles', 'public');
             $validated['featured_image'] = $imagePath;
+            $validated['featured_image_uid'] = null; // Clear media library reference
+        } elseif (!empty($validated['featured_image_uid'])) {
+            // Using media from library - get the URL
+            $media = \App\Models\Media::find($validated['featured_image_uid']);
+            if ($media) {
+                $validated['featured_image'] = $media->file_path;
+            }
         }
 
         // Calculate SEO score
@@ -211,6 +220,7 @@ class ArticleController extends Controller
             'excerpt' => 'nullable|string',
             'content' => 'required|string',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'featured_image_uid' => 'nullable|exists:media,uid',
             'video_url' => 'nullable|url|max:500',
             'tags' => 'nullable|string',
             'author_uid' => 'nullable|exists:users,uid',
@@ -259,18 +269,29 @@ class ArticleController extends Controller
         // Set last edited timestamp
         $validated['last_edited_at'] = now();
 
-        // Handle image upload
+        // Handle image upload or media library selection
         if ($request->hasFile('featured_image')) {
-            // Delete old image if exists
-            if ($article->featured_image) {
+            // Direct file upload - delete old image if exists and not from media library
+            if ($article->featured_image && !$article->featured_image_uid) {
                 Storage::disk('public')->delete($article->featured_image);
             }
             $imagePath = $request->file('featured_image')->store('articles', 'public');
             $validated['featured_image'] = $imagePath;
+            $validated['featured_image_uid'] = null; // Clear media library reference
+        } elseif (!empty($validated['featured_image_uid'])) {
+            // Using media from library
+            $media = \App\Models\Media::find($validated['featured_image_uid']);
+            if ($media) {
+                // Delete old uploaded file if exists and switching to media library
+                if ($article->featured_image && !$article->featured_image_uid) {
+                    Storage::disk('public')->delete($article->featured_image);
+                }
+                $validated['featured_image'] = $media->file_path;
+            }
         } else {
-            // If no new file uploaded, keep the existing image
-            // Remove featured_image from validated to prevent overwriting
+            // If no new file uploaded and no media selected, keep the existing image
             unset($validated['featured_image']);
+            unset($validated['featured_image_uid']);
         }
 
         // Calculate SEO score

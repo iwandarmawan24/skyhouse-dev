@@ -23,6 +23,7 @@ class Article extends Model
         'excerpt',
         'content',
         'featured_image',
+        'featured_image_uid',
         'video_url',
         'tags',
         'meta_title',

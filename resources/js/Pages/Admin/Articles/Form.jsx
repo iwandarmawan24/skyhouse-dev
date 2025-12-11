@@ -1,7 +1,7 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Link, useForm } from "@inertiajs/react";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Upload, Calendar, AlertCircle } from "lucide-react";
+import { ArrowLeft, Upload, Calendar, AlertCircle, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/Components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { FormInput, FormSelect, FormTextarea } from "@/Components/ui/FormField";
@@ -9,6 +9,7 @@ import { Label } from "@/Components/ui/Label";
 import { Alert } from "@/Components/ui/Alert";
 import RichTextEditor from "@/Components/RichTextEditor";
 import SeoAnalyzer from "@/Components/SeoAnalyzer";
+import { MediaPicker } from "@/Components/MediaPicker";
 
 export default function Form({ article, categories, users }) {
     const isEdit = article !== null;
@@ -22,6 +23,7 @@ export default function Form({ article, categories, users }) {
         excerpt: article?.excerpt || "",
         content: article?.content || "",
         featured_image: null,
+        featured_image_uid: article?.featured_image_uid || null,
         video_url: article?.video_url || "",
         tags: article?.tags || "",
         author_uid: article?.author_uid || "",
@@ -46,6 +48,7 @@ export default function Form({ article, categories, users }) {
                 : `/storage/${article.featured_image}`
             : null
     );
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
 
     // Auto-generate slug from title
     useEffect(() => {
@@ -72,6 +75,18 @@ export default function Form({ article, categories, users }) {
             };
             reader.readAsDataURL(file);
         }
+    };
+
+    const handleMediaSelect = (selectedMedia) => {
+        if (selectedMedia) {
+            // Set the image URL for preview
+            setImagePreview(selectedMedia.url);
+
+            // Store the media UID to send to backend
+            setData("featured_image_uid", selectedMedia.uid);
+            setData("featured_image", null); // Clear file upload
+        }
+        setShowMediaPicker(false);
     };
 
     const handleSubmit = (e) => {
@@ -220,30 +235,58 @@ export default function Form({ article, categories, users }) {
                                     <Label>Featured Image</Label>
                                     <div className="mt-2">
                                         {imagePreview && (
-                                            <div className="mb-4">
+                                            <div className="mb-4 relative group">
                                                 <img
                                                     src={imagePreview}
                                                     alt="Preview"
                                                     className="w-full h-48 object-cover rounded-lg"
                                                 />
+                                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all rounded-lg flex items-center justify-center">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => {
+                                                            setImagePreview(null);
+                                                            setData("featured_image", null);
+                                                            setData("featured_image_uid", null);
+                                                        }}
+                                                        className="opacity-0 group-hover:opacity-100 transition-opacity px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg"
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                </div>
                                             </div>
                                         )}
-                                        <input
-                                            type="file"
-                                            id="featured_image"
-                                            accept="image/*"
-                                            onChange={handleImageChange}
-                                            className="hidden"
-                                        />
-                                        <label
-                                            htmlFor="featured_image"
-                                            className="inline-flex items-center justify-center gap-2 w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg cursor-pointer transition-colors font-medium text-sm"
-                                        >
-                                            <Upload className="w-4 h-4" />
-                                            {imagePreview
-                                                ? "Change Image"
-                                                : "Upload Image"}
-                                        </label>
+
+                                        <div className="grid grid-cols-2 gap-2">
+                                            {/* Media Library Button */}
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowMediaPicker(true)}
+                                                className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium text-sm"
+                                            >
+                                                <ImageIcon className="w-4 h-4" />
+                                                Media Library
+                                            </button>
+
+                                            {/* Upload File Button */}
+                                            <div>
+                                                <input
+                                                    type="file"
+                                                    id="featured_image"
+                                                    accept="image/*"
+                                                    onChange={handleImageChange}
+                                                    className="hidden"
+                                                />
+                                                <label
+                                                    htmlFor="featured_image"
+                                                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg cursor-pointer transition-colors font-medium text-sm"
+                                                >
+                                                    <Upload className="w-4 h-4" />
+                                                    Upload File
+                                                </label>
+                                            </div>
+                                        </div>
+
                                         {errors.featured_image && (
                                             <p className="text-sm text-red-600 mt-2">
                                                 {errors.featured_image}
@@ -518,6 +561,16 @@ export default function Form({ article, categories, users }) {
                     </div>
                 </div>
             </form>
+
+            {/* MediaPicker Dialog */}
+            <MediaPicker
+                open={showMediaPicker}
+                onClose={() => setShowMediaPicker(false)}
+                onSelect={handleMediaSelect}
+                multiple={false}
+                accept="image"
+                folder="articles"
+            />
         </AdminLayout>
     );
 }
