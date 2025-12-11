@@ -122,6 +122,15 @@ class ArticleController extends Controller
             $validated['tags'] = array_map('trim', explode(',', $validated['tags']));
         }
 
+        // Convert empty strings to null for nullable fields
+        $nullableFields = ['author_uid', 'editor_uid', 'video_url', 'meta_title',
+                          'meta_description', 'meta_keywords', 'focus_keywords', 'scheduled_at'];
+        foreach ($nullableFields as $field) {
+            if (isset($validated[$field]) && $validated[$field] === '') {
+                $validated[$field] = null;
+            }
+        }
+
         // Set creator
         $validated['user_uid'] = auth()->id();
 
@@ -178,6 +187,10 @@ class ArticleController extends Controller
             $article->tags = implode(', ', $article->tags);
         }
 
+        // Ensure featured_image is accessible
+        // If it's a relative path, it will be handled by the frontend
+        // If it starts with http, it's already a full URL
+
         return Inertia::render('Admin/Articles/Form', [
             'article' => $article,
             'categories' => $categories,
@@ -222,6 +235,15 @@ class ArticleController extends Controller
             $validated['tags'] = array_map('trim', explode(',', $validated['tags']));
         }
 
+        // Convert empty strings to null for nullable fields
+        $nullableFields = ['author_uid', 'editor_uid', 'video_url', 'meta_title',
+                          'meta_description', 'meta_keywords', 'focus_keywords', 'scheduled_at'];
+        foreach ($nullableFields as $field) {
+            if (isset($validated[$field]) && $validated[$field] === '') {
+                $validated[$field] = null;
+            }
+        }
+
         // Handle status and publishing
         if ($validated['status'] === 'published') {
             $validated['is_published'] = true;
@@ -239,11 +261,16 @@ class ArticleController extends Controller
 
         // Handle image upload
         if ($request->hasFile('featured_image')) {
+            // Delete old image if exists
             if ($article->featured_image) {
                 Storage::disk('public')->delete($article->featured_image);
             }
             $imagePath = $request->file('featured_image')->store('articles', 'public');
             $validated['featured_image'] = $imagePath;
+        } else {
+            // If no new file uploaded, keep the existing image
+            // Remove featured_image from validated to prevent overwriting
+            unset($validated['featured_image']);
         }
 
         // Calculate SEO score

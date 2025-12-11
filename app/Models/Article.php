@@ -50,6 +50,21 @@ class Article extends Model
         'last_edited_at' => 'datetime',
     ];
 
+    protected $appends = ['computed_status'];
+
+    /**
+     * Get the computed status based on is_published and scheduled_at
+     */
+    public function getComputedStatusAttribute()
+    {
+        if ($this->is_published) {
+            return 'published';
+        } elseif ($this->scheduled_at && $this->scheduled_at->isFuture()) {
+            return 'scheduled';
+        }
+        return 'draft';
+    }
+
     protected static function boot()
     {
         parent::boot();
