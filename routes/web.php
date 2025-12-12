@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\RegisterController;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -40,6 +41,14 @@ Route::get('/about', function () {
 Route::get('/contact-us', function () {
     return Inertia::render('Contact');
 })->name('contact');
+
+// Sitemap Route
+Route::get('/sitemap.xml', function () {
+    return response(
+        Cache::get('sitemap') ?? app(\App\Services\SitemapService::class)->generate()->render(),
+        200
+    )->header('Content-Type', 'application/xml');
+})->name('sitemap');
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {

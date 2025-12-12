@@ -82,6 +82,7 @@ Visit: `http://localhost:8000/admin/dashboard`
 
 ### 🚀 Production Deployment
 - **[Deployment Guide](docs/deployment/)** - Production deployment options
+  - [Production Re-Deployment](docs/deployment/PRODUCTION-REDEPLOYMENT-GUIDE.md) - Complete redeploy from scratch
   - [Docker Deployment](docs/deployment/docker-deployment.md) - Full Docker stack
   - [Lightweight Deployment](docs/deployment/lightweight-deployment.md) - Resource-limited VPS
   - [VPS Setup Guide](docs/deployment/vps-setup.md) - Server setup from scratch

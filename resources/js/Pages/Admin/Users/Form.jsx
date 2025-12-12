@@ -1,9 +1,12 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, useForm } from '@inertiajs/react';
-import { ArrowLeft } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowLeft, Eye, EyeOff } from 'lucide-react';
 import { Button } from '@/Components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
 import { FormInput, FormSelect } from '@/Components/ui/FormField';
+import { Input } from '@/Components/ui/Input';
+import { Label } from '@/Components/ui/Label';
 
 export default function Form({ user }) {
     const isEdit = user !== null;
@@ -17,6 +20,9 @@ export default function Form({ user }) {
         status: user?.status || 'active',
         _method: isEdit ? 'PUT' : 'POST',
     });
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordConfirmation, setShowPasswordConfirmation] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -67,8 +73,8 @@ export default function Form({ user }) {
                             value={data.username}
                             onChange={(e) => setData('username', e.target.value)}
                             error={errors.username}
-                            placeholder="username (lowercase, numbers, underscore only)"
-                            helperText="Only lowercase letters, numbers, and underscores allowed"
+                            placeholder="username (e.g. john.doe, john-doe, john_doe)"
+                            helperText="Lowercase letters, numbers, dots (.), dashes (-), and underscores (_) allowed"
                         />
 
                         <FormInput
@@ -121,27 +127,73 @@ export default function Form({ user }) {
                             </p>
                         )}
 
-                        <FormInput
-                            label="Password"
-                            name="password"
-                            type="password"
-                            required={!isEdit}
-                            value={data.password}
-                            onChange={(e) => setData('password', e.target.value)}
-                            error={errors.password}
-                            placeholder={isEdit ? 'Leave empty to keep current password' : 'Minimum 8 characters'}
-                        />
+                        {/* Password Field with Toggle */}
+                        <div className="space-y-2">
+                            <Label htmlFor="password">
+                                Password {!isEdit && <span className="text-red-500">*</span>}
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    type={showPassword ? 'text' : 'password'}
+                                    required={!isEdit}
+                                    value={data.password}
+                                    onChange={(e) => setData('password', e.target.value)}
+                                    className={`pr-10 ${errors.password ? 'border-red-500' : ''}`}
+                                    placeholder={isEdit ? 'Leave empty to keep current password' : 'Minimum 8 characters'}
+                                />
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? (
+                                        <EyeOff className="h-4 w-4 text-gray-500" />
+                                    ) : (
+                                        <Eye className="h-4 w-4 text-gray-500" />
+                                    )}
+                                </Button>
+                            </div>
+                            {errors.password && (
+                                <p className="text-sm text-red-500">{errors.password}</p>
+                            )}
+                        </div>
 
-                        <FormInput
-                            label="Confirm Password"
-                            name="password_confirmation"
-                            type="password"
-                            required={!isEdit && data.password}
-                            value={data.password_confirmation}
-                            onChange={(e) => setData('password_confirmation', e.target.value)}
-                            error={errors.password_confirmation}
-                            placeholder="Re-enter password"
-                        />
+                        {/* Confirm Password Field with Toggle */}
+                        <div className="space-y-2">
+                            <Label htmlFor="password_confirmation">
+                                Confirm Password {!isEdit && data.password && <span className="text-red-500">*</span>}
+                            </Label>
+                            <div className="relative">
+                                <Input
+                                    id="password_confirmation"
+                                    type={showPasswordConfirmation ? 'text' : 'password'}
+                                    required={!isEdit && data.password}
+                                    value={data.password_confirmation}
+                                    onChange={(e) => setData('password_confirmation', e.target.value)}
+                                    className={`pr-10 ${errors.password_confirmation ? 'border-red-500' : ''}`}
+                                    placeholder="Re-enter password"
+                                />
+                                <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon"
+                                    className="absolute right-0 top-0 h-full px-3 hover:bg-transparent"
+                                    onClick={() => setShowPasswordConfirmation(!showPasswordConfirmation)}
+                                >
+                                    {showPasswordConfirmation ? (
+                                        <EyeOff className="h-4 w-4 text-gray-500" />
+                                    ) : (
+                                        <Eye className="h-4 w-4 text-gray-500" />
+                                    )}
+                                </Button>
+                            </div>
+                            {errors.password_confirmation && (
+                                <p className="text-sm text-red-500">{errors.password_confirmation}</p>
+                            )}
+                        </div>
 
                         {!isEdit && (
                             <p className="text-sm text-gray-500">

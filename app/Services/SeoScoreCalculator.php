@@ -74,11 +74,56 @@ class SeoScoreCalculator
         }
     }
 
+    /**
+     * Normalize text by removing hyphens and special characters for keyword matching
+     *
+     * @param string $text
+     * @return string
+     */
+    private function normalizeText($text)
+    {
+        // Convert to lowercase
+        $normalized = strtolower($text);
+
+        // Replace hyphens with spaces
+        $normalized = str_replace('-', ' ', $normalized);
+
+        // Remove multiple spaces
+        $normalized = preg_replace('/\s+/', ' ', $normalized);
+
+        return trim($normalized);
+    }
+
+    /**
+     * Check if all words in focus keyword exist in target text
+     * This allows partial matching and different word orders
+     *
+     * @param string $targetText
+     * @return bool
+     */
+    private function containsKeywordWords($targetText)
+    {
+        $normalizedTarget = $this->normalizeText($targetText);
+        $keywordWords = explode(' ', $this->focusKeyword);
+
+        // Check if all keyword words exist in target text
+        foreach ($keywordWords as $word) {
+            $word = trim($word);
+            if (empty($word)) continue;
+
+            if (stripos($normalizedTarget, $word) === false) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     // 1. Keyword in meta title (18 points)
     private function checkKeywordInMetaTitle()
     {
         $title = !empty($this->metaTitle) ? $this->metaTitle : $this->title;
-        $passed = stripos(strtolower($title), $this->focusKeyword) !== false;
+        $passed = $this->containsKeywordWords($title);
 
         $this->addResult(
             'Keyword in meta <title>',
@@ -93,9 +138,9 @@ class SeoScoreCalculator
     {
         $plainText = strip_tags($this->content);
         $paragraphs = preg_split('/\n\s*\n/', trim($plainText));
-        $firstParagraph = isset($paragraphs[0]) ? strtolower($paragraphs[0]) : '';
+        $firstParagraph = isset($paragraphs[0]) ? $paragraphs[0] : '';
 
-        $passed = stripos($firstParagraph, $this->focusKeyword) !== false;
+        $passed = $this->containsKeywordWords($firstParagraph);
 
         $this->addResult(
             'Keyword in first paragraph',
@@ -110,7 +155,7 @@ class SeoScoreCalculator
     {
         $passed = false;
         foreach ($this->metaTags as $tag) {
-            if (stripos(strtolower(trim($tag)), $this->focusKeyword) !== false) {
+            if ($this->containsKeywordWords(trim($tag))) {
                 $passed = true;
                 break;
             }
@@ -127,7 +172,7 @@ class SeoScoreCalculator
     // 4. Keyword in meta description (15 points)
     private function checkKeywordInMetaDescription()
     {
-        $passed = stripos(strtolower($this->metaDescription), $this->focusKeyword) !== false;
+        $passed = $this->containsKeywordWords($this->metaDescription);
 
         $this->addResult(
             'Keyword in meta description',
@@ -155,7 +200,7 @@ class SeoScoreCalculator
     private function checkKeywordInFirst70CharsOfTitle()
     {
         $first70 = mb_substr($this->title, 0, 70);
-        $passed = stripos(strtolower($first70), $this->focusKeyword) !== false;
+        $passed = $this->containsKeywordWords($first70);
 
         $this->addResult(
             'Keyword in the first 70 characters in the title',
@@ -212,7 +257,7 @@ class SeoScoreCalculator
 
         foreach ($matches[1] as $h2Content) {
             $plainH2 = strip_tags($h2Content);
-            if (stripos(strtolower($plainH2), $this->focusKeyword) !== false) {
+            if ($this->containsKeywordWords($plainH2)) {
                 $h2Count++;
             }
         }
@@ -230,7 +275,7 @@ class SeoScoreCalculator
     // 9. Keyword in slug (10 points)
     private function checkKeywordInSlug()
     {
-        $passed = stripos(strtolower($this->slug), $this->focusKeyword) !== false;
+        $passed = $this->containsKeywordWords($this->slug);
 
         $this->addResult(
             'Keyword in slug',
@@ -298,8 +343,8 @@ class SeoScoreCalculator
 
             // Check if it's an outbound link (external domain)
             if (!stripos($href, request()->getHost())) {
-                // Check if anchor text contains focus keyword
-                if (stripos(strtolower($anchorText), $this->focusKeyword) !== false) {
+                // Check if anchor text contains focus keyword words
+                if ($this->containsKeywordWords($anchorText)) {
                     $badOutboundCount++;
                 }
             }

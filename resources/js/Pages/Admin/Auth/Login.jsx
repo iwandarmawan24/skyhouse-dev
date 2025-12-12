@@ -32,8 +32,17 @@ export default function Login() {
     const hasErrors = Object.keys(errors).length > 0;
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 px-4 py-12">
-            {/* Background Pattern */}
+        <div className="min-h-screen flex items-center justify-center px-4 py-12 relative">
+            {/* Background Image */}
+            <div
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{ backgroundImage: 'url(/images/admin/bg-about-us-scaled.jpg)' }}
+            />
+
+            {/* Dark Overlay for better text readability */}
+            <div className="absolute inset-0 bg-black/60" />
+
+            {/* Pattern Overlay */}
             <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:50px_50px]" />
 
             <div className="w-full max-w-md relative z-10">

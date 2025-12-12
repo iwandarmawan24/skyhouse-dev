@@ -1,12 +1,10 @@
 import AdminLayout from '@/Layouts/AdminLayout';
-import { Link, router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
+import { Link, router } from '@inertiajs/react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/Components/ui/Button';
 import { Card } from '@/Components/ui/Card';
-import { Alert } from '@/Components/ui/Alert';
 import { Badge } from '@/Components/ui/Badge';
 import { Input } from '@/Components/ui/Input';
-import { Select } from '@/Components/ui/Select';
 import { Pagination } from '@/Components/ui/Pagination';
 import {
     Table,
@@ -27,7 +25,6 @@ import {
 import { Search, Mail, Eye, Trash2 } from 'lucide-react';
 
 export default function Index({ contacts, filters }) {
-    const { flash } = usePage().props;
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [localFilters, setLocalFilters] = useState({
         status: filters.status || '',
@@ -40,12 +37,27 @@ export default function Index({ contacts, filters }) {
         });
     };
 
-    const handleFilterChange = (key, value) => {
-        const newFilters = { ...localFilters, [key]: value };
+    // Debounced search - only trigger after 500ms of no typing
+    useEffect(() => {
+        const timeoutId = setTimeout(() => {
+            router.get('/admin/contacts', localFilters, {
+                preserveState: true,
+                preserveScroll: true,
+                only: ['contacts'],
+            });
+        }, 500);
+
+        return () => clearTimeout(timeoutId);
+    }, [localFilters.search]);
+
+    // Immediate filter for status changes
+    const handleStatusChange = (value) => {
+        const newFilters = { ...localFilters, status: value };
         setLocalFilters(newFilters);
         router.get('/admin/contacts', newFilters, {
             preserveState: true,
             preserveScroll: true,
+            only: ['contacts'],
         });
     };
 
@@ -54,6 +66,7 @@ export default function Index({ contacts, filters }) {
         router.get('/admin/contacts', {}, {
             preserveState: true,
             preserveScroll: true,
+            only: ['contacts'],
         });
     };
 
@@ -75,13 +88,6 @@ export default function Index({ contacts, filters }) {
                 <p className="text-gray-600 mt-1">Manage customer inquiries and contact requests</p>
             </div>
 
-            {/* Success Message */}
-            {flash.success && (
-                <Alert variant="success" className="mb-6">
-                    {flash.success}
-                </Alert>
-            )}
-
             {/* Filters */}
             <Card className="p-4 mb-6">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -92,21 +98,22 @@ export default function Index({ contacts, filters }) {
                             type="text"
                             placeholder="Search by name, email, or phone..."
                             value={localFilters.search}
-                            onChange={(e) => handleFilterChange('search', e.target.value)}
+                            onChange={(e) => setLocalFilters({ ...localFilters, search: e.target.value })}
                             className="pl-9"
                         />
                     </div>
 
                     {/* Status Filter */}
                     <div>
-                        <Select
+                        <select
                             value={localFilters.status}
-                            onChange={(e) => handleFilterChange('status', e.target.value)}
+                            onChange={(e) => handleStatusChange(e.target.value)}
+                            className="w-full h-10 px-3 rounded-md border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                             <option value="">All Status</option>
                             <option value="unread">Unread</option>
                             <option value="read">Read</option>
-                        </Select>
+                        </select>
                     </div>
 
                     {/* Clear Filters */}

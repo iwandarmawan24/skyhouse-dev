@@ -1,7 +1,13 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Link, useForm } from "@inertiajs/react";
 import { useState, useEffect } from "react";
-import { ArrowLeft, Upload, Calendar, AlertCircle, Image as ImageIcon } from "lucide-react";
+import {
+    ArrowLeft,
+    Upload,
+    Calendar,
+    AlertCircle,
+    Image as ImageIcon,
+} from "lucide-react";
 import { Button } from "@/Components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { FormInput, FormSelect, FormTextarea } from "@/Components/ui/FormField";
@@ -239,15 +245,23 @@ export default function Form({ article, categories, users }) {
                                                 <img
                                                     src={imagePreview}
                                                     alt="Preview"
-                                                    className="w-full h-48 object-cover rounded-lg"
+                                                    className="w-full h-[200px] object-contain rounded-lg"
                                                 />
-                                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all rounded-lg flex items-center justify-center">
+                                                <div className="absolute inset-0 group-hover:bg-opacity-40 transition-all rounded-lg flex items-center justify-center">
                                                     <button
                                                         type="button"
                                                         onClick={() => {
-                                                            setImagePreview(null);
-                                                            setData("featured_image", null);
-                                                            setData("featured_image_uid", null);
+                                                            setImagePreview(
+                                                                null
+                                                            );
+                                                            setData(
+                                                                "featured_image",
+                                                                null
+                                                            );
+                                                            setData(
+                                                                "featured_image_uid",
+                                                                null
+                                                            );
                                                         }}
                                                         className="opacity-0 group-hover:opacity-100 transition-opacity px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg"
                                                     >
@@ -261,7 +275,9 @@ export default function Form({ article, categories, users }) {
                                             {/* Media Library Button */}
                                             <button
                                                 type="button"
-                                                onClick={() => setShowMediaPicker(true)}
+                                                onClick={() =>
+                                                    setShowMediaPicker(true)
+                                                }
                                                 className="inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium text-sm"
                                             >
                                                 <ImageIcon className="w-4 h-4" />

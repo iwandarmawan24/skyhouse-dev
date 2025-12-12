@@ -117,8 +117,8 @@ export default function SeoAnalyzer({
                     <div className="text-sm mt-1">SEO Score</div>
                 </div>
 
-                {/* Analysis Results */}
-                <div className="space-y-3">
+                {/* Analysis Results - Scrollable */}
+                <div className="max-h-96 overflow-y-auto pr-2 space-y-3">
                     {analysis.results.map((result, index) => (
                         <div
                             key={index}

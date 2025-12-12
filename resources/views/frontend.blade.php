@@ -6,6 +6,13 @@
 
         <title inertia>{{ config('app.name', 'SkyHouse Property') }}</title>
 
+        <!-- Favicon -->
+        <link rel="icon" type="image/png" sizes="192x192" href="/images/cropped-favicon-192x192.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/images/cropped-favicon-192x192.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/images/cropped-favicon-192x192.png">
+        <link rel="shortcut icon" href="/favicon.png">
+        <link rel="apple-touch-icon" href="/images/cropped-favicon-192x192.png">
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

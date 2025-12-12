@@ -1,11 +1,6 @@
 import { useRef, useEffect, useState } from "react";
-import Quill from "quill";
 import "quill/dist/quill.snow.css";
 import { MediaPicker } from "./MediaPicker";
-import ImageResize from "quill-resize-module";
-
-// Register ImageResize module
-Quill.register("modules/resize", ImageResize);
 
 export default function RichTextEditor({
     value,
@@ -17,6 +12,7 @@ export default function RichTextEditor({
     const editorRef = useRef(null);
     const quillRef = useRef(null);
     const [showMediaPicker, setShowMediaPicker] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
 
     // Handle media selection from MediaPicker
     const handleMediaSelect = (selectedMedia) => {
@@ -39,60 +35,85 @@ export default function RichTextEditor({
     useEffect(() => {
         if (!editorRef.current || quillRef.current) return;
 
-        // Image handler for uploading images
-        const imageHandler = function () {
-            // Open MediaPicker dialog
-            setShowMediaPicker(true);
+        let isMounted = true;
+
+        const initQuill = async () => {
+            try {
+                // Dynamically import Quill
+                const QuillModule = await import("quill");
+                const Quill = QuillModule.default;
+
+                if (!isMounted) return;
+
+                // Image handler for uploading images
+                const imageHandler = function () {
+                    setShowMediaPicker(true);
+                };
+
+                // Configure modules
+                const modules = {
+                    toolbar: {
+                        container: [
+                            [{ header: [1, 2, 3, 4, 5, 6, false] }],
+                            ["bold", "italic", "underline", "strike"],
+                            [{ list: "ordered" }, { list: "bullet" }],
+                            [{ indent: "-1" }, { indent: "+1" }],
+                            [{ align: [] }],
+                            ["link", "image", "video"],
+                            [{ color: [] }, { background: [] }],
+                            ["blockquote", "code-block"],
+                            ["clean"],
+                        ],
+                        handlers: {
+                            image: imageHandler,
+                        },
+                    },
+                    clipboard: {
+                        matchVisual: false,
+                    },
+                };
+
+                // Initialize Quill instance
+                const quill = new Quill(editorRef.current, {
+                    theme: "snow",
+                    placeholder: placeholder,
+                    modules: modules,
+                });
+
+                if (!isMounted) return;
+
+                quillRef.current = quill;
+
+                // Set initial value
+                if (value) {
+                    quill.root.innerHTML = value;
+                }
+
+                // Listen for text changes
+                quill.on("text-change", () => {
+                    const html = quill.root.innerHTML;
+                    if (onChange) {
+                        onChange(html);
+                    }
+                });
+
+                // Mark as loaded
+                setIsLoading(false);
+            } catch (error) {
+                console.error("Error initializing Quill:", error);
+                setIsLoading(false);
+            }
         };
 
-        // Initialize Quill with ImageResize module
-        const quill = new Quill(editorRef.current, {
-            theme: "snow",
-            placeholder: placeholder,
-            modules: {
-                toolbar: {
-                    container: [
-                        [{ header: [1, 2, 3, 4, 5, 6, false] }],
-                        ["bold", "italic", "underline", "strike"],
-                        [{ list: "ordered" }, { list: "bullet" }],
-                        [{ indent: "-1" }, { indent: "+1" }],
-                        [{ align: [] }],
-                        ["link", "image", "video"],
-                        [{ color: [] }, { background: [] }],
-                        ["blockquote", "code-block"],
-                        ["clean"],
-                    ],
-                    handlers: {
-                        image: imageHandler,
-                    },
-                },
-                resize: {
-                    locale: {},
-                },
-                clipboard: {
-                    matchVisual: false,
-                },
-            },
-        });
-
-        quillRef.current = quill;
-
-        // Set initial value
-        if (value) {
-            quill.root.innerHTML = value;
-        }
-
-        // Listen for text changes
-        quill.on("text-change", () => {
-            const html = quill.root.innerHTML;
-            if (onChange) {
-                onChange(html);
-            }
-        });
+        initQuill();
 
         // Cleanup
         return () => {
-            quillRef.current = null;
+            isMounted = false;
+            if (quillRef.current) {
+                quillRef.current.off("text-change");
+                quillRef.current = null;
+            }
         };
     }, []);
 
@@ -109,9 +130,18 @@ export default function RichTextEditor({
 
     return (
         <div className={className}>
+            {isLoading && (
+                <div className="flex items-center justify-center h-[300px] bg-gray-50 rounded-lg border border-gray-300">
+                    <div className="text-center">
+                        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mb-2"></div>
+                        <p className="text-sm text-gray-600">Loading editor...</p>
+                    </div>
+                </div>
+            )}
             <div
                 ref={editorRef}
                 className={error ? "border-red-500 rounded-lg" : ""}
+                style={{ display: isLoading ? 'none' : 'block' }}
             />
             {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
 

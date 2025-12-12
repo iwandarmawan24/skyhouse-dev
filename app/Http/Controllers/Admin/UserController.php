@@ -64,13 +64,16 @@ class UserController extends Controller
         $validated = $request->validate([
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Password::min(8)],
-            'username' => 'required|string|max:255|unique:users|regex:/^[a-z0-9_]+$/',
+            'username' => 'required|string|max:255|unique:users|regex:/^[a-z0-9._-]+$/',
             'full_name' => 'required|string|max:255',
             'role' => 'required|in:staff,superadmin',
             'status' => 'required|in:active,inactive',
         ]);
 
         $validated['password'] = Hash::make($validated['password']);
+
+        // Set name same as full_name (required by database)
+        $validated['name'] = $validated['full_name'];
 
         User::create($validated);
 
@@ -96,7 +99,7 @@ class UserController extends Controller
         $validated = $request->validate([
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->uid . ',uid',
             'password' => ['nullable', 'confirmed', Password::min(8)],
-            'username' => 'required|string|max:255|unique:users,username,' . $user->uid . ',uid|regex:/^[a-z0-9_]+$/',
+            'username' => 'required|string|max:255|unique:users,username,' . $user->uid . ',uid|regex:/^[a-z0-9._-]+$/',
             'full_name' => 'required|string|max:255',
             'role' => 'required|in:staff,superadmin',
             'status' => 'required|in:active,inactive',
@@ -108,6 +111,9 @@ class UserController extends Controller
         } else {
             unset($validated['password']);
         }
+
+        // Set name same as full_name (required by database)
+        $validated['name'] = $validated['full_name'];
 
         $user->update($validated);
 

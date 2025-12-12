@@ -80,7 +80,7 @@ class MediaLibraryController extends Controller
     {
         $request->validate([
             'files' => 'required|array',
-            'files.*' => 'required|file|max:10240', // 10MB max
+            'files.*' => 'required|file|max:102400', // 100MB max
             'folder' => 'nullable|string|max:255',
             'alt_text' => 'nullable|string|max:255',
             'caption' => 'nullable|string',

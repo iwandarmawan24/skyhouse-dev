@@ -10,9 +10,19 @@ export default defineConfig({
         port: 5173,
         hmr: {
             host: 'localhost',
+            overlay: false, // Disable error overlay yang bisa stuck
         },
         watch: {
-            usePolling: true,
+            // Disable polling - bisa bikin infinite reload
+            usePolling: false,
+            // Ignore files yang ga perlu di-watch
+            ignored: [
+                '**/node_modules/**',
+                '**/vendor/**',
+                '**/storage/**',
+                '**/public/build/**',
+                '**/.git/**',
+            ],
         },
     },
     plugins: [
@@ -23,9 +33,17 @@ export default defineConfig({
                 'resources/css/frontend.css',
                 'resources/js/frontend.jsx'
             ],
-            refresh: true,
+            refresh: [
+                'resources/views/**',
+                'routes/**',
+            ],
         }),
-        react(),
+        react({
+            // Disable fast refresh untuk Quill yang bisa bikin stuck
+            fastRefresh: true,
+            // Exclude problematic components
+            exclude: /node_modules/,
+        }),
         tailwindcss(),
     ],
     resolve: {
@@ -33,6 +51,14 @@ export default defineConfig({
             '@': path.resolve(__dirname, './resources/js'),
             '@css': path.resolve(__dirname, './resources/css'),
         },
+    },
+    optimizeDeps: {
+        include: [
+            'react',
+            'react-dom',
+            'quill',
+            '@inertiajs/react',
+        ],
     },
     build: {
         // Optimize untuk VPS dengan RAM terbatas
