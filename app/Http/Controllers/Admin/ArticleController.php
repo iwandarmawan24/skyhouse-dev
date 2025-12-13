@@ -278,15 +278,25 @@ class ArticleController extends Controller
             $imagePath = $request->file('featured_image')->store('articles', 'public');
             $validated['featured_image'] = $imagePath;
             $validated['featured_image_uid'] = null; // Clear media library reference
-        } elseif (!empty($validated['featured_image_uid'])) {
-            // Using media from library
-            $media = \App\Models\MediaLibrary::where('uid', $validated['featured_image_uid'])->first();
-            if ($media) {
-                // Delete old uploaded file if exists and switching to media library
+        } elseif ($request->has('featured_image_uid')) {
+            // Check if explicitly removing image or selecting from library
+            if (!empty($validated['featured_image_uid'])) {
+                // Using media from library
+                $media = \App\Models\MediaLibrary::where('uid', $validated['featured_image_uid'])->first();
+                if ($media) {
+                    // Delete old uploaded file if exists and switching to media library
+                    if ($article->featured_image && !$article->featured_image_uid) {
+                        Storage::disk('public')->delete($article->featured_image);
+                    }
+                    $validated['featured_image'] = $media->url;
+                }
+            } else {
+                // Explicitly removing image (featured_image_uid is null)
                 if ($article->featured_image && !$article->featured_image_uid) {
                     Storage::disk('public')->delete($article->featured_image);
                 }
-                $validated['featured_image'] = $media->file_path;
+                $validated['featured_image'] = null;
+                $validated['featured_image_uid'] = null;
             }
         } else {
             // If no new file uploaded and no media selected, keep the existing image
