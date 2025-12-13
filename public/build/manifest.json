@@ -187,7 +187,7 @@
     "src": "_vendor-gViedR2G.css"
   },
   "resources/css/app.css": {
-    "file": "assets/app-XYMSUoqU.css",
+    "file": "assets/app-vPOGk1PL.css",
     "src": "resources/css/app.css",
     "isEntry": true,
     "name": "app",
@@ -528,7 +528,7 @@
     ]
   },
   "resources/js/Pages/Admin/Media/Form.jsx": {
-    "file": "assets/Form-BniZorS9.js",
+    "file": "assets/Form-DqtHoFv3.js",
     "name": "Form",
     "src": "resources/js/Pages/Admin/Media/Form.jsx",
     "isDynamicEntry": true,
@@ -821,7 +821,7 @@
     ]
   },
   "resources/js/app.jsx": {
-    "file": "assets/app-DGMTXOC0.js",
+    "file": "assets/app-CHEW5CqF.js",
     "name": "app",
     "src": "resources/js/app.jsx",
     "isEntry": true,
@@ -871,11 +871,11 @@
       "resources/js/Pages/Welcome.jsx"
     ],
     "css": [
-      "assets/app-XYMSUoqU.css"
+      "assets/app-vPOGk1PL.css"
     ]
   },
   "resources/js/frontend.jsx": {
-    "file": "assets/frontend-B9Vrv9Iq.js",
+    "file": "assets/frontend-WbSISDd8.js",
     "name": "frontend",
     "src": "resources/js/frontend.jsx",
     "isEntry": true,

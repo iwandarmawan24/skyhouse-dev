@@ -51,7 +51,26 @@ class Article extends Model
         'last_edited_at' => 'datetime',
     ];
 
-    protected $appends = ['computed_status'];
+    protected $appends = ['computed_status', 'featured_image_url'];
+
+    /**
+     * Get the featured image URL
+     */
+    public function getFeaturedImageUrlAttribute()
+    {
+        if ($this->featured_image_uid && $this->featuredImageMedia) {
+            return $this->featuredImageMedia->url;
+        }
+        if ($this->featured_image) {
+            // If it's a full URL, return as is
+            if (str_starts_with($this->featured_image, 'http')) {
+                return $this->featured_image;
+            }
+            // Otherwise, construct storage URL
+            return asset('storage/' . $this->featured_image);
+        }
+        return null;
+    }
 
     /**
      * Get the computed status based on is_published and scheduled_at
@@ -110,6 +129,14 @@ class Article extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_uid', 'uid');
+    }
+
+    /**
+     * Get the featured image from media library
+     */
+    public function featuredImageMedia(): BelongsTo
+    {
+        return $this->belongsTo(MediaLibrary::class, 'featured_image_uid', 'uid');
     }
 
     /**

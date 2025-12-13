@@ -98,7 +98,7 @@ class ArticleController extends Controller
             'excerpt' => 'nullable|string',
             'content' => 'required|string',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'featured_image_uid' => 'nullable|exists:media,uid',
+            'featured_image_uid' => 'nullable|exists:media_library,uid',
             'video_url' => 'nullable|url|max:500',
             'tags' => 'nullable|string',
             'author_uid' => 'nullable|exists:users,uid',
@@ -153,9 +153,9 @@ class ArticleController extends Controller
             $validated['featured_image_uid'] = null; // Clear media library reference
         } elseif (!empty($validated['featured_image_uid'])) {
             // Using media from library - get the URL
-            $media = \App\Models\Media::find($validated['featured_image_uid']);
+            $media = \App\Models\MediaLibrary::where('uid', $validated['featured_image_uid'])->first();
             if ($media) {
-                $validated['featured_image'] = $media->file_path;
+                $validated['featured_image'] = $media->url;
             }
         }
 
@@ -220,7 +220,7 @@ class ArticleController extends Controller
             'excerpt' => 'nullable|string',
             'content' => 'required|string',
             'featured_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'featured_image_uid' => 'nullable|exists:media,uid',
+            'featured_image_uid' => 'nullable|exists:media_library,uid',
             'video_url' => 'nullable|url|max:500',
             'tags' => 'nullable|string',
             'author_uid' => 'nullable|exists:users,uid',
@@ -280,7 +280,7 @@ class ArticleController extends Controller
             $validated['featured_image_uid'] = null; // Clear media library reference
         } elseif (!empty($validated['featured_image_uid'])) {
             // Using media from library
-            $media = \App\Models\Media::find($validated['featured_image_uid']);
+            $media = \App\Models\MediaLibrary::where('uid', $validated['featured_image_uid'])->first();
             if ($media) {
                 // Delete old uploaded file if exists and switching to media library
                 if ($article->featured_image && !$article->featured_image_uid) {
