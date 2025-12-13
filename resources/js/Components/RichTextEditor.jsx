@@ -39,11 +39,16 @@ export default function RichTextEditor({
 
         const initQuill = async () => {
             try {
-                // Dynamically import Quill
+                // Dynamically import Quill and resize module
                 const QuillModule = await import("quill");
                 const Quill = QuillModule.default;
 
+                const { default: ImageResize } = await import("quill-resize-image");
+
                 if (!isMounted) return;
+
+                // Register the resize module
+                Quill.register("modules/resize", ImageResize);
 
                 // Image handler for uploading images
                 const imageHandler = function () {
@@ -67,6 +72,10 @@ export default function RichTextEditor({
                         handlers: {
                             image: imageHandler,
                         },
+                    },
+                    resize: {
+                        showSize: false, // Hide percentage/size display
+                        locale: {},
                     },
                     clipboard: {
                         matchVisual: false,
@@ -185,6 +194,55 @@ export default function RichTextEditor({
                     height: auto;
                     border-radius: 0.5rem;
                     margin: 1rem 0;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+                }
+                .ql-editor img:hover {
+                    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                }
+                /* Image resize handles */
+                .ql-editor img.resize-active {
+                    outline: 2px solid #3b82f6;
+                    outline-offset: 2px;
+                }
+                .image-resizer {
+                    position: absolute;
+                    box-sizing: border-box;
+                    border: 1px solid #3b82f6;
+                }
+                .image-resizer .handle {
+                    position: absolute;
+                    width: 12px;
+                    height: 12px;
+                    background-color: #3b82f6;
+                    border: 2px solid white;
+                    border-radius: 50%;
+                    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+                }
+                .image-resizer .handle.ne {
+                    top: -6px;
+                    right: -6px;
+                    cursor: nesw-resize;
+                }
+                .image-resizer .handle.nw {
+                    top: -6px;
+                    left: -6px;
+                    cursor: nwse-resize;
+                }
+                .image-resizer .handle.se {
+                    bottom: -6px;
+                    right: -6px;
+                    cursor: nwse-resize;
+                }
+                .image-resizer .handle.sw {
+                    bottom: -6px;
+                    left: -6px;
+                    cursor: nesw-resize;
+                }
+                /* Hide percentage/size display */
+                .image-resizer-size-display,
+                .image-size-display {
+                    display: none !important;
                 }
                 .ql-editor h1 {
                     font-size: 2rem;
