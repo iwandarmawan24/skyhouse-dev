@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Event extends Model
 {
@@ -14,17 +15,26 @@ class Event extends Model
         'title',
         'description',
         'image',
+        'image_uid',
         'event_date',
         'location',
         'registration_link',
         'max_participants',
         'current_participants',
         'is_active',
+        'slug',
     ];
 
     protected $casts = [
         'event_date' => 'datetime',
         'is_active' => 'boolean',
+    ];
+
+    protected $appends = [
+        'event_date_formatted',
+        'event_time',
+        'is_past',
+        'image_url',
     ];
 
     protected static function boot()
@@ -36,6 +46,14 @@ class Event extends Model
                 $model->uid = (string) \Illuminate\Support\Str::uuid();
             }
         });
+    }
+
+    /**
+     * Get the media library image
+     */
+    public function mediaImage(): BelongsTo
+    {
+        return $this->belongsTo(MediaLibrary::class, 'image_uid', 'uid');
     }
 
     /**
@@ -52,6 +70,54 @@ class Event extends Model
     public function scopeUpcoming($query)
     {
         return $query->where('event_date', '>=', now())->orderBy('event_date', 'asc');
+    }
+
+    /**
+     * Scope past events
+     */
+    public function scopePast($query)
+    {
+        return $query->where('event_date', '<', now())->orderBy('event_date', 'desc');
+    }
+
+    /**
+     * Get formatted event date
+     */
+    public function getEventDateFormattedAttribute()
+    {
+        return $this->event_date->format('M d, Y');
+    }
+
+    /**
+     * Get event time only
+     */
+    public function getEventTimeAttribute()
+    {
+        return $this->event_date->format('H:i');
+    }
+
+    /**
+     * Check if event is past
+     */
+    public function getIsPastAttribute()
+    {
+        return $this->event_date->isPast();
+    }
+
+    /**
+     * Get image URL from media library or fallback to old image field
+     */
+    public function getImageUrlAttribute()
+    {
+        if ($this->image_uid && $this->mediaImage) {
+            return $this->mediaImage->url;
+        }
+
+        if ($this->image) {
+            return $this->image;
+        }
+
+        return null;
     }
 
     /**

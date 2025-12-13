@@ -14,7 +14,10 @@
       "Bash(ls:*)",
       "Bash(composer require:*)",
       "Bash(php -r:*)",
-      "Bash(docker exec:*)"
+      "Bash(docker exec:*)",
+      "Bash(cat:*)",
+      "Bash(./vendor/bin/sail artisan make:migration:*)",
+      "Bash(./vendor/bin/sail artisan migrate:*)"
     ],
     "deny": [],
     "ask": []

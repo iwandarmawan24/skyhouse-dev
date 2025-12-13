@@ -16,20 +16,29 @@ class EventController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Event::latest('event_date');
+        $query = Event::with('mediaImage')->latest('event_date');
 
-        // Filter by status (upcoming/past)
-        if ($request->filled('status')) {
-            if ($request->status === 'upcoming') {
-                $query->upcoming();
-            } elseif ($request->status === 'past') {
-                $query->past();
+        // Filter by statuses (can be multiple, comma-separated)
+        if ($request->filled('statuses')) {
+            $statuses = explode(',', $request->statuses);
+            $statuses = array_filter($statuses); // Remove empty values
+
+            if (!empty($statuses)) {
+                $query->where(function ($q) use ($statuses) {
+                    foreach ($statuses as $status) {
+                        if ($status === 'upcoming') {
+                            $q->orWhere(function ($sq) {
+                                $sq->where('is_active', true)
+                                   ->where('event_date', '>=', now());
+                            });
+                        } elseif ($status === 'past') {
+                            $q->orWhere('event_date', '<', now());
+                        } elseif ($status === 'inactive') {
+                            $q->orWhere('is_active', false);
+                        }
+                    }
+                });
             }
-        }
-
-        // Filter by active status
-        if ($request->filled('active')) {
-            $query->where('is_active', $request->boolean('active'));
         }
 
         // Search by title or location
@@ -45,7 +54,7 @@ class EventController extends Controller
 
         return Inertia::render('Admin/Events/Index', [
             'events' => $events,
-            'filters' => $request->only(['status', 'active', 'search']),
+            'filters' => $request->only(['statuses', 'search']),
         ]);
     }
 
@@ -70,10 +79,16 @@ class EventController extends Controller
             'event_date' => 'required|date',
             'event_time' => 'required',
             'location' => 'required|string|max:255',
-            'image' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image_uid' => 'nullable|string|exists:media_library,uid',
             'registration_link' => 'nullable|url|max:255',
             'is_active' => 'required|boolean',
         ]);
+
+        // Require either image_uid (from media library) or image upload
+        if (!$request->filled('image_uid') && !$request->hasFile('image')) {
+            return back()->withErrors(['image' => 'Please select an image.']);
+        }
 
         // Generate slug
         $validated['slug'] = Str::slug($validated['title']);
@@ -82,10 +97,11 @@ class EventController extends Controller
         $validated['event_date'] = $validated['event_date'] . ' ' . $validated['event_time'];
         unset($validated['event_time']);
 
-        // Handle image upload
+        // Handle image upload (fallback for old file upload method)
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('events', 'public');
             $validated['image'] = $imagePath;
+            $validated['image_uid'] = null;
         }
 
         Event::create($validated);
@@ -99,6 +115,9 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
+        // Load media image relationship
+        $event->load('mediaImage');
+
         // Split event_date into date and time for form
         $event->event_time = $event->event_date->format('H:i');
         $event->event_date_only = $event->event_date->format('Y-m-d');
@@ -120,6 +139,7 @@ class EventController extends Controller
             'event_time' => 'required',
             'location' => 'required|string|max:255',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image_uid' => 'nullable|string|exists:media_library,uid',
             'registration_link' => 'nullable|url|max:255',
             'is_active' => 'required|boolean',
         ]);
@@ -133,15 +153,20 @@ class EventController extends Controller
         $validated['event_date'] = $validated['event_date'] . ' ' . $validated['event_time'];
         unset($validated['event_time']);
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            // Delete old image
-            if ($event->image) {
+        // Handle image from media library or file upload
+        if ($request->filled('image_uid')) {
+            // Using media library
+            $validated['image'] = null; // Clear old file path
+        } elseif ($request->hasFile('image')) {
+            // Handle file upload (fallback for old method)
+            // Delete old image file
+            if ($event->image && !$event->image_uid) {
                 Storage::disk('public')->delete($event->image);
             }
 
             $imagePath = $request->file('image')->store('events', 'public');
             $validated['image'] = $imagePath;
+            $validated['image_uid'] = null;
         }
 
         $event->update($validated);

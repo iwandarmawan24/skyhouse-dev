@@ -3,17 +3,8 @@ import { Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { Button } from '@/Components/ui/Button';
 import { Input } from '@/Components/ui/Input';
-import { Alert } from '@/Components/ui/Alert';
+import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
 import { Badge } from '@/Components/ui/Badge';
-import { Pagination } from '@/Components/ui/Pagination';
-import {
-    Table,
-    TableHeader,
-    TableBody,
-    TableHead,
-    TableRow,
-    TableCell,
-} from '@/Components/ui/Table';
 import {
     Dialog,
     DialogContent,
@@ -22,14 +13,25 @@ import {
     DialogDescription,
     DialogFooter,
 } from '@/Components/ui/Dialog';
-import { Plus, Calendar, Search } from 'lucide-react';
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuCheckboxItem,
+    DropdownMenuTrigger,
+} from '@/Components/ui/dropdown-menu';
+import { DataTable } from '@/Components/DataTable';
+import { createColumns } from './columns';
+import LaravelPagination from '@/Components/LaravelPagination';
+import { Plus, Calendar, Search, Filter, X } from 'lucide-react';
 
 export default function Index({ events, filters }) {
     const { flash } = usePage().props;
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [localFilters, setLocalFilters] = useState({
-        status: filters.status || '',
-        search: filters.search || '',
+        statuses: filters?.statuses ? filters.statuses.split(',').filter(Boolean) : [],
+        search: filters?.search || '',
     });
 
     const handleDelete = (uid) => {
@@ -41,214 +43,206 @@ export default function Index({ events, filters }) {
     const handleFilterChange = (key, value) => {
         const newFilters = { ...localFilters, [key]: value };
         setLocalFilters(newFilters);
-        router.get('/admin/events', newFilters, {
+
+        // Convert arrays to comma-separated strings for URL
+        const filterParams = {
+            search: newFilters.search,
+            statuses: newFilters.statuses.join(','),
+        };
+
+        router.get('/admin/events', filterParams, {
             preserveState: true,
             preserveScroll: true,
         });
     };
 
+    const toggleFilter = (key, value) => {
+        const currentValues = localFilters[key];
+        const newValues = currentValues.includes(value)
+            ? currentValues.filter(v => v !== value)
+            : [...currentValues, value];
+
+        handleFilterChange(key, newValues);
+    };
+
+    const removeFilter = (key, value) => {
+        const newValues = localFilters[key].filter(v => v !== value);
+        handleFilterChange(key, newValues);
+    };
+
     const clearFilters = () => {
-        setLocalFilters({ status: '', search: '' });
+        setLocalFilters({ statuses: [], search: '' });
         router.get('/admin/events', {}, {
             preserveState: true,
             preserveScroll: true,
         });
     };
 
-    const formatDateTime = (date) => {
-        return new Date(date).toLocaleDateString('id-ID', {
-            year: 'numeric',
-            month: 'short',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-        });
-    };
-
-    const isUpcoming = (date) => {
-        return new Date(date) > new Date();
-    };
+    const columns = createColumns(setShowDeleteConfirm);
 
     return (
         <AdminLayout>
-            {/* Page Header */}
-            <div className="mb-6 flex items-center justify-between">
-                <div>
-                    <h1 className="text-2xl font-bold text-gray-900">Events</h1>
-                    <p className="text-gray-600 mt-1">Manage property events and open houses</p>
-                </div>
-                <Link href="/admin/events/create">
-                    <Button>
-                        <Plus className="w-5 h-5 mr-2" />
-                        Add New Event
+            <div className="space-y-6">
+                {/* Page Header */}
+                <div className="flex items-center justify-between">
+                    <div>
+                        <h1 className="text-3xl font-bold tracking-tight">Events</h1>
+                        <p className="text-muted-foreground mt-1">
+                            Manage property events and open houses
+                        </p>
+                    </div>
+                    <Button asChild>
+                        <Link href="/admin/events/create">
+                            <Plus className="mr-2 h-4 w-4" />
+                            Add Event
+                        </Link>
                     </Button>
-                </Link>
-            </div>
-
-            {/* Success Message */}
-            {flash.success && (
-                <div className="mb-6">
-                    <Alert variant="success">{flash.success}</Alert>
                 </div>
-            )}
 
-            {/* Filters */}
-            <div className="bg-white rounded-xl shadow-sm p-4 mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Search */}
-                    <div className="relative">
-                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                        <Input
-                            type="text"
-                            placeholder="Search by title or location..."
-                            value={localFilters.search}
-                            onChange={(e) => handleFilterChange('search', e.target.value)}
-                            className="pl-10"
-                        />
-                    </div>
+                {/* Filters Card */}
+                <Card>
+                    <CardHeader>
+                        <CardTitle>Filters</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                        <div className="space-y-4">
+                            {/* Search and Filter Buttons */}
+                            <div className="flex flex-col md:flex-row gap-3">
+                                {/* Search */}
+                                <div className="flex-1">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                        <Input
+                                            type="text"
+                                            placeholder="Search by title or location..."
+                                            value={localFilters.search}
+                                            onChange={(e) => handleFilterChange('search', e.target.value)}
+                                            className="pl-10"
+                                        />
+                                    </div>
+                                </div>
 
-                    {/* Status Filter */}
-                    <div>
-                        <select
-                            value={localFilters.status}
-                            onChange={(e) => handleFilterChange('status', e.target.value)}
-                            className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                        >
-                            <option value="">All Events</option>
-                            <option value="upcoming">Upcoming</option>
-                            <option value="past">Past</option>
-                        </select>
-                    </div>
-
-                    {/* Clear Filters */}
-                    <div>
-                        <Button
-                            onClick={clearFilters}
-                            variant="secondary"
-                            className="w-full"
-                        >
-                            Clear Filters
-                        </Button>
-                    </div>
-                </div>
-            </div>
-
-            {/* Events List */}
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
-                {events.data.length > 0 ? (
-                    <>
-                        <Table>
-                            <TableHeader>
-                                <TableRow>
-                                    <TableHead>Event</TableHead>
-                                    <TableHead>Date & Time</TableHead>
-                                    <TableHead>Location</TableHead>
-                                    <TableHead>Status</TableHead>
-                                    <TableHead className="text-right">Actions</TableHead>
-                                </TableRow>
-                            </TableHeader>
-                            <TableBody>
-                                {events.data.map((event) => (
-                                    <TableRow key={event.uid}>
-                                        <TableCell>
-                                            <div className="flex items-center">
-                                                <div className="flex-shrink-0 h-16 w-24">
-                                                    <img
-                                                        src={
-                                                            event.image.startsWith('http')
-                                                                ? event.image
-                                                                : `/storage/${event.image}`
-                                                        }
-                                                        alt={event.title}
-                                                        className="h-16 w-24 object-cover rounded-lg"
-                                                    />
-                                                </div>
-                                                <div className="ml-4">
-                                                    <div className="text-sm font-medium text-gray-900">
-                                                        {event.title}
-                                                    </div>
-                                                    {event.description && (
-                                                        <div className="text-sm text-gray-500 line-clamp-1">
-                                                            {event.description.substring(0, 50)}...
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="text-sm text-gray-900">
-                                                {formatDateTime(event.event_date)}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="text-sm text-gray-900">{event.location}</div>
-                                        </TableCell>
-                                        <TableCell>
-                                            <div className="flex flex-col gap-1">
-                                                <Badge
-                                                    variant={isUpcoming(event.event_date) ? 'success' : 'secondary'}
-                                                >
-                                                    {isUpcoming(event.event_date) ? 'Upcoming' : 'Past'}
+                                {/* Status Filter Dropdown */}
+                                <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                        <Button variant="outline" className="gap-2">
+                                            <Filter className="h-4 w-4" />
+                                            Status
+                                            {localFilters.statuses.length > 0 && (
+                                                <Badge variant="secondary" className="ml-1 rounded-full px-1.5 py-0">
+                                                    {localFilters.statuses.length}
                                                 </Badge>
-                                                {event.is_active && (
-                                                    <Badge variant="default">Active</Badge>
-                                                )}
-                                            </div>
-                                        </TableCell>
-                                        <TableCell className="text-right">
-                                            <div className="flex items-center justify-end gap-2">
-                                                <Link href={`/admin/events/${event.uid}/edit`}>
-                                                    <Button variant="ghost" size="sm">
-                                                        Edit
-                                                    </Button>
-                                                </Link>
-                                                <Button
-                                                    variant="ghost"
-                                                    size="sm"
-                                                    onClick={() => setShowDeleteConfirm(event.uid)}
-                                                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                >
-                                                    Delete
-                                                </Button>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
-                            </TableBody>
-                        </Table>
+                                            )}
+                                        </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end" className="w-48">
+                                        <DropdownMenuLabel>Filter by Status</DropdownMenuLabel>
+                                        <DropdownMenuSeparator />
+                                        <DropdownMenuCheckboxItem
+                                            checked={localFilters.statuses.includes('upcoming')}
+                                            onCheckedChange={() => toggleFilter('statuses', 'upcoming')}
+                                        >
+                                            Upcoming
+                                        </DropdownMenuCheckboxItem>
+                                        <DropdownMenuCheckboxItem
+                                            checked={localFilters.statuses.includes('past')}
+                                            onCheckedChange={() => toggleFilter('statuses', 'past')}
+                                        >
+                                            Past
+                                        </DropdownMenuCheckboxItem>
+                                        <DropdownMenuCheckboxItem
+                                            checked={localFilters.statuses.includes('inactive')}
+                                            onCheckedChange={() => toggleFilter('statuses', 'inactive')}
+                                        >
+                                            Inactive
+                                        </DropdownMenuCheckboxItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
 
-                        {/* Pagination */}
-                        <Pagination data={events} />
-                    </>
-                ) : (
-                    <div className="text-center py-12">
-                        <Calendar className="mx-auto h-12 w-12 text-gray-400" />
-                        <h3 className="mt-2 text-sm font-medium text-gray-900">No events</h3>
-                        <p className="mt-1 text-sm text-gray-500">Get started by creating a new event.</p>
-                        <div className="mt-6">
-                            <Link href="/admin/events/create">
-                                <Button>
-                                    <Plus className="w-5 h-5 mr-2" />
-                                    Add New Event
-                                </Button>
-                            </Link>
+                            {/* Active Filters */}
+                            {(localFilters.statuses.length > 0 || localFilters.search) && (
+                                <div className="flex flex-wrap items-center gap-2">
+                                    <span className="text-sm text-muted-foreground">Active filters:</span>
+
+                                    {/* Status badges */}
+                                    {localFilters.statuses.map((status) => (
+                                        <Badge key={status} variant="secondary" className="gap-1">
+                                            Status: {status.charAt(0).toUpperCase() + status.slice(1)}
+                                            <button
+                                                onClick={() => removeFilter('statuses', status)}
+                                                className="ml-1 hover:text-destructive"
+                                            >
+                                                <X className="h-3 w-3" />
+                                            </button>
+                                        </Badge>
+                                    ))}
+
+                                    {/* Clear all button */}
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        onClick={clearFilters}
+                                        className="h-6 px-2 text-xs"
+                                    >
+                                        Clear all
+                                    </Button>
+                                </div>
+                            )}
                         </div>
-                    </div>
+                    </CardContent>
+                </Card>
+
+                {/* Events DataTable */}
+                <Card>
+                    <CardContent className="pt-6">
+                        {events.data && events.data.length > 0 ? (
+                            <DataTable
+                                columns={columns}
+                                data={events.data || []}
+                            />
+                        ) : (
+                            <div className="text-center py-12">
+                                <Calendar className="mx-auto h-12 w-12 text-muted-foreground" />
+                                <h3 className="mt-2 text-sm font-medium">No events</h3>
+                                <p className="mt-1 text-sm text-muted-foreground">
+                                    Get started by creating a new event.
+                                </p>
+                                <div className="mt-6">
+                                    <Button asChild>
+                                        <Link href="/admin/events/create">
+                                            <Plus className="mr-2 h-4 w-4" />
+                                            Add Event
+                                        </Link>
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+
+                {/* Pagination */}
+                {events.data && events.data.length > 0 && (
+                    <LaravelPagination data={events} />
                 )}
             </div>
 
-            {/* Delete Confirmation Modal */}
-            <Dialog open={!!showDeleteConfirm} onOpenChange={() => setShowDeleteConfirm(null)}>
+            {/* Delete Confirmation Dialog */}
+            <Dialog
+                open={!!showDeleteConfirm}
+                onOpenChange={() => setShowDeleteConfirm(null)}
+            >
                 <DialogContent>
                     <DialogHeader>
                         <DialogTitle>Delete Event</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete this event? This action cannot be undone.
+                            Are you sure you want to delete this event? This action
+                            cannot be undone.
                         </DialogDescription>
                     </DialogHeader>
                     <DialogFooter>
                         <Button
-                            variant="secondary"
+                            variant="outline"
                             onClick={() => setShowDeleteConfirm(null)}
                         >
                             Cancel

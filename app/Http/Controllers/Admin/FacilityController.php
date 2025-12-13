@@ -17,14 +17,23 @@ class FacilityController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Facility::with('images')->latest();
+        $query = Facility::latest();
 
-        // Filter by active status
-        if ($request->filled('status')) {
-            if ($request->status === 'active') {
-                $query->where('is_active', true);
-            } elseif ($request->status === 'inactive') {
-                $query->where('is_active', false);
+        // Filter by statuses (can be multiple, comma-separated)
+        if ($request->filled('statuses')) {
+            $statuses = explode(',', $request->statuses);
+            $statuses = array_filter($statuses); // Remove empty values
+
+            if (!empty($statuses)) {
+                $query->where(function ($q) use ($statuses) {
+                    foreach ($statuses as $status) {
+                        if ($status === 'active') {
+                            $q->orWhere('is_active', true);
+                        } elseif ($status === 'inactive') {
+                            $q->orWhere('is_active', false);
+                        }
+                    }
+                });
             }
         }
 
@@ -37,7 +46,7 @@ class FacilityController extends Controller
 
         return Inertia::render('Admin/Facilities/Index', [
             'facilities' => $facilities,
-            'filters' => $request->only(['status', 'search']),
+            'filters' => $request->only(['statuses', 'search']),
         ]);
     }
 
@@ -63,20 +72,22 @@ class FacilityController extends Controller
             'is_active' => 'required|boolean',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image_uids' => 'nullable|array',
+            'image_uids.*' => 'string|exists:media_library,uid',
         ]);
 
         // Generate slug
         $validated['slug'] = Str::slug($validated['name']);
 
-        // Remove images from validated data for facility creation
-        $images = $validated['images'] ?? [];
+        // Handle images from media library or file uploads
+        $fileImages = $validated['images'] ?? [];
         unset($validated['images']);
 
         $facility = Facility::create($validated);
 
-        // Handle image uploads
-        if (!empty($images)) {
-            foreach ($images as $index => $image) {
+        // Handle old file upload method (fallback)
+        if (!empty($fileImages)) {
+            foreach ($fileImages as $index => $image) {
                 $imagePath = $image->store('facilities', 'public');
 
                 FacilityImage::create([
@@ -115,6 +126,8 @@ class FacilityController extends Controller
             'is_active' => 'required|boolean',
             'images' => 'nullable|array',
             'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image_uids' => 'nullable|array',
+            'image_uids.*' => 'string|exists:media_library,uid',
             'deleted_images' => 'nullable|array',
             'deleted_images.*' => 'integer|exists:facility_images,id',
         ]);
@@ -125,13 +138,13 @@ class FacilityController extends Controller
         }
 
         // Remove images and deleted_images from validated data
-        $imageData = $validated['images'] ?? [];
+        $fileImages = $validated['images'] ?? [];
         $deletedImages = $validated['deleted_images'] ?? [];
         unset($validated['images'], $validated['deleted_images']);
 
         $facility->update($validated);
 
-        // Delete removed images
+        // Delete removed images (old file upload method)
         if (!empty($deletedImages)) {
             $imagesToDelete = FacilityImage::whereIn('id', $deletedImages)
                 ->where('facility_id', $facility->id)
@@ -148,11 +161,11 @@ class FacilityController extends Controller
             });
         }
 
-        // Handle new image uploads
-        if (!empty($imageData)) {
+        // Handle new file uploads (old method, fallback)
+        if (!empty($fileImages)) {
             $currentMaxOrder = $facility->images()->max('order') ?? 0;
 
-            foreach ($imageData as $index => $image) {
+            foreach ($fileImages as $index => $image) {
                 $imagePath = $image->store('facilities', 'public');
 
                 FacilityImage::create([
