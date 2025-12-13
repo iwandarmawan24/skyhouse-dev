@@ -12,6 +12,8 @@ class Policy extends Model
 
     protected $fillable = [
         'type',
+        'title',
+        'slug',
         'content',
         'version',
     ];

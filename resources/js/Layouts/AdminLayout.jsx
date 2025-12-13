@@ -18,6 +18,7 @@ import {
     LogOut,
     Home,
     Package,
+    FileText,
 } from "lucide-react";
 
 import {
@@ -162,6 +163,11 @@ export default function AdminLayout({ children }) {
                 name: "Contacts",
                 href: "/admin/contacts",
                 icon: Mail,
+            },
+            {
+                name: "Policies",
+                href: "/admin/policies",
+                icon: FileText,
             },
             {
                 name: "Settings",
