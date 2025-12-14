@@ -157,11 +157,13 @@ button:focus {
 .page-wrapper {
   position: relative;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .main-wrapper {
   position: relative;
   z-index: 1;
+  overflow-x: hidden;
 }
 
 .padding-global {

@@ -4,6 +4,7 @@
   height: 80vh;
   position: relative;
   overflow: hidden;
+  bottom: -48px;
 }
 
 .section_quiz.is-bottom-rounded {

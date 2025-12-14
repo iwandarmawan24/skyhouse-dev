@@ -92,9 +92,17 @@
 
 /* Responsive Design */
 @media (max-width: 991px) {
+  .benefit_component {
+    flex-direction: column;
+  }
+
   .benefit_wrapper {
     grid-template-columns: 1fr;
     gap: 2rem;
+  }
+
+  .benefit_image {
+    order: -1;
   }
 
   .benefit_content h2 {
@@ -105,6 +113,11 @@
 @media (max-width: 767px) {
   .benefit_component {
     gap: 3rem;
+    flex-direction: column;
+  }
+
+  .benefit_image {
+    order: -1;
   }
 
   .benefit_content h2 {
