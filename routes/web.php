@@ -34,6 +34,12 @@ Route::get('/news', function () {
     return Inertia::render('News');
 })->name('news');
 
+Route::get('/news/{id}', function ($id) {
+    return Inertia::render('NewsDetail', [
+        'newsId' => $id
+    ]);
+})->name('news.detail');
+
 Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
