@@ -90,6 +90,11 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
+        // Convert empty strings to null before validation for featured_image_uid
+        if ($request->has('featured_image_uid') && $request->featured_image_uid === '') {
+            $request->merge(['featured_image_uid' => null]);
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:500',
@@ -212,6 +217,11 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
+        // Convert empty strings to null before validation for featured_image_uid
+        if ($request->has('featured_image_uid') && $request->featured_image_uid === '') {
+            $request->merge(['featured_image_uid' => null]);
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:500',
