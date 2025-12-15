@@ -13,15 +13,18 @@ cd /var/www/skyhouse-dev
 php artisan down || true
 
 # Pull latest code
+git stash
 git pull origin master
 
 # Install/Update PHP dependencies
 echo "📦 Installing PHP dependencies..."
+composer update
 composer install --no-dev --optimize-autoloader
 
 # Install/Update Node dependencies and build assets
 echo "📦 Installing Node dependencies..."
 npm ci --production
+npm install --legacy-peer-deps
 
 echo "🔨 Building frontend assets..."
 npm run build
