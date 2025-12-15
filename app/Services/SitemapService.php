@@ -101,9 +101,9 @@ class SitemapService
             ->orderBy('published_at', 'desc')
             ->each(function (Article $article) use ($sitemap) {
                 $sitemap->add(
-                    Url::create("/news/{$article->slug}")
+                    Url::create("/articles/{$article->slug}")
                         ->setLastModificationDate($article->updated_at)
-                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_MONTHLY)
+                        ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
                         ->setPriority(0.7)
                 );
             });

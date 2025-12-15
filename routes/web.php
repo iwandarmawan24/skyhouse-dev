@@ -33,12 +33,7 @@ Route::get('/project', function () {
 
 Route::get('/news', [NewsController::class, 'show'])->name('news');
 Route::get('/api/news', [NewsController::class, 'index'])->name('news.api');
-
-Route::get('/news/{id}', function ($id) {
-    return Inertia::render('NewsDetail', [
-        'newsId' => $id
-    ]);
-})->name('news.detail');
+Route::get('/articles/{slug}', [NewsController::class, 'detail'])->name('articles.detail');
 
 Route::get('/about', function () {
     return Inertia::render('About');

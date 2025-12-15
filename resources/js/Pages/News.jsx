@@ -213,7 +213,7 @@ export default function News({ featured }) {
                                         ) : (
                                             <Link
                                                 key={item.id}
-                                                href={`/news/${item.id}`}
+                                                href={`/articles/${item.slug}`}
                                                 className="news-card"
                                             >
                                                 <div className="news-card-image">
