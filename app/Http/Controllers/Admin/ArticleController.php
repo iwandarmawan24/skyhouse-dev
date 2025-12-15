@@ -90,9 +90,12 @@ class ArticleController extends Controller
      */
     public function store(Request $request)
     {
-        // Convert empty strings to null before validation for featured_image_uid
-        if ($request->has('featured_image_uid') && $request->featured_image_uid === '') {
-            $request->merge(['featured_image_uid' => null]);
+        // Convert empty/invalid values to null before validation for featured_image_uid
+        if ($request->has('featured_image_uid')) {
+            $value = $request->featured_image_uid;
+            if ($value === '' || $value === 'null' || $value === 'undefined' || is_null($value)) {
+                $request->merge(['featured_image_uid' => null]);
+            }
         }
 
         $validated = $request->validate([
@@ -217,9 +220,12 @@ class ArticleController extends Controller
      */
     public function update(Request $request, Article $article)
     {
-        // Convert empty strings to null before validation for featured_image_uid
-        if ($request->has('featured_image_uid') && $request->featured_image_uid === '') {
-            $request->merge(['featured_image_uid' => null]);
+        // Convert empty/invalid values to null before validation for featured_image_uid
+        if ($request->has('featured_image_uid')) {
+            $value = $request->featured_image_uid;
+            if ($value === '' || $value === 'null' || $value === 'undefined' || is_null($value)) {
+                $request->merge(['featured_image_uid' => null]);
+            }
         }
 
         $validated = $request->validate([
