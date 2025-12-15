@@ -20,13 +20,14 @@
 
 /* Left Side - Contact Form (Fixed) */
 .contact-form-wrapper {
-  position: relative;
-  height: 100%;
+  position: sticky;
+  top: 120px;
+  height: fit-content;
+  align-self: flex-start;
 }
 
 .contact-form-sticky {
-  position: sticky;
-  top: 120px;
+  position: relative;
 }
 
 .contact-title {
@@ -35,6 +36,7 @@
   color: var(--color-text-primary);
   margin: 0 0 2rem 0;
   line-height: 1.1;
+  padding-top: 5rem;
 }
 
 /* Contact Form */
@@ -114,6 +116,7 @@
   transition: all 0.3s ease;
   align-self: flex-start;
   margin-top: 0.5rem;
+  box-sizing: border-box;
 }
 
 .button.is-contact-submit:hover {
@@ -377,6 +380,10 @@
     gap: 4rem;
   }
 
+  .contact-form-wrapper {
+    position: static;
+  }
+
   .contact-form-sticky {
     position: static;
   }
@@ -499,8 +506,16 @@
     font-size: 1.75rem;
   }
 
+  .contact-form {
+    padding: 0;
+  }
+
   .button.is-contact-submit {
     width: 100%;
+    align-self: stretch;
+    padding: 1rem 1.5rem;
+    margin: 0;
+    max-width: 100%;
   }
 
   .contact-details,

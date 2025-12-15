@@ -9,6 +9,12 @@
   padding-bottom: 5rem;
 }
 
+/* News Layout */
+.news-layout {
+  display: flex;
+  gap: 40px;
+}
+
 /* News Header */
 .news-header {
   margin-bottom: 4rem;
@@ -174,8 +180,22 @@
     padding-bottom: 4rem;
   }
 
+  .news-layout {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
   .news-header {
-    margin-bottom: 3rem;
+    margin-bottom: 0;
+  }
+
+  .news-header-content {
+    text-align: center;
+    align-items: center;
+  }
+
+  .news-header-content .button {
+    align-self: center;
   }
 
   .news-header-content h2 {
@@ -235,11 +255,7 @@
   }
 
   .news-item-arrow {
-    position: absolute;
-    top: 1.25rem;
-    right: 1.25rem;
-    width: 40px;
-    height: 40px;
+    display: none;
   }
 }
 

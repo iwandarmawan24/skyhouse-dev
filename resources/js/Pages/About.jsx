@@ -142,8 +142,8 @@ export default function About() {
                 <div className="history-timeline">
                   {historyData.map((item, index) => (
                     <div key={index} className="timeline-item">
-                      <div className="timeline-year">{item.year}</div>
                       <div className="timeline-content">
+                        <div className="timeline-year">{item.year}</div>
                         <h3>{item.title}</h3>
                         <p>{item.description}</p>
                       </div>

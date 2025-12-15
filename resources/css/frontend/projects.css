@@ -50,6 +50,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
   color: var(--color-text-primary);
+  text-align: center;
 }
 
 .project-tab:hover {
@@ -235,6 +236,20 @@
 }
 
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .project-header-left {
+    width: 100%;
+  }
+
+  .project-tabs {
+    width: 100%;
+  }
+
+  .project-tab {
+    flex: 1;
+  }
+}
+
 @media (max-width: 991px) {
   .section_project {
     min-height: 550px;
@@ -255,10 +270,19 @@
     flex-direction: column;
     align-items: flex-start;
     gap: 1.5rem;
+    width: 100%;
   }
 
   .project-header-left h2 {
     font-size: 3rem;
+  }
+
+  .project-tabs {
+    width: 100%;
+  }
+
+  .project-tab {
+    flex: 1;
   }
 
   .project-navigation {

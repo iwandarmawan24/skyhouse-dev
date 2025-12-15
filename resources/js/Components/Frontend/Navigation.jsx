@@ -93,11 +93,11 @@ const Navigation = ({ isHomePage = false }) => {
           aria-label="menu"
         >
           <div className={`menu-icon2 ${isMobileMenuOpen ? 'is-open' : ''}`}>
-            <div className="menu-icon2_line-top"></div>
+            <div className="menu-icon2_line-top" style={{ backgroundColor: isScrolled ? 'white' : '#1E3A8A', transition: 'background-color 0.3s ease-in-out' }}></div>
             <div className="menu-icon2_line-middle">
-              <div className="menu-icon_line-middle-inner"></div>
+              <div className="menu-icon_line-middle-inner" style={{ backgroundColor: isScrolled ? 'white' : '#1E3A8A', transition: 'background-color 0.3s ease-in-out' }}></div>
             </div>
-            <div className="menu-icon2_line-bottom"></div>
+            <div className="menu-icon2_line-bottom" style={{ backgroundColor: isScrolled ? 'white' : '#1E3A8A', transition: 'background-color 0.3s ease-in-out' }}></div>
           </div>
         </button>
       </div>

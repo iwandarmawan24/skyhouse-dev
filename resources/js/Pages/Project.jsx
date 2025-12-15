@@ -111,7 +111,26 @@ export default function Project() {
     <div className="page-wrapper">
       <Navigation />
       <main className="main-wrapper">
-        {/* Hero Section */}
+        {/* Top Banner Section */}
+        <section className="project-top-banner">
+          <div className="project-banner-image-wrapper">
+            <img 
+              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=600&fit=crop" 
+              alt="Projects Banner" 
+              className="project-banner-image"
+            />
+            <div className="project-banner-overlay">
+              <div className="padding-global">
+                <div className="container-large">
+                  <h1 className="project-banner-title">Our Projects</h1>
+                  <p className="project-banner-subtitle">Discover our portfolio of exceptional residential developments</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Featured Project Section */}
         <section className="project-hero">
           <div className="project-hero-image">
             <img src={featuredProject.image} alt={featuredProject.title} />

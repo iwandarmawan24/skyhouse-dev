@@ -3,6 +3,8 @@
 .section_character {
   position: relative;
   overflow: hidden;
+  bottom: -25px;
+  z-index: 1;
 }
 
 .section_character.is-bottom-rounded {

@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 
 const About = () => {
   const [isVisible, setIsVisible] = useState(false);
+  const [count1, setCount1] = useState(0);
+  const [count2, setCount2] = useState(0);
   const sectionRef = useRef(null);
 
   useEffect(() => {
@@ -18,12 +20,35 @@ const About = () => {
       observer.observe(sectionRef.current);
     }
 
-    return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
-      }
-    };
+    return () => observer.disconnect();
   }, []);
+
+  // Counting animation effect
+  useEffect(() => {
+    if (isVisible) {
+      const duration = 2000; // 2 seconds
+      const targetCount1 = 22;
+      const targetCount2 = 7;
+      const steps = 60;
+      const increment1 = targetCount1 / steps;
+      const increment2 = targetCount2 / steps;
+      const stepDuration = duration / steps;
+
+      let currentStep = 0;
+
+      const timer = setInterval(() => {
+        currentStep++;
+        setCount1(Math.min(Math.round(increment1 * currentStep), targetCount1));
+        setCount2(Math.min(Math.round(increment2 * currentStep), targetCount2));
+
+        if (currentStep >= steps) {
+          clearInterval(timer);
+        }
+      }, stepDuration);
+
+      return () => clearInterval(timer);
+    }
+  }, [isVisible]);
 
   return (
     <>
@@ -129,11 +154,11 @@ const About = () => {
                 {/* Stats Numbers */}
                 <div className="home-about_number">
                   <div className="number_content">
-                    <div className="heading-style-h3">22</div>
+                    <div className="heading-style-h3">{count1}</div>
                     <p>Residential projects filled with happy eastonfam</p>
                   </div>
                   <div className="number_content">
-                    <div className="heading-style-h3">7</div>
+                    <div className="heading-style-h3">{count2}</div>
                     <p className="paragraph">Sold out shophouses in Greater Jakarta</p>
                   </div>
                 </div>

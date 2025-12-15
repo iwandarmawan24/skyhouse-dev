@@ -21,7 +21,7 @@ export const LaunchProjects = () => {
             <span className="italic font-bodoni"><i>Visit</i></span><br />
             Kinary House
           </h2>
-          <div style={{ width: "80px", height: "4px", backgroundColor: '#1E3A8A', marginBottom: "24px" }}></div>
+          <div className="visit-divider" style={{ width: "80px", height: "4px", backgroundColor: '#1E3A8A', marginBottom: "24px" }}></div>
           <p>
             Hi, skyhousefam! We're excited to share that Kinary House finally has its own show unit.
             Make sure to book an appointment with our skyhouseteam before stopping by.
@@ -332,7 +332,7 @@ export const News = () => {
       title: 'Kolaborasi dengan Anabuki Group, Skyhouse Alamsutera Bangun Hunian Terbaru di Serpong, Tangerang Selatan',
       date: 'September 18, 2024',
       mediaSource: 'Kompas',
-      mediaLogo: 'https://cdn.prod.website-files.com/6507e5069d2b6119052df387/650c0a1a4b89d76de4ab3c5a_kompas-logo.webp',
+      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
       link: '#'
     },
     {
@@ -341,7 +341,7 @@ export const News = () => {
       title: 'Skyhouse Alamsutera Bakal Luncurkan Hunian Dekat Stasiun LRT Ciracas',
       date: 'October 2, 2023',
       mediaSource: 'Kompas',
-      mediaLogo: 'https://cdn.prod.website-files.com/6507e5069d2b6119052df387/650c0a1a4b89d76de4ab3c5a_kompas-logo.webp',
+      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
       link: '#'
     },
     {
@@ -350,7 +350,7 @@ export const News = () => {
       title: 'Skyhouse Alamsutera Hadirkan Konsep Rumah Ramah Lingkungan di Jakarta',
       date: 'August 15, 2023',
       mediaSource: 'Kompas',
-      mediaLogo: 'https://cdn.prod.website-files.com/6507e5069d2b6119052df387/650c0a1a4b89d76de4ab3c5a_kompas-logo.webp',
+      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
       link: '#'
     }
   ];
@@ -359,7 +359,7 @@ export const News = () => {
     <section className="section_news background-color-cream is-20">
       <div className="padding-global">
         <div className="container-large">
-          <div className="padding-section-large" style={{ display: 'flex', gap: '40px' }}>
+          <div className="padding-section-large news-layout">
             <div className="news-header">
               <div className="news-header-content">
                 <h2>News</h2>
