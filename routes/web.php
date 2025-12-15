@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\Frontend\NewsController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,9 +31,8 @@ Route::get('/project', function () {
     return Inertia::render('Project');
 })->name('project');
 
-Route::get('/news', function () {
-    return Inertia::render('News');
-})->name('news');
+Route::get('/news', [NewsController::class, 'show'])->name('news');
+Route::get('/api/news', [NewsController::class, 'index'])->name('news.api');
 
 Route::get('/news/{id}', function ($id) {
     return Inertia::render('NewsDetail', [
