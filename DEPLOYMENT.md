@@ -29,7 +29,18 @@ npm run build
 php artisan queue:restart
 
 # 7. Restart PHP-FPM atau web server
-sudo systemctl restart php8.4-fpm
+# Cek versi PHP yang terinstall dulu:
+php -v
+
+# Restart PHP-FPM sesuai versi (pilih salah satu):
+sudo systemctl restart php8.3-fpm
+# atau
+sudo systemctl restart php8.2-fpm
+# atau
+sudo systemctl restart php8.1-fpm
+
+# Reload Nginx
+sudo systemctl reload nginx
 # atau
 sudo service nginx reload
 ```
@@ -52,6 +63,36 @@ php artisan route:clear
 ```
 
 ## Troubleshooting
+
+### Error: "Unit php8.4-fpm.service not found"
+
+**Cause:** PHP-FPM service name berbeda sesuai versi PHP yang terinstall
+
+**Solution - Cari service PHP-FPM yang aktif:**
+```bash
+# Method 1: List semua PHP-FPM services
+systemctl list-units --type=service | grep php
+
+# Method 2: Cek manual
+ls /etc/systemd/system/multi-user.target.wants/ | grep php
+
+# Method 3: Cek process yang running
+ps aux | grep php-fpm
+
+# Method 4: Cek status semua versi
+sudo systemctl status php8.3-fpm
+sudo systemctl status php8.2-fpm
+sudo systemctl status php8.1-fpm
+```
+
+**Setelah ketemu versinya, restart:**
+```bash
+# Contoh untuk PHP 8.3
+sudo systemctl restart php8.3-fpm
+
+# Atau reload aja (lebih aman, tidak putus koneksi):
+sudo systemctl reload php8.3-fpm
+```
 
 ### Error: "Route api/news could not be found"
 

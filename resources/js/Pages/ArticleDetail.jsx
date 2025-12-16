@@ -44,13 +44,18 @@ export default function ArticleDetail({ article, relatedArticles, seo }) {
                 <meta name="keywords" content={seo.keywords} />
                 <meta name="author" content={seo.author} />
 
-                {/* Open Graph Tags */}
+                {/* Open Graph Tags for Facebook, WhatsApp, LinkedIn */}
                 <meta property="og:type" content="article" />
                 <meta property="og:title" content={seo.title} />
                 <meta property="og:description" content={seo.description} />
                 <meta property="og:image" content={seo.image} />
+                <meta property="og:image:secure_url" content={seo.image} />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
+                <meta property="og:image:alt" content={seo.title} />
                 <meta property="og:url" content={seo.url} />
                 <meta property="og:site_name" content="Skyhouse Alamsutera" />
+                <meta property="og:locale" content="id_ID" />
                 <meta
                     property="article:published_time"
                     content={seo.published_time}

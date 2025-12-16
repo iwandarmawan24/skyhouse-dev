@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import Navigation from "@/Components/Frontend/Navigation";
 import Footer from "@/Components/Frontend/Footer";
 import { CTA } from "@/Components/Frontend/AllComponents";
@@ -8,6 +8,11 @@ import "@css/frontend/news-page.css";
 import axios from "axios";
 
 export default function News({ featured }) {
+    // SEO data for News page
+    const pageTitle = "Latest News & Articles - Skyhouse Alamsutera";
+    const pageDescription = "Stay informed with our latest property news, developments, and achievements from Skyhouse Alamsutera.";
+    const pageImage = featured?.image || window.location.origin + "/images/default-og-image.jpg";
+    const pageUrl = window.location.origin + "/news";
     const [activeTab, setActiveTab] = useState("media_highlights");
     const [items, setItems] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
@@ -69,8 +74,37 @@ export default function News({ featured }) {
     };
 
     return (
-        <div className="page-wrapper">
-            <Navigation />
+        <>
+            <Head>
+                {/* Basic Meta Tags */}
+                <title>{pageTitle}</title>
+                <meta name="description" content={pageDescription} />
+
+                {/* Open Graph Tags for Facebook, WhatsApp, LinkedIn */}
+                <meta property="og:type" content="website" />
+                <meta property="og:title" content={pageTitle} />
+                <meta property="og:description" content={pageDescription} />
+                <meta property="og:image" content={pageImage} />
+                <meta property="og:image:secure_url" content={pageImage} />
+                <meta property="og:image:width" content="1200" />
+                <meta property="og:image:height" content="630" />
+                <meta property="og:image:alt" content={pageTitle} />
+                <meta property="og:url" content={pageUrl} />
+                <meta property="og:site_name" content="Skyhouse Alamsutera" />
+                <meta property="og:locale" content="id_ID" />
+
+                {/* Twitter Card Tags */}
+                <meta name="twitter:card" content="summary_large_image" />
+                <meta name="twitter:title" content={pageTitle} />
+                <meta name="twitter:description" content={pageDescription} />
+                <meta name="twitter:image" content={pageImage} />
+
+                {/* Canonical URL */}
+                <link rel="canonical" href={pageUrl} />
+            </Head>
+
+            <div className="page-wrapper">
+                <Navigation />
             <main className="main-wrapper">
                 {/* Top Banner Section */}
                 <section className="news-top-banner">
@@ -278,6 +312,7 @@ export default function News({ featured }) {
             </main>
             <CTA />
             <Footer />
-        </div>
+            </div>
+        </>
     );
 }
