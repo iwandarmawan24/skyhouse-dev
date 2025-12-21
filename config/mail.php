@@ -115,4 +115,17 @@ return [
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | Contact Form Recipient
+    |--------------------------------------------------------------------------
+    |
+    | This email address will receive contact form submissions.
+    |
+    */
+
+    'contact' => [
+        'recipient' => env('MAIL_CONTACT_RECIPIENT', 'info@skyhousealamsutera.com'),
+    ],
+
 ];

@@ -43,9 +43,8 @@ Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
 
-Route::get('/contact-us', function () {
-    return Inertia::render('Contact');
-})->name('contact');
+Route::get('/contact-us', [\App\Http\Controllers\Frontend\ContactController::class, 'index'])->name('contact');
+Route::post('/contact', [\App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');
 
 // Sitemap Route
 Route::get('/sitemap.xml', function () {

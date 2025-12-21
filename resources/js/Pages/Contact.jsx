@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Head, useForm, usePage } from "@inertiajs/react";
 import Navigation from "@/Components/Frontend/Navigation";
 import Footer from "@/Components/Frontend/Footer";
 import { CTA } from "@/Components/Frontend/AllComponents";
 import "@css/frontend.css";
 import '@css/frontend/contact-page.css';
 
-export default function Contact() {
-    const [formData, setFormData] = useState({
+export default function Contact({ recaptchaSiteKey }) {
+    const { flash } = usePage().props;
+    const { data, setData, post, processing, errors, reset } = useForm({
         fullName: "",
         residence: "",
         email: "",
@@ -14,21 +16,65 @@ export default function Contact() {
         subject: "",
         project: "",
         message: "",
+        recaptchaToken: "",
     });
 
     const [openFaq, setOpenFaq] = useState(null);
+    const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value,
-        });
-    };
+    // Load reCAPTCHA v2 script
+    useEffect(() => {
+        if (!recaptchaSiteKey) return;
+
+        // Check if script already exists
+        if (document.querySelector('script[src*="recaptcha/api.js"]')) {
+            setRecaptchaLoaded(true);
+            return;
+        }
+
+        const script = document.createElement('script');
+        script.src = 'https://www.google.com/recaptcha/api.js';
+        script.async = true;
+        script.defer = true;
+        script.onload = () => setRecaptchaLoaded(true);
+        document.body.appendChild(script);
+
+        return () => {
+            if (document.body.contains(script)) {
+                document.body.removeChild(script);
+            }
+        };
+    }, [recaptchaSiteKey]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        // Handle form submission
-        console.log("Form submitted:", formData);
+
+        if (!window.grecaptcha) {
+            alert('reCAPTCHA not loaded. Please refresh the page.');
+            return;
+        }
+
+        // Get reCAPTCHA v2 response token
+        const recaptchaResponse = window.grecaptcha.getResponse();
+
+        if (!recaptchaResponse) {
+            alert('Please complete the reCAPTCHA challenge.');
+            return;
+        }
+
+        setData('recaptchaToken', recaptchaResponse);
+
+        post('/contact', {
+            onSuccess: () => {
+                reset();
+                // Reset reCAPTCHA widget
+                window.grecaptcha.reset();
+            },
+            onError: () => {
+                // Reset reCAPTCHA widget on error
+                window.grecaptcha.reset();
+            },
+        });
     };
 
     const faqs = [
@@ -59,11 +105,52 @@ export default function Contact() {
     };
 
     return (
-        <div className="page-wrapper">
-            <Navigation />
-            <main className="main-wrapper">
-                {/* Contact Section */}
-                <section className="contact-section">
+        <>
+            <Head>
+                <title>Contact Us - Skyhouse Alamsutera</title>
+                <meta name="description" content="Get in touch with Skyhouse Alamsutera. Contact us for inquiries, property information, or schedule a visit to our show units." />
+            </Head>
+
+            <div className="page-wrapper">
+                <Navigation />
+                <main className="main-wrapper">
+                    {/* Success Message */}
+                    {flash?.success && (
+                        <div style={{
+                            position: 'fixed',
+                            top: '2rem',
+                            right: '2rem',
+                            zIndex: 9999,
+                            background: '#10b981',
+                            color: 'white',
+                            padding: '1rem 1.5rem',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                            animation: 'slideInRight 0.3s ease-out'
+                        }}>
+                            {flash.success}
+                        </div>
+                    )}
+
+                    {/* Error Message */}
+                    {errors.recaptcha && (
+                        <div style={{
+                            position: 'fixed',
+                            top: '2rem',
+                            right: '2rem',
+                            zIndex: 9999,
+                            background: '#ef4444',
+                            color: 'white',
+                            padding: '1rem 1.5rem',
+                            borderRadius: '8px',
+                            boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                        }}>
+                            {errors.recaptcha}
+                        </div>
+                    )}
+
+                    {/* Contact Section */}
+                    <section className="contact-section">
                     <div className="padding-global">
                         <div className="contact-container">
                             {/* Left Side - Contact Form (Fixed) */}
@@ -87,10 +174,11 @@ export default function Contact() {
                                                     id="fullName"
                                                     name="fullName"
                                                     placeholder="Budi Ramdhan"
-                                                    value={formData.fullName}
-                                                    onChange={handleChange}
+                                                    value={data.fullName}
+                                                    onChange={(e) => setData('fullName', e.target.value)}
                                                     required
                                                 />
+                                                {errors.fullName && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.fullName}</span>}
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="residence">
@@ -101,10 +189,11 @@ export default function Contact() {
                                                     id="residence"
                                                     name="residence"
                                                     placeholder="Kembangan, Jakarta Barat"
-                                                    value={formData.residence}
-                                                    onChange={handleChange}
+                                                    value={data.residence}
+                                                    onChange={(e) => setData('residence', e.target.value)}
                                                     required
                                                 />
+                                                {errors.residence && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.residence}</span>}
                                             </div>
                                         </div>
 
@@ -118,10 +207,11 @@ export default function Contact() {
                                                     id="email"
                                                     name="email"
                                                     placeholder="name@gmail.com"
-                                                    value={formData.email}
-                                                    onChange={handleChange}
+                                                    value={data.email}
+                                                    onChange={(e) => setData('email', e.target.value)}
                                                     required
                                                 />
+                                                {errors.email && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.email}</span>}
                                             </div>
                                             <div className="form-group">
                                                 <label htmlFor="phone">
@@ -132,10 +222,11 @@ export default function Contact() {
                                                     id="phone"
                                                     name="phone"
                                                     placeholder="0821234567"
-                                                    value={formData.phone}
-                                                    onChange={handleChange}
+                                                    value={data.phone}
+                                                    onChange={(e) => setData('phone', e.target.value)}
                                                     required
                                                 />
+                                                {errors.phone && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.phone}</span>}
                                             </div>
                                         </div>
 
@@ -147,8 +238,8 @@ export default function Contact() {
                                                 <select
                                                     id="subject"
                                                     name="subject"
-                                                    value={formData.subject}
-                                                    onChange={handleChange}
+                                                    value={data.subject}
+                                                    onChange={(e) => setData('subject', e.target.value)}
                                                     required
                                                 >
                                                     <option value="">
@@ -170,8 +261,8 @@ export default function Contact() {
                                                 <select
                                                     id="project"
                                                     name="project"
-                                                    value={formData.project}
-                                                    onChange={handleChange}
+                                                    value={data.project}
+                                                    onChange={(e) => setData('project', e.target.value)}
                                                     required
                                                 >
                                                     <option value="">
@@ -185,6 +276,8 @@ export default function Contact() {
                                                     </option>
                                                 </select>
                                             </div>
+                                            {errors.subject && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem', display: 'block' }}>{errors.subject}</span>}
+                                            {errors.project && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem', display: 'block' }}>{errors.project}</span>}
                                         </div>
 
                                         <div className="form-group">
@@ -193,18 +286,40 @@ export default function Contact() {
                                                 name="message"
                                                 placeholder="Dear Skyhouse team, I wanna ask about..."
                                                 rows="5"
-                                                value={formData.message}
-                                                onChange={handleChange}
+                                                value={data.message}
+                                                onChange={(e) => setData('message', e.target.value)}
                                                 required
                                             ></textarea>
+                                            {errors.message && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.message}</span>}
                                         </div>
+
+                                        {/* reCAPTCHA v2 Widget */}
+                                        {recaptchaSiteKey && (
+                                            <div className="form-group">
+                                                <div
+                                                    className="g-recaptcha"
+                                                    data-sitekey={recaptchaSiteKey}
+                                                    style={{ marginBottom: '1rem' }}
+                                                ></div>
+                                                {errors.recaptcha && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem', display: 'block' }}>{errors.recaptcha}</span>}
+                                            </div>
+                                        )}
 
                                         <button
                                             type="submit"
                                             className="button is-contact-submit"
+                                            disabled={processing}
                                         >
-                                            Submit
+                                            {processing ? 'Submitting...' : 'Submit'}
                                         </button>
+
+                                        <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.75rem' }}>
+                                            This site is protected by reCAPTCHA and the Google{' '}
+                                            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#1E3A8A' }}>Privacy Policy</a>{' '}
+                                            and{' '}
+                                            <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: '#1E3A8A' }}>Terms of Service</a>{' '}
+                                            apply.
+                                        </p>
                                     </form>
                                 </div>
                             </div>
@@ -390,5 +505,6 @@ export default function Contact() {
             <CTA />
             <Footer />
         </div>
+        </>
     );
 }
