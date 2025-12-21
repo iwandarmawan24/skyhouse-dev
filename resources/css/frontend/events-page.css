@@ -1,0 +1,261 @@
+/* ============================================
+   EVENTS PAGE STYLES
+   ============================================ */
+
+/* Banner Section */
+.events-banner-wrapper {
+  position: relative;
+  height: 500px;
+  overflow: hidden;
+}
+
+.events-banner-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.events-banner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.events-banner-content {
+  width: 100%;
+}
+
+.events-banner-title {
+  color: white;
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.events-banner-subtitle {
+  color: white;
+  font-size: 1.25rem;
+  opacity: 0.9;
+  text-align: center;
+}
+
+/* Filter Buttons */
+.events-filter-container {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 4rem;
+  flex-wrap: wrap;
+}
+
+.events-filter-btn {
+  padding: 0.75rem 2rem;
+  border: 2px solid #1E3A8A;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: transparent;
+  color: #1E3A8A;
+}
+
+.events-filter-btn.active {
+  background: #1E3A8A;
+  color: white;
+}
+
+.events-filter-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
+}
+
+/* Events Grid */
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 2rem;
+  margin-bottom: 3rem;
+}
+
+/* Event Card */
+.event-card {
+  display: block;
+  background: white;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-decoration: none;
+  color: inherit;
+}
+
+.event-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.event-card-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  height: 240px;
+}
+
+.event-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.event-card-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.75);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.event-card-content {
+  padding: 1.5rem;
+}
+
+.event-card-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  color: #64748b;
+  flex-wrap: wrap;
+}
+
+.event-card-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.event-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1E3A8A;
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.event-card-description {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+}
+
+.event-card-link {
+  color: #1E3A8A;
+  font-weight: 600;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Load More Button */
+.events-load-more-container {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+.events-load-more-btn {
+  padding: 1rem 3rem;
+  background: #1E3A8A;
+  color: white;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 6px rgba(30, 58, 138, 0.3);
+}
+
+.events-load-more-btn:hover {
+  background: #1e40af;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(30, 58, 138, 0.4);
+}
+
+/* Empty State */
+.events-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: #64748b;
+}
+
+.events-empty-icon {
+  margin: 0 auto 1rem;
+  opacity: 0.3;
+}
+
+.events-empty-title {
+  font-size: 1.25rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.events-empty-description {
+  font-size: 1rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .events-banner-wrapper {
+    height: 400px;
+  }
+
+  .events-banner-title {
+    font-size: 2rem;
+  }
+
+  .events-banner-subtitle {
+    font-size: 1rem;
+  }
+
+  .events-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .events-filter-container {
+    gap: 0.75rem;
+  }
+
+  .events-filter-btn {
+    padding: 0.625rem 1.5rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .events-banner-wrapper {
+    height: 300px;
+  }
+
+  .events-banner-title {
+    font-size: 1.5rem;
+  }
+
+  .events-load-more-btn {
+    padding: 0.875rem 2rem;
+    font-size: 0.875rem;
+  }
+}

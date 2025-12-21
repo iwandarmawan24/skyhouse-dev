@@ -42,6 +42,11 @@ const Navigation = ({ isHomePage = false }) => {
               Company
             </a>
 
+            {/* Events Link */}
+            <a href="/events" className="navbar2_link">
+              Events
+            </a>
+
             {/* News Link */}
             <a href="/news" className="navbar2_link">
               News
@@ -108,6 +113,7 @@ const Navigation = ({ isHomePage = false }) => {
           <div className="mobile-menu-content" onClick={(e) => e.stopPropagation()}>
             <a href="/project" className="mobile-menu-link">Projects</a>
             <a href="/about" className="mobile-menu-link">About</a>
+            <a href="/events" className="mobile-menu-link">Events</a>
             <a href="/news" className="mobile-menu-link">News</a>
             <a href="/contact-us" className="mobile-menu-link">Contact Us</a>
           </div>
