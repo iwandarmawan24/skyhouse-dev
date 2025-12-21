@@ -173,9 +173,7 @@ export default function Event({ events }) {
                                                             {event.title}
                                                         </h3>
                                                         <p className="event-card-description">
-                                                            {event.description && event.description.length > 120
-                                                                ? event.description.substring(0, 120) + "..."
-                                                                : event.description}
+                                                            {event.description_excerpt || event.description}
                                                         </p>
                                                         <div className="event-card-link">
                                                             Learn More

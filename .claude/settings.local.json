@@ -17,7 +17,8 @@
       "Bash(docker exec:*)",
       "Bash(cat:*)",
       "Bash(./vendor/bin/sail artisan make:migration:*)",
-      "Bash(./vendor/bin/sail artisan migrate:*)"
+      "Bash(./vendor/bin/sail artisan migrate:*)",
+      "mcp__ide__getDiagnostics"
     ],
     "deny": [],
     "ask": []

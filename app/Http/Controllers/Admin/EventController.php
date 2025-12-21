@@ -83,6 +83,12 @@ class EventController extends Controller
             'image_uid' => 'nullable|string|exists:media_library,uid',
             'registration_link' => 'nullable|url|max:255',
             'is_active' => 'required|boolean',
+            // SEO fields
+            'slug' => 'nullable|string|max:255|unique:events,slug',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|string|max:255',
+            'focus_keyword' => 'nullable|string|max:255',
         ]);
 
         // Require either image_uid (from media library) or image upload
@@ -90,8 +96,10 @@ class EventController extends Controller
             return back()->withErrors(['image' => 'Please select an image.']);
         }
 
-        // Generate slug
-        $validated['slug'] = Str::slug($validated['title']);
+        // Generate slug if not provided
+        if (empty($validated['slug'])) {
+            $validated['slug'] = Str::slug($validated['title']);
+        }
 
         // Combine event_date and event_time
         $validated['event_date'] = $validated['event_date'] . ' ' . $validated['event_time'];
@@ -142,10 +150,16 @@ class EventController extends Controller
             'image_uid' => 'nullable|string|exists:media_library,uid',
             'registration_link' => 'nullable|url|max:255',
             'is_active' => 'required|boolean',
+            // SEO fields
+            'slug' => 'nullable|string|max:255|unique:events,slug,' . $event->uid . ',uid',
+            'meta_title' => 'nullable|string|max:255',
+            'meta_description' => 'nullable|string|max:500',
+            'meta_keywords' => 'nullable|string|max:255',
+            'focus_keyword' => 'nullable|string|max:255',
         ]);
 
-        // Update slug if title changed
-        if ($validated['title'] !== $event->title) {
+        // Update slug if not provided or if title changed and no custom slug
+        if (empty($validated['slug']) || ($validated['title'] !== $event->title && $validated['slug'] === $event->slug)) {
             $validated['slug'] = Str::slug($validated['title']);
         }
 

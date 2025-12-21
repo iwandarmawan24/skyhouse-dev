@@ -23,6 +23,10 @@ class Event extends Model
         'current_participants',
         'is_active',
         'slug',
+        'meta_title',
+        'meta_description',
+        'meta_keywords',
+        'focus_keyword',
     ];
 
     protected $casts = [
@@ -32,6 +36,7 @@ class Event extends Model
 
     protected $appends = [
         'event_date_formatted',
+        'event_date_only',
         'event_time',
         'is_past',
         'image_url',
@@ -86,6 +91,14 @@ class Event extends Model
     public function getEventDateFormattedAttribute()
     {
         return $this->event_date->format('M d, Y');
+    }
+
+    /**
+     * Get event date only (for form input)
+     */
+    public function getEventDateOnlyAttribute()
+    {
+        return $this->event_date->format('Y-m-d');
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Models\Event;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -10,69 +11,34 @@ use Inertia\Response;
 class EventController extends Controller
 {
     /**
-     * Get dummy events data
-     */
-    private function getDummyEvents(): array
-    {
-        return [
-            [
-                'uid' => '1',
-                'slug' => 'grand-launching-skyhouse-residence',
-                'title' => 'Grand Launching Skyhouse Residence',
-                'description' => 'Join us for the grand launching of our newest residential project featuring modern amenities and sustainable living spaces.',
-                'image' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=800&fit=crop',
-                'image_url' => 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&h=800&fit=crop',
-                'event_date' => '2025-01-15',
-                'event_date_formatted' => 'January 15, 2025',
-                'event_time' => '10:00 AM',
-                'location' => 'Skyhouse Alamsutera Sales Gallery',
-                'is_past' => false,
-                'max_participants' => 100,
-                'current_participants' => 45,
-                'registration_link' => '#',
-            ],
-            [
-                'uid' => '2',
-                'slug' => 'open-house-weekend',
-                'title' => 'Open House Weekend',
-                'description' => 'Explore our show units and get exclusive deals during our weekend open house event.',
-                'image' => 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&h=800&fit=crop',
-                'image_url' => 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1200&h=800&fit=crop',
-                'event_date' => '2025-02-20',
-                'event_date_formatted' => 'February 20, 2025',
-                'event_time' => '09:00 AM - 05:00 PM',
-                'location' => 'Skyhouse Alamsutera',
-                'is_past' => false,
-                'max_participants' => 200,
-                'current_participants' => 87,
-                'registration_link' => '#',
-            ],
-            [
-                'uid' => '3',
-                'slug' => 'property-investment-seminar',
-                'title' => 'Property Investment Seminar',
-                'description' => 'Learn about smart property investment strategies and market trends from industry experts.',
-                'image' => 'https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=1200&h=800&fit=crop',
-                'image_url' => 'https://images.unsplash.com/photo-1551818255-e6e10975bc17?w=1200&h=800&fit=crop',
-                'event_date' => '2024-11-10',
-                'event_date_formatted' => 'November 10, 2024',
-                'event_time' => '02:00 PM',
-                'location' => 'Grand Ballroom, Hotel Santika',
-                'is_past' => true,
-                'max_participants' => 150,
-                'current_participants' => 150,
-                'registration_link' => null,
-            ],
-        ];
-    }
-
-    /**
      * Display the events listing page
      */
     public function index(): Response
     {
+        $events = Event::with('mediaImage')
+            ->where('is_active', true)
+            ->orderBy('event_date', 'desc')
+            ->get()
+            ->map(function ($event) {
+                return [
+                    'uid' => $event->uid,
+                    'slug' => $event->slug,
+                    'title' => $event->title,
+                    'description' => $event->description,
+                    'description_excerpt' => $this->getPlainTextExcerpt($event->description, 120),
+                    'image' => $event->image,
+                    'image_url' => $event->image_url,
+                    'event_date' => $event->event_date,
+                    'event_date_formatted' => $event->event_date_formatted,
+                    'event_time' => $event->event_time,
+                    'location' => $event->location,
+                    'is_past' => $event->is_past,
+                    'registration_link' => $event->registration_link,
+                ];
+            });
+
         return Inertia::render('Event', [
-            'events' => $this->getDummyEvents(),
+            'events' => $events,
         ]);
     }
 
@@ -81,15 +47,54 @@ class EventController extends Controller
      */
     public function show(string $slug): Response
     {
-        $events = $this->getDummyEvents();
-        $event = collect($events)->firstWhere('slug', $slug);
-
-        if (!$event) {
-            abort(404);
-        }
+        $event = Event::with('mediaImage')
+            ->where('slug', $slug)
+            ->where('is_active', true)
+            ->firstOrFail();
 
         return Inertia::render('EventDetail', [
-            'event' => $event,
+            'event' => [
+                'uid' => $event->uid,
+                'slug' => $event->slug,
+                'title' => $event->title,
+                'description' => $event->description,
+                'image' => $event->image,
+                'image_url' => $event->image_url,
+                'event_date' => $event->event_date,
+                'event_date_formatted' => $event->event_date_formatted,
+                'event_time' => $event->event_time,
+                'location' => $event->location,
+                'is_past' => $event->is_past,
+                'max_participants' => $event->max_participants,
+                'current_participants' => $event->current_participants,
+                'registration_link' => $event->registration_link,
+                // SEO fields
+                'meta_title' => $event->meta_title,
+                'meta_description' => $event->meta_description,
+                'meta_keywords' => $event->meta_keywords,
+                'focus_keyword' => $event->focus_keyword,
+            ],
         ]);
+    }
+
+    /**
+     * Extract plain text excerpt from HTML content
+     */
+    private function getPlainTextExcerpt(string $html, int $length = 120): string
+    {
+        $text = strip_tags($html);
+        $text = preg_replace('/\s+/', ' ', $text);
+        $text = trim($text);
+
+        if (strlen($text) > $length) {
+            $text = substr($text, 0, $length);
+            $lastSpace = strrpos($text, ' ');
+            if ($lastSpace !== false) {
+                $text = substr($text, 0, $lastSpace);
+            }
+            $text .= '...';
+        }
+
+        return $text;
     }
 }

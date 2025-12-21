@@ -6,11 +6,12 @@ import '@css/frontend.css';
 import '@css/frontend/news-detail.css';
 
 export default function EventDetail({ event }) {
-    // SEO data for Event Detail page
-    const pageTitle = `${event.title} - Skyhouse Alamsutera`;
-    const pageDescription = event.description || "Join us for this exciting event at Skyhouse Alamsutera";
+    // SEO data for Event Detail page - use custom SEO fields if available
+    const pageTitle = event.meta_title || `${event.title} - Skyhouse Alamsutera`;
+    const pageDescription = event.meta_description || event.description?.replace(/<[^>]*>/g, '').substring(0, 155) || "Join us for this exciting event at Skyhouse Alamsutera";
     const pageImage = event.image_url || event.image || window.location.origin + "/images/default-og-image.jpg";
     const pageUrl = window.location.origin + `/events/${event.slug}`;
+    const pageKeywords = event.meta_keywords || `${event.title}, event, Skyhouse Alamsutera`;
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -30,6 +31,7 @@ export default function EventDetail({ event }) {
                 {/* Basic Meta Tags */}
                 <title>{pageTitle}</title>
                 <meta name="description" content={pageDescription} />
+                {pageKeywords && <meta name="keywords" content={pageKeywords} />}
 
                 {/* Open Graph Tags for Facebook, WhatsApp, LinkedIn */}
                 <meta property="og:type" content="article" />
@@ -186,29 +188,36 @@ export default function EventDetail({ event }) {
 
                                     {/* Event Content */}
                                     <div className="news-detail-content">
-                                        <div>
-                                            <h3 style={{ marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700', color: '#1E3A8A' }}>About This Event</h3>
-                                            <p style={{ lineHeight: '1.8', marginBottom: '1.5rem' }}>
-                                                {event.description || 'Event details coming soon...'}
-                                            </p>
+                                        {event.description ? (
+                                            <div
+                                                dangerouslySetInnerHTML={{ __html: event.description }}
+                                                style={{ lineHeight: '1.8' }}
+                                            />
+                                        ) : (
+                                            <div>
+                                                <h3 style={{ marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700', color: '#1E3A8A' }}>About This Event</h3>
+                                                <p style={{ lineHeight: '1.8', marginBottom: '1.5rem' }}>
+                                                    Event details coming soon...
+                                                </p>
 
-                                            <h3 style={{ marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700', color: '#1E3A8A' }}>Event Highlights</h3>
-                                            <ul style={{ lineHeight: '1.8', marginBottom: '1.5rem', paddingLeft: '1.5rem' }}>
-                                                <li>Exclusive property showcase</li>
-                                                <li>Special promotional pricing</li>
-                                                <li>Meet our expert consultants</li>
-                                                <li>Refreshments and entertainment</li>
-                                                <li>Doorprize and giveaways</li>
-                                            </ul>
+                                                <h3 style={{ marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700', color: '#1E3A8A' }}>Event Highlights</h3>
+                                                <ul style={{ lineHeight: '1.8', marginBottom: '1.5rem', paddingLeft: '1.5rem' }}>
+                                                    <li>Exclusive property showcase</li>
+                                                    <li>Special promotional pricing</li>
+                                                    <li>Meet our expert consultants</li>
+                                                    <li>Refreshments and entertainment</li>
+                                                    <li>Doorprize and giveaways</li>
+                                                </ul>
 
-                                            <h3 style={{ marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700', color: '#1E3A8A' }}>What to Expect</h3>
-                                            <p style={{ lineHeight: '1.8', marginBottom: '1.5rem' }}>
-                                                Join us for an exciting event showcasing our latest housing products. This is a perfect opportunity to explore our properties, meet our team, and discover exclusive offers available only during this event.
-                                            </p>
-                                            <p style={{ lineHeight: '1.8' }}>
-                                                Whether you're a first-time homebuyer or an experienced investor, our team will be on hand to answer your questions and guide you through the process of finding your dream home.
-                                            </p>
-                                        </div>
+                                                <h3 style={{ marginBottom: '1rem', fontSize: '1.5rem', fontWeight: '700', color: '#1E3A8A' }}>What to Expect</h3>
+                                                <p style={{ lineHeight: '1.8', marginBottom: '1.5rem' }}>
+                                                    Join us for an exciting event showcasing our latest housing products. This is a perfect opportunity to explore our properties, meet our team, and discover exclusive offers available only during this event.
+                                                </p>
+                                                <p style={{ lineHeight: '1.8' }}>
+                                                    Whether you're a first-time homebuyer or an experienced investor, our team will be on hand to answer your questions and guide you through the process of finding your dream home.
+                                                </p>
+                                            </div>
+                                        )}
                                     </div>
 
                                     {/* Back to Events */}
