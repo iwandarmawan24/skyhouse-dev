@@ -1,41 +1,62 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, useForm } from '@inertiajs/react';
 import { useState } from 'react';
-import { ArrowLeft, Upload } from 'lucide-react';
+import { ArrowLeft, Image as ImageIcon } from 'lucide-react';
 import { Button } from '@/Components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/Components/ui/Card';
 import { FormInput, FormSelect } from '@/Components/ui/FormField';
 import { Label } from '@/Components/ui/Label';
+import { MediaPicker } from '@/Components/MediaPicker';
 
 export default function Form({ highlight, mediaList }) {
     const isEdit = highlight !== null;
+
+    // Format date to YYYY-MM-DD for date input
+    const formatDateForInput = (date) => {
+        if (!date) return '';
+        const d = new Date(date);
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
     const { data, setData, post, processing, errors } = useForm({
         media_uid: highlight?.media_uid || (mediaList.length > 0 ? mediaList[0].uid : ''),
         title: highlight?.title || '',
-        publish_date: highlight?.publish_date || '',
+        publish_date: formatDateForInput(highlight?.publish_date) || '',
         image: null,
+        image_uid: highlight?.image_uid || null,
         article_url: highlight?.article_url || '',
         _method: isEdit ? 'PUT' : 'POST',
     });
 
-    const [imagePreview, setImagePreview] = useState(
-        highlight?.image
-            ? highlight.image.startsWith('http')
-                ? highlight.image
-                : `/storage/${highlight.image}`
-            : null
-    );
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setData('image', file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
+    // Get image preview from media library or legacy image field
+    const [imagePreview, setImagePreview] = useState(() => {
+        // Priority 1: Media library image (new approach)
+        if (highlight?.highlight_image?.url) {
+            return highlight.highlight_image.url;
         }
+        // Priority 2: Legacy direct upload
+        if (highlight?.image) {
+            return highlight.image.startsWith('http')
+                ? highlight.image
+                : `/storage/${highlight.image}`;
+        }
+        return null;
+    });
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
+
+    const handleMediaSelect = (selectedMedia) => {
+        if (selectedMedia) {
+            // Set the image URL for preview
+            setImagePreview(selectedMedia.url);
+
+            // Store the media UID to send to backend
+            setData('image_uid', selectedMedia.uid);
+            setData('image', null); // Clear file upload
+        }
+        setShowMediaPicker(false);
     };
 
     const handleSubmit = (e) => {
@@ -145,28 +166,37 @@ export default function Form({ highlight, mediaList }) {
                             <Label required>Image</Label>
                             <div className="mt-2">
                                 {imagePreview && (
-                                    <div className="mb-4">
+                                    <div className="mb-4 relative group">
                                         <img
                                             src={imagePreview}
                                             alt="Preview"
                                             className="w-full h-48 object-cover rounded-lg"
                                         />
+                                        <div className="absolute inset-0 bg-opacity-0 group-hover:bg-opacity-40 transition-all rounded-lg flex items-center justify-center">
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setImagePreview(null);
+                                                    setData('image', null);
+                                                    setData('image_uid', null);
+                                                }}
+                                                className="opacity-0 group-hover:opacity-100 transition-opacity px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg"
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
                                     </div>
                                 )}
-                                <input
-                                    type="file"
-                                    id="image"
-                                    accept="image/*"
-                                    onChange={handleImageChange}
-                                    className="hidden"
-                                />
-                                <label
-                                    htmlFor="image"
-                                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg cursor-pointer transition-colors font-medium text-sm"
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowMediaPicker(true)}
+                                    className="inline-flex items-center justify-center gap-2 w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium text-sm"
                                 >
-                                    <Upload className="w-4 h-4" />
-                                    {imagePreview ? 'Change Image' : 'Upload Image'}
-                                </label>
+                                    <ImageIcon className="w-4 h-4" />
+                                    {imagePreview ? 'Change Image' : 'Select from Media Library'}
+                                </button>
+
                                 {errors.image && (
                                     <p className="text-sm text-red-600 mt-2">{errors.image}</p>
                                 )}
@@ -192,6 +222,16 @@ export default function Form({ highlight, mediaList }) {
                     </CardContent>
                 </Card>
             </form>
+
+            {/* Media Picker Dialog */}
+            <MediaPicker
+                open={showMediaPicker}
+                onClose={() => setShowMediaPicker(false)}
+                onSelect={handleMediaSelect}
+                multiple={false}
+                accept="image"
+                folder="media-highlights"
+            />
         </AdminLayout>
     );
 }

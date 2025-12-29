@@ -34,18 +34,6 @@ export default function Form({ media }) {
 
     console.log("Initial logoPreview:", logoPreview);
 
-    const handleLogoChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setData("logo", file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setLogoPreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
     const handleMediaSelect = (selectedMedia) => {
         if (selectedMedia) {
             console.log("Selected media:", selectedMedia);
@@ -134,7 +122,7 @@ export default function Form({ media }) {
                                     </div>
                                 )}
 
-                                <div className="grid grid-cols-2 gap-2">
+                                <div className="grid grid-cols-1 gap-2">
                                     {/* Media Library Button */}
                                     <button
                                         type="button"
@@ -144,24 +132,6 @@ export default function Form({ media }) {
                                         <ImageIcon className="w-4 h-4" />
                                         Media Library
                                     </button>
-
-                                    {/* Upload File Button */}
-                                    <div>
-                                        <input
-                                            type="file"
-                                            id="logo"
-                                            accept="image/*"
-                                            onChange={handleLogoChange}
-                                            className="hidden"
-                                        />
-                                        <label
-                                            htmlFor="logo"
-                                            className="inline-flex items-center justify-center gap-2 w-full px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-900 rounded-lg cursor-pointer transition-colors font-medium text-sm"
-                                        >
-                                            <Upload className="w-4 h-4" />
-                                            Upload File
-                                        </label>
-                                    </div>
                                 </div>
 
                                 {errors.logo && (

@@ -17,6 +17,7 @@ class MediaHighlight extends Model
         'title',
         'publish_date',
         'image',
+        'image_uid',
         'article_url',
     ];
 
@@ -36,10 +37,18 @@ class MediaHighlight extends Model
     }
 
     /**
-     * Get the media
+     * Get the media outlet
      */
     public function media(): BelongsTo
     {
         return $this->belongsTo(Media::class, 'media_uid', 'uid');
+    }
+
+    /**
+     * Get the highlight image from media library
+     */
+    public function highlightImage(): BelongsTo
+    {
+        return $this->belongsTo(MediaLibrary::class, 'image_uid', 'uid');
     }
 }

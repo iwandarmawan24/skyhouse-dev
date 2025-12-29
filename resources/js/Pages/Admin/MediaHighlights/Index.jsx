@@ -120,9 +120,9 @@ export default function Index({ highlights, mediaList, filters }) {
                                     <TableRow key={highlight.uid}>
                                         <TableCell>
                                             <div className="flex items-start gap-3">
-                                                {highlight.image ? (
+                                                {(highlight.highlight_image?.url || highlight.image) ? (
                                                     <img
-                                                        src={highlight.image.startsWith('http') ? highlight.image : `/storage/${highlight.image}`}
+                                                        src={highlight.highlight_image?.url || (highlight.image.startsWith('http') ? highlight.image : `/storage/${highlight.image}`)}
                                                         alt={highlight.title}
                                                         className="h-16 w-24 rounded object-cover shrink-0 bg-gray-50"
                                                     />
