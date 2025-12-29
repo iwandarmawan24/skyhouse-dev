@@ -54,6 +54,14 @@ class Article extends Model
     protected $appends = ['computed_status', 'featured_image_url'];
 
     /**
+     * Prepare a date for array / JSON serialization.
+     */
+    protected function serializeDate(\DateTimeInterface $date): string
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
+    /**
      * Get the featured image URL
      */
     public function getFeaturedImageUrlAttribute()

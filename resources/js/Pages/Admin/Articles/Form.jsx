@@ -18,6 +18,18 @@ import { MediaPicker } from "@/Components/MediaPicker";
 
 export default function Form({ article, categories, users }) {
     const isEdit = article !== null;
+
+    // Helper function to format datetime for datetime-local input
+    // Backend sends datetime in Asia/Jakarta timezone (e.g., "2025-12-29 20:10:00")
+    // We need to format it for datetime-local input (e.g., "2025-12-29T20:10")
+    const formatDateTimeForInput = (datetime) => {
+        if (!datetime) return "";
+        // Backend sends format: "2025-12-29 20:10:00"
+        // datetime-local needs: "2025-12-29T20:10"
+        // Simply replace space with T and remove seconds
+        return datetime.substring(0, 16).replace(' ', 'T');
+    };
+
     const { data, setData, post, processing, errors } = useForm({
         title: article?.title || "",
         subtitle: article?.subtitle || "",
@@ -37,12 +49,9 @@ export default function Form({ article, categories, users }) {
         meta_description: article?.meta_description || "",
         meta_keywords: article?.meta_keywords || "",
         focus_keywords: article?.focus_keywords || "",
-        status: article?.computed_status || article?.status || "draft",
-        scheduled_at: article?.scheduled_at
-            ? article.scheduled_at.split("T")[0] +
-              "T" +
-              article.scheduled_at.split("T")[1].substring(0, 5)
-            : "",
+        status: article?.status || "draft",
+        scheduled_at: formatDateTimeForInput(article?.scheduled_at),
+        ignore_schedule_warning: false,
         _method: isEdit ? "PUT" : "POST",
     });
 
@@ -79,6 +88,12 @@ export default function Form({ article, categories, users }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+
+        // If there's a schedule warning error, set flag to ignore it on next submit
+        if (errors.scheduled_at && errors.scheduled_at.includes('in the past')) {
+            setData('ignore_schedule_warning', true);
+        }
+
         const url = isEdit
             ? `/admin/articles/${article.uid}`
             : "/admin/articles";

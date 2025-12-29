@@ -42,6 +42,14 @@ class Event extends Model
         'image_url',
     ];
 
+    /**
+     * Prepare a date for array / JSON serialization.
+     */
+    protected function serializeDate(\DateTimeInterface $date): string
+    {
+        return $date->format('Y-m-d H:i:s');
+    }
+
     protected static function boot()
     {
         parent::boot();

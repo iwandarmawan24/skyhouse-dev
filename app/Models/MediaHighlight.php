@@ -25,6 +25,14 @@ class MediaHighlight extends Model
         'publish_date' => 'date',
     ];
 
+    /**
+     * Prepare a date for array / JSON serialization.
+     */
+    protected function serializeDate(\DateTimeInterface $date): string
+    {
+        return $date->format('Y-m-d');
+    }
+
     protected static function boot()
     {
         parent::boot();

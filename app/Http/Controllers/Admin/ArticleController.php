@@ -116,8 +116,21 @@ class ArticleController extends Controller
             'meta_keywords' => 'nullable|string',
             'focus_keywords' => 'nullable|string|max:255',
             'status' => 'required|in:draft,scheduled,published',
-            'scheduled_at' => 'nullable|date|after:now',
+            'scheduled_at' => 'nullable|date',
+            'ignore_schedule_warning' => 'nullable|boolean',
         ]);
+
+        // Check if scheduled_at is in the past and user hasn't acknowledged
+        if ($validated['status'] === 'scheduled' &&
+            !empty($validated['scheduled_at']) &&
+            empty($validated['ignore_schedule_warning'])) {
+            $scheduledTime = \Carbon\Carbon::parse($validated['scheduled_at']);
+            if ($scheduledTime->isPast()) {
+                return back()->withErrors([
+                    'scheduled_at' => 'The scheduled time is in the past. The article will be published immediately by the scheduler. Click Save again to confirm.'
+                ])->withInput();
+            }
+        }
 
         // Generate slug if not provided
         if (empty($validated['slug'])) {
@@ -246,8 +259,21 @@ class ArticleController extends Controller
             'meta_keywords' => 'nullable|string',
             'focus_keywords' => 'nullable|string|max:255',
             'status' => 'required|in:draft,scheduled,published',
-            'scheduled_at' => 'nullable|date|after:now',
+            'scheduled_at' => 'nullable|date',
+            'ignore_schedule_warning' => 'nullable|boolean',
         ]);
+
+        // Check if scheduled_at is in the past and user hasn't acknowledged
+        if ($validated['status'] === 'scheduled' &&
+            !empty($validated['scheduled_at']) &&
+            empty($validated['ignore_schedule_warning'])) {
+            $scheduledTime = \Carbon\Carbon::parse($validated['scheduled_at']);
+            if ($scheduledTime->isPast()) {
+                return back()->withErrors([
+                    'scheduled_at' => 'The scheduled time is in the past. The article will be published immediately by the scheduler. Click Save again to confirm.'
+                ])->withInput();
+            }
+        }
 
         // Generate slug if not provided
         if (empty($validated['slug'])) {

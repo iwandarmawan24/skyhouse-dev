@@ -10,3 +10,10 @@ Artisan::command('inspire', function () {
 
 // Schedule sitemap generation daily
 Schedule::command('sitemap:generate')->daily();
+
+// Publish scheduled articles every minute (for testing)
+// TODO: Change back to ->everyThirtyMinutes() in production
+Schedule::command('articles:publish-scheduled')
+    ->everyMinute()
+    ->withoutOverlapping()
+    ->runInBackground();
