@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\ContactFormSubmitted;
 use App\Models\ContactSubmission;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -19,7 +19,7 @@ class ContactController extends Controller
     public function index(): Response
     {
         return Inertia::render('Contact', [
-            'recaptchaSiteKey' => config('services.recaptcha.site_key'),
+            'formLoadTime' => now()->timestamp,
         ]);
     }
 
@@ -37,23 +37,48 @@ class ContactController extends Controller
             'subject' => 'required|string|max:255',
             'project' => 'required|string|max:255',
             'message' => 'required|string|max:2000',
-            'recaptchaToken' => 'required|string',
+            'honeypot' => 'nullable|string|max:0', // Honeypot field should be empty
+            'formLoadTime' => 'required|integer',
         ]);
 
-        // Verify reCAPTCHA v2
-        $recaptchaSecret = config('services.recaptcha.secret_key');
-        $recaptchaResponse = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
-            'secret' => $recaptchaSecret,
-            'response' => $validated['recaptchaToken'],
-            'remoteip' => $request->ip(),
-        ]);
+        // 1. HONEYPOT VALIDATION - Bot trap
+        if (!empty($validated['honeypot'])) {
+            // Silently reject - bot filled the hidden field
+            return redirect()->route('contact')->with('success', 'Thank you for contacting us! We will get back to you soon.');
+        }
 
-        $recaptchaResult = $recaptchaResponse->json();
-
-        // Check if reCAPTCHA v2 verification failed
-        if (!$recaptchaResult['success']) {
+        // 2. TIME-BASED VALIDATION - Prevent instant submissions
+        $timeSpent = now()->timestamp - $validated['formLoadTime'];
+        if ($timeSpent < 3) {
+            // Too fast - likely a bot
             return back()->withErrors([
-                'recaptcha' => 'Please complete the reCAPTCHA challenge.',
+                'general' => 'Please take your time to fill out the form.',
+            ])->withInput();
+        }
+
+        // 3. RATE LIMITING - Prevent spam from same IP
+        $ip = $request->ip();
+        $rateLimitKey = 'contact_form_' . $ip;
+        $submissionCount = Cache::get($rateLimitKey, 0);
+
+        // Check if exceeded rate limit (3 submissions per hour)
+        if ($submissionCount >= 3) {
+            return back()->withErrors([
+                'general' => 'Too many submissions. Please try again later.',
+            ])->withInput();
+        }
+
+        // 4. DUPLICATE DETECTION - Prevent same content spam
+        $contentHash = md5(
+            $validated['email'] .
+            $validated['phone'] .
+            $validated['message']
+        );
+        $duplicateKey = 'contact_duplicate_' . $contentHash;
+
+        if (Cache::has($duplicateKey)) {
+            return back()->withErrors([
+                'general' => 'This message has already been submitted. Please wait before submitting again.',
             ])->withInput();
         }
 
@@ -77,6 +102,12 @@ class ContactController extends Controller
             // Log error but don't fail the request
             \Log::error('Failed to send contact form email: ' . $e->getMessage());
         }
+
+        // Update rate limiting counter (expires in 1 hour)
+        Cache::put($rateLimitKey, $submissionCount + 1, now()->addHour());
+
+        // Store duplicate hash (expires in 1 hour)
+        Cache::put($duplicateKey, true, now()->addHour());
 
         return redirect()->route('contact')->with('success', 'Thank you for contacting us! We will get back to you soon.');
     }

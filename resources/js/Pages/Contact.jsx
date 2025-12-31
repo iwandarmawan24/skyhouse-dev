@@ -6,7 +6,7 @@ import { CTA } from "@/Components/Frontend/AllComponents";
 import "@css/frontend.css";
 import '@css/frontend/contact-page.css';
 
-export default function Contact({ recaptchaSiteKey }) {
+export default function Contact({ formLoadTime }) {
     const { flash } = usePage().props;
     const { data, setData, post, processing, errors, reset } = useForm({
         fullName: "",
@@ -16,63 +16,20 @@ export default function Contact({ recaptchaSiteKey }) {
         subject: "",
         project: "",
         message: "",
-        recaptchaToken: "",
+        honeypot: "", // Honeypot field for bot detection
+        formLoadTime: formLoadTime || Math.floor(Date.now() / 1000),
     });
 
     const [openFaq, setOpenFaq] = useState(null);
-    const [recaptchaLoaded, setRecaptchaLoaded] = useState(false);
-
-    // Load reCAPTCHA v2 script
-    useEffect(() => {
-        if (!recaptchaSiteKey) return;
-
-        // Check if script already exists
-        if (document.querySelector('script[src*="recaptcha/api.js"]')) {
-            setRecaptchaLoaded(true);
-            return;
-        }
-
-        const script = document.createElement('script');
-        script.src = 'https://www.google.com/recaptcha/api.js';
-        script.async = true;
-        script.defer = true;
-        script.onload = () => setRecaptchaLoaded(true);
-        document.body.appendChild(script);
-
-        return () => {
-            if (document.body.contains(script)) {
-                document.body.removeChild(script);
-            }
-        };
-    }, [recaptchaSiteKey]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (!window.grecaptcha) {
-            alert('reCAPTCHA not loaded. Please refresh the page.');
-            return;
-        }
-
-        // Get reCAPTCHA v2 response token
-        const recaptchaResponse = window.grecaptcha.getResponse();
-
-        if (!recaptchaResponse) {
-            alert('Please complete the reCAPTCHA challenge.');
-            return;
-        }
-
-        setData('recaptchaToken', recaptchaResponse);
-
         post('/contact', {
             onSuccess: () => {
                 reset();
-                // Reset reCAPTCHA widget
-                window.grecaptcha.reset();
-            },
-            onError: () => {
-                // Reset reCAPTCHA widget on error
-                window.grecaptcha.reset();
+                // Reset formLoadTime for next submission
+                setData('formLoadTime', Math.floor(Date.now() / 1000));
             },
         });
     };
@@ -133,7 +90,7 @@ export default function Contact({ recaptchaSiteKey }) {
                     )}
 
                     {/* Error Message */}
-                    {errors.recaptcha && (
+                    {errors.general && (
                         <div style={{
                             position: 'fixed',
                             top: '2rem',
@@ -145,7 +102,7 @@ export default function Contact({ recaptchaSiteKey }) {
                             borderRadius: '8px',
                             boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
                         }}>
-                            {errors.recaptcha}
+                            {errors.general}
                         </div>
                     )}
 
@@ -293,17 +250,24 @@ export default function Contact({ recaptchaSiteKey }) {
                                             {errors.message && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.message}</span>}
                                         </div>
 
-                                        {/* reCAPTCHA v2 Widget */}
-                                        {recaptchaSiteKey && (
-                                            <div className="form-group">
-                                                <div
-                                                    className="g-recaptcha"
-                                                    data-sitekey={recaptchaSiteKey}
-                                                    style={{ marginBottom: '1rem' }}
-                                                ></div>
-                                                {errors.recaptcha && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem', display: 'block' }}>{errors.recaptcha}</span>}
-                                            </div>
-                                        )}
+                                        {/* Honeypot field - hidden from users, only bots will fill it */}
+                                        <input
+                                            type="text"
+                                            name="honeypot"
+                                            value={data.honeypot}
+                                            onChange={(e) => setData('honeypot', e.target.value)}
+                                            style={{
+                                                position: 'absolute',
+                                                left: '-9999px',
+                                                width: '1px',
+                                                height: '1px',
+                                                opacity: 0,
+                                                pointerEvents: 'none',
+                                            }}
+                                            tabIndex="-1"
+                                            autoComplete="off"
+                                            aria-hidden="true"
+                                        />
 
                                         <button
                                             type="submit"
@@ -312,14 +276,6 @@ export default function Contact({ recaptchaSiteKey }) {
                                         >
                                             {processing ? 'Submitting...' : 'Submit'}
                                         </button>
-
-                                        <p style={{ fontSize: '0.75rem', color: '#6b7280', marginTop: '0.75rem' }}>
-                                            This site is protected by reCAPTCHA and the Google{' '}
-                                            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer" style={{ color: '#1E3A8A' }}>Privacy Policy</a>{' '}
-                                            and{' '}
-                                            <a href="https://policies.google.com/terms" target="_blank" rel="noopener noreferrer" style={{ color: '#1E3A8A' }}>Terms of Service</a>{' '}
-                                            apply.
-                                        </p>
                                     </form>
                                 </div>
                             </div>

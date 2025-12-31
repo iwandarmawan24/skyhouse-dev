@@ -88,6 +88,14 @@ class Product extends Model
     }
 
     /**
+     * Get sliders for this product
+     */
+    public function sliders()
+    {
+        return $this->hasMany(ProductSlider::class, 'product_uid', 'uid');
+    }
+
+    /**
      * Get gallery images from media library
      */
     public function getGalleryImagesAttribute()

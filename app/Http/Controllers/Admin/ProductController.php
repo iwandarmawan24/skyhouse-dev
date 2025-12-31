@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
+use App\Models\ProductSlider;
 use App\Services\MediaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -191,7 +192,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load('featuredImage');
+        $product->load('featuredImage', 'sliders.mediaImage');
 
         // Load gallery images
         $product->gallery_images = $product->gallery_images;
@@ -258,5 +259,74 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product deleted successfully.');
+    }
+
+    /**
+     * Add a slider to product
+     */
+    public function addSlider(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'image_uid' => 'required|string|exists:media_library,uid',
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'is_active' => 'required|boolean',
+        ]);
+
+        // Auto-set order to be the last
+        $maxOrder = $product->sliders()->max('order') ?? -1;
+        $validated['order'] = $maxOrder + 1;
+        $validated['product_uid'] = $product->uid;
+
+        ProductSlider::create($validated);
+
+        return back()->with('success', 'Slider added successfully.');
+    }
+
+    /**
+     * Update a slider
+     */
+    public function updateSlider(Request $request, Product $product, ProductSlider $slider)
+    {
+        $validated = $request->validate([
+            'image_uid' => 'required|string|exists:media_library,uid',
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
+            'is_active' => 'required|boolean',
+        ]);
+
+        $slider->update($validated);
+
+        return back()->with('success', 'Slider updated successfully.');
+    }
+
+    /**
+     * Delete a slider
+     */
+    public function deleteSlider(Product $product, ProductSlider $slider)
+    {
+        $slider->delete();
+
+        return back()->with('success', 'Slider deleted successfully.');
+    }
+
+    /**
+     * Update slider order
+     */
+    public function updateSliderOrder(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'updates' => 'required|array',
+            'updates.*.uid' => 'required|string|exists:product_sliders,uid',
+            'updates.*.order' => 'required|integer',
+        ]);
+
+        foreach ($validated['updates'] as $update) {
+            ProductSlider::where('uid', $update['uid'])
+                ->where('product_uid', $product->uid)
+                ->update(['order' => $update['order']]);
+        }
+
+        return back()->with('success', 'Slider order updated successfully.');
     }
 }

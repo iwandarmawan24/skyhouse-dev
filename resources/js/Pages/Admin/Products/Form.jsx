@@ -1,9 +1,14 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { Link, router, useForm } from '@inertiajs/react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { MediaPicker } from '@/Components/MediaPicker';
 import RichTextEditor from '@/Components/RichTextEditor';
-import { Upload, X, Plus, Image as ImageIcon } from 'lucide-react';
+import { Upload, X, Plus, Image as ImageIcon, ArrowUp, ArrowDown, Pencil, Trash2, Eye } from 'lucide-react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 export default function Form({ product }) {
     const isEdit = product !== null;
@@ -36,11 +41,31 @@ export default function Form({ product }) {
 
     // MediaPicker state
     const [showMediaPicker, setShowMediaPicker] = useState(false);
-    const [mediaPickerMode, setMediaPickerMode] = useState('featured'); // 'featured' or 'gallery'
+    const [mediaPickerMode, setMediaPickerMode] = useState('featured'); // 'featured', 'gallery', or 'slider'
 
     // Preview state for MediaLibrary images
     const [featuredImagePreview, setFeaturedImagePreview] = useState(product?.featured_image || null);
     const [galleryPreviews, setGalleryPreviews] = useState(product?.gallery_images || []);
+
+    // Slider management state
+    const [sliders, setSliders] = useState(product?.sliders || []);
+    const [editingSlider, setEditingSlider] = useState(null);
+    const [showSliderForm, setShowSliderForm] = useState(false);
+    const [showSliderPreview, setShowSliderPreview] = useState(false);
+    const [sliderFormData, setSliderFormData] = useState({
+        image_uid: null,
+        title: '',
+        description: '',
+        is_active: true,
+    });
+    const [sliderImagePreview, setSliderImagePreview] = useState(null);
+
+    // Sync sliders with product prop when it changes
+    useEffect(() => {
+        if (product?.sliders) {
+            setSliders(product.sliders);
+        }
+    }, [product?.sliders]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -51,6 +76,113 @@ export default function Form({ product }) {
     const formatPrice = (value) => {
         if (!value) return '';
         return new Intl.NumberFormat('id-ID').format(value);
+    };
+
+    // Slider management functions
+    const handleAddSlider = () => {
+        setEditingSlider(null);
+        setSliderFormData({
+            image_uid: null,
+            title: '',
+            description: '',
+            is_active: true,
+        });
+        setSliderImagePreview(null);
+        setShowSliderForm(true);
+    };
+
+    const handleEditSlider = (slider) => {
+        setEditingSlider(slider);
+        setSliderFormData({
+            image_uid: slider.image_uid,
+            title: slider.title || '',
+            description: slider.description || '',
+            is_active: slider.is_active,
+        });
+        setSliderImagePreview(slider.media_image);
+        setShowSliderForm(true);
+    };
+
+    const handleSaveSlider = () => {
+        if (!sliderFormData.image_uid) {
+            alert('Please select an image for the slider');
+            return;
+        }
+
+        if (editingSlider) {
+            // Update existing slider
+            router.put(
+                `/admin/products/${product.uid}/sliders/${editingSlider.uid}`,
+                sliderFormData,
+                {
+                    preserveScroll: true,
+                    preserveState: false,
+                    onSuccess: () => {
+                        setShowSliderForm(false);
+                    },
+                }
+            );
+        } else {
+            // Add new slider
+            router.post(
+                `/admin/products/${product.uid}/sliders`,
+                sliderFormData,
+                {
+                    preserveScroll: true,
+                    preserveState: false,
+                    onSuccess: () => {
+                        setShowSliderForm(false);
+                    },
+                }
+            );
+        }
+    };
+
+    const handleDeleteSlider = (sliderUid) => {
+        if (confirm('Are you sure you want to delete this slider?')) {
+            router.delete(`/admin/products/${product.uid}/sliders/${sliderUid}`, {
+                preserveScroll: true,
+                preserveState: false,
+            });
+        }
+    };
+
+    const handleMoveSliderUp = (slider, index) => {
+        if (index === 0) return;
+
+        const prevSlider = sliders[index - 1];
+        router.post(
+            `/admin/products/${product.uid}/sliders/update-order`,
+            {
+                updates: [
+                    { uid: slider.uid, order: prevSlider.order },
+                    { uid: prevSlider.uid, order: slider.order },
+                ],
+            },
+            {
+                preserveScroll: true,
+                preserveState: false,
+            }
+        );
+    };
+
+    const handleMoveSliderDown = (slider, index) => {
+        if (index === sliders.length - 1) return;
+
+        const nextSlider = sliders[index + 1];
+        router.post(
+            `/admin/products/${product.uid}/sliders/update-order`,
+            {
+                updates: [
+                    { uid: slider.uid, order: nextSlider.order },
+                    { uid: nextSlider.uid, order: slider.order },
+                ],
+            },
+            {
+                preserveScroll: true,
+                preserveState: false,
+            }
+        );
     };
 
     return (
@@ -504,6 +636,107 @@ export default function Form({ product }) {
                     </div>
                 </div>
 
+                {/* Product Sliders */}
+                {isEdit && (
+                    <div className="bg-white rounded-xl shadow-sm p-6">
+                        <div className="flex items-center justify-between mb-4">
+                            <div>
+                                <h2 className="text-lg font-semibold text-gray-900">Product Sliders</h2>
+                                <p className="text-sm text-gray-600 mt-1">Manage image sliders for this product</p>
+                            </div>
+                            <div className="flex gap-2">
+                                {sliders && sliders.filter(s => s.is_active).length > 0 && (
+                                    <button
+                                        type="button"
+                                        onClick={() => setShowSliderPreview(true)}
+                                        className="inline-flex items-center gap-2 px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition"
+                                    >
+                                        <Eye className="w-4 h-4" />
+                                        Preview
+                                    </button>
+                                )}
+                                <button
+                                    type="button"
+                                    onClick={handleAddSlider}
+                                    className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
+                                >
+                                    <Plus className="w-4 h-4" />
+                                    Add Slider
+                                </button>
+                            </div>
+                        </div>
+
+                        {sliders && sliders.length > 0 ? (
+                            <div className="space-y-2">
+                                {sliders.map((slider, index) => (
+                                    <div key={slider.uid} className="flex items-center gap-3 p-3 border rounded-lg hover:bg-gray-50">
+                                        <div className="flex flex-col gap-1">
+                                            <button
+                                                type="button"
+                                                onClick={() => handleMoveSliderUp(slider, index)}
+                                                disabled={index === 0}
+                                                className="p-1 hover:bg-gray-200 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+                                            >
+                                                <ArrowUp className="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleMoveSliderDown(slider, index)}
+                                                disabled={index === sliders.length - 1}
+                                                className="p-1 hover:bg-gray-200 rounded disabled:opacity-30 disabled:cursor-not-allowed"
+                                            >
+                                                <ArrowDown className="w-4 h-4" />
+                                            </button>
+                                        </div>
+
+                                        <div className="w-20 h-14 flex-shrink-0">
+                                            {slider.image_url ? (
+                                                <img src={slider.image_url} alt={slider.title} className="w-full h-full object-cover rounded" />
+                                            ) : (
+                                                <div className="w-full h-full bg-gray-200 flex items-center justify-center rounded">
+                                                    <ImageIcon className="w-6 h-6 text-gray-400" />
+                                                </div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex-1">
+                                            <div className="font-medium">{slider.title || 'Untitled'}</div>
+                                            {slider.description && (
+                                                <div className="text-sm text-gray-600 line-clamp-1">{slider.description}</div>
+                                            )}
+                                        </div>
+
+                                        <div className="flex items-center gap-2">
+                                            <span className={`text-xs px-2 py-1 rounded ${slider.is_active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700'}`}>
+                                                {slider.is_active ? 'Active' : 'Inactive'}
+                                            </span>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleEditSlider(slider)}
+                                                className="p-2 hover:bg-gray-200 rounded"
+                                            >
+                                                <Pencil className="w-4 h-4" />
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDeleteSlider(slider.uid)}
+                                                className="p-2 hover:bg-red-100 text-red-600 rounded"
+                                            >
+                                                <Trash2 className="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="text-center py-8 text-gray-500">
+                                <ImageIcon className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                                <p>No sliders added yet. Click "Add Slider" to create one.</p>
+                            </div>
+                        )}
+                    </div>
+                )}
+
                 {/* Submit Buttons */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <div className="flex items-center justify-end gap-4">
@@ -533,12 +766,16 @@ export default function Form({ product }) {
                         // Single image for featured
                         setFeaturedImagePreview(media);
                         setData('featured_image_uid', media.uid);
-                    } else {
+                    } else if (mediaPickerMode === 'gallery') {
                         // Multiple images for gallery
                         const mediaArray = Array.isArray(media) ? media : [media];
                         const newGallery = [...galleryPreviews, ...mediaArray];
                         setGalleryPreviews(newGallery);
                         setData('gallery_uids', newGallery.map(img => img.uid));
+                    } else if (mediaPickerMode === 'slider') {
+                        // Single image for slider
+                        setSliderImagePreview(media);
+                        setSliderFormData({ ...sliderFormData, image_uid: media.uid });
                     }
                     setShowMediaPicker(false);
                 }}
@@ -546,6 +783,208 @@ export default function Form({ product }) {
                 accept="image"
                 folder="products"
             />
+
+            {/* Slider Form Modal */}
+            {showSliderForm && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                        <div className="p-6">
+                            <h3 className="text-xl font-semibold mb-4">
+                                {editingSlider ? 'Edit Slider' : 'Add New Slider'}
+                            </h3>
+
+                            <div className="space-y-4">
+                                {/* Image */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Image <span className="text-red-500">*</span>
+                                    </label>
+                                    {sliderImagePreview && (
+                                        <div className="mb-3 relative group">
+                                            <img src={sliderImagePreview.url} alt="Preview" className="w-full h-48 object-cover rounded-lg" />
+                                            <button
+                                                type="button"
+                                                onClick={() => {
+                                                    setSliderImagePreview(null);
+                                                    setSliderFormData({ ...sliderFormData, image_uid: null });
+                                                }}
+                                                className="absolute top-2 right-2 px-3 py-1.5 bg-red-600 hover:bg-red-700 text-white text-sm rounded-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                Remove
+                                            </button>
+                                        </div>
+                                    )}
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setMediaPickerMode('slider');
+                                            setShowMediaPicker(true);
+                                        }}
+                                        className="w-full px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
+                                    >
+                                        <ImageIcon className="w-4 h-4 inline mr-2" />
+                                        Select from Media Library
+                                    </button>
+                                </div>
+
+                                {/* Title */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Title
+                                    </label>
+                                    <input
+                                        type="text"
+                                        value={sliderFormData.title}
+                                        onChange={(e) => setSliderFormData({ ...sliderFormData, title: e.target.value })}
+                                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="Enter slider title (optional)"
+                                    />
+                                </div>
+
+                                {/* Description */}
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                                        Description
+                                    </label>
+                                    <textarea
+                                        value={sliderFormData.description}
+                                        onChange={(e) => setSliderFormData({ ...sliderFormData, description: e.target.value })}
+                                        className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="Enter slider description (optional)"
+                                        rows={3}
+                                    />
+                                </div>
+
+                                {/* Active Status */}
+                                <div className="flex items-center">
+                                    <label className="relative inline-flex items-center cursor-pointer">
+                                        <input
+                                            type="checkbox"
+                                            checked={sliderFormData.is_active}
+                                            onChange={(e) => setSliderFormData({ ...sliderFormData, is_active: e.target.checked })}
+                                            className="sr-only peer"
+                                        />
+                                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                                        <span className="ms-3 text-sm font-medium text-gray-700">
+                                            Active
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end gap-3 mt-6">
+                                <button
+                                    type="button"
+                                    onClick={() => setShowSliderForm(false)}
+                                    className="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    type="button"
+                                    onClick={handleSaveSlider}
+                                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition"
+                                >
+                                    {editingSlider ? 'Update' : 'Add'} Slider
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Slider Preview Modal */}
+            {showSliderPreview && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl shadow-xl max-w-5xl w-full max-h-[90vh] overflow-hidden">
+                        <div className="p-6">
+                            <div className="flex items-center justify-between mb-4">
+                                <div>
+                                    <h3 className="text-xl font-semibold">Slider Preview</h3>
+                                    <p className="text-sm text-gray-600 mt-1">
+                                        Preview bagaimana slider akan ditampilkan. Hanya slider aktif yang ditampilkan.
+                                    </p>
+                                </div>
+                                <button
+                                    type="button"
+                                    onClick={() => setShowSliderPreview(false)}
+                                    className="p-2 hover:bg-gray-100 rounded-lg"
+                                >
+                                    <X className="w-6 h-6" />
+                                </button>
+                            </div>
+
+                            {sliders && sliders.filter(s => s.is_active).length > 0 ? (
+                                <div className="space-y-4">
+                                    <div className="bg-gray-100 rounded-lg overflow-hidden">
+                                        <Swiper
+                                            modules={[Navigation, Pagination, Autoplay]}
+                                            spaceBetween={0}
+                                            slidesPerView={1}
+                                            navigation
+                                            pagination={{ clickable: true }}
+                                            autoplay={{
+                                                delay: 3000,
+                                                disableOnInteraction: false,
+                                            }}
+                                            loop={true}
+                                            className="product-slider-preview"
+                                        >
+                                            {sliders
+                                                .filter(slider => slider.is_active)
+                                                .map((slider) => (
+                                                    <SwiperSlide key={slider.uid}>
+                                                        <div className="bg-white">
+                                                            <div className="flex flex-col md:flex-row">
+                                                                <div className="md:w-1/2">
+                                                                    {slider.image_url ? (
+                                                                        <img
+                                                                            src={slider.image_url}
+                                                                            alt={slider.title}
+                                                                            className="w-full h-64 md:h-96 object-cover"
+                                                                        />
+                                                                    ) : (
+                                                                        <div className="w-full h-64 md:h-96 bg-gray-200 flex items-center justify-center">
+                                                                            <ImageIcon className="w-16 h-16 text-gray-400" />
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                                <div className="md:w-1/2 p-8 flex flex-col justify-center">
+                                                                    <h3 className="text-3xl font-bold text-gray-900 mb-4">
+                                                                        {slider.title || 'Untitled'}
+                                                                    </h3>
+                                                                    {slider.description && (
+                                                                        <p className="text-gray-600 text-lg mb-4 leading-relaxed">
+                                                                            {slider.description}
+                                                                        </p>
+                                                                    )}
+                                                                    <span className="inline-block text-xs px-3 py-1 bg-green-100 text-green-700 rounded w-fit">
+                                                                        Active
+                                                                    </span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </SwiperSlide>
+                                                ))}
+                                        </Swiper>
+                                    </div>
+                                    <div className="text-sm text-gray-500 text-center">
+                                        Menampilkan {sliders.filter(s => s.is_active).length} slider aktif
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className="text-center py-12 bg-gray-50 rounded-lg">
+                                    <ImageIcon className="w-12 h-12 mx-auto mb-2 text-gray-400" />
+                                    <h3 className="mt-2 text-sm font-medium text-gray-900">No Active Sliders</h3>
+                                    <p className="mt-1 text-sm text-gray-500">
+                                        Tidak ada slider aktif untuk ditampilkan.
+                                    </p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            )}
         </AdminLayout>
     );
 }

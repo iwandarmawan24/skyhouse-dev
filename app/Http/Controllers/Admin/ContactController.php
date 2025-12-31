@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Contact;
+use App\Models\ContactSubmission;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,27 +14,28 @@ class ContactController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Contact::with('product')->latest();
+        $query = ContactSubmission::latest();
 
-        // Filter by read/unread
+        // Filter by status
         if ($request->filled('status')) {
-            if ($request->status === 'unread') {
-                $query->unread();
-            } elseif ($request->status === 'read') {
-                $query->where('is_read', true);
-            }
+            $query->where('status', $request->status);
         }
 
-        // Filter by product
-        if ($request->filled('product')) {
-            $query->where('product_id', $request->product);
+        // Filter by subject
+        if ($request->filled('subject')) {
+            $query->where('subject', $request->subject);
         }
 
-        // Search by name or email
+        // Filter by project
+        if ($request->filled('project')) {
+            $query->where('project', $request->project);
+        }
+
+        // Search by name, email, or phone
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'ilike', "%{$search}%")
+                $q->where('full_name', 'ilike', "%{$search}%")
                     ->orWhere('email', 'ilike', "%{$search}%")
                     ->orWhere('phone', 'ilike', "%{$search}%");
             });
@@ -44,20 +45,18 @@ class ContactController extends Controller
 
         return Inertia::render('Admin/Contacts/Index', [
             'contacts' => $contacts,
-            'filters' => $request->only(['status', 'product', 'search']),
+            'filters' => $request->only(['status', 'subject', 'project', 'search']),
         ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Contact $contact)
+    public function show(ContactSubmission $contact)
     {
-        $contact->load('product');
-
-        // Mark as read when viewing
-        if (!$contact->is_read) {
-            $contact->update(['is_read' => true]);
+        // Mark as in_progress when viewing if still new
+        if ($contact->status === 'new') {
+            $contact->update(['status' => 'in_progress']);
         }
 
         return Inertia::render('Admin/Contacts/Show', [
@@ -68,11 +67,13 @@ class ContactController extends Controller
     /**
      * Mark contact as read/unread.
      */
-    public function markAsRead(Request $request, Contact $contact)
+    public function markAsRead(Request $request, ContactSubmission $contact)
     {
-        $contact->update([
-            'is_read' => $request->boolean('is_read', true),
+        $validated = $request->validate([
+            'status' => 'required|in:new,in_progress,resolved',
         ]);
+
+        $contact->update($validated);
 
         return back()->with('success', 'Contact status updated.');
     }
@@ -80,7 +81,7 @@ class ContactController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Contact $contact)
+    public function destroy(ContactSubmission $contact)
     {
         $contact->delete();
 

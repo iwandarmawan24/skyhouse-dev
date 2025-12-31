@@ -8,7 +8,10 @@ use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\FacilityController;
+use App\Http\Controllers\Admin\FacilitySliderController;
+use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\HeroBannerController;
+use App\Http\Controllers\Admin\InstagramGalleryController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaLibraryController;
 use App\Http\Controllers\Admin\MediaHighlightController;
@@ -81,6 +84,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/products/{product}/update-image-order', [ProductController::class, 'updateImageOrder'])->name('products.update-image-order');
         Route::post('/products/{product}/set-primary-image', [ProductController::class, 'setPrimaryImage'])->name('products.set-primary-image');
 
+        // Product Sliders
+        Route::post('/products/{product}/sliders', [ProductController::class, 'addSlider'])->name('products.add-slider');
+        Route::put('/products/{product}/sliders/{slider}', [ProductController::class, 'updateSlider'])->name('products.update-slider');
+        Route::delete('/products/{product}/sliders/{slider}', [ProductController::class, 'deleteSlider'])->name('products.delete-slider');
+        Route::post('/products/{product}/sliders/update-order', [ProductController::class, 'updateSliderOrder'])->name('products.update-slider-order');
+
         // Articles
         Route::resource('articles', ArticleController::class)->except(['show']);
         Route::post('/articles/analyze-seo', [ArticleController::class, 'analyzeSeo'])->name('articles.analyze-seo');
@@ -112,6 +121,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
         // Facilities
         Route::resource('facilities', FacilityController::class)->except(['show']);
         Route::post('/facilities/{facility}/update-image-order', [FacilityController::class, 'updateImageOrder'])->name('facilities.update-image-order');
+
+        // Facility Sliders
+        Route::post('/facility-sliders/update-order', [FacilitySliderController::class, 'updateOrder'])->name('facility-sliders.update-order');
+        Route::resource('facility-sliders', FacilitySliderController::class)->except(['show']);
+
+        // Galleries
+        Route::post('/galleries/update-order', [GalleryController::class, 'updateOrder'])->name('galleries.update-order');
+        Route::resource('galleries', GalleryController::class)->except(['show']);
+
+        // Instagram Gallery
+        Route::get('/instagram-gallery', [InstagramGalleryController::class, 'index'])->name('instagram-gallery.index');
+        Route::post('/instagram-gallery/update-position', [InstagramGalleryController::class, 'updatePosition'])->name('instagram-gallery.update-position');
+        Route::delete('/instagram-gallery/delete-position', [InstagramGalleryController::class, 'deletePosition'])->name('instagram-gallery.delete-position');
+        Route::post('/instagram-gallery/toggle-active', [InstagramGalleryController::class, 'toggleActive'])->name('instagram-gallery.toggle-active');
 
         // Contacts / Leads
         Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');

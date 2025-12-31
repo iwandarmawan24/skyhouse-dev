@@ -6,6 +6,7 @@ import {
     ChevronRight,
     LayoutDashboard,
     Image as ImageIcon,
+    Images,
     Newspaper,
     FolderOpen,
     Megaphone,
@@ -49,6 +50,7 @@ export default function AdminLayout({ children }) {
 
     // Initialize state before any functions that use it
     const [articlesOpen, setArticlesOpen] = useState(false);
+    const [facilitiesOpen, setFacilitiesOpen] = useState(false);
 
     // Show toast notifications for flash messages
     useEffect(() => {
@@ -77,6 +79,18 @@ export default function AdminLayout({ children }) {
         setArticlesOpen(isActive);
     }, []);
 
+    // Set facilitiesOpen based on current path
+    useEffect(() => {
+        const facilityPaths = [
+            "/admin/facilities",
+            "/admin/facility-sliders",
+        ];
+        const isActive = facilityPaths.some((path) =>
+            window.location.pathname.startsWith(path)
+        );
+        setFacilitiesOpen(isActive);
+    }, []);
+
     const isArticleSubmenuActive = () => {
         const articlePaths = [
             "/admin/articles",
@@ -85,6 +99,16 @@ export default function AdminLayout({ children }) {
             "/admin/media-highlights",
         ];
         return articlePaths.some((path) =>
+            window.location.pathname.startsWith(path)
+        );
+    };
+
+    const isFacilitySubmenuActive = () => {
+        const facilityPaths = [
+            "/admin/facilities",
+            "/admin/facility-sliders",
+        ];
+        return facilityPaths.some((path) =>
             window.location.pathname.startsWith(path)
         );
     };
@@ -154,8 +178,28 @@ export default function AdminLayout({ children }) {
             },
             {
                 name: "Facilities",
-                href: "/admin/facilities",
                 icon: Layers,
+                hasSubmenu: true,
+                submenu: [
+                    {
+                        name: "All Facilities",
+                        href: "/admin/facilities",
+                    },
+                    {
+                        name: "Sliders",
+                        href: "/admin/facility-sliders",
+                    },
+                ],
+            },
+            {
+                name: "Gallery",
+                href: "/admin/galleries",
+                icon: Images,
+            },
+            {
+                name: "Instagram Gallery",
+                href: "/admin/instagram-gallery",
+                icon: ImageIcon,
             },
         ],
         system: [
@@ -231,13 +275,13 @@ export default function AdminLayout({ children }) {
                                 <SidebarMenuItem key={item.name}>
                                     {item.hasSubmenu ? (
                                         <Collapsible
-                                            open={articlesOpen}
-                                            onOpenChange={setArticlesOpen}
+                                            open={item.name === "Articles" ? articlesOpen : facilitiesOpen}
+                                            onOpenChange={item.name === "Articles" ? setArticlesOpen : setFacilitiesOpen}
                                             className="group/collapsible"
                                         >
                                             <CollapsibleTrigger asChild>
                                                 <SidebarMenuButton
-                                                    isActive={isArticleSubmenuActive()}
+                                                    isActive={item.name === "Articles" ? isArticleSubmenuActive() : isFacilitySubmenuActive()}
                                                 >
                                                     <item.icon className="h-4 w-4" />
                                                     <span>{item.name}</span>

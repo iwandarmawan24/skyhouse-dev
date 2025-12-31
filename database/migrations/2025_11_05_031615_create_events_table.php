@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('max_participants')->nullable();
             $table->integer('current_participants')->default(0);
             $table->boolean('is_active')->default(true);
+            $table->string('slug')->unique();
             $table->timestamps();
 
             $table->index('event_date');

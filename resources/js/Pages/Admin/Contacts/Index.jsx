@@ -28,11 +28,13 @@ export default function Index({ contacts, filters }) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [localFilters, setLocalFilters] = useState({
         status: filters.status || '',
+        subject: filters.subject || '',
+        project: filters.project || '',
         search: filters.search || '',
     });
 
-    const handleDelete = (uid) => {
-        router.delete(`/admin/contacts/${uid}`, {
+    const handleDelete = (id) => {
+        router.delete(`/admin/contacts/${id}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
@@ -51,8 +53,8 @@ export default function Index({ contacts, filters }) {
     }, [localFilters.search]);
 
     // Immediate filter for status changes
-    const handleStatusChange = (value) => {
-        const newFilters = { ...localFilters, status: value };
+    const handleFilterChange = (key, value) => {
+        const newFilters = { ...localFilters, [key]: value };
         setLocalFilters(newFilters);
         router.get('/admin/contacts', newFilters, {
             preserveState: true,
@@ -62,7 +64,7 @@ export default function Index({ contacts, filters }) {
     };
 
     const clearFilters = () => {
-        setLocalFilters({ status: '', search: '' });
+        setLocalFilters({ status: '', subject: '', project: '', search: '' });
         router.get('/admin/contacts', {}, {
             preserveState: true,
             preserveScroll: true,
@@ -90,9 +92,9 @@ export default function Index({ contacts, filters }) {
 
             {/* Filters */}
             <Card className="p-4 mb-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
                     {/* Search */}
-                    <div className="relative">
+                    <div className="relative md:col-span-2">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500" />
                         <Input
                             type="text"
@@ -107,12 +109,28 @@ export default function Index({ contacts, filters }) {
                     <div>
                         <select
                             value={localFilters.status}
-                            onChange={(e) => handleStatusChange(e.target.value)}
+                            onChange={(e) => handleFilterChange('status', e.target.value)}
                             className="w-full h-10 px-3 rounded-md border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                         >
                             <option value="">All Status</option>
-                            <option value="unread">Unread</option>
-                            <option value="read">Read</option>
+                            <option value="new">New</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="resolved">Resolved</option>
+                        </select>
+                    </div>
+
+                    {/* Subject Filter */}
+                    <div>
+                        <select
+                            value={localFilters.subject}
+                            onChange={(e) => handleFilterChange('subject', e.target.value)}
+                            className="w-full h-10 px-3 rounded-md border border-gray-300 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        >
+                            <option value="">All Subjects</option>
+                            <option value="inquiry">General Inquiry</option>
+                            <option value="purchase">Purchase Information</option>
+                            <option value="visit">Schedule Visit</option>
+                            <option value="other">Other</option>
                         </select>
                     </div>
 
@@ -137,7 +155,8 @@ export default function Index({ contacts, filters }) {
                             <TableHeader>
                                 <TableRow>
                                     <TableHead>Contact Info</TableHead>
-                                    <TableHead>Product</TableHead>
+                                    <TableHead>Subject & Project</TableHead>
+                                    <TableHead>Residence</TableHead>
                                     <TableHead>Message</TableHead>
                                     <TableHead>Date</TableHead>
                                     <TableHead>Status</TableHead>
@@ -147,14 +166,14 @@ export default function Index({ contacts, filters }) {
                             <TableBody>
                                 {contacts.data.map((contact) => (
                                     <TableRow
-                                        key={contact.uid}
-                                        className={!contact.is_read ? 'bg-blue-50/50' : ''}
+                                        key={contact.id}
+                                        className={contact.status === 'new' ? 'bg-blue-50/50' : ''}
                                     >
                                         <TableCell>
                                             <div>
                                                 <div className="text-sm font-medium text-gray-900 flex items-center">
-                                                    {contact.name}
-                                                    {!contact.is_read && (
+                                                    {contact.full_name}
+                                                    {contact.status === 'new' && (
                                                         <span className="ml-2 w-2 h-2 bg-blue-600 rounded-full"></span>
                                                     )}
                                                 </div>
@@ -165,11 +184,18 @@ export default function Index({ contacts, filters }) {
                                             </div>
                                         </TableCell>
                                         <TableCell className="whitespace-nowrap">
-                                            {contact.product ? (
-                                                <div className="text-sm text-gray-900">{contact.product.name}</div>
-                                            ) : (
-                                                <span className="text-sm text-gray-400">General Inquiry</span>
-                                            )}
+                                            <div className="text-sm text-gray-900 font-medium">
+                                                {contact.subject === 'inquiry' && 'General Inquiry'}
+                                                {contact.subject === 'purchase' && 'Purchase Info'}
+                                                {contact.subject === 'visit' && 'Schedule Visit'}
+                                                {contact.subject === 'other' && 'Other'}
+                                            </div>
+                                            <div className="text-sm text-gray-500">
+                                                {contact.project === 'kinary' ? 'Kinary House' : 'Other Projects'}
+                                            </div>
+                                        </TableCell>
+                                        <TableCell className="whitespace-nowrap">
+                                            <div className="text-sm text-gray-900">{contact.residence}</div>
                                         </TableCell>
                                         <TableCell>
                                             <div className="text-sm text-gray-900 line-clamp-2 max-w-md">
@@ -180,8 +206,14 @@ export default function Index({ contacts, filters }) {
                                             <div className="text-sm text-gray-900">{formatDate(contact.created_at)}</div>
                                         </TableCell>
                                         <TableCell className="whitespace-nowrap">
-                                            <Badge variant={contact.is_read ? 'secondary' : 'default'}>
-                                                {contact.is_read ? 'Read' : 'Unread'}
+                                            <Badge variant={
+                                                contact.status === 'new' ? 'default' :
+                                                contact.status === 'in_progress' ? 'secondary' :
+                                                'success'
+                                            }>
+                                                {contact.status === 'new' && 'New'}
+                                                {contact.status === 'in_progress' && 'In Progress'}
+                                                {contact.status === 'resolved' && 'Resolved'}
                                             </Badge>
                                         </TableCell>
                                         <TableCell className="text-right">
@@ -191,7 +223,7 @@ export default function Index({ contacts, filters }) {
                                                     size="sm"
                                                     asChild
                                                 >
-                                                    <Link href={`/admin/contacts/${contact.uid}`}>
+                                                    <Link href={`/admin/contacts/${contact.id}`}>
                                                         <Eye className="h-4 w-4 mr-1" />
                                                         View
                                                     </Link>
@@ -199,7 +231,7 @@ export default function Index({ contacts, filters }) {
                                                 <Button
                                                     variant="ghost"
                                                     size="sm"
-                                                    onClick={() => setShowDeleteConfirm(contact.uid)}
+                                                    onClick={() => setShowDeleteConfirm(contact.id)}
                                                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
                                                 >
                                                     <Trash2 className="h-4 w-4 mr-1" />

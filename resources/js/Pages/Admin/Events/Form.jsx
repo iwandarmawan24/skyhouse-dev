@@ -34,10 +34,11 @@ export default function Form({ event }) {
     const [imagePreview, setImagePreview] = useState(
         event?.image ? (event.image.startsWith('http') ? event.image : `/storage/${event.image}`) : null
     );
+    const [manualSlugEdit, setManualSlugEdit] = useState(false);
 
     // Auto-generate slug from title
     useEffect(() => {
-        if (!isEdit && data.title && !data.slug) {
+        if (data.title && !manualSlugEdit) {
             const slug = data.title
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, '-')
@@ -241,7 +242,10 @@ export default function Form({ event }) {
                             label="URL Slug"
                             name="slug"
                             value={data.slug}
-                            onChange={(e) => setData('slug', e.target.value)}
+                            onChange={(e) => {
+                                setData('slug', e.target.value);
+                                setManualSlugEdit(true);
+                            }}
                             error={errors.slug}
                             placeholder="event-title-slug"
                             helperText="Auto-generated from title, but you can customize it"
