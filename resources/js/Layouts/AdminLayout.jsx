@@ -124,6 +124,12 @@ export default function AdminLayout({ children }) {
         );
     };
 
+    // Helper function to check if user has required role
+    const hasRole = (roles) => {
+        if (!auth.user?.role) return false;
+        return roles.includes(auth.user.role);
+    };
+
     const navigation = {
         main: [
             {
@@ -135,16 +141,19 @@ export default function AdminLayout({ children }) {
                 name: "Hero Banners",
                 href: "/admin/hero-banners",
                 icon: ImageIcon,
+                roles: ["superadmin", "admin", "staff"],
             },
             {
                 name: "Media Library",
                 href: "/admin/media-library",
                 icon: FolderOpen,
+                roles: ["superadmin", "admin", "staff"],
             },
             {
                 name: "Products",
                 href: "/admin/products",
                 icon: Package,
+                roles: ["superadmin", "admin", "staff"],
             },
         ],
         content: [
@@ -152,6 +161,7 @@ export default function AdminLayout({ children }) {
                 name: "Articles",
                 icon: Newspaper,
                 hasSubmenu: true,
+                roles: ["superadmin", "admin", "staff"],
                 submenu: [
                     {
                         name: "All Articles",
@@ -175,11 +185,13 @@ export default function AdminLayout({ children }) {
                 name: "Events",
                 href: "/admin/events",
                 icon: Calendar,
+                roles: ["superadmin", "admin", "staff"],
             },
             {
                 name: "Facilities",
                 icon: Layers,
                 hasSubmenu: true,
+                roles: ["superadmin", "admin", "staff"],
                 submenu: [
                     {
                         name: "All Facilities",
@@ -195,11 +207,13 @@ export default function AdminLayout({ children }) {
                 name: "Gallery",
                 href: "/admin/galleries",
                 icon: Images,
+                roles: ["superadmin", "admin", "staff"],
             },
             {
                 name: "Instagram Gallery",
                 href: "/admin/instagram-gallery",
                 icon: ImageIcon,
+                roles: ["superadmin", "admin", "staff"],
             },
         ],
         system: [
@@ -207,21 +221,25 @@ export default function AdminLayout({ children }) {
                 name: "Contacts",
                 href: "/admin/contacts",
                 icon: Mail,
+                roles: ["superadmin", "admin"],
             },
             {
                 name: "Policies",
                 href: "/admin/policies",
                 icon: FileText,
+                roles: ["superadmin", "admin", "staff"],
             },
             {
                 name: "Settings",
                 href: "/admin/settings",
                 icon: Settings,
+                roles: ["superadmin"],
             },
             {
                 name: "Users",
                 href: "/admin/users",
                 icon: Users,
+                roles: ["superadmin"],
             },
         ],
     };
@@ -249,79 +267,10 @@ export default function AdminLayout({ children }) {
                     <SidebarGroupLabel>Main</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {navigation.main.map((item) => (
-                                <SidebarMenuItem key={item.name}>
-                                    <SidebarMenuButton
-                                        asChild
-                                        isActive={isActiveUrl(item.href)}
-                                    >
-                                        <Link href={item.href}>
-                                            <item.icon className="h-4 w-4" />
-                                            <span>{item.name}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
-                        </SidebarMenu>
-                    </SidebarGroupContent>
-                </SidebarGroup>
-
-                {/* Content Management */}
-                <SidebarGroup>
-                    <SidebarGroupLabel>Content</SidebarGroupLabel>
-                    <SidebarGroupContent>
-                        <SidebarMenu>
-                            {navigation.content.map((item) => (
-                                <SidebarMenuItem key={item.name}>
-                                    {item.hasSubmenu ? (
-                                        <Collapsible
-                                            open={item.name === "Articles" ? articlesOpen : facilitiesOpen}
-                                            onOpenChange={item.name === "Articles" ? setArticlesOpen : setFacilitiesOpen}
-                                            className="group/collapsible"
-                                        >
-                                            <CollapsibleTrigger asChild>
-                                                <SidebarMenuButton
-                                                    isActive={item.name === "Articles" ? isArticleSubmenuActive() : isFacilitySubmenuActive()}
-                                                >
-                                                    <item.icon className="h-4 w-4" />
-                                                    <span>{item.name}</span>
-                                                    <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
-                                                </SidebarMenuButton>
-                                            </CollapsibleTrigger>
-                                            <CollapsibleContent>
-                                                <SidebarMenuSub>
-                                                    {item.submenu.map(
-                                                        (subitem) => (
-                                                            <SidebarMenuSubItem
-                                                                key={
-                                                                    subitem.name
-                                                                }
-                                                            >
-                                                                <SidebarMenuSubButton
-                                                                    asChild
-                                                                    isActive={isActiveUrl(
-                                                                        subitem.href
-                                                                    )}
-                                                                >
-                                                                    <Link
-                                                                        href={
-                                                                            subitem.href
-                                                                        }
-                                                                    >
-                                                                        <span>
-                                                                            {
-                                                                                subitem.name
-                                                                            }
-                                                                        </span>
-                                                                    </Link>
-                                                                </SidebarMenuSubButton>
-                                                            </SidebarMenuSubItem>
-                                                        )
-                                                    )}
-                                                </SidebarMenuSub>
-                                            </CollapsibleContent>
-                                        </Collapsible>
-                                    ) : (
+                            {navigation.main
+                                .filter((item) => !item.roles || hasRole(item.roles))
+                                .map((item) => (
+                                    <SidebarMenuItem key={item.name}>
                                         <SidebarMenuButton
                                             asChild
                                             isActive={isActiveUrl(item.href)}
@@ -331,9 +280,82 @@ export default function AdminLayout({ children }) {
                                                 <span>{item.name}</span>
                                             </Link>
                                         </SidebarMenuButton>
-                                    )}
-                                </SidebarMenuItem>
-                            ))}
+                                    </SidebarMenuItem>
+                                ))}
+                        </SidebarMenu>
+                    </SidebarGroupContent>
+                </SidebarGroup>
+
+                {/* Content Management */}
+                <SidebarGroup>
+                    <SidebarGroupLabel>Content</SidebarGroupLabel>
+                    <SidebarGroupContent>
+                        <SidebarMenu>
+                            {navigation.content
+                                .filter((item) => !item.roles || hasRole(item.roles))
+                                .map((item) => (
+                                    <SidebarMenuItem key={item.name}>
+                                        {item.hasSubmenu ? (
+                                            <Collapsible
+                                                open={item.name === "Articles" ? articlesOpen : facilitiesOpen}
+                                                onOpenChange={item.name === "Articles" ? setArticlesOpen : setFacilitiesOpen}
+                                                className="group/collapsible"
+                                            >
+                                                <CollapsibleTrigger asChild>
+                                                    <SidebarMenuButton
+                                                        isActive={item.name === "Articles" ? isArticleSubmenuActive() : isFacilitySubmenuActive()}
+                                                    >
+                                                        <item.icon className="h-4 w-4" />
+                                                        <span>{item.name}</span>
+                                                        <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                                                    </SidebarMenuButton>
+                                                </CollapsibleTrigger>
+                                                <CollapsibleContent>
+                                                    <SidebarMenuSub>
+                                                        {item.submenu.map(
+                                                            (subitem) => (
+                                                                <SidebarMenuSubItem
+                                                                    key={
+                                                                        subitem.name
+                                                                    }
+                                                                >
+                                                                    <SidebarMenuSubButton
+                                                                        asChild
+                                                                        isActive={isActiveUrl(
+                                                                            subitem.href
+                                                                        )}
+                                                                    >
+                                                                        <Link
+                                                                            href={
+                                                                                subitem.href
+                                                                            }
+                                                                        >
+                                                                            <span>
+                                                                                {
+                                                                                    subitem.name
+                                                                                }
+                                                                            </span>
+                                                                        </Link>
+                                                                    </SidebarMenuSubButton>
+                                                                </SidebarMenuSubItem>
+                                                            )
+                                                        )}
+                                                    </SidebarMenuSub>
+                                                </CollapsibleContent>
+                                            </Collapsible>
+                                        ) : (
+                                            <SidebarMenuButton
+                                                asChild
+                                                isActive={isActiveUrl(item.href)}
+                                            >
+                                                <Link href={item.href}>
+                                                    <item.icon className="h-4 w-4" />
+                                                    <span>{item.name}</span>
+                                                </Link>
+                                            </SidebarMenuButton>
+                                        )}
+                                    </SidebarMenuItem>
+                                ))}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>
@@ -343,19 +365,21 @@ export default function AdminLayout({ children }) {
                     <SidebarGroupLabel>System</SidebarGroupLabel>
                     <SidebarGroupContent>
                         <SidebarMenu>
-                            {navigation.system.map((item) => (
-                                <SidebarMenuItem key={item.name}>
-                                    <SidebarMenuButton
-                                        asChild
-                                        isActive={isActiveUrl(item.href)}
-                                    >
-                                        <Link href={item.href}>
-                                            <item.icon className="h-4 w-4" />
-                                            <span>{item.name}</span>
-                                        </Link>
-                                    </SidebarMenuButton>
-                                </SidebarMenuItem>
-                            ))}
+                            {navigation.system
+                                .filter((item) => !item.roles || hasRole(item.roles))
+                                .map((item) => (
+                                    <SidebarMenuItem key={item.name}>
+                                        <SidebarMenuButton
+                                            asChild
+                                            isActive={isActiveUrl(item.href)}
+                                        >
+                                            <Link href={item.href}>
+                                                <item.icon className="h-4 w-4" />
+                                                <span>{item.name}</span>
+                                            </Link>
+                                        </SidebarMenuButton>
+                                    </SidebarMenuItem>
+                                ))}
                         </SidebarMenu>
                     </SidebarGroupContent>
                 </SidebarGroup>

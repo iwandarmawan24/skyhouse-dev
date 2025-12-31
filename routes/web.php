@@ -74,86 +74,95 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-        // Hero Banners
-        Route::post('/hero-banners/bulk-delete', [HeroBannerController::class, 'bulkDelete'])->name('hero-banners.bulk-delete');
-        Route::post('/hero-banners/update-order', [HeroBannerController::class, 'updateOrder'])->name('hero-banners.update-order');
-        Route::resource('hero-banners', HeroBannerController::class)->except(['show']);
+        // Routes accessible by all authenticated users (superadmin, admin, staff)
+        Route::middleware('role:superadmin,admin,staff')->group(function () {
+            // Hero Banners
+            Route::post('/hero-banners/bulk-delete', [HeroBannerController::class, 'bulkDelete'])->name('hero-banners.bulk-delete');
+            Route::post('/hero-banners/update-order', [HeroBannerController::class, 'updateOrder'])->name('hero-banners.update-order');
+            Route::resource('hero-banners', HeroBannerController::class)->except(['show']);
 
-        // Products
-        Route::resource('products', ProductController::class)->except(['show']);
-        Route::post('/products/{product}/update-image-order', [ProductController::class, 'updateImageOrder'])->name('products.update-image-order');
-        Route::post('/products/{product}/set-primary-image', [ProductController::class, 'setPrimaryImage'])->name('products.set-primary-image');
+            // Products
+            Route::resource('products', ProductController::class)->except(['show']);
+            Route::post('/products/{product}/update-image-order', [ProductController::class, 'updateImageOrder'])->name('products.update-image-order');
+            Route::post('/products/{product}/set-primary-image', [ProductController::class, 'setPrimaryImage'])->name('products.set-primary-image');
 
-        // Product Sliders
-        Route::post('/products/{product}/sliders', [ProductController::class, 'addSlider'])->name('products.add-slider');
-        Route::put('/products/{product}/sliders/{slider}', [ProductController::class, 'updateSlider'])->name('products.update-slider');
-        Route::delete('/products/{product}/sliders/{slider}', [ProductController::class, 'deleteSlider'])->name('products.delete-slider');
-        Route::post('/products/{product}/sliders/update-order', [ProductController::class, 'updateSliderOrder'])->name('products.update-slider-order');
+            // Product Sliders
+            Route::post('/products/{product}/sliders', [ProductController::class, 'addSlider'])->name('products.add-slider');
+            Route::put('/products/{product}/sliders/{slider}', [ProductController::class, 'updateSlider'])->name('products.update-slider');
+            Route::delete('/products/{product}/sliders/{slider}', [ProductController::class, 'deleteSlider'])->name('products.delete-slider');
+            Route::post('/products/{product}/sliders/update-order', [ProductController::class, 'updateSliderOrder'])->name('products.update-slider-order');
 
-        // Articles
-        Route::resource('articles', ArticleController::class)->except(['show']);
-        Route::post('/articles/analyze-seo', [ArticleController::class, 'analyzeSeo'])->name('articles.analyze-seo');
+            // Articles
+            Route::resource('articles', ArticleController::class)->except(['show']);
+            Route::post('/articles/analyze-seo', [ArticleController::class, 'analyzeSeo'])->name('articles.analyze-seo');
 
-        // Article Categories
-        Route::resource('article-categories', ArticleCategoryController::class)->except(['show']);
+            // Article Categories
+            Route::resource('article-categories', ArticleCategoryController::class)->except(['show']);
 
-        // Media
-        Route::resource('media', MediaController::class)->except(['show']);
+            // Media
+            Route::resource('media', MediaController::class)->except(['show']);
 
-        // Media Library (WordPress-like media management)
-        Route::prefix('media-library')->name('media-library.')->group(function () {
-            Route::get('/', [MediaLibraryController::class, 'index'])->name('index');
-            Route::post('/upload', [MediaLibraryController::class, 'upload'])->name('upload');
-            Route::get('/picker', [MediaLibraryController::class, 'picker'])->name('picker');
-            Route::get('/{media}', [MediaLibraryController::class, 'show'])->name('show');
-            Route::patch('/{media}', [MediaLibraryController::class, 'update'])->name('update');
-            Route::post('/{media}/replace', [MediaLibraryController::class, 'replace'])->name('replace');
-            Route::delete('/{media}', [MediaLibraryController::class, 'destroy'])->name('destroy');
-            Route::post('/bulk-delete', [MediaLibraryController::class, 'bulkDelete'])->name('bulk-delete');
+            // Media Library (WordPress-like media management)
+            Route::prefix('media-library')->name('media-library.')->group(function () {
+                Route::get('/', [MediaLibraryController::class, 'index'])->name('index');
+                Route::post('/upload', [MediaLibraryController::class, 'upload'])->name('upload');
+                Route::get('/picker', [MediaLibraryController::class, 'picker'])->name('picker');
+                Route::get('/{media}', [MediaLibraryController::class, 'show'])->name('show');
+                Route::patch('/{media}', [MediaLibraryController::class, 'update'])->name('update');
+                Route::post('/{media}/replace', [MediaLibraryController::class, 'replace'])->name('replace');
+                Route::delete('/{media}', [MediaLibraryController::class, 'destroy'])->name('destroy');
+                Route::post('/bulk-delete', [MediaLibraryController::class, 'bulkDelete'])->name('bulk-delete');
+            });
+
+            // Media Highlights
+            Route::resource('media-highlights', MediaHighlightController::class)->except(['show']);
+
+            // Events
+            Route::resource('events', EventController::class)->except(['show']);
+
+            // Facilities
+            Route::resource('facilities', FacilityController::class)->except(['show']);
+            Route::post('/facilities/{facility}/update-image-order', [FacilityController::class, 'updateImageOrder'])->name('facilities.update-image-order');
+
+            // Facility Sliders
+            Route::post('/facility-sliders/update-order', [FacilitySliderController::class, 'updateOrder'])->name('facility-sliders.update-order');
+            Route::resource('facility-sliders', FacilitySliderController::class)->except(['show']);
+
+            // Galleries
+            Route::post('/galleries/update-order', [GalleryController::class, 'updateOrder'])->name('galleries.update-order');
+            Route::resource('galleries', GalleryController::class)->except(['show']);
+
+            // Instagram Gallery
+            Route::get('/instagram-gallery', [InstagramGalleryController::class, 'index'])->name('instagram-gallery.index');
+            Route::post('/instagram-gallery/update-position', [InstagramGalleryController::class, 'updatePosition'])->name('instagram-gallery.update-position');
+            Route::delete('/instagram-gallery/delete-position', [InstagramGalleryController::class, 'deletePosition'])->name('instagram-gallery.delete-position');
+            Route::post('/instagram-gallery/toggle-active', [InstagramGalleryController::class, 'toggleActive'])->name('instagram-gallery.toggle-active');
+
+            // Policies
+            Route::resource('policies', PolicyController::class)->except(['show']);
         });
 
-        // Media Highlights
-        Route::resource('media-highlights', MediaHighlightController::class)->except(['show']);
+        // Routes accessible by superadmin and admin only
+        Route::middleware('role:superadmin,admin')->group(function () {
+            // Contacts / Leads
+            Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+            Route::get('/contacts/{contact}', [ContactController::class, 'show'])->name('contacts.show');
+            Route::patch('/contacts/{contact}/mark-read', [ContactController::class, 'markAsRead'])->name('contacts.mark-read');
+            Route::delete('/contacts/{contact}', [ContactController::class, 'destroy'])->name('contacts.destroy');
 
-        // Events
-        Route::resource('events', EventController::class)->except(['show']);
+            // About Us
+            Route::get('/about', [AboutController::class, 'edit'])->name('about.edit');
+            Route::put('/about', [AboutController::class, 'update'])->name('about.update');
+        });
 
-        // Facilities
-        Route::resource('facilities', FacilityController::class)->except(['show']);
-        Route::post('/facilities/{facility}/update-image-order', [FacilityController::class, 'updateImageOrder'])->name('facilities.update-image-order');
+        // Routes accessible by superadmin only
+        Route::middleware('role:superadmin')->group(function () {
+            // Settings
+            Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+            Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
-        // Facility Sliders
-        Route::post('/facility-sliders/update-order', [FacilitySliderController::class, 'updateOrder'])->name('facility-sliders.update-order');
-        Route::resource('facility-sliders', FacilitySliderController::class)->except(['show']);
-
-        // Galleries
-        Route::post('/galleries/update-order', [GalleryController::class, 'updateOrder'])->name('galleries.update-order');
-        Route::resource('galleries', GalleryController::class)->except(['show']);
-
-        // Instagram Gallery
-        Route::get('/instagram-gallery', [InstagramGalleryController::class, 'index'])->name('instagram-gallery.index');
-        Route::post('/instagram-gallery/update-position', [InstagramGalleryController::class, 'updatePosition'])->name('instagram-gallery.update-position');
-        Route::delete('/instagram-gallery/delete-position', [InstagramGalleryController::class, 'deletePosition'])->name('instagram-gallery.delete-position');
-        Route::post('/instagram-gallery/toggle-active', [InstagramGalleryController::class, 'toggleActive'])->name('instagram-gallery.toggle-active');
-
-        // Contacts / Leads
-        Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
-        Route::get('/contacts/{contact}', [ContactController::class, 'show'])->name('contacts.show');
-        Route::patch('/contacts/{contact}/mark-read', [ContactController::class, 'markAsRead'])->name('contacts.mark-read');
-        Route::delete('/contacts/{contact}', [ContactController::class, 'destroy'])->name('contacts.destroy');
-
-        // About Us
-        Route::get('/about', [AboutController::class, 'edit'])->name('about.edit');
-        Route::put('/about', [AboutController::class, 'update'])->name('about.update');
-
-        // Settings
-        Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-        Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
-
-        // Policies
-        Route::resource('policies', PolicyController::class)->except(['show']);
-
-        // Users Management
-        Route::resource('users', UserController::class)->except(['show']);
+            // Users Management
+            Route::resource('users', UserController::class)->except(['show']);
+        });
     });
 });

@@ -20,6 +20,11 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Redirect authenticated users to admin dashboard
         $middleware->redirectUsersTo('/admin/dashboard');
+
+        // Register custom middleware aliases
+        $middleware->alias([
+            'role' => \App\Http\Middleware\CheckRole::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
