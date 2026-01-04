@@ -42,7 +42,8 @@
   color: var(--color-text-primary);
 }
 
-.news-header-content .button {
+/* Legacy - now using Tailwind Button component */
+/* .news-header-content .button {
   display: inline-block;
   padding: 1rem 2.5rem;
   background: var(--color-btn-primary);
@@ -62,7 +63,7 @@
   background: var(--color-text-secondary);
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(30, 58, 138, 0.2);
-}
+} */
 
 /* News Items */
 .news-items {
@@ -194,9 +195,10 @@
     align-items: center;
   }
 
-  .news-header-content .button {
+  /* Legacy button style commented out */
+  /* .news-header-content .button {
     align-self: center;
-  }
+  } */
 
   .news-header-content h2 {
     font-size: 3rem;
@@ -268,10 +270,11 @@
     font-size: 1rem;
   }
 
-  .news-header-content .button {
+  /* Legacy button style commented out */
+  /* .news-header-content .button {
     padding: 0.875rem 2rem;
     font-size: 0.9375rem;
-  }
+  } */
 
   .news-item {
     padding: 1rem;

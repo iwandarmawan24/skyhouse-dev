@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Button from '@/Components/Frontend/atoms/Button';
 
 const Navigation = ({ isHomePage = false }) => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -76,19 +77,15 @@ const Navigation = ({ isHomePage = false }) => {
         </a>
 
         {/* Right: Contact Button */}
-        <div className="navbar_button-wrapper" style={{ flex: '1', display: 'flex', justifyContent: 'flex-end' }}>
-          <div className="button-squash">
-            <a 
-              href="/contact-us" 
-              className="button is-icon"
-              style={{
-                padding: '0.5rem 1rem',
-                fontSize: '0.875rem'
-              }}
-            >
-              Contact us
-            </a>
-          </div>
+        <div>
+          <Button 
+            href="/contact-us"
+            variant="sunshine"
+            size="sm"
+            squash
+          >
+            Contact us
+          </Button>
         </div>
 
         {/* Mobile Menu Button */}
