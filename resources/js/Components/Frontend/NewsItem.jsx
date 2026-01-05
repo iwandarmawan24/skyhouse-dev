@@ -9,7 +9,7 @@ const NewsItem = ({
   link
 }) => {
   return (
-    <a href={link} className="news-item" target="_blank" rel="noopener noreferrer">
+    <a href={link} className="news-item shadow-md bg-white/80 backdrop-blur-md hover:bg-white/90 transition-all duration-300" target="_blank" rel="noopener noreferrer">
       <div className="news-item-image">
         <img src={image} alt={title} />
       </div>

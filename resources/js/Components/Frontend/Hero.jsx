@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Button from '@/Components/Frontend/atoms/Button';
-import { Heading } from '@/Components/Frontend/atoms';
+import { Heading, Text } from '@/Components/Frontend/atoms';
 
 const Hero = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -69,9 +69,15 @@ const Hero = () => {
                     style={{ width: '150px', height: 'auto', margin: '0 auto', marginBottom: '40px' }}
                   />
                   <div className="margin-bottom margin-small">
-                    <Heading as="h1" variant="hero" color="white" className="is-home text-center">
-                      Homes match lifestyle
+                    <Heading as="h1" variant="hero" color="white" className="text-center !leading-none">
+                      <span className="font-bodoni italic">Find</span> the Place
+                      <br />Where your <span className="font-bodoni italic">Story Begins</span>
                     </Heading>
+                    <div className="block bg-white h-1 w-24 mx-auto my-12"></div>
+                    <Text className="text-center" color="white" size="md">
+                      Discover your dream home with Skyhouse Alamsutera
+                      <br />where comfort meets elegance in the heart of the city.
+                    </Text>
                   </div>
                 </div>
               </div>
@@ -87,14 +93,11 @@ const Hero = () => {
             <div className="button-group is-center">
               <Button 
                 href="/project" 
-                variant="sunshine"
+                variant="pill-light-sunshine"
                 size="md"
                 squash
               >
-                Get Started
-                <svg height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M12.6893 7.25L6.96967 1.53033L8.03033 0.469666L15.5607 8L8.03033 15.5303L6.96967 14.4697L12.6893 8.75H0.5V7.25H12.6893Z" fill="currentColor"/>
-                </svg>
+                Explore Our Projects
               </Button>
             </div>
           </div>
@@ -105,7 +108,7 @@ const Hero = () => {
       <div ref={housesRef} className="hero_houses"></div>
 
       {/* Hero Background Overlay */}
-      <div className="hero_bg"></div>
+      {/* <div className="hero_bg"></div> */}
     </header>
   );
 };

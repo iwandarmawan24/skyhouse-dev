@@ -558,6 +558,229 @@ export default function ComponentsShowcase() {
             </div>
           </section>
 
+          {/* Pill Buttons Section - Dark Variants */}
+          <section className="mb-16 bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-lg p-8">
+            <h2 className="text-2xl font-bold text-white mb-2 border-b border-gray-700 pb-4">
+              Pill Buttons - Dark (Premium Style)
+            </h2>
+            <p className="text-gray-300 mb-6">
+              Sleek pill-shaped buttons with black background and animated icon circles - perfect for CTAs and premium actions
+            </p>
+            
+            <div className="space-y-8">
+              {/* Pill Ocean */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-300 mb-4">Pill Ocean (White on Black)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-ocean" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-ocean" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                  <Button variant="pill-ocean" href="/project">
+                    As Link
+                  </Button>
+                </div>
+              </div>
+
+              {/* Pill Sunshine */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-300 mb-4">Pill Sunshine (Yellow on Black)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-sunshine" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-sunshine" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                </div>
+              </div>
+
+              {/* Pill Terracota */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-300 mb-4">Pill Terracota (Warm Red on Black)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-terracota" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-terracota" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                </div>
+              </div>
+
+              {/* Pill Forest */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-300 mb-4">Pill Forest (Green on Black)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-forest" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-forest" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                </div>
+              </div>
+
+              {/* Pill Slate */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-300 mb-4">Pill Slate (Gray on Black)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-slate" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-slate" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                </div>
+              </div>
+
+              {/* Pill Charcoal */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-300 mb-4">Pill Charcoal (Dark Gray on Black)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-charcoal" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-charcoal" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* Pill Buttons Section - Light Variants */}
+          <section className="mb-16 bg-gradient-to-br from-skyhouse-ivory to-skyhouse-cream rounded-2xl shadow-lg p-8">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2 border-b border-gray-300 pb-4">
+              Pill Buttons - Light (Premium Style)
+            </h2>
+            <p className="text-gray-700 mb-6">
+              Sleek pill-shaped buttons with white background and animated icon circles - perfect for dark backgrounds
+            </p>
+            
+            <div className="space-y-8">
+              {/* Pill Light Ocean */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">Pill Light Ocean (Black on White)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-light-ocean" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-light-ocean" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                  <Button variant="pill-light-ocean" href="/project">
+                    As Link
+                  </Button>
+                </div>
+              </div>
+
+              {/* Pill Light Sunshine */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">Pill Light Sunshine (Black on White)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-light-sunshine" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-light-sunshine" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                </div>
+              </div>
+
+              {/* Pill Light Terracota */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">Pill Light Terracota (Black on White)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-light-terracota" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-light-terracota" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                </div>
+              </div>
+
+              {/* Pill Light Forest */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">Pill Light Forest (Black on White)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-light-forest" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-light-forest" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                </div>
+              </div>
+
+              {/* Pill Light Slate */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">Pill Light Slate (Black on White)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-light-slate" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-light-slate" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                </div>
+              </div>
+
+              {/* Pill Light Charcoal */}
+              <div>
+                <h3 className="text-lg font-semibold text-gray-700 mb-4">Pill Light Charcoal (Black on White)</h3>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="pill-light-charcoal" onClick={handleClick}>
+                    Explore template
+                  </Button>
+                  <Button variant="pill-light-charcoal" squash onClick={handleClick}>
+                    With Squash Effect
+                  </Button>
+                </div>
+              </div>
+
+              {/* Usage Example */}
+              <div className="mt-8 pt-8 border-t border-gray-300">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Usage Examples in Context</h3>
+                
+                {/* Dark Background Example */}
+                <div className="bg-gradient-to-br from-gray-900 to-gray-800 p-8 rounded-xl mb-6">
+                  <h4 className="text-2xl font-bold text-white mb-2">Premium Property Awaits</h4>
+                  <p className="text-gray-300 mb-6">
+                    Discover luxury living spaces designed for modern families. Experience world-class amenities and unparalleled comfort.
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    <Button variant="pill-light-ocean" squash>
+                      Explore template
+                    </Button>
+                    <Button variant="pill-light-sunshine" squash>
+                      Book a tour
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Light Background Example */}
+                <div className="bg-white p-8 rounded-xl border-2 border-gray-200">
+                  <h4 className="text-2xl font-bold text-gray-900 mb-2">Find Your Dream Home</h4>
+                  <p className="text-gray-600 mb-6">
+                    Browse through our collection of stunning properties and find the perfect place to call home.
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    <Button variant="pill-ocean" squash>
+                      Explore template
+                    </Button>
+                    <Button variant="pill-terracota" squash>
+                      Contact us
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+
           {/* Sizes Section */}
           <section className="mb-16 bg-white rounded-2xl shadow-lg p-8">
             <h2 className="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">

@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
  * Button Component - Fully styled with Tailwind CSS
  * 
  * @param {Object} props
- * @param {'primary' | 'sunshine' | 'terracota' | 'forest' | 'slate' | 'outline' | 'ghost'} props.variant - Button style variant
+ * @param {'primary' | 'sunshine' | 'terracota' | 'forest' | 'slate' | 'outline' | 'ghost' | 'pill-ocean' | 'pill-sunshine' | 'pill-terracota' | 'pill-forest' | 'pill-slate' | 'pill-charcoal' | 'pill-light-ocean' | 'pill-light-sunshine' | 'pill-light-terracota' | 'pill-light-forest' | 'pill-light-slate' | 'pill-light-charcoal'} props.variant - Button style variant
  * @param {'sm' | 'md' | 'lg' | 'xl'} props.size - Button size
  * @param {boolean} props.squash - Enable squash hover effect
  * @param {boolean} props.icon - Enable icon styling
@@ -86,6 +86,78 @@ const Button = React.forwardRef(({
       'bg-transparent text-skyhouse-ocean border-transparent',
       'hover:bg-skyhouse-ocean/10 hover:border-skyhouse-ocean',
       'focus:ring-skyhouse-ocean'
+    ),
+    'pill-ocean': cn(
+      'bg-black text-white border-black',
+      'hover:bg-transparent hover:text-black hover:scale-105',
+      'focus:ring-black',
+      'relative overflow-hidden group'
+    ),
+    'pill-sunshine': cn(
+      'bg-black text-skyhouse-sunshine border-black',
+      'hover:bg-skyhouse-sunshine hover:text-black hover:border-skyhouse-sunshine hover:scale-105',
+      'focus:ring-skyhouse-sunshine',
+      'relative overflow-hidden group'
+    ),
+    'pill-terracota': cn(
+      'bg-black text-skyhouse-terracota border-black',
+      'hover:bg-skyhouse-terracota hover:text-white hover:border-skyhouse-terracota hover:scale-105',
+      'focus:ring-skyhouse-terracota',
+      'relative overflow-hidden group'
+    ),
+    'pill-forest': cn(
+      'bg-black text-skyhouse-forest border-black',
+      'hover:bg-skyhouse-forest hover:text-white hover:border-skyhouse-forest hover:scale-105',
+      'focus:ring-skyhouse-forest',
+      'relative overflow-hidden group'
+    ),
+    'pill-slate': cn(
+      'bg-black text-skyhouse-slate border-black',
+      'hover:bg-skyhouse-slate hover:text-white hover:border-skyhouse-slate hover:scale-105',
+      'focus:ring-skyhouse-slate',
+      'relative overflow-hidden group'
+    ),
+    'pill-charcoal': cn(
+      'bg-black text-skyhouse-charcoal border-black',
+      'hover:bg-skyhouse-charcoal hover:text-white hover:border-skyhouse-charcoal hover:scale-105',
+      'focus:ring-skyhouse-charcoal',
+      'relative overflow-hidden group'
+    ),
+    'pill-light-ocean': cn(
+      'bg-white text-black border-white',
+      'hover:bg-transparent hover:text-white hover:border-white hover:scale-105',
+      'focus:ring-white',
+      'relative overflow-hidden group'
+    ),
+    'pill-light-sunshine': cn(
+      'bg-white text-black border-white',
+      'hover:bg-skyhouse-sunshine hover:text-black hover:border-skyhouse-sunshine hover:scale-105',
+      'focus:ring-skyhouse-sunshine',
+      'relative overflow-hidden group'
+    ),
+    'pill-light-terracota': cn(
+      'bg-white text-black border-white',
+      'hover:bg-skyhouse-terracota hover:text-white hover:border-skyhouse-terracota hover:scale-105',
+      'focus:ring-skyhouse-terracota',
+      'relative overflow-hidden group'
+    ),
+    'pill-light-forest': cn(
+      'bg-white text-black border-white',
+      'hover:bg-skyhouse-forest hover:text-white hover:border-skyhouse-forest hover:scale-105',
+      'focus:ring-skyhouse-forest',
+      'relative overflow-hidden group'
+    ),
+    'pill-light-slate': cn(
+      'bg-white text-black border-white',
+      'hover:bg-skyhouse-slate hover:text-white hover:border-skyhouse-slate hover:scale-105',
+      'focus:ring-skyhouse-slate',
+      'relative overflow-hidden group'
+    ),
+    'pill-light-charcoal': cn(
+      'bg-white text-black border-white',
+      'hover:bg-skyhouse-charcoal hover:text-white hover:border-skyhouse-charcoal hover:scale-105',
+      'focus:ring-skyhouse-charcoal',
+      'relative overflow-hidden group'
     )
   };
 
@@ -95,6 +167,14 @@ const Button = React.forwardRef(({
     md: 'px-8 py-4 text-base',
     lg: 'px-10 py-5 text-lg',
     xl: 'px-12 py-6 text-xl'
+  };
+
+  // Pill button specific size adjustments (more compact)
+  const pillSizeStyles = {
+    sm: 'pl-4 pr-2 py-1.5 text-sm',
+    md: 'pl-6 pr-2 py-2 text-base',
+    lg: 'pl-8 pr-2.5 py-2.5 text-lg',
+    xl: 'pl-10 pr-3 py-3 text-xl'
   };
 
   // Icon button adjustment
@@ -108,13 +188,67 @@ const Button = React.forwardRef(({
     'active:scale-90'
   ) : '';
 
+  // Check if this is a pill variant
+  const isPillVariant = variant.startsWith('pill-');
+
   // Combined classes
   const buttonClasses = cn(
     baseStyles,
     variantStyles[variant],
-    sizeStyles[size],
+    isPillVariant ? pillSizeStyles[size] : sizeStyles[size],
     iconStyles,
     className
+  );
+  
+  // Get pill color from variant
+  const pillColorMap = {
+    'pill-ocean': 'bg-skyhouse-ocean',
+    'pill-sunshine': 'bg-skyhouse-sunshine',
+    'pill-terracota': 'bg-skyhouse-terracota',
+    'pill-forest': 'bg-skyhouse-forest',
+    'pill-slate': 'bg-skyhouse-slate',
+    'pill-charcoal': 'bg-skyhouse-charcoal',
+    'pill-light-ocean': 'bg-skyhouse-ocean',
+    'pill-light-sunshine': 'bg-skyhouse-sunshine',
+    'pill-light-terracota': 'bg-skyhouse-terracota',
+    'pill-light-forest': 'bg-skyhouse-forest',
+    'pill-light-slate': 'bg-skyhouse-slate',
+    'pill-light-charcoal': 'bg-skyhouse-charcoal'
+  };
+
+  // Get icon color for pill buttons
+  const pillIconColorMap = {
+    'pill-ocean': 'text-black',
+    'pill-sunshine': 'text-black',
+    'pill-terracota': 'text-black',
+    'pill-forest': 'text-black',
+    'pill-slate': 'text-black',
+    'pill-charcoal': 'text-black',
+    'pill-light-ocean': 'text-white',
+    'pill-light-sunshine': 'text-black',
+    'pill-light-terracota': 'text-white',
+    'pill-light-forest': 'text-white',
+    'pill-light-slate': 'text-white',
+    'pill-light-charcoal': 'text-white'
+  };
+
+  // Render pill button content
+  const renderPillContent = (content) => (
+    <>
+      <span className="relative z-10">{content}</span>
+      <span className={cn(
+        'flex items-center justify-center w-10 h-10 rounded-full transition-all duration-300',
+        pillColorMap[variant],
+        'group-hover:scale-110'
+      )}>
+        <svg className={cn(
+          'w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5',
+          pillIconColorMap[variant]
+        )} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+        </svg>
+      </span>
+    </>
   );
 
   // Render as anchor if href is provided
@@ -129,7 +263,7 @@ const Button = React.forwardRef(({
         rel={rel || (target === '_blank' ? 'noopener noreferrer' : undefined)}
         {...props}
       >
-        {children}
+        {isPillVariant ? renderPillContent(children) : children}
       </a>
     );
 
@@ -150,7 +284,7 @@ const Button = React.forwardRef(({
       disabled={disabled}
       {...props}
     >
-      {children}
+      {isPillVariant ? renderPillContent(children) : children}
     </button>
   );
 

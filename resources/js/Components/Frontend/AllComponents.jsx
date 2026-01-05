@@ -4,47 +4,181 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation } from 'swiper/modules';
+import { Navigation, Pagination, Autoplay } from 'swiper/modules';
 import { Button, Heading, Text } from '@/Components/Frontend/atoms';
 import ProjectCard from './ProjectCard';
 import NewsItem from './NewsItem';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import 'swiper/css/pagination';
 
 // LaunchProjects Component - Visit Kinary House
 export const LaunchProjects = () => {
-  return (
-    <section className="visit-kinary-section">
-      <div className="visit-kinary-container">
-        {/* Left Content */}
-        <div className="visit-kinary-content">
-          <Heading as="h3" bodoni className="italic mb-0 leading-none"><i>Visit</i></Heading>
-          <Heading as="h2" variant="section">
-            Kinary House
-          </Heading>
-          <div className="visit-divider" style={{ width: "80px", height: "4px", backgroundColor: '#1E3A8A', marginBottom: "24px" }}></div>
-          <Text>
-            Hi, skyhousefam! We're excited to share that Kinary House finally has its own show unit.
-            Make sure to book an appointment with our skyhouseteam before stopping by.
-          </Text>
-        </div>
+  const swiperRef = useRef(null);
+  const bgRef = useRef(null);
 
-        {/* Right Image Card */}
-        <div className="visit-kinary-card">
-          <img
-            src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop"
-            alt="Kinary House"
-            className="visit-kinary-image"
-          />
-          <div className="visit-kinary-overlay">
-            <Text as="span" size="sm" className="visit-kinary-location">South Tangerang</Text>
-            <Heading as="h3" variant="card" className="visit-kinary-title">Kinary House</Heading>
-          </div>
-          <a href="#" className="visit-kinary-button">
-            Make appointment
-          </a>
+  useEffect(() => {
+    const handleScroll = () => {
+      if (bgRef.current) {
+        const scrollY = window.scrollY;
+        const rect = bgRef.current.getBoundingClientRect();
+        const elementTop = rect.top + scrollY;
+        const offset = scrollY - elementTop;
+        
+        // Apply parallax effect (move slower than scroll)
+        bgRef.current.style.transform = `translateY(${offset * 0.5}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const launchProjectsData = [
+    {
+      id: 1,
+      title: 'Visit',
+      subtitle: 'Kinary House',
+      location: 'South Tangerang',
+      description: 'Hi, skyhousefam! We\'re excited to share that Kinary House finally has its own show unit. Make sure to book an appointment with our skyhouseteam before stopping by.',
+      image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop',
+      link: '#'
+    },
+    {
+      id: 2,
+      title: 'Discover',
+      subtitle: 'Wellspring House',
+      location: 'South Tangerang',
+      description: 'Experience the serene beauty of Wellspring House. A perfect blend of modern design and natural elements, featuring a stunning sunny patio for your outdoor moments.',
+      image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop',
+      link: '#'
+    },
+    {
+      id: 3,
+      title: 'Explore',
+      subtitle: 'Evertree House',
+      location: 'South Tangerang',
+      description: 'Step into Evertree House and embrace outdoor living. With a semi-outdoor kitchen and dining area, this is where comfort meets nature in perfect harmony.',
+      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
+      link: '#'
+    }
+  ];
+
+  return (
+    <section className="p-4 pb-16 md:px-8 lg:px-16 relative overflow-hidden">
+      {/* Background with gradient mask */}
+      <div 
+        ref={bgRef}
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ 
+          backgroundImage: 'url(/images/hero/bg-blur.png)',
+          maskImage: 'linear-gradient(to bottom, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 40%, black 70%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 40%, black 70%)'
+        }}
+      ></div>
+      
+      <div className="max-w-7xl mx-auto relative z-10">
+        <Swiper
+          modules={[Pagination, Navigation, Autoplay]}
+          slidesPerView={1}
+          spaceBetween={0}
+          loop={true}
+          autoplay={{
+            delay: 5000,
+            disableOnInteraction: false,
+          }}
+          pagination={{
+            clickable: true,
+            el: '.launch-projects-pagination',
+          }}
+          navigation={{
+            prevEl: '.launch-projects-prev',
+            nextEl: '.launch-projects-next',
+          }}
+          onSwiper={(swiper) => { swiperRef.current = swiper; }}
+          className="h-[600px] md:h-[700px]"
+        >
+          {launchProjectsData.map((project) => (
+            <SwiperSlide key={project.id}>
+              <div className="grid grid-cols-1 lg:grid-cols-5 gap-8 lg:gap-12 items-center h-full px-4">
+                {/* Left Content */}
+                <div className="space-y-4 lg:col-span-2">
+                  <Heading as="h3" className="mb-0 leading-none">{project.title}</Heading>
+                  <Heading as="h2" bodoni variant="section" className="italic">
+                    {project.subtitle}
+                  </Heading>
+                  <div className="w-20 h-1 bg-blue-900 my-6"></div>
+                  <Text>{project.description}</Text>
+                </div>
+
+                {/* Right Image Card */}
+                <div className="relative rounded-2xl overflow-hidden shadow-xl group lg:col-span-3">
+                  <img
+                    src={project.image}
+                    alt={project.subtitle}
+                    className="w-full h-[400px] md:h-[500px] object-cover transition-transform duration-300 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-6">
+                    <Text as="span" size="sm" className="text-white/90 mb-2">{project.location}</Text>
+                    <Heading as="h3" variant="card" className="text-white mb-0">{project.subtitle}</Heading>
+                  </div>
+                  <a 
+                    href={project.link} 
+                    className="absolute bottom-6 right-6 bg-white text-skyhouse-ocean px-6 py-3 rounded-full font-semibold hover:bg-skyhouse-ocean hover:text-white transition-all duration-300 shadow-lg"
+                  >
+                    Make appointment
+                  </a>
+                </div>
+              </div>
+            </SwiperSlide>
+          ))}
+        </Swiper>
+
+        {/* Navigation Controls - Under Content */}
+        <div className="flex items-center justify-center gap-6">
+          {/* Previous Button */}
+          <button 
+            className="launch-projects-prev w-12 h-12 rounded-full bg-white hover:bg-skyhouse-ocean shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 group border-2 border-skyhouse-ocean"
+            onClick={() => swiperRef.current?.slidePrev()}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-skyhouse-ocean group-hover:text-white">
+              <path d="M18 12L6 12M6 12L12 18M6 12L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+
+          {/* Pagination Dots */}
+          <div className="launch-projects-pagination flex flex-row gap-3"></div>
+
+          {/* Next Button */}
+          <button 
+            className="launch-projects-next w-12 h-12 rounded-full bg-white hover:bg-skyhouse-ocean shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 group border-2 border-skyhouse-ocean"
+            onClick={() => swiperRef.current?.slideNext()}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-skyhouse-ocean group-hover:text-white">
+              <path d="M6 12L18 12M18 12L12 6M18 12L12 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
         </div>
       </div>
+
+      <style jsx>{`
+        .launch-projects-pagination :global(.swiper-pagination-bullet) {
+          width: 12px;
+          height: 12px;
+          background: #cbd5e1;
+          opacity: 0.5;
+          transition: all 0.3s ease;
+        }
+        .launch-projects-pagination :global(.swiper-pagination-bullet-active) {
+          background: #1E3A8A;
+          opacity: 1;
+          transform: scale(1.3);
+        }
+        .launch-projects-pagination :global(.swiper-pagination-bullet:hover) {
+          opacity: 0.8;
+          transform: scale(1.2);
+        }
+      `}</style>
     </section>
   );
 };
@@ -240,7 +374,7 @@ export const Projects = () => {
 export const ShowMoreBanner = () => {
   return (
     <section className="section_show-more background-color-cream">
-      <div className="padding-global">
+      <div className="padding-global pb-24">
         <div className="container-large">
           <div className="show-more-wrapper">
             <a href="/project" className="banner_component">
@@ -291,8 +425,8 @@ export const Quiz = () => {
       <div className="padding-global">
         <div className="padding-section-medium">
           <div className="text-align-center">
-            <Heading as="h2" variant="section" color="ocean" style={{ margin: 0 }}>Discover Your Dream Home</Heading>
-            <Text size="lg" color="ocean">
+            <Heading as="h2" variant="section" color="ocean" className="text-center m-0">Discover Your Dream Home</Heading>
+            <Text size="lg" color="ocean" className="text-center">
               Let Skyhouse turn your dream home wish into a wonderful reality!
             </Text>
             <div className="margin-top margin-medium">
@@ -337,6 +471,25 @@ export const Characters = () => {
 
 // News Component
 export const News = () => {
+  const newsBgRef = useRef(null);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (newsBgRef.current) {
+        const scrollY = window.scrollY;
+        const rect = newsBgRef.current.getBoundingClientRect();
+        const elementTop = rect.top + scrollY;
+        const offset = scrollY - elementTop;
+        
+        // Apply parallax effect (move slower than scroll)
+        newsBgRef.current.style.transform = `translateY(${offset * 0.5}px)`;
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const newsData = [
     {
       id: 1,
@@ -368,19 +521,24 @@ export const News = () => {
   ];
 
   return (
-    <section className="section_news background-color-cream is-20">
-      <div className="padding-global">
+    <section className="section_news bg-white is-20 relative overflow-hidden">
+      {/* Background with gradient mask */}
+      <div 
+        ref={newsBgRef}
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ 
+          backgroundImage: 'url(/images/hero/bg-blur-2.png)',
+          maskImage: 'linear-gradient(to top, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 20%, black 70%)',
+          WebkitMaskImage: 'linear-gradient(to top, transparent 0%, transparent 15%, rgba(0,0,0,0.3) 20%, black 70%)'
+        }}
+      ></div>
+      
+      {/* Blue overlay to darken the background */}
+      <div className="absolute inset-0"></div>
+      
+      <div className="padding-global relative z-10">
         <div className="container-large">
           <div className="padding-section-large news-layout">
-            <div className="news-header">
-              <div className="news-header-content">
-                <Heading as="h2" variant="section">News</Heading>
-                <Text size="lg">Don't miss our latest media update!</Text>
-                <Button href="/news" variant="primary">
-                  View more
-                </Button>
-              </div>
-            </div>
             <div className="news-items">
               {newsData.map((news) => (
                 <NewsItem
@@ -415,7 +573,7 @@ export const CTA = () => {
   return (
     <section className="section_cta background-color-brown is-bottom-rounded is-20">
       <div className="padding-global">
-        <div className="container-large">
+        <div className="py-24">
           <div className="cta_component">
             <div className="cta_left">
               <div className="cta_card">
