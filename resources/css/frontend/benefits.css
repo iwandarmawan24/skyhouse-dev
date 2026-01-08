@@ -65,10 +65,11 @@
   margin: 0;
 }
 
-.benefit_content .button {
+/* Legacy - now using Tailwind Button component */
+/* .benefit_content .button {
   margin-top: 1rem;
   align-self: flex-start;
-}
+} */
 
 .benefit_image {
   position: relative;

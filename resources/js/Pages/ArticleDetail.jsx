@@ -2,7 +2,7 @@ import React from "react";
 import { Head, Link } from "@inertiajs/react";
 import Navigation from "@/Components/Frontend/Navigation";
 import Footer from "@/Components/Frontend/Footer";
-import { CTA } from "@/Components/Frontend/AllComponents";
+import CTA from '@/Components/Frontend/CTA';
 import "@css/frontend.css";
 import "@css/frontend/article-detail.css";
 import { Calendar, Tag } from "lucide-react";

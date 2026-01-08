@@ -1,7 +1,129 @@
-/* Frontend CSS Entry Point - No Tailwind */
+/* Frontend CSS Entry Point */
+
+/* Import Google Fonts first */
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&display=swap');
+
+/* Tailwind CSS */
+@import 'tailwindcss';
+
+/* Tell Tailwind where to look for utility class usage */
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../**/*.jsx';
+@source '../js/**/*.js';
+@source '../js/**/*.jsx';
+@source '../js/Components/**/*.jsx';
+@source '../js/Components/**/*.js';
+
+@theme {
+    /* Skyhouse Frontend Brand Colors */
+    --color-skyhouse-ocean: #1E3A8A;      /* Deep Blue - Main brand color */
+    --color-skyhouse-sunshine: #F5D87F;   /* Soft Yellow - Accent color */
+    --color-skyhouse-terracota: #C85A3E;  /* Terracota - Warm accent */
+    --color-skyhouse-forest: #2F4538;     /* Dark Green */
+    --color-skyhouse-slate: #2C3E50;      /* Dark Blue Gray */
+    
+    /* Background Colors */
+    --color-skyhouse-cream: #E8E6F2;      /* Lavender Cream */
+    --color-skyhouse-ivory: #FDFEF0;      /* Ivory Background */
+    --color-skyhouse-mist: #F8F9FA;       /* Light Gray */
+    
+    /* Text Colors */
+    --color-skyhouse-charcoal: #4A5568;   /* Medium Gray Text */
+    --color-skyhouse-silver: #718096;     /* Muted Text */
+}
+
+/* Generate utility classes for Skyhouse colors */
+@utility bg-skyhouse-ocean {
+    background-color: var(--color-skyhouse-ocean);
+}
+@utility bg-skyhouse-sunshine {
+    background-color: var(--color-skyhouse-sunshine);
+}
+@utility bg-skyhouse-terracota {
+    background-color: var(--color-skyhouse-terracota);
+}
+@utility bg-skyhouse-forest {
+    background-color: var(--color-skyhouse-forest);
+}
+@utility bg-skyhouse-slate {
+    background-color: var(--color-skyhouse-slate);
+}
+@utility bg-skyhouse-cream {
+    background-color: var(--color-skyhouse-cream);
+}
+@utility bg-skyhouse-ivory {
+    background-color: var(--color-skyhouse-ivory);
+}
+@utility bg-skyhouse-mist {
+    background-color: var(--color-skyhouse-mist);
+}
+@utility bg-skyhouse-charcoal {
+    background-color: var(--color-skyhouse-charcoal);
+}
+@utility bg-skyhouse-silver {
+    background-color: var(--color-skyhouse-silver);
+}
+
+@utility text-skyhouse-ocean {
+    color: var(--color-skyhouse-ocean);
+}
+@utility text-skyhouse-sunshine {
+    color: var(--color-skyhouse-sunshine);
+}
+@utility text-skyhouse-terracota {
+    color: var(--color-skyhouse-terracota);
+}
+@utility text-skyhouse-forest {
+    color: var(--color-skyhouse-forest);
+}
+@utility text-skyhouse-slate {
+    color: var(--color-skyhouse-slate);
+}
+@utility text-skyhouse-charcoal {
+    color: var(--color-skyhouse-charcoal);
+}
+@utility text-skyhouse-silver {
+    color: var(--color-skyhouse-silver);
+}
+
+@utility border-skyhouse-ocean {
+    border-color: var(--color-skyhouse-ocean);
+}
+@utility border-skyhouse-sunshine {
+    border-color: var(--color-skyhouse-sunshine);
+}
+@utility border-skyhouse-terracota {
+    border-color: var(--color-skyhouse-terracota);
+}
+@utility border-skyhouse-forest {
+    border-color: var(--color-skyhouse-forest);
+}
+@utility border-skyhouse-slate {
+    border-color: var(--color-skyhouse-slate);
+}
+
+@utility ring-skyhouse-ocean {
+    --tw-ring-color: var(--color-skyhouse-ocean);
+}
+@utility ring-skyhouse-sunshine {
+    --tw-ring-color: var(--color-skyhouse-sunshine);
+}
+@utility ring-skyhouse-terracota {
+    --tw-ring-color: var(--color-skyhouse-terracota);
+}
+@utility ring-skyhouse-forest {
+    --tw-ring-color: var(--color-skyhouse-forest);
+}
+@utility ring-skyhouse-slate {
+    --tw-ring-color: var(--color-skyhouse-slate);
+}
+
 /* Import all Easton CSS files in correct order */
 
-/* 1. Global styles first */
+/* 1. Global styles (without font import to avoid duplicate) */
 @import './frontend/globals.css';
 
 /* 2. Component styles */

@@ -49,6 +49,11 @@ Route::get('/about', function () {
 Route::get('/contact-us', [\App\Http\Controllers\Frontend\ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [\App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');
 
+// Components Showcase Route
+Route::get('/components', function () {
+    return Inertia::render('ComponentsShowcase');
+})->name('components.showcase');
+
 // Sitemap Route
 Route::get('/sitemap.xml', function () {
     return response(

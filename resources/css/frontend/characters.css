@@ -43,7 +43,8 @@
   opacity: 0.9;
 }
 
-.character_component .button {
+/* Legacy - now using Tailwind Button component */
+/* .character_component .button {
   display: inline-block;
   padding: 1rem 2.5rem;
   background: var(--color-brown);
@@ -62,7 +63,7 @@
   background: rgba(139, 69, 19, 0.9);
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(139, 69, 19, 0.2);
-}
+} */
 
 /* Responsive Design */
 @media (max-width: 991px) {
@@ -103,10 +104,11 @@
     font-size: 1rem;
   }
 
-  .character_component .button {
+  /* Legacy button style commented out */
+  /* .character_component .button {
     padding: 0.875rem 2rem;
     font-size: 0.9375rem;
-  }
+  } */
 }
 
 @media (max-width: 479px) {

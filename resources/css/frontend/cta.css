@@ -57,7 +57,8 @@
     opacity: 0.9;
 }
 
-.cta_card .button {
+/* Legacy - now using Tailwind Button component */
+/* .cta_card .button {
     display: inline-block;
     padding: 1rem 2.5rem;
     background: var(--color-btn-primary);
@@ -77,7 +78,7 @@
     background: var(--color-text-secondary);
     transform: translateY(-3px);
     box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3);
-}
+} */
 
 /* Right Instagram Grid */
 .cta_right {
@@ -195,10 +196,11 @@
         font-size: 1rem;
     }
 
-    .cta_card .button {
+    /* Legacy button style commented out */
+    /* .cta_card .button {
         padding: 0.875rem 2rem;
         font-size: 0.9375rem;
-    }
+    } */
 
     .instagram_grid {
         grid-template-columns: repeat(2, 1fr);

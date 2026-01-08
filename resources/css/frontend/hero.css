@@ -29,7 +29,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-image: url('https://cdn.prod.website-files.com/6507e5069d2b6119052df387/651124747de1ae08741ac4bd_hero-sky2a-edit.png');
+  background-image: url('/images/hero/hero-sky-bg.png');
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -98,9 +98,8 @@
   height: 20%;
   background: linear-gradient(180deg,
     transparent 0%,
-    rgba(253, 254, 240, 0.2) 40%,
-    rgba(253, 254, 240, 0.6) 70%,
-    rgba(253, 254, 240, 1) 90%,
+    rgba(253, 254, 240, 0.1) 50%,
+    rgba(253, 254, 240, 1) 95%,
     #FDFEF0 100%
   );
   z-index: 20;

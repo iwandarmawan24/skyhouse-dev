@@ -42,7 +42,8 @@
   color: var(--color-text-primary);
 }
 
-.news-header-content .button {
+/* Legacy - now using Tailwind Button component */
+/* .news-header-content .button {
   display: inline-block;
   padding: 1rem 2.5rem;
   background: var(--color-btn-primary);
@@ -62,7 +63,7 @@
   background: var(--color-text-secondary);
   transform: translateY(-3px);
   box-shadow: 0 8px 25px rgba(30, 58, 138, 0.2);
-}
+} */
 
 /* News Items */
 .news-items {
@@ -77,8 +78,10 @@
   grid-template-columns: 200px 1fr auto;
   gap: 2rem;
   align-items: center;
-  background: white;
-  border: 2px solid transparent;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
   border-radius: 1.5rem;
   padding: 1.5rem;
   text-decoration: none;
@@ -87,6 +90,7 @@
 }
 
 .news-item:hover {
+  background: rgba(255, 255, 255, 0.9);
   border-color: var(--color-btn-primary);
   transform: translateY(-4px);
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
@@ -194,9 +198,10 @@
     align-items: center;
   }
 
-  .news-header-content .button {
+  /* Legacy button style commented out */
+  /* .news-header-content .button {
     align-self: center;
-  }
+  } */
 
   .news-header-content h2 {
     font-size: 3rem;
@@ -209,6 +214,9 @@
   .news-item {
     grid-template-columns: 180px 1fr auto;
     gap: 1.5rem;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .news-item-image {
@@ -243,6 +251,9 @@
     grid-template-columns: 1fr;
     gap: 1.25rem;
     padding: 1.25rem;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .news-item-image {
@@ -268,13 +279,17 @@
     font-size: 1rem;
   }
 
-  .news-header-content .button {
+  /* Legacy button style commented out */
+  /* .news-header-content .button {
     padding: 0.875rem 2rem;
     font-size: 0.9375rem;
-  }
+  } */
 
   .news-item {
     padding: 1rem;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
   }
 
   .news-item-image {

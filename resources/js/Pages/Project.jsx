@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Navigation from '@/Components/Frontend/Navigation';
 import Footer from '@/Components/Frontend/Footer';
 import ProjectCard from '@/Components/Frontend/ProjectCard';
-import { CTA } from '@/Components/Frontend/AllComponents';
+import CTA from '@/Components/Frontend/CTA';
 import '@css/frontend.css';
 import '@css/frontend/project-page.css';
 

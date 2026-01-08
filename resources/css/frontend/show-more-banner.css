@@ -4,10 +4,6 @@
   position: relative;
 }
 
-.show-more-wrapper {
-  padding: 3rem 0;
-}
-
 .banner_component {
   display: flex;
   align-items: center;

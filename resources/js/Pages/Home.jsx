@@ -3,6 +3,7 @@ import Navigation from '@/Components/Frontend/Navigation';
 import Hero from '@/Components/Frontend/Hero';
 import About from '@/Components/Frontend/About';
 import LaunchProjects from '@/Components/Frontend/LaunchProjects';
+import Services from '@/Components/Frontend/Services';
 import Benefits from '@/Components/Frontend/Benefits';
 import Projects from '@/Components/Frontend/Projects';
 import ShowMoreBanner from '@/Components/Frontend/ShowMoreBanner';
@@ -30,13 +31,14 @@ export default function Home() {
       <Navigation isHomePage={true} />
       <main className="main-wrapper">
         <Hero />
+        <Services />
         <LaunchProjects />
-        <About />
-        <Benefits />
+        {/* <About /> */}
+        {/* <Benefits /> */}
         <Projects />
         <ShowMoreBanner />
         <Quiz />
-        <Characters />
+        {/* <Characters /> */}
         <News />
         <CTA />
       </main>
