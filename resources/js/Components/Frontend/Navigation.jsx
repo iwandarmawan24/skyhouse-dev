@@ -76,8 +76,8 @@ const Navigation = ({ isHomePage = false }) => {
           />
         </a>
 
-        {/* Right: Contact Button */}
-        <div>
+        {/* Right: Contact Button - Hidden on mobile */}
+        <div className="hidden lg:block">
           <Button 
             href="/contact-us"
             variant="sunshine"

@@ -8,7 +8,7 @@ export default function Services() {
         <div className="max-w-7xl mx-auto">
           <div className="services-grid grid grid-cols-1 lg:grid-cols-2 gap-6 lg:grid-rows-3">
             {/* Left - Large Services Image */}
-            <div className="services-hero relative rounded-3xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:row-span-3 group cursor-pointer">
+            <div className="services-hero relative rounded-3xl overflow-hidden aspect-[4/3] lg:aspect-auto lg:row-span-3 group cursor-pointer order-2 lg:order-1">
               <img
                 src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&h=900&fit=crop&q=80"
                 alt="Modern Architecture"
@@ -17,17 +17,18 @@ export default function Services() {
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-12 left-12">
                 <Heading as="h2" variant="display" color="white" className="tracking-wider font-light">
-                  SERVICES
+                  Project Name 
                 </Heading>
               </div>
               <div className="absolute top-8 left-8 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full">
-                <Text as="span" size="sm" weight="medium" color="charcoal">Frasinco</Text>
+                <Text as="span" size="sm" weight="medium" color="charcoal">Project Category</Text>
               </div>
             </div>
 
             {/* Architecture Card */}
-            <div className="service-card bg-gradient-to-br from-blue-50 to-cyan-100 rounded-3xl p-8 flex flex-col justify-center">
-              <Heading as="h3" variant="card" bodoni className="mb-3 italic">Architecture</Heading>
+            <div className="service-card bg-gradient-to-br from-blue-50 to-cyan-100 rounded-3xl p-8 flex flex-col justify-center order-1 lg:order-2">
+              <Heading as="h3" variant="card" className="mb-3">About</Heading>
+              <Heading as="h3" variant="card" bodoni className="mb-3 italic">Skyhouse Alam Sutera</Heading>
               <div className="block bg-blue-300 h-1 w-16 my-4"></div>
               <Text size="base" color="charcoal">
                 From vision to reality, we shape innovative structures that seamlessly merge modern aesthetics with eco-friendly principles, redefining urban landscapes.
@@ -35,7 +36,7 @@ export default function Services() {
             </div>
 
             {/* Interior Design Card */}
-            <div className="service-card relative rounded-3xl overflow-hidden min-h-[250px] group cursor-pointer">
+            <div className="service-card relative rounded-3xl overflow-hidden min-h-[250px] group cursor-pointer order-3">
               <img
                 src="https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=1200&h=675&fit=crop&q=80"
                 alt="Interior Design"
@@ -51,7 +52,7 @@ export default function Services() {
             </div>
 
             {/* Exterior Design Card */}
-            <div className="service-card relative rounded-3xl overflow-hidden min-h-[250px] group cursor-pointer">
+            <div className="service-card relative rounded-3xl overflow-hidden min-h-[250px] group cursor-pointer order-4">
               <img
                 src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=675&fit=crop&q=80"
                 alt="Exterior Design"

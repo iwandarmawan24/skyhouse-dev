@@ -53,7 +53,7 @@ const Hero = () => {
       </div>
 
       {/* Hero Content */}
-      <div className="padding-global">
+      <div className="padding-global" style={{ position: 'relative', zIndex: 20 }}>
         <div className="container-large">
           <div className="padding-section-large" style={{ paddingTop: '2rem' }}>
             <div className="header26_component">
@@ -87,10 +87,10 @@ const Hero = () => {
       </div>
 
       {/* Button - Separate from text to be in front of house */}
-      <div className="padding-global" style={{ position: 'absolute', top: '60vh', left: 0, right: 0, zIndex: 25 }}>
+      <div className="padding-global absolute top-[70vh] lg:top-[60vh] left-0 right-0 z-25">
         <div className="container-large">
           <div className="margin-top margin-large padding-bottom">
-            <div className="button-group is-center">
+            <div className="button-group flex justify-center items-center">
               <Button 
                 href="/project" 
                 variant="pill-light-sunshine"
