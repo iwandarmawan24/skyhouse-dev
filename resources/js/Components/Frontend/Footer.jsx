@@ -4,7 +4,13 @@ import { Heading, Text } from '@/Components/Frontend/atoms';
 // Footer Component
 const Footer = () => {
   return (
-    <footer className="footer_component">
+    <footer 
+      className="footer_component"
+      style={{
+        backgroundImage: 'radial-gradient(circle, rgba(30, 58, 138, 0.15) 1px, transparent 2px)',
+        backgroundSize: '20px 20px'
+      }}
+    >
       <div className="padding-global">
         <div className="container-large">
           <div className="footer_content">
@@ -12,6 +18,7 @@ const Footer = () => {
               <img
                 src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
                 alt="Skyhouse Alamsutera"
+                className="invert-60"
               />
             </div>
 
@@ -36,15 +43,6 @@ const Footer = () => {
               <a href="/career">Careers</a>
               <a href="/news">News</a>
               <a href="/agent-portal">Agent Portal</a>
-            </div>
-
-            <div className="footer_section">
-              <Heading as="h4" variant="subsection">House</Heading>
-              <a href="/project">Skyhouse Projects</a>
-              <a href="/easton-home">Skyhouse Home App</a>
-              <a href="https://quiz.eastonurbankapital.com/landing" target="_blank" rel="noopener noreferrer">Skyhouse Quiz</a>
-              <a href="/easton-facilities">Skyhouse Facilities</a>
-              <a href="/easton-characters">Skyhouse Characters</a>
             </div>
 
             <div className="footer_section">

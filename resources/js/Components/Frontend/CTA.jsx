@@ -19,7 +19,7 @@ const CTA = () => {
           <div className="cta_component">
             <div className="cta_left">
               <div className="cta_card">
-                <Heading as="h2" variant="section">Get in touch with us to discover more about Skyhouse!</Heading>
+                <Heading as="h2" variant="section">Get in touch with us to discover more about <span className="font-bodoni italic">Skyhouse!</span></Heading>
                 <Text>Ask anything, we will answer it immediately.</Text>
                 <Button href="/contact-us" variant="primary">
                   Contact us
