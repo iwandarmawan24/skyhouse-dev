@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Button from '@/Components/Frontend/atoms/Button';
 
-const Navigation = ({ isHomePage = false }) => {
+const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -22,10 +22,10 @@ const Navigation = ({ isHomePage = false }) => {
     <nav
       className={`navbar_component ${isScrolled ? 'is-scrolled' : ''}`}
       style={{
-        backgroundColor: isScrolled ? 'rgba(17, 83, 189, 0.85)' : 'transparent',
-        backdropFilter: isScrolled ? 'blur(12px)' : 'none',
-        WebkitBackdropFilter: isScrolled ? 'blur(12px)' : 'none',
-        boxShadow: isScrolled ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none',
+        backgroundColor: (isScrolled || showBackgroundDefault) ? 'rgba(17, 83, 189, 0.85)' : 'transparent',
+        backdropFilter: (isScrolled || showBackgroundDefault) ? 'blur(12px)' : 'none',
+        WebkitBackdropFilter: (isScrolled || showBackgroundDefault) ? 'blur(12px)' : 'none',
+        boxShadow: (isScrolled || showBackgroundDefault) ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none',
         transition: 'all 0.3s ease-in-out',
       }}
     >
@@ -64,8 +64,8 @@ const Navigation = ({ isHomePage = false }) => {
             position: 'absolute', 
             left: '50%', 
             transform: 'translateX(-50%)',
-            opacity: isHomePage && !isScrolled ? 0 : 1,
-            visibility: isHomePage && !isScrolled ? 'hidden' : 'visible',
+            opacity: hideLogoOnTop && !isScrolled ? 0 : 1,
+            visibility: hideLogoOnTop && !isScrolled ? 'hidden' : 'visible',
             transition: 'opacity 0.3s ease-in-out, visibility 0.3s ease-in-out'
           }}
         >
@@ -84,7 +84,7 @@ const Navigation = ({ isHomePage = false }) => {
             size="sm"
             squash
           >
-            Contact us
+            Get in Touch
           </Button>
         </div>
 
@@ -95,11 +95,11 @@ const Navigation = ({ isHomePage = false }) => {
           aria-label="menu"
         >
           <div className={`menu-icon2 ${isMobileMenuOpen ? 'is-open' : ''}`}>
-            <div className="menu-icon2_line-top" style={{ backgroundColor: isScrolled ? 'white' : '#1E3A8A', transition: 'background-color 0.3s ease-in-out' }}></div>
+            <div className="menu-icon2_line-top" style={{ backgroundColor: (isScrolled || showBackgroundDefault) ? 'white' : '#1E3A8A', transition: 'background-color 0.3s ease-in-out' }}></div>
             <div className="menu-icon2_line-middle">
-              <div className="menu-icon_line-middle-inner" style={{ backgroundColor: isScrolled ? 'white' : '#1E3A8A', transition: 'background-color 0.3s ease-in-out' }}></div>
+              <div className="menu-icon_line-middle-inner" style={{ backgroundColor: (isScrolled || showBackgroundDefault) ? 'white' : '#1E3A8A', transition: 'background-color 0.3s ease-in-out' }}></div>
             </div>
-            <div className="menu-icon2_line-bottom" style={{ backgroundColor: isScrolled ? 'white' : '#1E3A8A', transition: 'background-color 0.3s ease-in-out' }}></div>
+            <div className="menu-icon2_line-bottom" style={{ backgroundColor: (isScrolled || showBackgroundDefault) ? 'white' : '#1E3A8A', transition: 'background-color 0.3s ease-in-out' }}></div>
           </div>
         </button>
       </div>

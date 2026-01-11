@@ -1,5 +1,6 @@
 import React from 'react';
 import Navigation from '@/Components/Frontend/Navigation';
+import PageLayout from '@/Components/Frontend/PageLayout';
 import Footer from '@/Components/Frontend/Footer';
 import CTA from '@/Components/Frontend/CTA';
 import '@css/frontend.css';
@@ -105,8 +106,7 @@ export default function About() {
   ];
 
   return (
-    <div className="page-wrapper">
-      <Navigation />
+    <PageLayout showBackgroundDefault={true}>
       <main className="main-wrapper">
         {/* Hero/About Section */}
         <section className="about-hero background-color-yellow">
@@ -231,7 +231,6 @@ export default function About() {
         </section>
       </main>
       <CTA />
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }

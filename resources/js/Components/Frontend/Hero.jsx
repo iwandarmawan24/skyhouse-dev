@@ -74,10 +74,19 @@ const Hero = () => {
                       <br />Where your <span className="font-bodoni italic">Story Begins</span>
                     </Heading>
                     <div className="block bg-white h-1 w-24 mx-auto my-12"></div>
-                    <Text className="text-center" color="white" size="md">
+                    <Text className="text-center !mb-12" color="white" size="md">
                       Discover your dream home with Skyhouse Alamsutera
                       <br />where comfort meets elegance in the heart of the city.
                     </Text>
+
+                    <Button 
+                      href="/project" 
+                      variant="pill-light-sunshine"
+                      size="md"
+                      squash
+                    >
+                      Explore Our Projects
+                    </Button>
                   </div>
                 </div>
               </div>
@@ -87,7 +96,7 @@ const Hero = () => {
       </div>
 
       {/* Button - Separate from text to be in front of house */}
-      <div className="padding-global absolute top-[70vh] lg:top-[60vh] left-0 right-0 z-25">
+      {/* <div className="padding-global absolute top-[70vh] lg:top-[60vh] left-0 right-0 z-25">
         <div className="container-large">
           <div className="margin-top margin-large padding-bottom">
             <div className="button-group flex justify-center items-center">
@@ -102,7 +111,7 @@ const Hero = () => {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Houses - Layer 2 (medium speed) - Now outside wrapper */}
       <div ref={housesRef} className="hero_houses"></div>

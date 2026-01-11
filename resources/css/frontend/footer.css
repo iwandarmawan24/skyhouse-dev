@@ -7,7 +7,7 @@
 
 .footer_content {
   display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 1fr;
   gap: 3rem;
   padding-bottom: 4rem;
   border-bottom: 1px solid rgba(30, 58, 138, 0.15);

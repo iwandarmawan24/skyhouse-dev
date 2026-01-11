@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Head, useForm, usePage } from "@inertiajs/react";
 import Navigation from "@/Components/Frontend/Navigation";
+import PageLayout from "@/Components/Frontend/PageLayout";
 import Footer from "@/Components/Frontend/Footer";
 import CTA from '@/Components/Frontend/CTA';
 import "@css/frontend.css";
@@ -68,8 +69,7 @@ export default function Contact({ formLoadTime }) {
                 <meta name="description" content="Get in touch with Skyhouse Alamsutera. Contact us for inquiries, property information, or schedule a visit to our show units." />
             </Head>
 
-            <div className="page-wrapper">
-                <Navigation />
+            <PageLayout showBackgroundDefault={true}>
                 <main className="main-wrapper">
                     {/* Success Message */}
                     {flash?.success && (
@@ -459,8 +459,7 @@ export default function Contact({ formLoadTime }) {
                 </section>
             </main>
             <CTA />
-            <Footer />
-        </div>
+        </PageLayout>
         </>
     );
 }
