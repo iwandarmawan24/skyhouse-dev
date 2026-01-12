@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import Navigation from '@/Components/Frontend/Navigation';
-import Footer from '@/Components/Frontend/Footer';
+import { Button } from '@/Components/Frontend/atoms';
 import ProjectCard from '@/Components/Frontend/ProjectCard';
 import PageLayout from '@/Components/Frontend/PageLayout';
-import CTA from '@/Components/Frontend/CTA';
 import '@css/frontend.css';
 import '@css/frontend/project-page.css';
 
@@ -158,7 +156,7 @@ export default function Project() {
                 <span>{featuredProject.units} Units</span>
               </div>
             </div>
-            <button className="project-hero-button">Make appointment</button>
+            <Button>Make appointment</Button>
           </div>
         </section>
 

@@ -5,6 +5,7 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProjectsDropdownOpen, setIsProjectsDropdownOpen] = useState(false);
+  const [isNewsDropdownOpen, setIsNewsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -31,63 +32,86 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
       }}
     >
       <div className="navbar_container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
-        {/* Left: Desktop Menu */}
         <div className="navbar_menu" style={{ flex: '1', justifyContent: 'flex-start' }}>
           <div className="navbar-menu_wrapper">
-            {/* Projects Dropdown */}
+            <a href="/project" className="navbar2_link">
+              Projects
+            </a>
+
             <div 
               className="relative"
               onMouseEnter={() => setIsProjectsDropdownOpen(true)}
               onMouseLeave={() => setIsProjectsDropdownOpen(false)}
             >
               <div className="navbar2_link flex items-center gap-1">
-                Projects
+                Company
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                 </svg>
               </div>
               
-              {/* Dropdown Menu */}
               {isProjectsDropdownOpen && (
                 <div 
                   className="absolute top-full left-0 w-48 rounded-lg shadow-lg py-2 z-50"
                   style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
                     backdropFilter: 'blur(12px)',
                     WebkitBackdropFilter: 'blur(12px)',
                   }}
                 >
-                  <a href="/project" className="block px-4 py-2 text-skyhouse-ocean hover:bg-gray-100 transition-colors">
-                    Project
+                  <a href="/about" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
+                    Company
                   </a>
-                  <a href="/facilities" className="block px-4 py-2 text-skyhouse-ocean hover:bg-gray-100 transition-colors">
+                  <a href="/facilities" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
                     Facilities
                   </a>
-                  <a href="/gallery" className="block px-4 py-2 text-skyhouse-ocean hover:bg-gray-100 transition-colors">
+                  <a href="/gallery" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
                     Gallery
                   </a>
                 </div>
               )}
             </div>
 
-            {/* Company Link */}
-            <a href="/about" className="navbar2_link">
-              Company
-            </a>
-
-            {/* Events Link */}
             <a href="/events" className="navbar2_link">
               Events
             </a>
 
-            {/* News Link */}
-            <a href="/news" className="navbar2_link">
-              News
-            </a>
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsNewsDropdownOpen(true)}
+              onMouseLeave={() => setIsNewsDropdownOpen(false)}
+            >
+              <div className="navbar2_link flex items-center gap-1">
+                News
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              
+              {isNewsDropdownOpen && (
+                <div 
+                  className="absolute top-full left-0 w-48 rounded-lg shadow-lg py-2 z-50"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                  }}
+                >
+                  <a href="/news" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
+                    News
+                  </a>
+                  <a href="/news#media" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
+                    Media Highlights
+                  </a>
+                  <a href="/news#article" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
+                    Articles
+                  </a>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Center: Logo */}
         <a 
           href="/" 
           className="navbar_logo-link" 
@@ -108,7 +132,6 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
           />
         </a>
 
-        {/* Right: Contact Button - Hidden on mobile */}
         <div className="hidden lg:block">
           <Button 
             href="/contact-us"
@@ -120,7 +143,6 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
           </Button>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           className="navbar_menu-button"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
@@ -136,7 +158,6 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
         </button>
       </div>
 
-      {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div className="mobile-menu-overlay" onClick={() => setIsMobileMenuOpen(false)}>
           <div className="mobile-menu-content" onClick={(e) => e.stopPropagation()}>
@@ -146,6 +167,8 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
             <a href="/about" className="mobile-menu-link">About</a>
             <a href="/events" className="mobile-menu-link">Events</a>
             <a href="/news" className="mobile-menu-link">News</a>
+            <a href="/news#media" className="mobile-menu-link">Media Highlights</a>
+            <a href="/news#article" className="mobile-menu-link">Articles</a>
             <a href="/contact-us" className="mobile-menu-link">Contact Us</a>
           </div>
         </div>

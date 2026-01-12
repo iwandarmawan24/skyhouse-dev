@@ -1,6 +1,4 @@
-import React, { useRef, useEffect } from 'react';
-import { Swiper, SwiperSlide } from 'swiper/react';
-import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import React, { useRef, useEffect, useState } from 'react';
 import { Button, Heading, Text } from '@/Components/Frontend/atoms';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -8,8 +6,8 @@ import 'swiper/css/pagination';
 
 // LaunchProjects Component - Visit Kinary House
 const LaunchProjects = () => {
-  const swiperRef = useRef(null);
   const bgRef = useRef(null);
+  const [activeIndex, setActiveIndex] = useState(2);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,33 +26,56 @@ const LaunchProjects = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const launchProjectsData = [
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % facilitiesData.length);
+    }, 3500);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const facilitiesData = [
     {
       id: 1,
-      title: 'Visit',
-      subtitle: 'Kinary House',
-      location: 'South Tangerang',
-      description: 'Hi, skyhousefam! We\'re excited to share that Kinary House finally has its own show unit. Make sure to book an appointment with our skyhouseteam before stopping by.',
-      image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=600&fit=crop',
-      link: '#'
+      title: 'Swimming Pool',
+      description: 'Olympic-sized pool with modern facilities',
+      image: 'https://images.unsplash.com/photo-1576610616656-d3aa5d1f4534?w=1200&h=800&fit=crop'
     },
     {
       id: 2,
-      title: 'Discover',
-      subtitle: 'Wellspring House',
-      location: 'South Tangerang',
-      description: 'Experience the serene beauty of Wellspring House. A perfect blend of modern design and natural elements, featuring a stunning sunny patio for your outdoor moments.',
-      image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop',
-      link: '#'
+      title: 'Fitness Center',
+      description: 'State-of-the-art gym equipment',
+      image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=1200&h=800&fit=crop'
     },
     {
       id: 3,
-      title: 'Explore',
-      subtitle: 'Evertree House',
-      location: 'South Tangerang',
-      description: 'Step into Evertree House and embrace outdoor living. With a semi-outdoor kitchen and dining area, this is where comfort meets nature in perfect harmony.',
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
-      link: '#'
+      title: 'Garden Park',
+      description: 'Lush green spaces for relaxation',
+      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1200&h=800&fit=crop'
+    },
+    {
+      id: 4,
+      title: 'Kids Playground',
+      description: 'Safe and fun play area for children',
+      image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200&h=800&fit=crop'
+    },
+    {
+      id: 5,
+      title: 'Clubhouse',
+      description: 'Community gathering and events space',
+      image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&h=800&fit=crop'
+    },
+    {
+      id: 6,
+      title: 'Basketball Court',
+      description: 'Full-size court for sports activities',
+      image: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=1200&h=800&fit=crop'
+    },
+    {
+      id: 7,
+      title: 'Jogging Track',
+      description: 'Scenic running and walking paths',
+      image: 'https://images.unsplash.com/photo-1461897104016-0b3b00cc81ee?w=1200&h=800&fit=crop'
     }
   ];
 
@@ -71,112 +92,67 @@ const LaunchProjects = () => {
         }}
       ></div>
       
-        <div className="max-w-7xl mx-auto relative z-10 overflow-hidden">
-          <Swiper
-            modules={[Pagination, Navigation, Autoplay]}
-            slidesPerView={1}
-            spaceBetween={0}
-            loop={true}
-            autoplay={{
-              delay: 5000,
-              disableOnInteraction: false,
-            }}
-            pagination={{
-              clickable: true,
-              el: '.launch-projects-pagination',
-            }}
-            navigation={{
-              prevEl: '.launch-projects-prev',
-              nextEl: '.launch-projects-next',
-            }}
-            onSwiper={(swiper) => { swiperRef.current = swiper; }}
-            className="h-auto lg:h-[700px] pb-16 lg:pb-0 overflow-visible"
-          >
-            {launchProjectsData.map((project) => (
-              <SwiperSlide key={project.id}>
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-12 items-center h-full p-4">
-                  {/* Left Content */}
-                  <div className="space-y-3 lg:space-y-4 lg:col-span-2 order-2 lg:order-1 px-2 lg:px-0">
-                  <Heading as="h3" className="mb-0 leading-none">{project.title}</Heading>
-                  <Heading as="h2" bodoni variant="section" className="italic">
-                    {project.subtitle}
-                  </Heading>
-                  <div className="w-16 lg:w-20 h-1 bg-blue-900 my-4 lg:my-6"></div>
-                  <Text>{project.description}</Text>
-                  <div className="pt-2 lg:pt-4">
-                    <Button
-                      href="/project" 
-                      variant="sunshine"
-                      size="md"
-                      squash
-                    >
-                        Make appointment
-                    </Button>
-                  </div>
-                </div>
+      
 
-                {/* Right Image Card */}
-                <div className="relative rounded-2xl overflow-hidden shadow-xl group lg:col-span-3 order-1 lg:order-2">
-                  <img
-                    src={project.image}
-                    alt={project.subtitle}
-                    className="w-full h-[350px] md:h-[450px] lg:h-[500px] object-cover transition-transform duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent flex flex-col justify-end p-6">
-                    <Text as="span" size="sm" className="text-white/90 mb-2">{project.location}</Text>
-                    <Heading as="h3" variant="card" className="text-white mb-0">{project.subtitle}</Heading>
-                  </div>
-                </div>
-              </div>
-            </SwiperSlide>
-          ))}
-        </Swiper>
-
-        {/* Navigation Buttons - Mobile: on sides, Desktop: horizontal layout at bottom */}
-        <button 
-          className="launch-projects-prev absolute left-2 top-[140px] md:top-[180px] lg:hidden -translate-y-[-20px] z-20 w-10 h-10 rounded-full !bg-white hover:!bg-skyhouse-ocean shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 group border-2 border-skyhouse-ocean"
-          onClick={() => swiperRef.current?.slidePrev()}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-skyhouse-ocean group-hover:text-white">
-            <path d="M18 12L6 12M6 12L12 18M6 12L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-
-        <button 
-          className="launch-projects-next absolute right-2 top-[140px] md:top-[180px] lg:hidden -translate-y-[-20px] z-20 w-10 h-10 rounded-full !bg-white hover:!bg-skyhouse-ocean shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 group border-2 border-skyhouse-ocean"
-          onClick={() => swiperRef.current?.slideNext()}
-        >
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" className="text-skyhouse-ocean group-hover:text-white">
-            <path d="M6 12L18 12M18 12L12 6M18 12L12 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-        </button>
-
-        {/* Desktop Navigation - horizontal layout at bottom */}
-        <div className="hidden lg:flex items-center gap-4 absolute bottom-6 right-6 z-20">
-          <button 
-            className="launch-projects-prev flex-shrink-0 w-12 h-12 rounded-full !bg-white hover:!bg-skyhouse-ocean shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 group border-2 border-skyhouse-ocean"
-            onClick={() => swiperRef.current?.slidePrev()}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-skyhouse-ocean group-hover:text-white">
-              <path d="M18 12L6 12M6 12L12 18M6 12L12 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
-
-          <div className="launch-projects-pagination flex flex-row gap-3 items-center"></div>
-
-          <button 
-            className="launch-projects-next flex-shrink-0 w-12 h-12 rounded-full !bg-white hover:!bg-skyhouse-ocean shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 group border-2 border-skyhouse-ocean"
-            onClick={() => swiperRef.current?.slideNext()}
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-skyhouse-ocean group-hover:text-white">
-              <path d="M6 12L18 12M18 12L12 6M18 12L12 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-          </button>
+      {/* Facilities Section */}
+      <div className="max-w-7xl mx-auto relative z-10 mt-16 lg:mt-24 px-4">
+        <div className="text-center mb-8 lg:mb-12">
+          <div className="flex">
+            <Heading as="h2" variant="section" className="mb-4">
+              Premium <span className="font-bodoni !italic">Facilities</span>
+            </Heading>
+            <Button href="/facilities" variant="outline" className="ml-auto self-center">
+              See all facilities
+            </Button>
+          </div>
+          <Text size="lg" className="text-gray-600 max-w-2xl mx-auto">
+            Discover exceptional amenities designed for your lifestyle
+          </Text>
         </div>
 
-        {/* Mobile Pagination Dots - Below content */}
-        <div className="flex lg:hidden items-center justify-center mt-6">
-          <div className="launch-projects-pagination-mobile flex flex-row gap-3"></div>
+        <div className="flex gap-3 lg:gap-5 h-[400px] md:h-[450px] lg:h-[500px] overflow-hidden">
+          {facilitiesData.map((facility, index) => (
+            <div
+              key={facility.id}
+              onClick={() => setActiveIndex(index)}
+              className={`relative overflow-hidden rounded-[100px] shadow-xl transition-all duration-700 ease-in-out group cursor-pointer ${
+                index === activeIndex 
+                  ? 'flex-[3] md:flex-[4] lg:flex-[5] !rounded-[30px]' 
+                  : 'hidden lg:flex lg:flex-1 lg:hover:flex-[1.5]'
+              }`}
+            >
+              <img
+                src={facility.image}
+                alt={facility.title}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
+              <div className={`absolute bottom-0 left-0 right-0 p-4 lg:p-8 transition-opacity duration-500 ${
+                index === activeIndex ? 'opacity-100' : 'opacity-0 lg:opacity-0'
+              }`}>
+                <Heading as="h3" variant="card" className="text-white mb-2">
+                  {facility.title}
+                </Heading>
+                <Text size="sm" className="text-white/90">
+                  {facility.description}
+                </Text>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="flex justify-center gap-2 mt-8">
+          {facilitiesData.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setActiveIndex(index)}
+              className={`transition-all duration-300 rounded-full ${
+                index === activeIndex 
+                  ? 'w-8 h-3 bg-skyhouse-ocean' 
+                  : 'w-3 h-3 bg-gray-300 hover:bg-gray-400'
+              }`}
+            />
+          ))}
         </div>
       </div>
 
