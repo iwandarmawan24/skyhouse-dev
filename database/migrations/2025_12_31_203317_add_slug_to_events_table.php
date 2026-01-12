@@ -12,7 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('events', function (Blueprint $table) {
-            //
+            // Check if slug column doesn't exist before adding
+            if (!Schema::hasColumn('events', 'slug')) {
+                $table->string('slug')->unique()->after('is_active');
+            }
         });
     }
 
@@ -22,7 +25,10 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('events', function (Blueprint $table) {
-            //
+            if (Schema::hasColumn('events', 'slug')) {
+                $table->dropUnique(['slug']);
+                $table->dropColumn('slug');
+            }
         });
     }
 };

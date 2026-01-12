@@ -59,17 +59,18 @@ export default function Form({ article, categories, users }) {
         article?.featured_image_url || null
     );
     const [showMediaPicker, setShowMediaPicker] = useState(false);
+    const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
 
     // Auto-generate slug from title
     useEffect(() => {
-        if (!isEdit && data.title && !data.slug) {
+        if (!isEdit && data.title && !isSlugManuallyEdited) {
             const slug = data.title
                 .toLowerCase()
                 .replace(/[^a-z0-9]+/g, "-")
                 .replace(/^-|-$/g, "");
             setData("slug", slug);
         }
-    }, [data.title]);
+    }, [data.title, isSlugManuallyEdited]);
 
     // Character counters
     const titleLength = data.title.length;
@@ -364,13 +365,30 @@ export default function Form({ article, categories, users }) {
                                         label="URL Slug"
                                         name="slug"
                                         value={data.slug}
-                                        onChange={(e) =>
-                                            setData("slug", e.target.value)
-                                        }
+                                        onChange={(e) => {
+                                            setData("slug", e.target.value);
+                                            setIsSlugManuallyEdited(true);
+                                        }}
                                         error={errors.slug}
                                         placeholder="article-url-slug"
                                         helperText="Auto-generated from title, but you can customize it"
                                     />
+                                    {isSlugManuallyEdited && !isEdit && (
+                                        <button
+                                            type="button"
+                                            onClick={() => {
+                                                setIsSlugManuallyEdited(false);
+                                                const slug = data.title
+                                                    .toLowerCase()
+                                                    .replace(/[^a-z0-9]+/g, "-")
+                                                    .replace(/^-|-$/g, "");
+                                                setData("slug", slug);
+                                            }}
+                                            className="mt-2 text-sm text-blue-600 hover:text-blue-700 underline"
+                                        >
+                                            Reset to auto-generated slug
+                                        </button>
+                                    )}
                                 </div>
 
                                 <FormInput
