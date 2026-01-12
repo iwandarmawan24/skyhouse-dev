@@ -458,7 +458,6 @@ export default function Contact({ formLoadTime }) {
                     </div>
                 </section>
             </main>
-            <CTA />
         </PageLayout>
         </>
     );

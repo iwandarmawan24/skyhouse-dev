@@ -1,6 +1,7 @@
 import React from "react";
 import { Head, Link } from "@inertiajs/react";
 import Navigation from "@/Components/Frontend/Navigation";
+import PageLayout from "@/Components/Frontend/PageLayout";
 import Footer from "@/Components/Frontend/Footer";
 import CTA from '@/Components/Frontend/CTA';
 import "@css/frontend.css";
@@ -81,203 +82,198 @@ export default function ArticleDetail({ article, relatedArticles, seo }) {
                 </script>
             </Head>
 
-            <div className="page-wrapper">
-                <Navigation />
-                <main className="main-wrapper">
-                    {/* Article Hero with Featured Image Background */}
-                    <section className="article-hero-section">
-                        <div className="article-hero-image-wrapper">
-                            {article.featured_image && (
-                                <img
-                                    src={article.featured_image}
-                                    alt={article.title}
-                                    className="article-hero-image"
-                                />
-                            )}
-                            <div className="article-hero-overlay"></div>
-                        </div>
-                        <div className="article-hero-content">
-                            <div className="padding-global">
-                                <div className="container-medium">
-                                    {/* Breadcrumb */}
-                                    <div className="article-breadcrumb">
-                                        <Link
-                                            href="/"
-                                            className="breadcrumb-link-item"
-                                        >
-                                            Home
-                                        </Link>
-                                        <span className="breadcrumb-separator">
-                                            /
-                                        </span>
-                                        <Link
-                                            href="/news"
-                                            className="breadcrumb-link-item"
-                                        >
-                                            News
-                                        </Link>
-                                        <span className="breadcrumb-separator">
-                                            /
-                                        </span>
-                                        <span className="breadcrumb-current">
-                                            Article
-                                        </span>
+            <PageLayout>
+                {/* Article Hero with Featured Image Background */}
+                <section className="article-hero-section">
+                    <div className="article-hero-image-wrapper">
+                        {article.featured_image && (
+                            <img
+                                src={article.featured_image}
+                                alt={article.title}
+                                className="article-hero-image"
+                            />
+                        )}
+                        <div className="article-hero-overlay"></div>
+                    </div>
+                    <div className="article-hero-content">
+                        <div className="padding-global">
+                            <div className="container-medium">
+                                {/* Breadcrumb */}
+                                <div className="article-breadcrumb">
+                                    <Link
+                                        href="/"
+                                        className="breadcrumb-link-item"
+                                    >
+                                        Home
+                                    </Link>
+                                    <span className="breadcrumb-separator">
+                                        /
+                                    </span>
+                                    <Link
+                                        href="/news"
+                                        className="breadcrumb-link-item"
+                                    >
+                                        News
+                                    </Link>
+                                    <span className="breadcrumb-separator">
+                                        /
+                                    </span>
+                                    <span className="breadcrumb-current">
+                                        Article
+                                    </span>
+                                </div>
+
+                                {/* Title */}
+                                <h1 className="article-hero-title">
+                                    {article.title}
+                                </h1>
+
+                                {/* Meta Info */}
+                                <div className="article-hero-meta">
+                                    <div className="article-meta-item">
+                                        <Calendar className="w-4 h-4" />
+                                        <span>{article.published_at}</span>
                                     </div>
-
-                                    {/* Title */}
-                                    <h1 className="article-hero-title">
-                                        {article.title}
-                                    </h1>
-
-                                    {/* Meta Info */}
-                                    <div className="article-hero-meta">
-                                        <div className="article-meta-item">
-                                            <Calendar className="w-4 h-4" />
-                                            <span>{article.published_at}</span>
-                                        </div>
-                                        {article.category.name && (
-                                            <>
-                                                <span className="meta-separator">
-                                                    |
+                                    {article.category.name && (
+                                        <>
+                                            <span className="meta-separator">
+                                                |
+                                            </span>
+                                            <div className="article-meta-item">
+                                                <Tag className="w-4 h-4" />
+                                                <span>
+                                                    {article.category.name}
                                                 </span>
-                                                <div className="article-meta-item">
-                                                    <Tag className="w-4 h-4" />
-                                                    <span>
-                                                        {article.category.name}
-                                                    </span>
-                                                </div>
-                                            </>
-                                        )}
-                                    </div>
+                                            </div>
+                                        </>
+                                    )}
                                 </div>
                             </div>
                         </div>
-                    </section>
+                    </div>
+                </section>
 
-                    {/* Article Content */}
-                    <section className="article-content-section">
-                        <div className="padding-global">
-                            <div className="container-medium">
-                                <div className="article-content-wrapper">
-                                    {/* Main Content */}
-                                    <div
-                                        className="article-content"
-                                        dangerouslySetInnerHTML={{
-                                            __html: article.content,
-                                        }}
-                                    />
+                {/* Article Content */}
+                <section className="article-content-section">
+                    <div className="padding-global">
+                        <div className="container-medium">
+                            <div className="article-content-wrapper">
+                                {/* Main Content */}
+                                <div
+                                    className="article-content"
+                                    dangerouslySetInnerHTML={{
+                                        __html: article.content,
+                                    }}
+                                />
 
-                                    {/* Video */}
-                                    {article.video_url && (
-                                        <div className="article-video">
-                                            <div className="video-wrapper">
-                                                <iframe
-                                                    src={article.video_url}
-                                                    title={article.title}
-                                                    style={{ border: 0 }}
-                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                    allowFullScreen
-                                                ></iframe>
+                                {/* Video */}
+                                {article.video_url && (
+                                    <div className="article-video">
+                                        <div className="video-wrapper">
+                                            <iframe
+                                                src={article.video_url}
+                                                title={article.title}
+                                                style={{ border: 0 }}
+                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                allowFullScreen
+                                            ></iframe>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {/* Tags */}
+                                {article.tags &&
+                                    article.tags.length > 0 && (
+                                        <div className="article-tags">
+                                            <div className="tags-header">
+                                                <Tag className="w-4 h-4" />
+                                                <span>Tags:</span>
+                                            </div>
+                                            <div className="tags-list">
+                                                {article.tags.map(
+                                                    (tag, index) => (
+                                                        <span
+                                                            key={index}
+                                                            className="tag"
+                                                        >
+                                                            {tag}
+                                                        </span>
+                                                    )
+                                                )}
                                             </div>
                                         </div>
                                     )}
+                            </div>
+                        </div>
+                    </div>
+                </section>
 
-                                    {/* Tags */}
-                                    {article.tags &&
-                                        article.tags.length > 0 && (
-                                            <div className="article-tags">
-                                                <div className="tags-header">
-                                                    <Tag className="w-4 h-4" />
-                                                    <span>Tags:</span>
-                                                </div>
-                                                <div className="tags-list">
-                                                    {article.tags.map(
-                                                        (tag, index) => (
-                                                            <span
-                                                                key={index}
-                                                                className="tag"
-                                                            >
-                                                                {tag}
-                                                            </span>
-                                                        )
+                {/* Related Articles */}
+                {relatedArticles && relatedArticles.length > 0 && (
+                    <section className="related-articles-section background-color-cream">
+                        <div className="padding-global">
+                            <div className="container-large">
+                                <div className="padding-section-medium">
+                                    <h2 className="section-heading">
+                                        Related Articles
+                                    </h2>
+                                    <div className="related-articles-grid">
+                                        {relatedArticles.map((related) => (
+                                            <Link
+                                                key={related.uid}
+                                                href={`/articles/${related.slug}`}
+                                                className="related-article-card"
+                                            >
+                                                {related.image && (
+                                                    <div className="related-article-image">
+                                                        <img
+                                                            src={
+                                                                related.image
+                                                            }
+                                                            alt={
+                                                                related.title
+                                                            }
+                                                        />
+                                                    </div>
+                                                )}
+                                                <div className="related-article-content">
+                                                    <div className="related-article-meta">
+                                                        <span className="related-article-date">
+                                                            {
+                                                                related.published_at
+                                                            }
+                                                        </span>
+                                                        {related.category && (
+                                                            <>
+                                                                <span className="meta-separator">
+                                                                    |
+                                                                </span>
+                                                                <span className="related-article-category">
+                                                                    {
+                                                                        related.category
+                                                                    }
+                                                                </span>
+                                                            </>
+                                                        )}
+                                                    </div>
+                                                    <h3 className="related-article-title">
+                                                        {related.title}
+                                                    </h3>
+                                                    {related.excerpt && (
+                                                        <p className="related-article-excerpt">
+                                                            {related.excerpt}
+                                                        </p>
                                                     )}
                                                 </div>
-                                            </div>
-                                        )}
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </section>
-
-                    {/* Related Articles */}
-                    {relatedArticles && relatedArticles.length > 0 && (
-                        <section className="related-articles-section background-color-cream">
-                            <div className="padding-global">
-                                <div className="container-large">
-                                    <div className="padding-section-medium">
-                                        <h2 className="section-heading">
-                                            Related Articles
-                                        </h2>
-                                        <div className="related-articles-grid">
-                                            {relatedArticles.map((related) => (
-                                                <Link
-                                                    key={related.uid}
-                                                    href={`/articles/${related.slug}`}
-                                                    className="related-article-card"
-                                                >
-                                                    {related.image && (
-                                                        <div className="related-article-image">
-                                                            <img
-                                                                src={
-                                                                    related.image
-                                                                }
-                                                                alt={
-                                                                    related.title
-                                                                }
-                                                            />
-                                                        </div>
-                                                    )}
-                                                    <div className="related-article-content">
-                                                        <div className="related-article-meta">
-                                                            <span className="related-article-date">
-                                                                {
-                                                                    related.published_at
-                                                                }
-                                                            </span>
-                                                            {related.category && (
-                                                                <>
-                                                                    <span className="meta-separator">
-                                                                        |
-                                                                    </span>
-                                                                    <span className="related-article-category">
-                                                                        {
-                                                                            related.category
-                                                                        }
-                                                                    </span>
-                                                                </>
-                                                            )}
-                                                        </div>
-                                                        <h3 className="related-article-title">
-                                                            {related.title}
-                                                        </h3>
-                                                        {related.excerpt && (
-                                                            <p className="related-article-excerpt">
-                                                                {related.excerpt}
-                                                            </p>
-                                                        )}
-                                                    </div>
-                                                </Link>
-                                            ))}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section>
-                    )}
-                </main>
-                <CTA />
-                <Footer />
-            </div>
+                )}
+            </PageLayout>
         </>
     );
 }

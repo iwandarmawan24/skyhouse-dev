@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Head, Link } from "@inertiajs/react";
 import Navigation from "@/Components/Frontend/Navigation";
+import PageLayout from "@/Components/Frontend/PageLayout";
 import Footer from "@/Components/Frontend/Footer";
 import CTA from '@/Components/Frontend/CTA';
 import "@css/frontend.css";
@@ -103,9 +104,7 @@ export default function News({ featured }) {
                 <link rel="canonical" href={pageUrl} />
             </Head>
 
-            <div className="page-wrapper">
-                <Navigation />
-            <main className="main-wrapper">
+            <PageLayout>
                 {/* Top Banner Section */}
                 <section className="news-top-banner">
                     <div className="news-banner-image-wrapper">
@@ -309,10 +308,7 @@ export default function News({ featured }) {
                         </div>
                     </div>
                 </section>
-            </main>
-            <CTA />
-            <Footer />
-            </div>
+            </PageLayout>
         </>
     );
 }

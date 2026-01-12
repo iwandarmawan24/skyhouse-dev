@@ -77,13 +77,10 @@ const Footer = () => {
           </div>
 
           <div className="footer_bottom">
-            <Text>© 2025 Skyhouse Alamsutera. All rights reserved.</Text>
+            <Text>© 2026 Skyhouse Alamsutera. All rights reserved.</Text>
             <div className="footer_bottom-links">
               <a href="/terms">Terms and Conditions</a>
               <a href="/privacy">Privacy Policy</a>
-              <a href="https://www.dianadia.com" target="_blank" rel="noopener noreferrer">
-                Website by dianadia
-              </a>
             </div>
           </div>
         </div>

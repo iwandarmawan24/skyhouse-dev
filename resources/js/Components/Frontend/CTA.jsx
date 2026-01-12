@@ -35,7 +35,7 @@ const CTA = () => {
                 ))}
               </div>
               <a
-                href="https://www.instagram.com/eastonurbankapital/"
+                href="https://www.instagram.com/skyhouse_alamsuteraid/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="instagram_button"

@@ -39,7 +39,6 @@ export default function Home() {
       <Quiz />
       {/* <Characters /> */}
       <News />
-      <CTA />
     </PageLayout>
   )
 }

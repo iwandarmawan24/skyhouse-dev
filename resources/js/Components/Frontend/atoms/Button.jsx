@@ -52,113 +52,25 @@ const Button = React.forwardRef(({
 
   // Variant styles
   const variantStyles = {
-    primary: cn(
-      'bg-skyhouse-ocean text-white border-skyhouse-ocean',
-      'hover:bg-transparent hover:text-skyhouse-ocean hover:scale-105',
-      'focus:ring-skyhouse-ocean'
-    ),
-    sunshine: cn(
-      'bg-skyhouse-sunshine text-skyhouse-ocean border-skyhouse-sunshine',
-      'hover:bg-transparent hover:text-skyhouse-sunshine hover:border-skyhouse-sunshine hover:scale-105',
-      'focus:ring-skyhouse-sunshine'
-    ),
-    terracota: cn(
-      'bg-skyhouse-terracota text-white border-skyhouse-terracota',
-      'hover:bg-transparent hover:text-skyhouse-terracota hover:scale-105',
-      'focus:ring-skyhouse-terracota'
-    ),
-    forest: cn(
-      'bg-skyhouse-forest text-white border-skyhouse-forest',
-      'hover:bg-transparent hover:text-skyhouse-forest hover:scale-105',
-      'focus:ring-skyhouse-forest'
-    ),
-    slate: cn(
-      'bg-skyhouse-slate text-white border-skyhouse-slate',
-      'hover:bg-transparent hover:text-skyhouse-slate hover:scale-105',
-      'focus:ring-skyhouse-slate'
-    ),
-    outline: cn(
-      'bg-transparent text-skyhouse-ocean border-skyhouse-ocean',
-      'hover:bg-skyhouse-ocean hover:text-white hover:scale-105',
-      'focus:ring-skyhouse-ocean'
-    ),
-    ghost: cn(
-      'bg-transparent text-skyhouse-ocean border-transparent',
-      'hover:bg-skyhouse-ocean/10 hover:border-skyhouse-ocean',
-      'focus:ring-skyhouse-ocean'
-    ),
-    'pill-ocean': cn(
-      'bg-black text-white border-black',
-      'hover:bg-transparent hover:text-black hover:scale-105',
-      'focus:ring-black',
-      'relative overflow-hidden group'
-    ),
-    'pill-sunshine': cn(
-      'bg-black text-skyhouse-sunshine border-black',
-      'hover:bg-skyhouse-sunshine hover:text-black hover:border-skyhouse-sunshine hover:scale-105',
-      'focus:ring-skyhouse-sunshine',
-      'relative overflow-hidden group'
-    ),
-    'pill-terracota': cn(
-      'bg-black text-skyhouse-terracota border-black',
-      'hover:bg-skyhouse-terracota hover:text-white hover:border-skyhouse-terracota hover:scale-105',
-      'focus:ring-skyhouse-terracota',
-      'relative overflow-hidden group'
-    ),
-    'pill-forest': cn(
-      'bg-black text-skyhouse-forest border-black',
-      'hover:bg-skyhouse-forest hover:text-white hover:border-skyhouse-forest hover:scale-105',
-      'focus:ring-skyhouse-forest',
-      'relative overflow-hidden group'
-    ),
-    'pill-slate': cn(
-      'bg-black text-skyhouse-slate border-black',
-      'hover:bg-skyhouse-slate hover:text-white hover:border-skyhouse-slate hover:scale-105',
-      'focus:ring-skyhouse-slate',
-      'relative overflow-hidden group'
-    ),
-    'pill-charcoal': cn(
-      'bg-black text-skyhouse-charcoal border-black',
-      'hover:bg-skyhouse-charcoal hover:text-white hover:border-skyhouse-charcoal hover:scale-105',
-      'focus:ring-skyhouse-charcoal',
-      'relative overflow-hidden group'
-    ),
-    'pill-light-ocean': cn(
-      'bg-white text-black border-white',
-      'hover:bg-transparent hover:text-white hover:border-white hover:scale-105',
-      'focus:ring-white',
-      'relative overflow-hidden group'
-    ),
-    'pill-light-sunshine': cn(
-      'bg-white text-black border-white',
-      'hover:bg-skyhouse-sunshine hover:text-black hover:border-skyhouse-sunshine hover:scale-105',
-      'focus:ring-skyhouse-sunshine',
-      'relative overflow-hidden group'
-    ),
-    'pill-light-terracota': cn(
-      'bg-white text-black border-white',
-      'hover:bg-skyhouse-terracota hover:text-white hover:border-skyhouse-terracota hover:scale-105',
-      'focus:ring-skyhouse-terracota',
-      'relative overflow-hidden group'
-    ),
-    'pill-light-forest': cn(
-      'bg-white text-black border-white',
-      'hover:bg-skyhouse-forest hover:text-white hover:border-skyhouse-forest hover:scale-105',
-      'focus:ring-skyhouse-forest',
-      'relative overflow-hidden group'
-    ),
-    'pill-light-slate': cn(
-      'bg-white text-black border-white',
-      'hover:bg-skyhouse-slate hover:text-white hover:border-skyhouse-slate hover:scale-105',
-      'focus:ring-skyhouse-slate',
-      'relative overflow-hidden group'
-    ),
-    'pill-light-charcoal': cn(
-      'bg-white text-black border-white',
-      'hover:bg-skyhouse-charcoal hover:text-white hover:border-skyhouse-charcoal hover:scale-105',
-      'focus:ring-skyhouse-charcoal',
-      'relative overflow-hidden group'
-    )
+    primary: 'bg-skyhouse-ocean text-white border-skyhouse-ocean hover:bg-transparent hover:text-skyhouse-ocean hover:scale-105 focus:ring-skyhouse-ocean',
+    sunshine: 'bg-skyhouse-sunshine text-skyhouse-ocean border-skyhouse-sunshine hover:bg-transparent hover:text-skyhouse-sunshine hover:border-skyhouse-sunshine hover:scale-105 focus:ring-skyhouse-sunshine',
+    terracota: 'bg-skyhouse-terracota text-white border-skyhouse-terracota hover:bg-transparent hover:text-skyhouse-terracota hover:scale-105 focus:ring-skyhouse-terracota',
+    forest: 'bg-skyhouse-forest text-white border-skyhouse-forest hover:bg-transparent hover:text-skyhouse-forest hover:scale-105 focus:ring-skyhouse-forest',
+    slate: 'bg-skyhouse-slate text-white border-skyhouse-slate hover:bg-transparent hover:text-skyhouse-slate hover:scale-105 focus:ring-skyhouse-slate',
+    outline: 'bg-transparent text-skyhouse-ocean border-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white hover:scale-105 focus:ring-skyhouse-ocean',
+    ghost: 'bg-transparent text-skyhouse-ocean border-transparent hover:bg-skyhouse-ocean/10 hover:border-skyhouse-ocean focus:ring-skyhouse-ocean',
+    'pill-ocean': 'bg-black text-white border-black hover:bg-transparent hover:text-black hover:scale-105 focus:ring-black relative overflow-hidden group',
+    'pill-sunshine': 'bg-black text-skyhouse-sunshine border-black hover:bg-skyhouse-sunshine hover:text-black hover:border-skyhouse-sunshine hover:scale-105 focus:ring-skyhouse-sunshine relative overflow-hidden group',
+    'pill-terracota': 'bg-black text-skyhouse-terracota border-black hover:bg-skyhouse-terracota hover:text-white hover:border-skyhouse-terracota hover:scale-105 focus:ring-skyhouse-terracota relative overflow-hidden group',
+    'pill-forest': 'bg-black text-skyhouse-forest border-black hover:bg-skyhouse-forest hover:text-white hover:border-skyhouse-forest hover:scale-105 focus:ring-skyhouse-forest relative overflow-hidden group',
+    'pill-slate': 'bg-black text-skyhouse-slate border-black hover:bg-skyhouse-slate hover:text-white hover:border-skyhouse-slate hover:scale-105 focus:ring-skyhouse-slate relative overflow-hidden group',
+    'pill-charcoal': 'bg-black text-skyhouse-charcoal border-black hover:bg-skyhouse-charcoal hover:text-white hover:border-skyhouse-charcoal hover:scale-105 focus:ring-skyhouse-charcoal relative overflow-hidden group',
+    'pill-light-ocean': 'bg-white text-black border-white hover:bg-transparent hover:text-white hover:border-white hover:scale-105 focus:ring-white relative overflow-hidden group',
+    'pill-light-sunshine': 'bg-white text-black border-white hover:bg-skyhouse-sunshine hover:text-black hover:border-skyhouse-sunshine hover:scale-105 focus:ring-skyhouse-sunshine relative overflow-hidden group',
+    'pill-light-terracota': 'bg-white text-black border-white hover:bg-skyhouse-terracota hover:text-white hover:border-skyhouse-terracota hover:scale-105 focus:ring-skyhouse-terracota relative overflow-hidden group',
+    'pill-light-forest': 'bg-white text-black border-white hover:bg-skyhouse-forest hover:text-white hover:border-skyhouse-forest hover:scale-105 focus:ring-skyhouse-forest relative overflow-hidden group',
+    'pill-light-slate': 'bg-white text-black border-white hover:bg-skyhouse-slate hover:text-white hover:border-skyhouse-slate hover:scale-105 focus:ring-skyhouse-slate relative overflow-hidden group',
+    'pill-light-charcoal': 'bg-white text-black border-white hover:bg-skyhouse-charcoal hover:text-white hover:border-skyhouse-charcoal hover:scale-105 focus:ring-skyhouse-charcoal relative overflow-hidden group'
   };
 
   // Size styles
