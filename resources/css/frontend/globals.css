@@ -145,7 +145,8 @@ a[class*="text-"] {
   color: revert-layer;
 }
 
-button {
+/* Only reset buttons that don't have Tailwind classes - prevents conflicts with Button component */
+button:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]) {
   /* Don't use 'all: unset' as it prevents Tailwind utilities from working */
   background: none;
   border: none;
@@ -154,7 +155,7 @@ button {
   font-family: inherit;
 }
 
-button:focus {
+button:not([class*="bg-"]):not([class*="border-"]):not([class*="text-"]):focus {
   outline: revert;
 }
 

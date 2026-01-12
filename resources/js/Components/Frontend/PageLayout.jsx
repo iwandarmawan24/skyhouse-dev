@@ -1,5 +1,6 @@
 import React from "react";
 import Navigation from "./Navigation";
+import CTA from "./CTA";
 import Footer from "./Footer";
 
 const PageLayout = ({ showBackgroundDefault = false, hideLogoOnTop = false, children }) => {
@@ -9,6 +10,7 @@ const PageLayout = ({ showBackgroundDefault = false, hideLogoOnTop = false, chil
     <div className="page-wrapper">
       <Navigation hideLogoOnTop={hideLogoOnTop} showBackgroundDefault={showBackgroundDefault} />
       <main className="main-wrapper">{children}</main>
+      <CTA />
       <Footer />
       
       {/* WhatsApp Floating Button */}

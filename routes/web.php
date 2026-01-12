@@ -35,6 +35,8 @@ Route::get('/project', function () {
     return Inertia::render('Project');
 })->name('project');
 
+Route::get('/project/{id}', [\App\Http\Controllers\Frontend\ProjectController::class, 'show'])->name('project.detail');
+
 Route::get('/news', [NewsController::class, 'show'])->name('news');
 Route::get('/api/news', [NewsController::class, 'index'])->name('news.api');
 Route::get('/articles/{slug}', [NewsController::class, 'detail'])->name('articles.detail');
@@ -45,6 +47,14 @@ Route::get('/events/{slug}', [FrontendEventController::class, 'show'])->name('ev
 Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
+
+Route::get('/gallery', function () {
+    return Inertia::render('Gallery');
+})->name('gallery');
+
+Route::get('/facilities', function () {
+    return Inertia::render('Facilities');
+})->name('facilities');
 
 Route::get('/contact-us', [\App\Http\Controllers\Frontend\ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [\App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');

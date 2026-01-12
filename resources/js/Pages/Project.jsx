@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Navigation from '@/Components/Frontend/Navigation';
 import Footer from '@/Components/Frontend/Footer';
 import ProjectCard from '@/Components/Frontend/ProjectCard';
+import PageLayout from '@/Components/Frontend/PageLayout';
 import CTA from '@/Components/Frontend/CTA';
 import '@css/frontend.css';
 import '@css/frontend/project-page.css';
@@ -108,9 +109,7 @@ export default function Project() {
     : projectsData.filter(project => selectedFilters.includes(project.type));
 
   return (
-    <div className="page-wrapper">
-      <Navigation />
-      <main className="main-wrapper">
+    <PageLayout>
         {/* Top Banner Section */}
         <section className="project-top-banner">
           <div className="project-banner-image-wrapper">
@@ -242,6 +241,7 @@ export default function Project() {
                             units={project.units}
                             title={project.title}
                             description={project.description}
+                            href={`/project/${project.id}`}
                           />
                         ))
                       ) : (
@@ -263,9 +263,6 @@ export default function Project() {
             </div>
           </div>
         </section>
-      </main>
-      <CTA />
-      <Footer />
-    </div>
+    </PageLayout>
   );
 }

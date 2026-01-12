@@ -4,6 +4,7 @@ import Button from '@/Components/Frontend/atoms/Button';
 const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProjectsDropdownOpen, setIsProjectsDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -33,10 +34,41 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
         {/* Left: Desktop Menu */}
         <div className="navbar_menu" style={{ flex: '1', justifyContent: 'flex-start' }}>
           <div className="navbar-menu_wrapper">
-            {/* Projects Link */}
-            <a href="/project" className="navbar2_link">
-              Projects
-            </a>
+            {/* Projects Dropdown */}
+            <div 
+              className="relative"
+              onMouseEnter={() => setIsProjectsDropdownOpen(true)}
+              onMouseLeave={() => setIsProjectsDropdownOpen(false)}
+            >
+              <div className="navbar2_link flex items-center gap-1">
+                Projects
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+              
+              {/* Dropdown Menu */}
+              {isProjectsDropdownOpen && (
+                <div 
+                  className="absolute top-full left-0 w-48 rounded-lg shadow-lg py-2 z-50"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                  }}
+                >
+                  <a href="/project" className="block px-4 py-2 text-skyhouse-ocean hover:bg-gray-100 transition-colors">
+                    Project
+                  </a>
+                  <a href="/facilities" className="block px-4 py-2 text-skyhouse-ocean hover:bg-gray-100 transition-colors">
+                    Facilities
+                  </a>
+                  <a href="/gallery" className="block px-4 py-2 text-skyhouse-ocean hover:bg-gray-100 transition-colors">
+                    Gallery
+                  </a>
+                </div>
+              )}
+            </div>
 
             {/* Company Link */}
             <a href="/about" className="navbar2_link">
@@ -108,7 +140,9 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
       {isMobileMenuOpen && (
         <div className="mobile-menu-overlay" onClick={() => setIsMobileMenuOpen(false)}>
           <div className="mobile-menu-content" onClick={(e) => e.stopPropagation()}>
-            <a href="/project" className="mobile-menu-link">Projects</a>
+            <a href="/project" className="mobile-menu-link">Project</a>
+            <a href="/facilities" className="mobile-menu-link">Facilities</a>
+            <a href="/gallery" className="mobile-menu-link">Gallery</a>
             <a href="/about" className="mobile-menu-link">About</a>
             <a href="/events" className="mobile-menu-link">Events</a>
             <a href="/news" className="mobile-menu-link">News</a>
