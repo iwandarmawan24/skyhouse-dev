@@ -73,6 +73,16 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
+        // Check if slug column exists before applying unique validation
+        $slugValidation = 'nullable|string|max:255';
+        try {
+            if (\Schema::hasColumn('events', 'slug')) {
+                $slugValidation .= '|unique:events,slug';
+            }
+        } catch (\Exception $e) {
+            // Column doesn't exist yet, skip unique validation
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -84,7 +94,7 @@ class EventController extends Controller
             'registration_link' => 'nullable|url|max:255',
             'is_active' => 'required|boolean',
             // SEO fields
-            'slug' => 'nullable|string|max:255|unique:events,slug',
+            'slug' => $slugValidation,
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:255',
@@ -96,9 +106,18 @@ class EventController extends Controller
             return back()->withErrors(['image' => 'Please select an image.']);
         }
 
-        // Generate slug if not provided
-        if (empty($validated['slug'])) {
-            $validated['slug'] = Str::slug($validated['title']);
+        // Generate slug if not provided (only if column exists)
+        try {
+            if (\Schema::hasColumn('events', 'slug')) {
+                if (empty($validated['slug'])) {
+                    $validated['slug'] = Str::slug($validated['title']);
+                }
+            } else {
+                // Remove slug from validated data if column doesn't exist
+                unset($validated['slug']);
+            }
+        } catch (\Exception $e) {
+            unset($validated['slug']);
         }
 
         // Combine event_date and event_time
@@ -140,6 +159,16 @@ class EventController extends Controller
      */
     public function update(Request $request, Event $event)
     {
+        // Check if slug column exists before applying unique validation
+        $slugValidation = 'nullable|string|max:255';
+        try {
+            if (\Schema::hasColumn('events', 'slug')) {
+                $slugValidation .= '|unique:events,slug,' . $event->uid . ',uid';
+            }
+        } catch (\Exception $e) {
+            // Column doesn't exist yet, skip unique validation
+        }
+
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'required|string',
@@ -151,16 +180,25 @@ class EventController extends Controller
             'registration_link' => 'nullable|url|max:255',
             'is_active' => 'required|boolean',
             // SEO fields
-            'slug' => 'nullable|string|max:255|unique:events,slug,' . $event->uid . ',uid',
+            'slug' => $slugValidation,
             'meta_title' => 'nullable|string|max:255',
             'meta_description' => 'nullable|string|max:500',
             'meta_keywords' => 'nullable|string|max:255',
             'focus_keyword' => 'nullable|string|max:255',
         ]);
 
-        // Update slug if not provided or if title changed and no custom slug
-        if (empty($validated['slug']) || ($validated['title'] !== $event->title && $validated['slug'] === $event->slug)) {
-            $validated['slug'] = Str::slug($validated['title']);
+        // Update slug if not provided or if title changed and no custom slug (only if column exists)
+        try {
+            if (\Schema::hasColumn('events', 'slug')) {
+                if (empty($validated['slug']) || ($validated['title'] !== $event->title && $validated['slug'] === $event->slug)) {
+                    $validated['slug'] = Str::slug($validated['title']);
+                }
+            } else {
+                // Remove slug from validated data if column doesn't exist
+                unset($validated['slug']);
+            }
+        } catch (\Exception $e) {
+            unset($validated['slug']);
         }
 
         // Combine event_date and event_time
