@@ -23,6 +23,23 @@ class SettingController extends Controller
     }
 
     /**
+     * Store a new setting.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'key' => 'required|string|unique:settings,key|max:255',
+            'value' => 'nullable',
+            'type' => 'required|string|in:text,textarea,number,boolean,image',
+            'group' => 'required|string|max:255',
+        ]);
+
+        Setting::create($validated);
+
+        return back()->with('success', 'Setting created successfully.');
+    }
+
+    /**
      * Update settings.
      */
     public function update(Request $request)
@@ -45,5 +62,18 @@ class SettingController extends Controller
         }
 
         return back()->with('success', 'Settings updated successfully.');
+    }
+
+    /**
+     * Delete a setting.
+     */
+    public function destroy(Setting $setting)
+    {
+        // Clear cache for this setting
+        Cache::forget("setting_{$setting->key}");
+
+        $setting->delete();
+
+        return back()->with('success', 'Setting deleted successfully.');
     }
 }

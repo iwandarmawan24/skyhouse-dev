@@ -19,6 +19,14 @@ export default function Event({ events }) {
     const [displayedEvents, setDisplayedEvents] = useState([]);
     const [itemsToShow, setItemsToShow] = useState(6);
 
+    // Decode HTML entities and strip tags
+    const decodeHtml = (html) => {
+        if (!html) return '';
+        const txt = document.createElement('textarea');
+        txt.innerHTML = html;
+        return txt.value;
+    };
+
     // Filter events based on status
     useEffect(() => {
         if (!events) return;
@@ -172,7 +180,7 @@ export default function Event({ events }) {
                                                         {event.title}
                                                     </h3>
                                                     <p className="event-card-description">
-                                                        {event.description_excerpt || event.description}
+                                                        {decodeHtml(event.description_excerpt || event.description)}
                                                     </p>
                                                     <div className="event-card-link">
                                                         Learn More

@@ -32,24 +32,21 @@ export const createColumns = (setShowDeleteConfirm) => [
 
             return (
                 <div className="flex items-center gap-3">
-                    <div className="flex-shrink-0 h-16 w-24">
+                    <div className="flex-shrink-0 h-12 w-20">
                         {imageSrc ? (
                             <img
                                 src={imageSrc}
                                 alt={event.title}
-                                className="h-16 w-24 object-cover rounded-lg"
+                                className="h-12 w-20 object-cover rounded-lg"
                             />
                         ) : (
-                            <div className="h-16 w-24 bg-muted rounded-lg flex items-center justify-center">
-                                <ImageIcon className="w-8 h-8 text-muted-foreground" />
+                            <div className="h-12 w-20 bg-muted rounded-lg flex items-center justify-center">
+                                <ImageIcon className="w-6 h-6 text-muted-foreground" />
                             </div>
                         )}
                     </div>
                     <div className="max-w-md">
                         <div className="font-medium line-clamp-1">{event.title}</div>
-                        <div className="text-sm text-muted-foreground line-clamp-2">
-                            {event.description}
-                        </div>
                     </div>
                 </div>
             );

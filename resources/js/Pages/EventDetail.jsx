@@ -190,6 +190,7 @@ export default function EventDetail({ event }) {
                                     <div className="news-detail-content">
                                         {event.description ? (
                                             <div
+                                                className="prose prose-lg max-w-none"
                                                 dangerouslySetInnerHTML={{ __html: event.description }}
                                                 style={{ lineHeight: '1.8' }}
                                             />

@@ -172,7 +172,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::middleware('role:superadmin')->group(function () {
             // Settings
             Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+            Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
             Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+            Route::delete('/settings/{setting}', [SettingController::class, 'destroy'])->name('settings.destroy');
 
             // Users Management
             Route::resource('users', UserController::class)->except(['show']);
