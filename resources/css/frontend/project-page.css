@@ -438,3 +438,41 @@
     width: 100%;
   }
 }
+
+/* Empty State */
+.project-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 4rem 2rem;
+  min-height: 400px;
+  grid-column: 1 / -1;
+}
+
+.project-empty-state-icon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.5rem;
+  color: #d0d0d0;
+}
+
+.project-empty-state-icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.project-empty-state h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin: 0 0 0.75rem 0;
+}
+
+.project-empty-state p {
+  font-size: 1rem;
+  color: var(--color-text-secondary);
+  margin: 0;
+  max-width: 400px;
+}

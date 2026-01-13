@@ -131,9 +131,10 @@ export default function ProjectDetail({ project }) {
                 <Heading as="h4" variant="subsection" color="charcoal" className="!mb-6">
                   About This Project
                 </Heading>
-                <Text size="lg" color="charcoal" className="max-w-none text-justify">
-                  {project.description}
-                </Text>
+                <div
+                  className="prose prose-lg max-w-none text-justify text-gray-700"
+                  dangerouslySetInnerHTML={{ __html: project.description }}
+                />
               </div>
 
               {/* Specifications Grid */}

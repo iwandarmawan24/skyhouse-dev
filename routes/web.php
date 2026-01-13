@@ -31,9 +31,7 @@ Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
 
-Route::get('/project', function () {
-    return Inertia::render('Project');
-})->name('project');
+Route::get('/project', [\App\Http\Controllers\Frontend\ProjectController::class, 'index'])->name('project');
 
 Route::get('/project/{id}', [\App\Http\Controllers\Frontend\ProjectController::class, 'show'])->name('project.detail');
 

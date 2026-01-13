@@ -9,7 +9,16 @@ const ProjectCard = ({
   href
 }) => {
   const CardWrapper = href ? 'a' : 'div';
-  
+
+  // Strip HTML tags and create excerpt
+  const getPlainTextExcerpt = (html, maxLength = 120) => {
+    const text = html.replace(/<[^>]*>/g, '');
+    if (text.length > maxLength) {
+      return text.substring(0, maxLength) + '...';
+    }
+    return text;
+  };
+
   return (
     <CardWrapper href={href} className="project-card">
       <div className="project-card-image">
@@ -21,7 +30,7 @@ const ProjectCard = ({
           <span className="project-card-units">{units} Units</span>
         </div>
         <h3 className="project-card-title">{title}</h3>
-        <p className="project-card-description">{description}</p>
+        <p className="project-card-description">{getPlainTextExcerpt(description)}</p>
       </div>
     </CardWrapper>
   );
