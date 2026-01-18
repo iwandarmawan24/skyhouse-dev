@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\FacilitySliderController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\HeroBannerController;
 use App\Http\Controllers\Admin\InstagramGalleryController;
+use App\Http\Controllers\Admin\LocationMapController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaLibraryController;
 use App\Http\Controllers\Admin\MediaHighlightController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Frontend\EventController as FrontendEventController;
 use App\Http\Controllers\Frontend\HeroBannerController as FrontendHeroBannerController;
+use App\Http\Controllers\Frontend\LocationMapController as FrontendLocationMapController;
 use App\Http\Controllers\Frontend\NewsController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -34,6 +36,7 @@ Route::get('/', function () {
 
 // Frontend API Routes
 Route::get('/api/hero-banners', [FrontendHeroBannerController::class, 'index'])->name('api.hero-banners');
+Route::get('/api/location-map', [FrontendLocationMapController::class, 'show'])->name('api.location-map');
 
 Route::get('/project', [\App\Http\Controllers\Frontend\ProjectController::class, 'index'])->name('project');
 
@@ -93,10 +96,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Routes accessible by all authenticated users (superadmin, admin, staff)
         Route::middleware('role:superadmin,admin,staff')->group(function () {
+            // Home Page Settings
             // Hero Banners
             Route::post('/hero-banners/bulk-delete', [HeroBannerController::class, 'bulkDelete'])->name('hero-banners.bulk-delete');
             Route::post('/hero-banners/update-order', [HeroBannerController::class, 'updateOrder'])->name('hero-banners.update-order');
             Route::resource('hero-banners', HeroBannerController::class)->except(['show']);
+
+            // Location Map
+            Route::get('/location-map/edit', [LocationMapController::class, 'edit'])->name('location-map.edit');
+            Route::put('/location-map', [LocationMapController::class, 'update'])->name('location-map.update');
 
             // Products
             Route::resource('products', ProductController::class)->except(['show']);

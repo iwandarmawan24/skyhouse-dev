@@ -20,6 +20,7 @@ import {
     Home,
     Package,
     FileText,
+    MapPin,
 } from "lucide-react";
 
 import {
@@ -49,6 +50,7 @@ export default function AdminLayout({ children }) {
     const { auth, flash } = usePage().props;
 
     // Initialize state before any functions that use it
+    const [homepageOpen, setHomepageOpen] = useState(false);
     const [articlesOpen, setArticlesOpen] = useState(false);
     const [facilitiesOpen, setFacilitiesOpen] = useState(false);
 
@@ -64,6 +66,18 @@ export default function AdminLayout({ children }) {
             toast.info(flash.info);
         }
     }, [flash]);
+
+    // Set homepageOpen based on current path
+    useEffect(() => {
+        const homepagePaths = [
+            "/admin/hero-banners",
+            "/admin/location-map",
+        ];
+        const isActive = homepagePaths.some((path) =>
+            window.location.pathname.startsWith(path)
+        );
+        setHomepageOpen(isActive);
+    }, []);
 
     // Set articlesOpen based on current path
     useEffect(() => {
@@ -90,6 +104,16 @@ export default function AdminLayout({ children }) {
         );
         setFacilitiesOpen(isActive);
     }, []);
+
+    const isHomepageSubmenuActive = () => {
+        const homepagePaths = [
+            "/admin/hero-banners",
+            "/admin/location-map",
+        ];
+        return homepagePaths.some((path) =>
+            window.location.pathname.startsWith(path)
+        );
+    };
 
     const isArticleSubmenuActive = () => {
         const articlePaths = [
@@ -138,10 +162,22 @@ export default function AdminLayout({ children }) {
                 icon: LayoutDashboard,
             },
             {
-                name: "Hero Banners",
-                href: "/admin/hero-banners",
-                icon: ImageIcon,
+                name: "Homepage",
+                icon: Home,
+                hasSubmenu: true,
                 roles: ["superadmin", "admin", "staff"],
+                submenu: [
+                    {
+                        name: "Hero Banners",
+                        href: "/admin/hero-banners",
+                        icon: ImageIcon,
+                    },
+                    {
+                        name: "Location Map",
+                        href: "/admin/location-map/edit",
+                        icon: MapPin,
+                    },
+                ],
             },
             {
                 name: "Media Library",
@@ -271,15 +307,50 @@ export default function AdminLayout({ children }) {
                                 .filter((item) => !item.roles || hasRole(item.roles))
                                 .map((item) => (
                                     <SidebarMenuItem key={item.name}>
-                                        <SidebarMenuButton
-                                            asChild
-                                            isActive={isActiveUrl(item.href)}
-                                        >
-                                            <Link href={item.href}>
-                                                <item.icon className="h-4 w-4" />
-                                                <span>{item.name}</span>
-                                            </Link>
-                                        </SidebarMenuButton>
+                                        {item.hasSubmenu ? (
+                                            <Collapsible
+                                                open={homepageOpen}
+                                                onOpenChange={setHomepageOpen}
+                                                className="group/collapsible"
+                                            >
+                                                <CollapsibleTrigger asChild>
+                                                    <SidebarMenuButton
+                                                        isActive={isHomepageSubmenuActive()}
+                                                    >
+                                                        <item.icon className="h-4 w-4" />
+                                                        <span>{item.name}</span>
+                                                        <ChevronRight className="ml-auto h-4 w-4 transition-transform group-data-[state=open]/collapsible:rotate-90" />
+                                                    </SidebarMenuButton>
+                                                </CollapsibleTrigger>
+                                                <CollapsibleContent>
+                                                    <SidebarMenuSub>
+                                                        {item.submenu.map((subitem) => (
+                                                            <SidebarMenuSubItem key={subitem.name}>
+                                                                <SidebarMenuSubButton
+                                                                    asChild
+                                                                    isActive={isActiveUrl(subitem.href)}
+                                                                >
+                                                                    <Link href={subitem.href}>
+                                                                        {subitem.icon && <subitem.icon className="h-4 w-4" />}
+                                                                        <span>{subitem.name}</span>
+                                                                    </Link>
+                                                                </SidebarMenuSubButton>
+                                                            </SidebarMenuSubItem>
+                                                        ))}
+                                                    </SidebarMenuSub>
+                                                </CollapsibleContent>
+                                            </Collapsible>
+                                        ) : (
+                                            <SidebarMenuButton
+                                                asChild
+                                                isActive={isActiveUrl(item.href)}
+                                            >
+                                                <Link href={item.href}>
+                                                    <item.icon className="h-4 w-4" />
+                                                    <span>{item.name}</span>
+                                                </Link>
+                                            </SidebarMenuButton>
+                                        )}
                                     </SidebarMenuItem>
                                 ))}
                         </SidebarMenu>

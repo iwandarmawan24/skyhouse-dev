@@ -1,8 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Heading, Text, Button } from '@/Components/Frontend/atoms';
+import axios from 'axios';
 
 const Location = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [locationData, setLocationData] = useState({
+    title: 'Strategic Location in CBD of Alam Sutera',
+    image_url: '/images/maps.jpg',
+    google_maps_link: 'https://maps.app.goo.gl/Ru7myaVcPCSgNspo7'
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Fetch location map data from backend
+  useEffect(() => {
+    const fetchLocationMap = async () => {
+      try {
+        const response = await axios.get('/api/location-map');
+        const data = response.data.data;
+
+        if (data) {
+          setLocationData({
+            title: data.title || 'Strategic Location in CBD of Alam Sutera',
+            image_url: data.image_url || '/images/maps.jpg',
+            google_maps_link: data.google_maps_link || 'https://maps.app.goo.gl/Ru7myaVcPCSgNspo7'
+          });
+        }
+      } catch (error) {
+        console.error('Error fetching location map:', error);
+        // Use default data if fetch fails
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchLocationMap();
+  }, []);
 
   return (
     <>
@@ -22,18 +54,18 @@ const Location = () => {
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-6 items-center">
           {/* Left side - Content */}
           <div className="text-center lg:text-left w-full lg:w-1/3 py-8 lg:py-12 px-4 lg:px-0">
-            <Heading 
-              as="h3" 
-              variant="section" 
+            <Heading
+              as="h3"
+              variant="section"
               color="white"
               weight="light"
               className="text-center md:text-left text-2xl md:text-3xl lg:text-4xl"
             >
-              Strategic Location in CBD of <span className="font-bodoni italic">Alam Sutera</span>
+              <div dangerouslySetInnerHTML={{ __html: locationData.title }} />
             </Heading>
 
             <Button
-              onClick={() => window.open('https://maps.app.goo.gl/Ru7myaVcPCSgNspo7', '_blank')}
+              onClick={() => window.open(locationData.google_maps_link, '_blank')}
               href="#"
               variant="pill-light-sunshine"
               size="md"
@@ -44,13 +76,13 @@ const Location = () => {
             </Button>
           </div>
 
-          <div 
+          <div
             className="w-full lg:w-2/3 h-[400px] md:h-[600px] lg:h-[600px] py-0 lg:py-12 px-4 lg:px-0 transition-transform duration-300 hover:-translate-y-6 cursor-pointer -mb-[200px]"
             onClick={() => setIsModalOpen(true)}
           >
-            <img 
-              src="/images/maps.jpg" 
-              alt="Strategic Location Map" 
+            <img
+              src={locationData.image_url}
+              alt={locationData.title}
               className="w-full h-full object-cover object-top rounded-[30px] lg:rounded-[50px] shadow-2xl"
             />
           </div>
@@ -60,7 +92,7 @@ const Location = () => {
 
     {/* Full size map modal */}
     {isModalOpen && (
-      <div 
+      <div
         className="fixed inset-0 bg-black/80 flex items-center justify-center p-4"
         style={{ zIndex: 10000 }}
         onClick={() => setIsModalOpen(false)}
@@ -74,9 +106,9 @@ const Location = () => {
               <path d="M18 6L6 18M6 6l12 12" />
             </svg>
           </button>
-          <img 
-            src="/images/maps.jpg" 
-            alt="Strategic Location Map - Full Size" 
+          <img
+            src={locationData.image_url}
+            alt={`${locationData.title} - Full Size`}
             className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           />
