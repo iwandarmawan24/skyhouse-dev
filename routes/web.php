@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\HeroBannerController;
 use App\Http\Controllers\Admin\InstagramGalleryController;
 use App\Http\Controllers\Admin\LocationMapController;
 use App\Http\Controllers\Admin\BrochureController;
+use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaLibraryController;
 use App\Http\Controllers\Admin\MediaHighlightController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\Frontend\EventController as FrontendEventController;
 use App\Http\Controllers\Frontend\HeroBannerController as FrontendHeroBannerController;
 use App\Http\Controllers\Frontend\LocationMapController as FrontendLocationMapController;
 use App\Http\Controllers\Frontend\BrochureController as FrontendBrochureController;
+use App\Http\Controllers\Frontend\FaqController as FrontendFaqController;
 use App\Http\Controllers\Frontend\NewsController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -40,6 +42,7 @@ Route::get('/', function () {
 Route::get('/api/hero-banners', [FrontendHeroBannerController::class, 'index'])->name('api.hero-banners');
 Route::get('/api/location-map', [FrontendLocationMapController::class, 'show'])->name('api.location-map');
 Route::get('/api/brochure', [FrontendBrochureController::class, 'show'])->name('api.brochure');
+Route::get('/api/faqs', [FrontendFaqController::class, 'index'])->name('api.faqs');
 
 Route::get('/project', [\App\Http\Controllers\Frontend\ProjectController::class, 'index'])->name('project');
 
@@ -172,6 +175,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             // Policies
             Route::resource('policies', PolicyController::class)->except(['show']);
+
+            // FAQs
+            Route::post('/faqs/update-order', [FaqController::class, 'updateOrder'])->name('faqs.update-order');
+            Route::resource('faqs', FaqController::class)->except(['show']);
         });
 
         // Routes accessible by superadmin and admin only

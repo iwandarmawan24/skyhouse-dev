@@ -21,6 +21,7 @@ import {
     Package,
     FileText,
     MapPin,
+    HelpCircle,
 } from "lucide-react";
 
 import {
@@ -293,6 +294,12 @@ export default function AdminLayout({ children }) {
                 href: "/admin/contacts",
                 icon: Mail,
                 roles: ["superadmin", "admin"],
+            },
+            {
+                name: "FAQs",
+                href: "/admin/faqs",
+                icon: HelpCircle,
+                roles: ["superadmin", "admin", "staff"],
             },
             {
                 name: "Policies",

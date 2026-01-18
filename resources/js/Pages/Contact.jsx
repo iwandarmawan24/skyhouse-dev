@@ -5,6 +5,7 @@ import PageLayout from "@/Components/Frontend/PageLayout";
 import Footer from "@/Components/Frontend/Footer";
 import CTA from '@/Components/Frontend/CTA';
 import Button from '@/Components/Frontend/atoms/Button';
+import axios from 'axios';
 import "@css/frontend.css";
 import '@css/frontend/contact-page.css';
 
@@ -23,6 +24,8 @@ export default function Contact({ formLoadTime }) {
   });
 
   const [openFaq, setOpenFaq] = useState(null);
+  const [faqs, setFaqs] = useState([]);
+  const [isLoadingFaqs, setIsLoadingFaqs] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -35,28 +38,24 @@ export default function Contact({ formLoadTime }) {
     });
   };
 
-  const faqs = [
-    {
-      question: "Where are the Skyhouse projects located?",
-      answer: "Our projects are strategically located in prime areas across Jakarta, Tangerang, and surrounding cities. Each location is carefully selected for accessibility, amenities, and future development potential.",
-    },
-    {
-      question: "Can I get and read Skyhouse projects' e-brochure?",
-      answer: "Yes! You can download our project brochures from our website or request a physical copy by contacting our sales team. The brochures contain detailed information about specifications, floor plans, and pricing.",
-    },
-    {
-      question: "Where can I check the house availability?",
-      answer: "You can check house availability on our website under each project page, or contact our sales team directly via phone or WhatsApp for real-time availability updates.",
-    },
-    {
-      question: "How can I visit the show unit?",
-      answer: "You can schedule a show unit visit by contacting our sales team or booking an appointment through our website. Our show units are open daily from 9 AM to 5 PM.",
-    },
-    {
-      question: "Where can I get the house pricelist?",
-      answer: "For the latest pricelist and special promotions, please contact our sales team directly or visit our sales office. Prices are subject to change and may vary based on unit type and availability.",
-    },
-  ];
+  // Fetch FAQs from backend
+  useEffect(() => {
+    const fetchFaqs = async () => {
+      try {
+        const response = await axios.get('/api/faqs');
+        if (response.data.success) {
+          setFaqs(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching FAQs:', error);
+        // Keep empty array on error
+      } finally {
+        setIsLoadingFaqs(false);
+      }
+    };
+
+    fetchFaqs();
+  }, []);
 
   const toggleFaq = (index) => {
     setOpenFaq(openFaq === index ? null : index);
