@@ -53,6 +53,7 @@ export default function AdminLayout({ children }) {
     const [homepageOpen, setHomepageOpen] = useState(false);
     const [articlesOpen, setArticlesOpen] = useState(false);
     const [facilitiesOpen, setFacilitiesOpen] = useState(false);
+    const [productsOpen, setProductsOpen] = useState(false);
 
     // Show toast notifications for flash messages
     useEffect(() => {
@@ -77,6 +78,18 @@ export default function AdminLayout({ children }) {
             window.location.pathname.startsWith(path)
         );
         setHomepageOpen(isActive);
+    }, []);
+
+    // Set productsOpen based on current path
+    useEffect(() => {
+        const productPaths = [
+            "/admin/products",
+            "/admin/brochures",
+        ];
+        const isActive = productPaths.some((path) =>
+            window.location.pathname.startsWith(path)
+        );
+        setProductsOpen(isActive);
     }, []);
 
     // Set articlesOpen based on current path
@@ -137,6 +150,16 @@ export default function AdminLayout({ children }) {
         );
     };
 
+    const isProductSubmenuActive = () => {
+        const productPaths = [
+            "/admin/products",
+            "/admin/brochures",
+        ];
+        return productPaths.some((path) =>
+            window.location.pathname.startsWith(path)
+        );
+    };
+
     const handleLogout = () => {
         router.post("/admin/logout");
     };
@@ -187,9 +210,21 @@ export default function AdminLayout({ children }) {
             },
             {
                 name: "Products",
-                href: "/admin/products",
                 icon: Package,
+                hasSubmenu: true,
                 roles: ["superadmin", "admin", "staff"],
+                submenu: [
+                    {
+                        name: "All Products",
+                        href: "/admin/products",
+                        icon: Package,
+                    },
+                    {
+                        name: "Brochures",
+                        href: "/admin/brochures/edit",
+                        icon: FileText,
+                    },
+                ],
             },
         ],
         content: [
@@ -309,13 +344,13 @@ export default function AdminLayout({ children }) {
                                     <SidebarMenuItem key={item.name}>
                                         {item.hasSubmenu ? (
                                             <Collapsible
-                                                open={homepageOpen}
-                                                onOpenChange={setHomepageOpen}
+                                                open={item.name === "Homepage" ? homepageOpen : productsOpen}
+                                                onOpenChange={item.name === "Homepage" ? setHomepageOpen : setProductsOpen}
                                                 className="group/collapsible"
                                             >
                                                 <CollapsibleTrigger asChild>
                                                     <SidebarMenuButton
-                                                        isActive={isHomepageSubmenuActive()}
+                                                        isActive={item.name === "Homepage" ? isHomepageSubmenuActive() : isProductSubmenuActive()}
                                                     >
                                                         <item.icon className="h-4 w-4" />
                                                         <span>{item.name}</span>

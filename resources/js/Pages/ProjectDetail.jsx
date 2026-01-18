@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import { Heading, Text } from '@/Components/Frontend/atoms';
 import Button from '@/Components/Frontend/atoms/Button';
+import axios from 'axios';
 import '@css/frontend.css';
 
 export default function ProjectDetail({ project }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(0);
+  const [brochure, setBrochure] = useState(null);
+  const [isLoadingBrochure, setIsLoadingBrochure] = useState(true);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) => 
@@ -40,6 +43,38 @@ export default function ProjectDetail({ project }) {
     setModalImageIndex((prevIndex) => 
       prevIndex === 0 ? project.gallery.length - 1 : prevIndex - 1
     );
+  };
+
+  // Fetch brochure data
+  useEffect(() => {
+    const fetchBrochure = async () => {
+      try {
+        const response = await axios.get('/api/brochure');
+        if (response.data.success) {
+          setBrochure(response.data.data);
+        }
+      } catch (error) {
+        console.error('Error fetching brochure:', error);
+      } finally {
+        setIsLoadingBrochure(false);
+      }
+    };
+
+    fetchBrochure();
+  }, []);
+
+  // Handle download brochure
+  const handleDownloadBrochure = () => {
+    if (brochure && brochure.file_url) {
+      // Create a temporary link element
+      const link = document.createElement('a');
+      link.href = brochure.file_url;
+      link.download = brochure.filename || 'brochure';
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
   };
 
   // Close modal on ESC key
@@ -305,22 +340,26 @@ export default function ProjectDetail({ project }) {
                   Schedule a viewing or get more information about this property. Contact us to know more about pricing, availability, and special offers.
                 </Text>
 
-                <Button 
-                  variant="sunshine" 
-                  size="md" 
+                <Button
+                  variant="sunshine"
+                  size="md"
                   fullWidth
                   className="mb-4"
                 >
                   Contact Us
                 </Button>
 
-                <Button 
-                  variant="terracota" 
-                  size="md" 
-                  fullWidth
-                >
-                  Download Brochure
-                </Button>
+                {brochure && (
+                  <Button
+                    variant="terracota"
+                    size="md"
+                    fullWidth
+                    onClick={handleDownloadBrochure}
+                    disabled={isLoadingBrochure}
+                  >
+                    {isLoadingBrochure ? 'Loading...' : 'Download Brochure'}
+                  </Button>
+                )}
               </div>
             </div>
           </div>

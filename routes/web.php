@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\HeroBannerController;
 use App\Http\Controllers\Admin\InstagramGalleryController;
 use App\Http\Controllers\Admin\LocationMapController;
+use App\Http\Controllers\Admin\BrochureController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaLibraryController;
 use App\Http\Controllers\Admin\MediaHighlightController;
@@ -24,6 +25,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Frontend\EventController as FrontendEventController;
 use App\Http\Controllers\Frontend\HeroBannerController as FrontendHeroBannerController;
 use App\Http\Controllers\Frontend\LocationMapController as FrontendLocationMapController;
+use App\Http\Controllers\Frontend\BrochureController as FrontendBrochureController;
 use App\Http\Controllers\Frontend\NewsController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -37,6 +39,7 @@ Route::get('/', function () {
 // Frontend API Routes
 Route::get('/api/hero-banners', [FrontendHeroBannerController::class, 'index'])->name('api.hero-banners');
 Route::get('/api/location-map', [FrontendLocationMapController::class, 'show'])->name('api.location-map');
+Route::get('/api/brochure', [FrontendBrochureController::class, 'show'])->name('api.brochure');
 
 Route::get('/project', [\App\Http\Controllers\Frontend\ProjectController::class, 'index'])->name('project');
 
@@ -105,6 +108,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Location Map
             Route::get('/location-map/edit', [LocationMapController::class, 'edit'])->name('location-map.edit');
             Route::put('/location-map', [LocationMapController::class, 'update'])->name('location-map.update');
+
+            // Brochures
+            Route::get('/brochures/edit', [BrochureController::class, 'edit'])->name('brochures.edit');
+            Route::put('/brochures', [BrochureController::class, 'update'])->name('brochures.update');
 
             // Products
             Route::resource('products', ProductController::class)->except(['show']);
