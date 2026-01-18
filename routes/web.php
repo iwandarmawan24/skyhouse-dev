@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Frontend\EventController as FrontendEventController;
+use App\Http\Controllers\Frontend\HeroBannerController as FrontendHeroBannerController;
 use App\Http\Controllers\Frontend\NewsController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,9 @@ use Inertia\Inertia;
 Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
+
+// Frontend API Routes
+Route::get('/api/hero-banners', [FrontendHeroBannerController::class, 'index'])->name('api.hero-banners');
 
 Route::get('/project', [\App\Http\Controllers\Frontend\ProjectController::class, 'index'])->name('project');
 
