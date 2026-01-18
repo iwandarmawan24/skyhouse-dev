@@ -5,6 +5,7 @@ const ProjectCard = ({
   location,
   units,
   title,
+  short_description,
   description,
   href
 }) => {
@@ -19,6 +20,9 @@ const ProjectCard = ({
     return text;
   };
 
+  // Use short_description if available, otherwise fallback to description excerpt
+  const displayText = short_description || getPlainTextExcerpt(description);
+
   return (
     <CardWrapper href={href} className="project-card">
       <div className="project-card-image">
@@ -30,7 +34,7 @@ const ProjectCard = ({
           <span className="project-card-units">{units} Units</span>
         </div>
         <h3 className="project-card-title">{title}</h3>
-        <p className="project-card-description">{getPlainTextExcerpt(description)}</p>
+        <p className="project-card-description">{displayText}</p>
       </div>
     </CardWrapper>
   );

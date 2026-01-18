@@ -67,7 +67,7 @@ export default function Project({ projects = [], featuredProject = null }) {
                 {featuredProject.category} - {featuredProject.status}
               </span>
               <h1 className="project-hero-title">{featuredProject.title}</h1>
-              <p className="project-hero-description">{stripHtml(featuredProject.description)}</p>
+              <p className="project-hero-description">{featuredProject.short_description || stripHtml(featuredProject.description)}</p>
               <div className="project-hero-meta">
                 <div className="project-hero-meta-item">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -171,6 +171,7 @@ export default function Project({ projects = [], featuredProject = null }) {
                             location={project.location}
                             units={project.units}
                             title={project.title}
+                            short_description={project.short_description}
                             description={project.description}
                             href={`/project/${project.id}`}
                           />

@@ -150,6 +150,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:house,apartment,land',
+            'short_description' => 'nullable|string|max:500',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'land_area' => 'nullable|numeric|min:0',
@@ -210,6 +211,7 @@ class ProductController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:house,apartment,land',
+            'short_description' => 'nullable|string|max:500',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
             'land_area' => 'nullable|numeric|min:0',

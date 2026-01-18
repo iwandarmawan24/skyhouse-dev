@@ -16,6 +16,7 @@ export default function Form({ product }) {
     const { data, setData, post, processing, errors } = useForm({
         name: product?.name || '',
         type: product?.type || 'house',
+        short_description: product?.short_description || '',
         description: product?.description || '',
         price: product?.price || '',
         land_area: product?.land_area || '',
@@ -269,6 +270,26 @@ export default function Form({ product }) {
                                     {formatPrice(data.price)} IDR
                                 </p>
                             )}
+                        </div>
+
+                        <div className="md:col-span-2">
+                            <label htmlFor="short_description" className="block text-sm font-medium text-gray-700 mb-2">
+                                Short Description
+                            </label>
+                            <textarea
+                                id="short_description"
+                                value={data.short_description}
+                                onChange={(e) => setData('short_description', e.target.value)}
+                                className={`w-full px-4 py-2 rounded-lg border ${
+                                    errors.short_description ? 'border-red-500' : 'border-gray-300'
+                                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
+                                placeholder="Enter a brief description (1-2 sentences)"
+                                rows={3}
+                            />
+                            {errors.short_description && <p className="mt-1 text-sm text-red-600">{errors.short_description}</p>}
+                            <p className="mt-1 text-sm text-gray-500">
+                                A brief summary of the property (optional)
+                            </p>
                         </div>
 
                         <div className="md:col-span-2">

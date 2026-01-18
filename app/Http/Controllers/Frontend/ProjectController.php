@@ -31,6 +31,7 @@ class ProjectController extends Controller
                     'location' => $product->location,
                     'units' => 1, // Products don't have units field, you can add it or default to 1
                     'title' => $product->name,
+                    'short_description' => $product->short_description,
                     'description' => $product->description,
                     'status' => $status,
                     'category' => $product->type,
@@ -60,6 +61,7 @@ class ProjectController extends Controller
             'category' => ucfirst($featuredProject->type),
             'status' => $featuredProject->is_sold ? 'Sold Out' : 'Available',
             'title' => $featuredProject->name,
+            'short_description' => $featuredProject->short_description,
             'description' => $featuredProject->description,
             'location' => $featuredProject->location,
             'units' => 1, // Products don't have units field

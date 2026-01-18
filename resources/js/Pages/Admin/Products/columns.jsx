@@ -60,6 +60,11 @@ export const createColumns = (setShowDeleteConfirm, setViewProduct) => [
                     </div>
                     <div>
                         <div className="font-medium">{product.name}</div>
+                        {product.short_description && (
+                            <div className="text-sm text-muted-foreground line-clamp-1 mb-1">
+                                {product.short_description}
+                            </div>
+                        )}
                         <div className="text-sm text-muted-foreground">
                             {product.bedrooms && product.bathrooms && (
                                 <span>
