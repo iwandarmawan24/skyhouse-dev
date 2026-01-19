@@ -24,16 +24,22 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
     <nav
       className={`navbar_component ${isScrolled ? 'is-scrolled' : ''}`}
       style={{
-        backgroundColor: (isScrolled || showBackgroundDefault) ? 'rgba(17, 83, 189, 0.85)' : 'transparent',
-        backdropFilter: (isScrolled || showBackgroundDefault) ? 'blur(12px)' : 'none',
-        WebkitBackdropFilter: (isScrolled || showBackgroundDefault) ? 'blur(12px)' : 'none',
+        backgroundColor: (isScrolled || showBackgroundDefault) ? 'rgba(17, 83, 189, 0.85)' : 'rgba(17, 83, 189, 0.85)',
+        backdropFilter: 'blur(12px)',
+        WebkitBackdropFilter: 'blur(12px)',
         boxShadow: (isScrolled || showBackgroundDefault) ? '0 2px 10px rgba(0, 0, 0, 0.1)' : 'none',
-        transition: 'all 0.3s ease-in-out',
+        transition: 'margin 0.5s cubic-bezier(0.4, 0, 0.2, 1), border-radius 0.5s cubic-bezier(0.4, 0, 0.2, 1), max-width 0.5s cubic-bezier(0.4, 0, 0.2, 1), width 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease-in-out',
+        marginTop: isScrolled ? '0' : '20px',
+        marginLeft: isScrolled ? '0' : 'auto',
+        marginRight: isScrolled ? '0' : 'auto',
+        borderRadius: isScrolled ? '0' : '50px',
+        maxWidth: isScrolled ? '100vw' : '72rem',
+        width: isScrolled ? '100%' : 'calc(100% - 40px)',
       }}
     >
       <div className="navbar_container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
         <div className="navbar_menu" style={{ flex: '1', justifyContent: 'flex-start' }}>
-          <div className="navbar-menu_wrapper">
+          <div className="navbar-menu_wrapper ml-4">
             <a href="/project" className="navbar2_link">
               Projects
             </a>

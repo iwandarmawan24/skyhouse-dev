@@ -77,7 +77,7 @@ const Location = () => {
           </div>
 
           <div
-            className="w-full lg:w-2/3 h-[400px] md:h-[600px] lg:h-[600px] py-0 lg:py-12 px-4 lg:px-0 transition-transform duration-300 hover:-translate-y-6 cursor-pointer -mb-[200px]"
+            className="w-full lg:w-2/3 h-[400px] md:h-[600px] lg:h-[600px] py-0 lg:py-12 px-4 lg:px-0 transition-transform duration-300 hover:-translate-y-6 cursor-pointer -mb-[200px] relative group"
             onClick={() => setIsModalOpen(true)}
           >
             <img
@@ -85,6 +85,18 @@ const Location = () => {
               alt={locationData.title}
               className="w-full h-full object-cover object-top rounded-[30px] lg:rounded-[50px] shadow-2xl"
             />
+            {/* Click to expand button */}
+            <div className="absolute top-4 left-4 lg:top-8 lg:left-8 pointer-events-none">
+              <div className="bg-white/90 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg flex items-center gap-3 transition-all duration-300 group-hover:scale-110">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <path d="M21 21l-4.35-4.35"></path>
+                  <line x1="11" y1="8" x2="11" y2="14"></line>
+                  <line x1="8" y1="11" x2="14" y2="11"></line>
+                </svg>
+                <span className="text-skyhouse-ocean font-medium text-lg">Click to expand</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>

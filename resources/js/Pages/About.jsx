@@ -419,33 +419,6 @@ export default function About() {
             </div>
           </div>
         </section>
-
-        {/* Team Section */}
-        <section className="about-team background-color-cream">
-          <div className="padding-global">
-            <div className="container-large">
-              <div className="padding-section-large">
-                <div className="section-header">
-                  <h2>Leadership Team</h2>
-                  <p>Meet the people behind our success</p>
-                </div>
-                <div className="team-grid">
-                  {team.map((member, index) => (
-                    <div key={index} className="team-card">
-                      <div className="team-image">
-                        <img src={member.image} alt={member.name} />
-                      </div>
-                      <div className="team-info">
-                        <h3 className="team-name">{member.name}</h3>
-                        <p className="team-position">{member.position}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
       </main>
     </PageLayout>
   );

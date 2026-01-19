@@ -50,6 +50,33 @@ const News = () => {
       mediaSource: 'Kompas',
       mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
       link: '#'
+    },
+    {
+      id: 4,
+      image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop',
+      title: 'Inovasi Terbaru dalam Desain Hunian Modern di Alam Sutera',
+      date: 'July 20, 2023',
+      mediaSource: 'Kompas',
+      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
+      link: '#'
+    },
+    {
+      id: 5,
+      image: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop',
+      title: 'Skyhouse Alamsutera Raih Penghargaan Developer Terbaik 2023',
+      date: 'June 10, 2023',
+      mediaSource: 'Kompas',
+      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
+      link: '#'
+    },
+    {
+      id: 6,
+      image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop',
+      title: 'Program Subsidi Khusus untuk Pembeli Rumah Pertama',
+      date: 'May 5, 2023',
+      mediaSource: 'Kompas',
+      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
+      link: '#'
     }
   ];
 
@@ -71,8 +98,19 @@ const News = () => {
       
       <div className="padding-global relative z-10">
         <div className="container-large">
-          <div className="padding-section-large news-layout">
-            <div className="news-items order-2 lg:order-1">
+          <div className="padding-section-large">
+            <div className="flex flex-row items-center justify-between mb-12">
+              <Heading as="h2" variant="section" className="flex-1 !leading-12">Follow our <span className="font-bodoni italic">Updates</span></Heading>
+              <Button 
+                href="/news" 
+                variant="sunshine"
+                size="sm"
+                squash
+              >
+                View All News
+              </Button>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
               {newsData.map((news) => (
                 <NewsItem
                   key={news.id}
@@ -84,18 +122,6 @@ const News = () => {
                   link={news.link}
                 />
               ))}
-            </div>
-            <div className="order-1 lg:order-2 flex flex-row lg:flex-col items-center lg:items-start gap-4">
-              <Heading as="h2" variant="section" className="flex-1 lg:flex-none !leading-12">Follow our <span className="font-bodoni italic">updates</span></Heading>
-              <Button 
-                href="/news" 
-                variant="sunshine"
-                size="sm"
-                squash
-                className="flex-shrink-0 lg:mt-6"
-              >
-                View All News
-              </Button>
             </div>
           </div>
         </div>
