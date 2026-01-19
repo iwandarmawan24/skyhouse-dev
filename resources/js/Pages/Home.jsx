@@ -8,6 +8,7 @@ import Benefits from '@/Components/Frontend/Benefits';
 import Projects from '@/Components/Frontend/Projects';
 import ShowMoreBanner from '@/Components/Frontend/ShowMoreBanner';
 import Quiz from '@/Components/Frontend/Quiz';
+import Employee from '@/Components/Frontend/Employee';
 import Characters from '@/Components/Frontend/Characters';
 import News from '@/Components/Frontend/News';
 import CTA from '@/Components/Frontend/CTA';
@@ -36,7 +37,8 @@ export default function Home() {
       {/* <Benefits /> */}
       <Projects />
       <ShowMoreBanner />
-      <Quiz />
+      {/* <Quiz /> */}
+      <Employee />
       {/* <Characters /> */}
       <News />
     </PageLayout>

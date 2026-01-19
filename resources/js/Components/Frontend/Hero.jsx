@@ -20,6 +20,9 @@ const Hero = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [scrollY, setScrollY] = useState(0);
+  const [showContent, setShowContent] = useState(true);
+  const [showBlur, setShowBlur] = useState(true);
   const intervalRef = useRef(null);
 
   // Fetch hero banners from backend
@@ -53,6 +56,16 @@ const Hero = () => {
     fetchBanners();
   }, []);
 
+  // Parallax scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrollY(window.scrollY);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   // Auto-play slider (only start after data is loaded)
   useEffect(() => {
     if (!isLoading && slides.length > 1) {
@@ -71,24 +84,69 @@ const Hero = () => {
   const handleNextSlide = () => {
     if (!isAnimating) {
       setIsAnimating(true);
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
-      setTimeout(() => setIsAnimating(false), 800);
+      // Remove blur first
+      setShowBlur(false);
+      // Wait for blur animation to complete, then fade out content
+      setTimeout(() => {
+        setShowContent(false);
+        setTimeout(() => {
+          setCurrentSlide((prev) => (prev + 1) % slides.length);
+          setTimeout(() => {
+            setShowContent(true);
+            setIsAnimating(false);
+            // Trigger blur animation after content fade-in completes
+            setTimeout(() => {
+              setShowBlur(true);
+            }, 600); // Wait for content animation to finish
+          }, 300);
+        }, 400);
+      }, 800); // Wait for blur to fade out
     }
   };
 
   const handlePrevSlide = () => {
     if (!isAnimating) {
       setIsAnimating(true);
-      setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-      setTimeout(() => setIsAnimating(false), 800);
+      // Remove blur first
+      setShowBlur(false);
+      // Wait for blur animation to complete, then fade out content
+      setTimeout(() => {
+        setShowContent(false);
+        setTimeout(() => {
+          setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+          setTimeout(() => {
+            setShowContent(true);
+            setIsAnimating(false);
+            // Trigger blur animation after content fade-in completes
+            setTimeout(() => {
+              setShowBlur(true);
+            }, 600); // Wait for content animation to finish
+          }, 300);
+        }, 400);
+      }, 800); // Wait for blur to fade out
     }
   };
 
   const goToSlide = (index) => {
     if (!isAnimating && index !== currentSlide) {
       setIsAnimating(true);
-      setCurrentSlide(index);
-      setTimeout(() => setIsAnimating(false), 800);
+      // Remove blur first
+      setShowBlur(false);
+      // Wait for blur animation to complete, then fade out content
+      setTimeout(() => {
+        setShowContent(false);
+        setTimeout(() => {
+          setCurrentSlide(index);
+          setTimeout(() => {
+            setShowContent(true);
+            setIsAnimating(false);
+            // Trigger blur animation after content fade-in completes
+            setTimeout(() => {
+              setShowBlur(true);
+            }, 600); // Wait for content animation to finish
+          }, 300);
+        }, 400);
+      }, 800); // Wait for blur to fade out
 
       // Reset interval
       if (intervalRef.current) {
@@ -124,68 +182,72 @@ const Hero = () => {
               backgroundSize: 'cover',
               backgroundPosition: 'center center',
               backgroundRepeat: 'no-repeat',
+              transform: `translateY(${scrollY * 0.5}px)`,
             }}
           />
         ))}
       </div>
 
       {/* Hero Content */}
-      <div className="padding-global" style={{ position: 'relative', zIndex: 20 }}>
+      <div className="padding-global" style={{ 
+        position: 'relative', 
+        zIndex: 20,
+        transform: `translateY(${scrollY * 0.2}px)`,
+      }}>
         <div className="container-large">
-          <div className="padding-section-large" style={{ paddingTop: '2rem' }}>
-            <div className="header26_component">
-
-              {/* Hero Text Container */}
-              <div className="text-align-center is-center">
-                <div className="hero-text">
-                  <div className="padding-bottom padding-small"></div>
-
-                  {/* Logo - Only rendered once */}
+          {/* Slide Content with Fade */}
+            {slides.map((slide, index) => (
+              <div
+                key={slide.id}
+                className={`slide_content ${index === currentSlide ? 'active' : ''}`}
+              >
+                <div 
+                  className="flex flex-col items-center pt-24"
+                  style={{
+                    opacity: showContent && index === currentSlide ? 1 : 0,
+                    transform: showContent && index === currentSlide ? 'translateY(0)' : 'translateY(50px)',
+                    transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
+                  }}
+                >
                   <img
                     src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
                     alt="Skyhouse Alamsutera"
                     className="navbar_logo"
-                    style={{ width: '150px', height: 'auto', margin: '0 auto', marginBottom: '40px' }}
+                    style={{ width: '150px', height: 'auto', margin: '0 auto', marginBottom: '80px' }}
                   />
+                  <div 
+                    className={`flex flex-col items-center bg-black/10 p-12 rounded-[50px] shadow-lg max-w-3xl ${showBlur && index === currentSlide ? 'backdrop-blur-md' : 'backdrop-blur-none'}`}
+                    style={{
+                      transition: 'backdrop-filter 0.8s ease-out',
+                    }}
+                  >
+                    <Heading as="h1" variant="hero" color="white" className="text-center !mb-4 !leading-[4.8rem] text-shadow-lg">
+                      <div dangerouslySetInnerHTML={{ __html: slide.title }} />
+                    </Heading>
+                    <Text className="text-center text-shadow-lg" color="white" size="md">
+                      <div dangerouslySetInnerHTML={{ __html: slide.description }} />
+                    </Text>
+                    <div className="block bg-white h-1 w-24 mx-auto mt-12 mb-2"></div>
+                  </div>
 
-                  {/* Slide Content with Fade */}
-                  {slides.map((slide, index) => (
-                    <div
-                      key={slide.id}
-                      className={`slide_content ${index === currentSlide ? 'active' : ''}`}
-                    >
-                      <div className="margin-bottom margin-small">
-                        <Heading as="h1" variant="hero" color="white" className="text-center !leading-none">
-                          <div dangerouslySetInnerHTML={{ __html: slide.title }} />
-                        </Heading>
-                        <div className="block bg-white h-1 w-24 mx-auto my-12"></div>
-                        <Text className="text-center !mb-12" color="white" size="md">
-                          <div dangerouslySetInnerHTML={{ __html: slide.description }} />
-                        </Text>
 
-                        {slide.button_text && (
-                          <Button
-                            href={slide.button_link}
-                            variant="pill-light-sunshine"
-                            size="md"
-                            squash
-                          >
-                            {slide.button_text}
-                          </Button>
-                        )}
-                      </div>
+                  {slide.button_text && (
+                    <div className="-mt-6">
+                      <Button
+                        href={slide.button_link}
+                        variant="pill-light-sunshine"
+                        size="md"
+                        squash
+                      >
+                        {slide.button_text}
+                      </Button>
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
-
-            </div>
-          </div>
+            ))}
         </div>
       </div>
-
-      {/* Houses - Static Foreground */}
-      <div className="hero_houses"></div>
 
       {/* Navigation Controls - Only show if more than 1 slide */}
       {slides.length > 1 && (

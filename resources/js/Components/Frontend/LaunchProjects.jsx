@@ -8,6 +8,8 @@ import 'swiper/css/pagination';
 const LaunchProjects = () => {
   const bgRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(2);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -28,11 +30,13 @@ const LaunchProjects = () => {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setActiveIndex((prevIndex) => (prevIndex + 1) % facilitiesData.length);
+      if (!isPaused && !isModalOpen) {
+        setActiveIndex((prevIndex) => (prevIndex + 1) % facilitiesData.length);
+      }
     }, 3500);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [isPaused, isModalOpen]);
 
   const facilitiesData = [
     {
@@ -95,12 +99,17 @@ const LaunchProjects = () => {
       
 
       {/* Facilities Section */}
-      <div className="max-w-7xl mx-auto relative z-10 mt-16 lg:mt-24 px-4">
+      <div className="max-w-7xl mx-auto relative z-10 mt-16 lg:mt-4 px-4">
         <div className="text-center mb-8 lg:mb-12">
           <div className="flex">
-            <Heading as="h2" variant="section" className="mb-4">
-              Premium <span className="font-bodoni !italic">Facilities</span>
-            </Heading>
+            <div>
+              <Heading as="h3" variant="section" className="mb-4">
+                Premium
+              </Heading>
+              <Heading as="h1" variant="section" className="mb-4">
+                <span className="font-bodoni !italic">Facilities</span>
+              </Heading>
+            </div>
             <Button href="/facilities" variant="outline" className="ml-auto self-center">
               See all facilities
             </Button>
@@ -110,11 +119,22 @@ const LaunchProjects = () => {
           </Text>
         </div>
 
-        <div className="flex gap-3 lg:gap-5 h-[400px] md:h-[450px] lg:h-[500px] overflow-hidden">
+        <div 
+          className="flex gap-3 lg:gap-5 h-[400px] md:h-[450px] lg:h-[500px] overflow-hidden"
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+        >
           {facilitiesData.map((facility, index) => (
             <div
               key={facility.id}
-              onClick={() => setActiveIndex(index)}
+              onClick={() => {
+                if (index === activeIndex) {
+                  setIsModalOpen(true);
+                  setIsPaused(true);
+                } else {
+                  setActiveIndex(index);
+                }
+              }}
               className={`relative overflow-hidden rounded-[100px] shadow-xl transition-all duration-700 ease-in-out group cursor-pointer ${
                 index === activeIndex 
                   ? 'flex-[3] md:flex-[4] lg:flex-[5] !rounded-[30px]' 
@@ -155,6 +175,48 @@ const LaunchProjects = () => {
           ))}
         </div>
       </div>
+
+      {/* Full size image modal */}
+      {isModalOpen && (
+        <div
+          className="fixed inset-0 bg-black/80 flex items-center justify-center p-4"
+          style={{ zIndex: 10000 }}
+          onClick={() => {
+            setIsModalOpen(false);
+            setIsPaused(false);
+          }}
+        >
+          <div className="relative w-full h-full flex items-center justify-center">
+            <button
+              onClick={() => {
+                setIsModalOpen(false);
+                setIsPaused(false);
+              }}
+              className="absolute top-4 right-4 text-white hover:text-skyhouse-sunshine transition-colors z-10"
+            >
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </button>
+            <div className="relative max-w-full max-h-full">
+              <img
+                src={facilitiesData[activeIndex].image}
+                alt={facilitiesData[activeIndex].title}
+                className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
+                onClick={(e) => e.stopPropagation()}
+              />
+              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-lg">
+                <Heading as="h3" variant="card" className="text-white mb-2">
+                  {facilitiesData[activeIndex].title}
+                </Heading>
+                <Text size="md" className="text-white/90">
+                  {facilitiesData[activeIndex].description}
+                </Text>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style jsx>{`
         .launch-projects-pagination :global(.swiper-pagination-bullet),
