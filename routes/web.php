@@ -29,6 +29,8 @@ use App\Http\Controllers\Frontend\LocationMapController as FrontendLocationMapCo
 use App\Http\Controllers\Frontend\BrochureController as FrontendBrochureController;
 use App\Http\Controllers\Frontend\FaqController as FrontendFaqController;
 use App\Http\Controllers\Frontend\GalleryController as FrontendGalleryController;
+use App\Http\Controllers\Frontend\FacilityController as FrontendFacilityController;
+use App\Http\Controllers\Frontend\InstagramGalleryController as FrontendInstagramGalleryController;
 use App\Http\Controllers\Frontend\NewsController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -44,6 +46,7 @@ Route::get('/api/hero-banners', [FrontendHeroBannerController::class, 'index'])-
 Route::get('/api/location-map', [FrontendLocationMapController::class, 'show'])->name('api.location-map');
 Route::get('/api/brochure', [FrontendBrochureController::class, 'show'])->name('api.brochure');
 Route::get('/api/faqs', [FrontendFaqController::class, 'index'])->name('api.faqs');
+Route::get('/api/instagram-gallery', [FrontendInstagramGalleryController::class, 'index'])->name('api.instagram-gallery');
 
 Route::get('/project', [\App\Http\Controllers\Frontend\ProjectController::class, 'index'])->name('project');
 
@@ -62,9 +65,7 @@ Route::get('/about', function () {
 
 Route::get('/gallery', [FrontendGalleryController::class, 'index'])->name('gallery');
 
-Route::get('/facilities', function () {
-    return Inertia::render('Facilities');
-})->name('facilities');
+Route::get('/facilities', [FrontendFacilityController::class, 'index'])->name('facilities');
 
 Route::get('/contact-us', [\App\Http\Controllers\Frontend\ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [\App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');
