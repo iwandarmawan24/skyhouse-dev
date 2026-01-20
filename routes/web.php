@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\MediaHighlightController;
 use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TopSalesController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Frontend\EventController as FrontendEventController;
@@ -31,6 +32,7 @@ use App\Http\Controllers\Frontend\FaqController as FrontendFaqController;
 use App\Http\Controllers\Frontend\GalleryController as FrontendGalleryController;
 use App\Http\Controllers\Frontend\FacilityController as FrontendFacilityController;
 use App\Http\Controllers\Frontend\InstagramGalleryController as FrontendInstagramGalleryController;
+use App\Http\Controllers\Frontend\TopSalesController as FrontendTopSalesController;
 use App\Http\Controllers\Frontend\NewsController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -47,6 +49,7 @@ Route::get('/api/location-map', [FrontendLocationMapController::class, 'show'])-
 Route::get('/api/brochure', [FrontendBrochureController::class, 'show'])->name('api.brochure');
 Route::get('/api/faqs', [FrontendFaqController::class, 'index'])->name('api.faqs');
 Route::get('/api/instagram-gallery', [FrontendInstagramGalleryController::class, 'index'])->name('api.instagram-gallery');
+Route::get('/api/top-sales', [FrontendTopSalesController::class, 'index'])->name('api.top-sales');
 
 Route::get('/project', [\App\Http\Controllers\Frontend\ProjectController::class, 'index'])->name('project');
 
@@ -179,6 +182,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // FAQs
             Route::post('/faqs/update-order', [FaqController::class, 'updateOrder'])->name('faqs.update-order');
             Route::resource('faqs', FaqController::class)->except(['show']);
+
+            // Top Sales
+            Route::post('/top-sales/update-order', [TopSalesController::class, 'updateOrder'])->name('top-sales.update-order');
+            Route::resource('top-sales', TopSalesController::class)->except(['show']);
         });
 
         // Routes accessible by superadmin and admin only

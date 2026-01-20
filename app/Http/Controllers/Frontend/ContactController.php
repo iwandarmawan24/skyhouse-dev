@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Mail\ContactFormSubmitted;
 use App\Models\ContactSubmission;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Mail;
@@ -18,8 +19,21 @@ class ContactController extends Controller
      */
     public function index(): Response
     {
+        // Get all active products for room type selection
+        $products = Product::where('is_active', true)
+            ->orderBy('name')
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'uid' => $product->uid,
+                    'name' => $product->name,
+                    'slug' => $product->slug,
+                ];
+            });
+
         return Inertia::render('Contact', [
             'formLoadTime' => now()->timestamp,
+            'products' => $products,
         ]);
     }
 
@@ -35,7 +49,7 @@ class ContactController extends Controller
             'email' => 'required|email|max:255',
             'phone' => 'required|string|max:20',
             'subject' => 'required|string|max:255',
-            'project' => 'required|string|max:255',
+            'room_type' => 'required|string|max:255',
             'message' => 'required|string|max:2000',
             'honeypot' => 'nullable|string|max:0', // Honeypot field should be empty
             'formLoadTime' => 'required|integer',
@@ -89,7 +103,7 @@ class ContactController extends Controller
             'email' => $validated['email'],
             'phone' => $validated['phone'],
             'subject' => $validated['subject'],
-            'project' => $validated['project'],
+            'project' => $validated['room_type'], // Store room_type as project
             'message' => $validated['message'],
             'status' => 'new',
         ]);

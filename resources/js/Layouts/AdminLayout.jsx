@@ -22,6 +22,7 @@ import {
     FileText,
     MapPin,
     HelpCircle,
+    Trophy,
 } from "lucide-react";
 
 import {
@@ -285,6 +286,12 @@ export default function AdminLayout({ children }) {
                 name: "Instagram Gallery",
                 href: "/admin/instagram-gallery",
                 icon: ImageIcon,
+                roles: ["superadmin", "admin", "staff"],
+            },
+            {
+                name: "Top Sales",
+                href: "/admin/top-sales",
+                icon: Trophy,
                 roles: ["superadmin", "admin", "staff"],
             },
         ],
