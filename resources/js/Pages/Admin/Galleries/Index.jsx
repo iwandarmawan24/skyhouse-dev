@@ -221,6 +221,7 @@ export default function Index({ galleries, filters }) {
                                     <TableRow>
                                         <TableHead className="w-16">Order</TableHead>
                                         <TableHead>Image</TableHead>
+                                        <TableHead className="w-28">Category</TableHead>
                                         <TableHead className="w-24">Status</TableHead>
                                         <TableHead className="w-32 text-right">Actions</TableHead>
                                     </TableRow>
@@ -274,6 +275,15 @@ export default function Index({ galleries, filters }) {
                                                         )}
                                                     </div>
                                                 </div>
+                                            </TableCell>
+                                            <TableCell>
+                                                {gallery.category ? (
+                                                    <Badge variant="outline" className="capitalize">
+                                                        {gallery.category}
+                                                    </Badge>
+                                                ) : (
+                                                    <span className="text-muted-foreground text-sm">-</span>
+                                                )}
                                             </TableCell>
                                             <TableCell>
                                                 <Badge variant={gallery.is_active ? "success" : "secondary"}>

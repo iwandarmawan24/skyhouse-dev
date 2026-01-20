@@ -16,6 +16,7 @@ class Gallery extends Model
         'image_uid',
         'title',
         'description',
+        'category',
         'order',
         'is_active',
     ];

@@ -58,6 +58,7 @@ class GalleryController extends Controller
             'image_uid' => 'required|string|exists:media_library,uid',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'category' => 'nullable|string|max:255',
             'is_active' => 'required|boolean',
         ]);
 
@@ -92,6 +93,7 @@ class GalleryController extends Controller
             'image_uid' => 'required|string|exists:media_library,uid',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'category' => 'nullable|string|max:255',
             'is_active' => 'required|boolean',
         ]);
 

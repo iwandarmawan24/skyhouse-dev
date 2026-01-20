@@ -13,10 +13,18 @@ export default function Form({ gallery }) {
         image_uid: gallery?.image_uid || null,
         title: gallery?.title || '',
         description: gallery?.description || '',
+        category: gallery?.category || '',
         order: gallery?.order || 0,
         is_active: gallery?.is_active ?? true,
         _method: isEdit ? 'PUT' : 'POST',
     });
+
+    const categoryOptions = [
+        { value: '', label: 'Select Category' },
+        { value: 'facilities', label: 'Facilities' },
+        { value: 'units', label: 'Units' },
+        { value: 'events', label: 'Events' },
+    ];
 
     const [showMediaPicker, setShowMediaPicker] = useState(false);
     const [imagePreview, setImagePreview] = useState(
@@ -83,6 +91,29 @@ export default function Form({ gallery }) {
                             placeholder="Enter image description (optional)"
                             rows={4}
                         />
+
+                        {/* Category */}
+                        <div>
+                            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-1">
+                                Category
+                            </label>
+                            <select
+                                id="category"
+                                name="category"
+                                value={data.category}
+                                onChange={(e) => setData('category', e.target.value)}
+                                className="block w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            >
+                                {categoryOptions.map((option) => (
+                                    <option key={option.value} value={option.value}>
+                                        {option.label}
+                                    </option>
+                                ))}
+                            </select>
+                            {errors.category && (
+                                <p className="mt-1 text-sm text-red-600">{errors.category}</p>
+                            )}
+                        </div>
 
                         {/* Order Info */}
                         {isEdit && (

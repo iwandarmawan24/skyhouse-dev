@@ -28,6 +28,7 @@ use App\Http\Controllers\Frontend\HeroBannerController as FrontendHeroBannerCont
 use App\Http\Controllers\Frontend\LocationMapController as FrontendLocationMapController;
 use App\Http\Controllers\Frontend\BrochureController as FrontendBrochureController;
 use App\Http\Controllers\Frontend\FaqController as FrontendFaqController;
+use App\Http\Controllers\Frontend\GalleryController as FrontendGalleryController;
 use App\Http\Controllers\Frontend\NewsController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
@@ -59,9 +60,7 @@ Route::get('/about', function () {
     return Inertia::render('About');
 })->name('about');
 
-Route::get('/gallery', function () {
-    return Inertia::render('Gallery');
-})->name('gallery');
+Route::get('/gallery', [FrontendGalleryController::class, 'index'])->name('gallery');
 
 Route::get('/facilities', function () {
     return Inertia::render('Facilities');
