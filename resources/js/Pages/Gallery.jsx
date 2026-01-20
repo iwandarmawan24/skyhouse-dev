@@ -1,47 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import '@css/frontend.css';
 
-export default function Gallery() {
+export default function Gallery({ galleries = [] }) {
   const [activeTab, setActiveTab] = useState('all');
   const [selectedImage, setSelectedImage] = useState(null);
   const [currentSliderIndex, setCurrentSliderIndex] = useState(0);
 
-  // Gallery data by category
-  const galleryData = {
-    all: [
-      { id: 1, url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop', title: 'Modern Living Space', category: 'facilities' },
-      { id: 2, url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&h=800&fit=crop', title: 'Luxury Unit', category: 'units' },
-      { id: 3, url: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&h=800&fit=crop', title: 'Community Event', category: 'events' },
-      { id: 4, url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop', title: 'Swimming Pool', category: 'facilities' },
-      { id: 5, url: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&h=800&fit=crop', title: 'Master Bedroom', category: 'units' },
-      { id: 6, url: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&h=800&fit=crop', title: 'Grand Opening', category: 'events' },
-      { id: 7, url: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&h=800&fit=crop', title: 'Fitness Center', category: 'facilities' },
-      { id: 8, url: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&h=800&fit=crop', title: 'Dining Area', category: 'units' },
-      { id: 9, url: 'https://images.unsplash.com/photo-1431540015161-0bf868a2d407?w=1200&h=800&fit=crop', title: 'Cultural Festival', category: 'events' },
-      { id: 10, url: 'https://images.unsplash.com/photo-1600585152915-d208bec867a1?w=1200&h=800&fit=crop', title: 'Garden Area', category: 'facilities' },
-      { id: 11, url: 'https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=1200&h=800&fit=crop', title: 'Kitchen Design', category: 'units' },
-      { id: 12, url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&h=800&fit=crop', title: 'Annual Gathering', category: 'events' },
-    ],
-    facilities: [
-      { id: 1, url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop', title: 'Modern Living Space' },
-      { id: 4, url: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop', title: 'Swimming Pool' },
-      { id: 7, url: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&h=800&fit=crop', title: 'Fitness Center' },
-      { id: 10, url: 'https://images.unsplash.com/photo-1600585152915-d208bec867a1?w=1200&h=800&fit=crop', title: 'Garden Area' },
-    ],
-    units: [
-      { id: 2, url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&h=800&fit=crop', title: 'Luxury Unit' },
-      { id: 5, url: 'https://images.unsplash.com/photo-1600047509807-ba8f99d2cdde?w=1200&h=800&fit=crop', title: 'Master Bedroom' },
-      { id: 8, url: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&h=800&fit=crop', title: 'Dining Area' },
-      { id: 11, url: 'https://images.unsplash.com/photo-1600573472592-401b489a3cdc?w=1200&h=800&fit=crop', title: 'Kitchen Design' },
-    ],
-    events: [
-      { id: 3, url: 'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&h=800&fit=crop', title: 'Community Event' },
-      { id: 6, url: 'https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&h=800&fit=crop', title: 'Grand Opening' },
-      { id: 9, url: 'https://images.unsplash.com/photo-1431540015161-0bf868a2d407?w=1200&h=800&fit=crop', title: 'Cultural Festival' },
-      { id: 12, url: 'https://images.unsplash.com/photo-1511578314322-379afb476865?w=1200&h=800&fit=crop', title: 'Annual Gathering' },
-    ],
-  };
+  // Build gallery data by category from backend data
+  const galleryData = useMemo(() => {
+    const data = {
+      all: galleries,
+      facilities: galleries.filter(item => item.category === 'facilities'),
+      units: galleries.filter(item => item.category === 'units'),
+      events: galleries.filter(item => item.category === 'events'),
+    };
+    return data;
+  }, [galleries]);
 
   const tabs = [
     { id: 'all', label: 'All Photos' },
@@ -90,32 +65,44 @@ export default function Gallery() {
         {/* Hero Section with Featured Slider */}
         <div className="relative w-full h-96 md:h-[500px] lg:h-[600px] overflow-hidden bg-gray-900">
           <div className="relative h-full">
-            <img 
-              src={currentGallery[currentSliderIndex]?.url} 
-              alt={currentGallery[currentSliderIndex]?.title}
-              className="w-full h-full object-cover"
-            />
+            {currentGallery.length > 0 ? (
+              <img
+                src={currentGallery[currentSliderIndex]?.url}
+                alt={currentGallery[currentSliderIndex]?.title}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center bg-gray-800">
+                <svg className="w-24 h-24 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-            
+
             {/* Slider Controls */}
-            <button 
-              onClick={prevSlide}
-              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-3 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all hover:scale-110 z-10"
-              aria-label="Previous slide"
-            >
-              <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button 
-              onClick={nextSlide}
-              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-3 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all hover:scale-110 z-10"
-              aria-label="Next slide"
-            >
-              <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+            {currentGallery.length > 1 && (
+              <>
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 p-3 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all hover:scale-110 z-10"
+                  aria-label="Previous slide"
+                >
+                  <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 p-3 bg-white/90 hover:bg-white rounded-full shadow-lg transition-all hover:scale-110 z-10"
+                  aria-label="Next slide"
+                >
+                  <svg className="w-6 h-6 text-gray-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </>
+            )}
 
             {/* Slide Info */}
             <div className="absolute bottom-0 left-0 right-0 p-6 md:p-12 text-white z-10">
@@ -124,7 +111,7 @@ export default function Gallery() {
                   Gallery
                 </h1>
                 <p className="text-lg md:text-xl text-white/90">
-                  {currentGallery[currentSliderIndex]?.title}
+                  {currentGallery[currentSliderIndex]?.title || 'Explore our gallery'}
                 </p>
                 <div className="mt-4 flex items-center gap-2">
                   {currentGallery.map((_, index) => (

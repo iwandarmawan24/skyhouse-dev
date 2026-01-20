@@ -9,7 +9,7 @@ import axios from 'axios';
 import "@css/frontend.css";
 import '@css/frontend/contact-page.css';
 
-export default function Contact({ formLoadTime }) {
+export default function Contact({ formLoadTime, products = [] }) {
   const { flash } = usePage().props;
   const { data, setData, post, processing, errors, reset } = useForm({
     fullName: "",
@@ -17,7 +17,7 @@ export default function Contact({ formLoadTime }) {
     email: "",
     phone: "",
     subject: "",
-    project: "",
+    room_type: "",
     message: "",
     honeypot: "",
     formLoadTime: formLoadTime || Math.floor(Date.now() / 1000),
@@ -211,25 +211,27 @@ export default function Contact({ formLoadTime }) {
                             </option>
                           </select>
                           <select
-                            id="project"
-                            name="project"
-                            value={data.project}
-                            onChange={(e) => setData('project', e.target.value)}
+                            id="room_type"
+                            name="room_type"
+                            value={data.room_type}
+                            onChange={(e) => setData('room_type', e.target.value)}
                             required
                           >
                             <option value="">
-                              Select project name...
+                              Select room type...
                             </option>
-                            <option value="kinary">
-                              Kinary House
-                            </option>
-                            <option value="other">
-                              Other Projects
+                            {products.map((product) => (
+                              <option key={product.uid} value={product.name}>
+                                {product.name}
+                              </option>
+                            ))}
+                            <option value="Other">
+                              Other
                             </option>
                           </select>
                         </div>
                         {errors.subject && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem', display: 'block' }}>{errors.subject}</span>}
-                        {errors.project && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem', display: 'block' }}>{errors.project}</span>}
+                        {errors.room_type && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem', display: 'block' }}>{errors.room_type}</span>}
                       </div>
 
                       <div className="form-group">

@@ -9,6 +9,7 @@ import '@css/frontend/about-page.css';
 
 export default function About() {
   const [isMapVisible, setIsMapVisible] = useState(false);
+  const [topSales, setTopSales] = useState([]);
   const mapRef = React.useRef(null);
 
   useEffect(() => {
@@ -32,6 +33,24 @@ export default function About() {
         observer.unobserve(mapRef.current);
       }
     };
+  }, []);
+
+  // Fetch Top Sales from backend
+  useEffect(() => {
+    const fetchTopSales = async () => {
+      try {
+        const response = await fetch('/api/top-sales');
+        const result = await response.json();
+        console.log('Top Sales API response:', result);
+        if (result.success && result.data) {
+          setTopSales(result.data);
+        }
+      } catch (error) {
+        console.error('Error fetching top sales:', error);
+      }
+    };
+
+    fetchTopSales();
   }, []);
 
   const historyData = [
@@ -109,28 +128,6 @@ export default function About() {
     }
   ];
 
-  const team = [
-    {
-      name: 'John Anderson',
-      position: 'Chief Executive Officer',
-      image: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=400&fit=crop'
-    },
-    {
-      name: 'Sarah Williams',
-      position: 'Chief Operations Officer',
-      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=400&fit=crop'
-    },
-    {
-      name: 'Michael Chen',
-      position: 'Chief Financial Officer',
-      image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=400&fit=crop'
-    },
-    {
-      name: 'Emma Thompson',
-      position: 'Head of Design',
-      image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=400&fit=crop'
-    }
-  ];
 
   return (
     <PageLayout showBackgroundDefault={true}>
@@ -419,6 +416,71 @@ export default function About() {
             </div>
           </div>
         </section>
+
+        {/* Top Sales Section */}
+        {topSales.length > 0 && (
+          <section className="about-team background-color-cream">
+            <div className="padding-global">
+              <div className="container-large">
+                <div className="padding-section-large">
+                  <div className="section-header">
+                    <h2>Top Sales</h2>
+                    <p>Meet our best performing sales team</p>
+                  </div>
+                  <div className="team-grid" style={{ justifyContent: 'center' }}>
+                    {topSales.map((member, index) => (
+                      <div key={index} className="team-card" style={{ position: 'relative' }}>
+                        {/* Rank Badge */}
+                        <div style={{
+                          position: 'absolute',
+                          top: '-10px',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          zIndex: 10,
+                          background: member.position === 1 ? '#FFD700' : member.position === 2 ? '#C0C0C0' : member.position === 3 ? '#CD7F32' : '#4A5568',
+                          color: member.position <= 3 ? '#1a1a1a' : '#fff',
+                          width: '36px',
+                          height: '36px',
+                          borderRadius: '50%',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: 'bold',
+                          fontSize: '14px',
+                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                        }}>
+                          #{member.position}
+                        </div>
+                        <div className="team-image">
+                          {member.image ? (
+                            <img src={member.image} alt={member.name} />
+                          ) : (
+                            <div style={{
+                              width: '100%',
+                              height: '100%',
+                              background: '#e5e7eb',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center'
+                            }}>
+                              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5">
+                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                <circle cx="12" cy="7" r="4" />
+                              </svg>
+                            </div>
+                          )}
+                        </div>
+                        <div className="team-info">
+                          <h3 className="team-name">{member.name}</h3>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
       </main>
     </PageLayout>
   );

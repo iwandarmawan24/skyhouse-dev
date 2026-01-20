@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import { Heading, Text, Button } from '@/Components/Frontend/atoms';
 import '@css/frontend.css';
 
-export default function Facilities() {
+export default function Facilities({ facilities: backendFacilities = [] }) {
   const [flippedCard, setFlippedCard] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [cardsPerSlide, setCardsPerSlide] = useState(3);
 
   // Update cards per slide based on viewport
-  React.useEffect(() => {
+  useEffect(() => {
     const updateCardsPerSlide = () => {
       if (window.innerWidth < 768) {
         setCardsPerSlide(1);
@@ -23,81 +23,8 @@ export default function Facilities() {
     return () => window.removeEventListener('resize', updateCardsPerSlide);
   }, []);
 
-  // Facilities data
-  const facilities = [
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1576013551627-0cc20b96c2a7?w=800',
-      title: 'Swimming Pool',
-      description: 'Olympic-sized swimming pool with dedicated lanes for adults and a separate area for children, complete with professional lifeguard services.'
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=800',
-      title: 'Fitness Center',
-      description: 'State-of-the-art gym equipped with modern cardio machines, weight training equipment, and dedicated spaces for yoga and aerobics.'
-    },
-    {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800',
-      title: 'Children Playground',
-      description: 'Safe and fun outdoor playground featuring slides, swings, climbing structures, and soft-surface flooring for maximum safety.'
-    },
-    {
-      id: 4,
-      image: 'https://images.unsplash.com/photo-1519046904884-53103b34b206?w=800',
-      title: 'Community Garden',
-      description: 'Beautiful landscaped garden with walking paths, seating areas, and green spaces perfect for relaxation and social gatherings.'
-    },
-    {
-      id: 5,
-      image: 'https://images.unsplash.com/photo-1511882150382-421056c89033?w=800',
-      title: 'Basketball Court',
-      description: 'Full-size basketball court with professional flooring and lighting for both day and night games with your community.'
-    },
-    {
-      id: 6,
-      image: 'https://images.unsplash.com/photo-1554995207-c18c203602cb?w=800',
-      title: 'Function Hall',
-      description: 'Multi-purpose function hall perfect for community events, celebrations, and gatherings with complete audio-visual facilities.'
-    },
-    {
-      id: 7,
-      image: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800',
-      title: 'Jogging Track',
-      description: 'Well-maintained jogging and cycling track surrounded by lush greenery, perfect for morning runs and evening strolls.'
-    },
-    {
-      id: 8,
-      image: 'https://images.unsplash.com/photo-1507652313519-d4e9174996dd?w=800',
-      title: 'Cafeteria',
-      description: 'Modern community cafeteria serving fresh coffee, snacks, and meals in a cozy atmosphere for residents to socialize.'
-    },
-    {
-      id: 9,
-      image: 'https://images.unsplash.com/photo-1521737604893-d14cc237f11d?w=800',
-      title: 'Co-Working Space',
-      description: 'Professional co-working area with high-speed internet, private meeting rooms, and comfortable workstations for remote workers.'
-    },
-    {
-      id: 10,
-      image: 'https://images.unsplash.com/photo-1571902943202-507ec2618e8f?w=800',
-      title: 'Tennis Court',
-      description: 'Premium tennis court with professional-grade surface and lighting, available for both casual play and competitive matches.'
-    },
-    {
-      id: 11,
-      image: 'https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800',
-      title: 'Mini Theater',
-      description: 'Private screening room with comfortable seating and state-of-the-art audio-visual equipment for movie nights and presentations.'
-    },
-    {
-      id: 12,
-      image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800',
-      title: 'Library & Reading Room',
-      description: 'Quiet library space with an extensive collection of books, magazines, and comfortable reading nooks for peaceful study time.'
-    }
-  ];
+  // Use backend data for facilities
+  const facilities = backendFacilities;
 
   // What makes a good house great
   const greatFeatures = [
@@ -202,44 +129,53 @@ export default function Facilities() {
               </Text>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {facilities.map((facility) => (
-                <div
-                  key={facility.id}
-                  className="group h-80 perspective-1000"
-                  onMouseEnter={() => setFlippedCard(facility.id)}
-                  onMouseLeave={() => setFlippedCard(null)}
-                >
-                  <div className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${
-                    flippedCard === facility.id ? 'rotate-y-180' : ''
-                  }`}>
-                    {/* Front of Card - Image */}
-                    <div className="absolute inset-0 backface-hidden rounded-lg overflow-hidden shadow-lg">
-                      <img
-                        src={facility.image}
-                        alt={facility.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-6">
-                        <Heading as="h3" variant="card" color="white" className="!text-2xl">
+            {facilities.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {facilities.map((facility) => (
+                  <div
+                    key={facility.id}
+                    className="group h-80 perspective-1000"
+                    onMouseEnter={() => setFlippedCard(facility.id)}
+                    onMouseLeave={() => setFlippedCard(null)}
+                  >
+                    <div className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${
+                      flippedCard === facility.id ? 'rotate-y-180' : ''
+                    }`}>
+                      {/* Front of Card - Image */}
+                      <div className="absolute inset-0 backface-hidden rounded-lg overflow-hidden shadow-lg">
+                        <img
+                          src={facility.image}
+                          alt={facility.title}
+                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-6">
+                          <Heading as="h3" variant="card" color="white" className="!text-2xl">
+                            {facility.title}
+                          </Heading>
+                        </div>
+                      </div>
+
+                      {/* Back of Card - Details */}
+                      <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-skyhouse-ocean to-skyhouse-slate rounded-lg shadow-lg p-6 flex flex-col justify-center items-center text-center">
+                        <Heading as="h3" variant="card" color="white" className="!text-2xl mb-4">
                           {facility.title}
                         </Heading>
-                      </div>
-                    </div>
-
-                    {/* Back of Card - Details */}
-                    <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-skyhouse-ocean to-skyhouse-slate rounded-lg shadow-lg p-6 flex flex-col justify-center items-center text-center">
-                      <Heading as="h3" variant="card" color="white" className="!text-2xl mb-4">
-                        {facility.title}
-                      </Heading>
-                      <Text color="white" className="opacity-90">
-                        {facility.description}
-                      </Text>
+                        <Text color="white" className="opacity-90">
+                          {facility.description}
+                        </Text>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16">
+                <svg className="w-16 h-16 mx-auto text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                <Text size="lg" color="slate">No facilities available at the moment</Text>
+              </div>
+            )}
           </div>
         </div>
 

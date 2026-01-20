@@ -29,9 +29,9 @@ import {
     TableHeader,
     TableRow,
 } from '@/Components/ui/Table';
-import { Plus, Image as ImageIcon, Search, Filter, X, Pencil, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
+import { Plus, User, Search, Filter, X, Pencil, Trash2, ArrowUp, ArrowDown } from 'lucide-react';
 
-export default function Index({ galleries, filters }) {
+export default function Index({ topSales, filters }) {
     const { flash } = usePage().props;
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
     const [localFilters, setLocalFilters] = useState({
@@ -40,7 +40,7 @@ export default function Index({ galleries, filters }) {
     });
 
     const handleDelete = (uid) => {
-        router.delete(`/admin/galleries/${uid}`, {
+        router.delete(`/admin/top-sales/${uid}`, {
             onSuccess: () => setShowDeleteConfirm(null),
         });
     };
@@ -49,7 +49,7 @@ export default function Index({ galleries, filters }) {
         const newFilters = { ...localFilters, [key]: value };
         setLocalFilters(newFilters);
 
-        router.get('/admin/galleries', newFilters, {
+        router.get('/admin/top-sales', newFilters, {
             preserveState: true,
             preserveScroll: true,
         });
@@ -57,22 +57,22 @@ export default function Index({ galleries, filters }) {
 
     const clearFilters = () => {
         setLocalFilters({ status: '', search: '' });
-        router.get('/admin/galleries', {}, {
+        router.get('/admin/top-sales', {}, {
             preserveState: true,
             preserveScroll: true,
         });
     };
 
-    const handleMoveUp = (gallery, index) => {
+    const handleMoveUp = (item, index) => {
         if (index === 0) return;
 
-        const prevGallery = galleries[index - 1];
+        const prevItem = topSales[index - 1];
         router.post(
-            '/admin/galleries/update-order',
+            '/admin/top-sales/update-order',
             {
                 updates: [
-                    { uid: gallery.uid, order: prevGallery.order },
-                    { uid: prevGallery.uid, order: gallery.order },
+                    { uid: item.uid, position: prevItem.position },
+                    { uid: prevItem.uid, position: item.position },
                 ],
             },
             {
@@ -81,16 +81,16 @@ export default function Index({ galleries, filters }) {
         );
     };
 
-    const handleMoveDown = (gallery, index) => {
-        if (index === galleries.length - 1) return;
+    const handleMoveDown = (item, index) => {
+        if (index === topSales.length - 1) return;
 
-        const nextGallery = galleries[index + 1];
+        const nextItem = topSales[index + 1];
         router.post(
-            '/admin/galleries/update-order',
+            '/admin/top-sales/update-order',
             {
                 updates: [
-                    { uid: gallery.uid, order: nextGallery.order },
-                    { uid: nextGallery.uid, order: gallery.order },
+                    { uid: item.uid, position: nextItem.position },
+                    { uid: nextItem.uid, position: item.position },
                 ],
             },
             {
@@ -105,16 +105,16 @@ export default function Index({ galleries, filters }) {
                 {/* Page Header */}
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-3xl font-bold tracking-tight">Gallery</h1>
+                        <h1 className="text-3xl font-bold tracking-tight">Top Sales</h1>
                         <p className="text-muted-foreground mt-1">
-                            Manage gallery images for your website
+                            Manage top sales rankings
                         </p>
                     </div>
                     <div className="flex items-center gap-3">
                         <Button asChild>
-                            <Link href="/admin/galleries/create">
+                            <Link href="/admin/top-sales/create">
                                 <Plus className="mr-2 h-4 w-4" />
-                                Add Image
+                                Add Sales
                             </Link>
                         </Button>
                     </div>
@@ -135,7 +135,7 @@ export default function Index({ galleries, filters }) {
                                         <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                                         <Input
                                             type="text"
-                                            placeholder="Search by title..."
+                                            placeholder="Search by name..."
                                             value={localFilters.search}
                                             onChange={(e) => handleFilterChange('search', e.target.value)}
                                             className="pl-10"
@@ -212,30 +212,31 @@ export default function Index({ galleries, filters }) {
                     </CardContent>
                 </Card>
 
-                {/* Gallery Table */}
+                {/* Top Sales Table */}
                 <Card>
                     <CardContent className="pt-6">
-                        {galleries && galleries.length > 0 ? (
+                        {topSales && topSales.length > 0 ? (
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead className="w-16">Order</TableHead>
-                                        <TableHead>Image</TableHead>
-                                        <TableHead className="w-28">Category</TableHead>
+                                        <TableHead className="w-24">Position</TableHead>
+                                        <TableHead className="w-20">Image</TableHead>
+                                        <TableHead>Name</TableHead>
                                         <TableHead className="w-24">Status</TableHead>
                                         <TableHead className="w-32 text-right">Actions</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {galleries.map((gallery, index) => (
-                                        <TableRow key={gallery.uid}>
+                                    {topSales.map((item, index) => (
+                                        <TableRow key={item.uid}>
                                             <TableCell>
                                                 <div className="flex items-center gap-1">
+                                                    <span className="font-medium text-lg mr-2">#{item.position}</span>
                                                     <Button
                                                         variant="ghost"
                                                         size="icon"
                                                         className="h-7 w-7"
-                                                        onClick={() => handleMoveUp(gallery, index)}
+                                                        onClick={() => handleMoveUp(item, index)}
                                                         disabled={index === 0}
                                                     >
                                                         <ArrowUp className="h-4 w-4" />
@@ -244,50 +245,34 @@ export default function Index({ galleries, filters }) {
                                                         variant="ghost"
                                                         size="icon"
                                                         className="h-7 w-7"
-                                                        onClick={() => handleMoveDown(gallery, index)}
-                                                        disabled={index === galleries.length - 1}
+                                                        onClick={() => handleMoveDown(item, index)}
+                                                        disabled={index === topSales.length - 1}
                                                     >
                                                         <ArrowDown className="h-4 w-4" />
                                                     </Button>
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                <div className="flex items-center gap-3">
-                                                    <div className="flex-shrink-0 h-16 w-24">
-                                                        {gallery.image_url ? (
-                                                            <img
-                                                                src={gallery.image_url}
-                                                                alt={gallery.title}
-                                                                className="h-16 w-24 object-cover rounded-lg"
-                                                            />
-                                                        ) : (
-                                                            <div className="h-16 w-24 bg-muted rounded-lg flex items-center justify-center">
-                                                                <ImageIcon className="w-8 h-8 text-muted-foreground" />
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                    <div className="max-w-md">
-                                                        <div className="font-medium line-clamp-1">{gallery.title}</div>
-                                                        {gallery.description && (
-                                                            <div className="text-sm text-muted-foreground line-clamp-2">
-                                                                {gallery.description}
-                                                            </div>
-                                                        )}
-                                                    </div>
+                                                <div className="flex-shrink-0 h-12 w-12">
+                                                    {item.image_url ? (
+                                                        <img
+                                                            src={item.image_url}
+                                                            alt={item.name}
+                                                            className="h-12 w-12 object-cover rounded-full"
+                                                        />
+                                                    ) : (
+                                                        <div className="h-12 w-12 bg-muted rounded-full flex items-center justify-center">
+                                                            <User className="w-6 h-6 text-muted-foreground" />
+                                                        </div>
+                                                    )}
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                {gallery.category ? (
-                                                    <Badge variant="outline" className="capitalize">
-                                                        {gallery.category}
-                                                    </Badge>
-                                                ) : (
-                                                    <span className="text-muted-foreground text-sm">-</span>
-                                                )}
+                                                <span className="font-medium">{item.name}</span>
                                             </TableCell>
                                             <TableCell>
-                                                <Badge variant={gallery.is_active ? "success" : "secondary"}>
-                                                    {gallery.is_active ? "Active" : "Inactive"}
+                                                <Badge variant={item.is_active ? "success" : "secondary"}>
+                                                    {item.is_active ? "Active" : "Inactive"}
                                                 </Badge>
                                             </TableCell>
                                             <TableCell>
@@ -298,7 +283,7 @@ export default function Index({ galleries, filters }) {
                                                         className="h-8 w-8"
                                                         asChild
                                                     >
-                                                        <Link href={`/admin/galleries/${gallery.uid}/edit`}>
+                                                        <Link href={`/admin/top-sales/${item.uid}/edit`}>
                                                             <Pencil className="h-4 w-4" />
                                                             <span className="sr-only">Edit</span>
                                                         </Link>
@@ -307,7 +292,7 @@ export default function Index({ galleries, filters }) {
                                                         variant="ghost"
                                                         size="icon"
                                                         className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
-                                                        onClick={() => setShowDeleteConfirm(gallery.uid)}
+                                                        onClick={() => setShowDeleteConfirm(item.uid)}
                                                     >
                                                         <Trash2 className="h-4 w-4" />
                                                         <span className="sr-only">Delete</span>
@@ -320,16 +305,16 @@ export default function Index({ galleries, filters }) {
                             </Table>
                         ) : (
                             <div className="text-center py-12">
-                                <ImageIcon className="mx-auto h-12 w-12 text-muted-foreground" />
-                                <h3 className="mt-2 text-sm font-medium">No gallery images</h3>
+                                <User className="mx-auto h-12 w-12 text-muted-foreground" />
+                                <h3 className="mt-2 text-sm font-medium">No top sales</h3>
                                 <p className="mt-1 text-sm text-muted-foreground">
-                                    Get started by adding a new gallery image.
+                                    Get started by adding a new sales person.
                                 </p>
                                 <div className="mt-6">
                                     <Button asChild>
-                                        <Link href="/admin/galleries/create">
+                                        <Link href="/admin/top-sales/create">
                                             <Plus className="mr-2 h-4 w-4" />
-                                            Add Image
+                                            Add Sales
                                         </Link>
                                     </Button>
                                 </div>
@@ -346,9 +331,9 @@ export default function Index({ galleries, filters }) {
             >
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>Delete Gallery Image</DialogTitle>
+                        <DialogTitle>Delete Top Sales</DialogTitle>
                         <DialogDescription>
-                            Are you sure you want to delete this gallery image? This action
+                            Are you sure you want to delete this sales person? This action
                             cannot be undone.
                         </DialogDescription>
                     </DialogHeader>
