@@ -11,6 +11,7 @@ export default function ProjectDetail({ project }) {
   const [modalImageIndex, setModalImageIndex] = useState(0);
   const [brochure, setBrochure] = useState(null);
   const [isLoadingBrochure, setIsLoadingBrochure] = useState(true);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
 
   const nextImage = () => {
     setCurrentImageIndex((prevIndex) => 
@@ -167,9 +168,25 @@ export default function ProjectDetail({ project }) {
                   About This Project
                 </Heading>
                 <div
-                  className="prose prose-lg max-w-none text-justify text-gray-700"
+                  className={`max-w-none text-justify text-gray-700 ${
+                    !isDescriptionExpanded ? 'line-clamp-3' : ''
+                  }`}
                   dangerouslySetInnerHTML={{ __html: project.description }}
                 />
+                <button
+                  onClick={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                  className="mt-4 text-blue-600 hover:text-blue-700 font-medium text-sm flex items-center gap-1 transition-colors"
+                >
+                  {isDescriptionExpanded ? 'Read less' : 'Read more'}
+                  <svg 
+                    className={`w-4 h-4 transition-transform ${isDescriptionExpanded ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
               </div>
 
               {/* Specifications Grid */}
@@ -177,72 +194,61 @@ export default function ProjectDetail({ project }) {
                 <Heading as="h4" variant="subsection" color="charcoal" className="!mb-6">
                   Specifications
                 </Heading>
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  <div className="relative p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow overflow-hidden">
-                    <div className="absolute -left-4 top-1/2 -translate-y-1/2 opacity-10">
-                      <svg className="w-24 h-24 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
                       </svg>
+                      <Text size="sm" color="slate" className="!font-medium">Land Area</Text>
                     </div>
-                    <div className="relative z-10">
-                      <Heading as="h3" variant="card" color="slate" className="!text-sm !font-medium mb-2">Land Area</Heading>
-                      <Text size="lg" weight="bold" color="charcoal" className="!text-lg">{project.specifications.land_area} m²</Text>
-                    </div>
+                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.land_area} m²</Text>
                   </div>
-                  <div className="relative p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow overflow-hidden">
-                    <div className="absolute -left-4 top-1/2 -translate-y-1/2 opacity-10">
-                      <svg className="w-24 h-24 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
                       </svg>
+                      <Text size="sm" color="slate" className="!font-medium">Building Area</Text>
                     </div>
-                    <div className="relative z-10">
-                      <Heading as="h3" variant="card" color="slate" className="!text-sm !font-medium mb-2">Building Area</Heading>
-                      <Text size="lg" weight="bold" color="charcoal" className="!text-lg">{project.specifications.building_area} m²</Text>
-                    </div>
+                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.building_area} m²</Text>
                   </div>
-                  <div className="relative p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow overflow-hidden">
-                    <div className="absolute -left-4 top-1/2 -translate-y-1/2 opacity-10">
-                      <svg className="w-24 h-24 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                       </svg>
+                      <Text size="sm" color="slate" className="!font-medium">Bedrooms</Text>
                     </div>
-                    <div className="relative z-10">
-                      <Heading as="h3" variant="card" color="slate" className="!text-sm !font-medium mb-2">Bedrooms</Heading>
-                      <Text size="lg" weight="bold" color="charcoal" className="!text-lg">{project.specifications.bedrooms}</Text>
-                    </div>
+                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.bedrooms}</Text>
                   </div>
-                  <div className="relative p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow overflow-hidden">
-                    <div className="absolute -left-4 top-1/2 -translate-y-1/2 opacity-10">
-                      <svg className="w-24 h-24 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
                       </svg>
+                      <Text size="sm" color="slate" className="!font-medium">Bathrooms</Text>
                     </div>
-                    <div className="relative z-10">
-                      <Heading as="h3" variant="card" color="slate" className="!text-sm !font-medium mb-2">Bathrooms</Heading>
-                      <Text size="lg" weight="bold" color="charcoal" className="!text-lg">{project.specifications.bathrooms}</Text>
-                    </div>
+                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.bathrooms}</Text>
                   </div>
-                  <div className="relative p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow overflow-hidden">
-                    <div className="absolute -left-4 top-1/2 -translate-y-1/2 opacity-10">
-                      <svg className="w-24 h-24 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
+                      <Text size="sm" color="slate" className="!font-medium">Floors</Text>
                     </div>
-                    <div className="relative z-10">
-                      <Heading as="h3" variant="card" color="slate" className="!text-sm !font-medium mb-2">Floors</Heading>
-                      <Text size="lg" weight="bold" color="charcoal" className="!text-lg">{project.specifications.floors}</Text>
-                    </div>
+                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.floors}</Text>
                   </div>
-                  <div className="relative p-4 bg-white border border-gray-200 rounded-lg hover:shadow-md transition-shadow overflow-hidden">
-                    <div className="absolute -left-4 top-1/2 -translate-y-1/2 opacity-10">
-                      <svg className="w-24 h-24 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4" />
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 mb-1">
+                      <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6 0a1 1 0 001 1h2a1 1 0 001-1m0 0h1a1 1 0 001-1v-1a1 1 0 00-1-1h-1m-6 0H9" />
                       </svg>
+                      <Text size="sm" color="slate" className="!font-medium">Carports</Text>
                     </div>
-                    <div className="relative z-10">
-                      <Heading as="h3" variant="card" color="slate" className="!text-sm !font-medium mb-2">Carports</Heading>
-                      <Text size="lg" weight="bold" color="charcoal" className="!text-lg">{project.specifications.carports}</Text>
-                    </div>
+                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.carports}</Text>
                   </div>
                 </div>
               </div>

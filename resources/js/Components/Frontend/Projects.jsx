@@ -8,7 +8,6 @@ import 'swiper/css/navigation';
 
 // Projects Component
 const Projects = () => {
-  const [activeTab, setActiveTab] = useState('built');
   const swiperRef = useRef(null);
 
   const projectsData = [
@@ -50,8 +49,6 @@ const Projects = () => {
     }
   ];
 
-  const filteredProjects = projectsData.filter(project => project.status === activeTab);
-
   return (
     <section className="relative min-h-[600px] py-16 md:py-20 px-[5%]" style={{ backgroundColor: 'var(--color-cream)' }}>
       <div className="w-full max-w-[80rem] mx-auto">
@@ -59,35 +56,13 @@ const Projects = () => {
           {/* Header with Tabs */}
           <div className="flex flex-between flex-col md:flex-row justify-between items-start md:items-center mb-16 gap-6">
             <div className="flex flex-col w-full md:flex-row items-start md:items-center gap-6 md:gap-12">
-              <Heading as="h2" variant="section" className="flex-1 w-full">Residential</Heading>
-              <div className="inline-flex gap-1 !bg-white p-1 rounded-full shadow-md">
-                <button
-                  className={`!px-6 md:!px-8 !py-2 md:!py-3 !rounded-full !text-sm md:!text-base !font-medium !cursor-pointer !transition-all !duration-300 whitespace-nowrap !border-0 ${
-                    activeTab === 'available' 
-                      ? '!bg-skyhouse-ocean !text-white shadow-sm' 
-                      : '!bg-transparent !text-skyhouse-charcoal hover:!bg-skyhouse-ocean/5'
-                  }`}
-                  onClick={() => setActiveTab('available')}
-                >
-                  Available
-                </button>
-                <button
-                  className={`!px-6 md:!px-8 !py-2 md:!py-3 !rounded-full !text-sm md:!text-base !font-medium !cursor-pointer !transition-all !duration-300 whitespace-nowrap !border-0 ${
-                    activeTab === 'built' 
-                      ? '!bg-skyhouse-ocean !text-white shadow-sm' 
-                      : '!bg-transparent !text-skyhouse-charcoal hover:!bg-skyhouse-ocean/5'
-                  }`}
-                  onClick={() => setActiveTab('built')}
-                >
-                  Built Project
-                </button>
-              </div>
+              <Heading as="h2" variant="section" className="flex-1 w-full">Room <span className="font-bodoni !italic">Type</span></Heading>
             </div>
           </div>
 
           {/* Swiper Carousel or Empty State */}
           <div className="relative mt-8">
-            {filteredProjects.length > 0 ? (
+            {projectsData.length > 0 ? (
               <Swiper
                 modules={[Navigation]}
                 spaceBetween={30}
@@ -104,7 +79,7 @@ const Projects = () => {
                   },
                 }}
               >
-                {filteredProjects.map((project) => (
+                {projectsData.map((project) => (
                   <SwiperSlide key={project.id}>
                     <ProjectCard
                       image={project.image}
@@ -125,30 +100,8 @@ const Projects = () => {
                   </svg>
                 </div>
                 <Heading as="h3" variant="subsection">No Projects Available</Heading>
-                <Text>There are currently no {activeTab === 'available' ? 'available' : 'built'} projects to display.</Text>
+                <Text>There are currently no projects to display.</Text>
               </div>
-            )}
-            
-            {/* Navigation Buttons - Floating on sides */}
-            {filteredProjects.length > 0 && (
-              <>
-                <button
-                  className="absolute -left-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full !bg-white hover:!bg-skyhouse-ocean shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 group border-2 border-skyhouse-ocean"
-                  onClick={() => swiperRef.current?.slidePrev()}
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-skyhouse-ocean group-hover:text-white">
-                    <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-                <button
-                  className="absolute -right-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full !bg-white hover:!bg-skyhouse-ocean shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 group border-2 border-skyhouse-ocean"
-                  onClick={() => swiperRef.current?.slideNext()}
-                >
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-skyhouse-ocean group-hover:text-white">
-                    <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-              </>
             )}
           </div>
         </div>

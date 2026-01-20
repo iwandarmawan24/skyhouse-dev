@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Head, Link } from "@inertiajs/react";
-import Navigation from "@/Components/Frontend/Navigation";
 import PageLayout from "@/Components/Frontend/PageLayout";
-import Footer from "@/Components/Frontend/Footer";
-import CTA from '@/Components/Frontend/CTA';
 import "@css/frontend.css";
 import "@css/frontend/events-page.css";
 
@@ -115,22 +112,34 @@ export default function Event({ events }) {
                 <section className="padding-section-large">
                     <div className="padding-global">
                         <div className="container-large">
-                            <div className="events-filter-container">
+                            <div className="flex gap-4 mb-8 flex-wrap justify-center">
                                 <button
                                     onClick={() => setActiveFilter("all")}
-                                    className={`events-filter-btn ${activeFilter === "all" ? "active" : ""}`}
+                                    className={`px-6 py-3 cursor-pointer rounded-full font-medium transition-all duration-300 ${
+                                        activeFilter === "all" 
+                                            ? "bg-skyhouse-ocean text-white shadow-lg" 
+                                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                    }`}
                                 >
                                     All Events
                                 </button>
                                 <button
                                     onClick={() => setActiveFilter("upcoming")}
-                                    className={`events-filter-btn ${activeFilter === "upcoming" ? "active" : ""}`}
+                                    className={`px-6 py-3 cursor-pointer rounded-full font-medium transition-all duration-300 ${
+                                        activeFilter === "upcoming" 
+                                            ? "bg-skyhouse-ocean text-white shadow-lg" 
+                                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                    }`}
                                 >
                                     Upcoming
                                 </button>
                                 <button
                                     onClick={() => setActiveFilter("past")}
-                                    className={`events-filter-btn ${activeFilter === "past" ? "active" : ""}`}
+                                    className={`px-6 py-3 cursor-pointer rounded-full font-medium transition-all duration-300 ${
+                                        activeFilter === "past" 
+                                            ? "bg-skyhouse-ocean text-white shadow-lg" 
+                                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                                    }`}
                                 >
                                     Past Events
                                 </button>
