@@ -1,15 +1,15 @@
-import React, { useState, useEffect, useRef } from "react";
-import { Head, Link } from "@inertiajs/react";
+import React, { useState, useEffect } from "react";
+import { Head } from "@inertiajs/react";
 import PageLayout from "@/Components/Frontend/PageLayout";
 import "@css/frontend.css";
 import "@css/frontend/news-page.css";
 import axios from "axios";
 
-export default function News({ featured }) {
-  const pageTitle = "Latest News & Articles - Skyhouse Alamsutera";
-  const pageDescription = "Stay informed with our latest property news, developments, and achievements from Skyhouse Alamsutera.";
+export default function MediaHighlights({ featured }) {
+  const pageTitle = "Media Highlights - Skyhouse Alamsutera";
+  const pageDescription = "Stay informed with our latest media coverage and press releases from Skyhouse Alamsutera.";
   const pageImage = featured?.image || window.location.origin + "/images/default-og-image.jpg";
-  const pageUrl = window.location.origin + "/news";
+  const pageUrl = window.location.origin + "/media-highlights";
   const [items, setItems] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
@@ -24,7 +24,7 @@ export default function News({ featured }) {
     try {
       const response = await axios.get("/api/news", {
         params: {
-          type: "articles",
+          type: "media_highlights",
           page: page,
         },
       });
@@ -92,17 +92,17 @@ export default function News({ featured }) {
           <div className="news-banner-image-wrapper">
             <img
               src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920&h=600&fit=crop"
-              alt="News Banner"
+              alt="Media Highlights Banner"
               className="news-banner-image"
             />
             <div className="news-banner-overlay">
               <div className="padding-global">
                 <div className="container-large">
                   <h1 className="news-banner-title">
-                    News & Articles
+                    Media Highlights
                   </h1>
                   <p className="news-banner-subtitle">
-                    Stay informed with our latest articles and updates
+                    Stay informed with our latest media coverage and press releases
                   </p>
                 </div>
               </div>
@@ -154,15 +154,17 @@ export default function News({ featured }) {
                   {items.length === 0 && !loading && (
                     <div className="col-span-full text-center py-12">
                       <p className="text-gray-500">
-                        No articles found.
+                        No media highlights found.
                       </p>
                     </div>
                   )}
 
                   {items.map((item) => (
-                    <Link
+                    <a
                       key={item.id}
-                      href={`/articles/${item.slug}`}
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="news-card"
                     >
                       <div className="news-card-image">
@@ -176,27 +178,20 @@ export default function News({ featured }) {
                           <span className="news-card-date">
                             {item.date}
                           </span>
-                          {item.category && (
-                            <>
-                              <span className="news-card-separator">
-                                |
-                              </span>
-                              <span className="news-card-category">
-                                {item.category}
-                              </span>
-                            </>
-                          )}
+                          <span className="news-card-separator">
+                            |
+                          </span>
+                          <img
+                            src={item.mediaLogo}
+                            alt="Media logo"
+                            className="news-card-logo"
+                          />
                         </div>
                         <h3 className="news-card-title">
                           {item.title}
                         </h3>
-                        {item.excerpt && (
-                          <p className="news-card-excerpt">
-                            {item.excerpt}
-                          </p>
-                        )}
                       </div>
-                    </Link>
+                    </a>
                   ))}
                 </div>
 

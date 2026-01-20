@@ -59,6 +59,8 @@ Route::get('/news', [NewsController::class, 'show'])->name('news');
 Route::get('/api/news', [NewsController::class, 'index'])->name('news.api');
 Route::get('/articles/{slug}', [NewsController::class, 'detail'])->name('articles.detail');
 
+Route::get('/media-highlights', [NewsController::class, 'mediaHighlights'])->name('media-highlights');
+
 Route::get('/events', [FrontendEventController::class, 'index'])->name('events');
 Route::get('/events/{slug}', [FrontendEventController::class, 'show'])->name('events.detail');
 
