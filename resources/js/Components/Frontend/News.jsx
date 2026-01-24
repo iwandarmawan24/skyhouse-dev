@@ -2,8 +2,30 @@ import React, { useRef, useEffect } from 'react';
 import { Heading, Button } from '@/Components/Frontend/atoms';
 import NewsItem from './NewsItem';
 
+// Default placeholder data when no news items are available
+const defaultNewsData = [
+  {
+    id: 1,
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop',
+    title: 'Kolaborasi dengan Anabuki Group, Skyhouse Alamsutera Bangun Hunian Terbaru di Serpong, Tangerang Selatan',
+    date: 'September 18, 2024',
+    mediaSource: 'Kompas',
+    mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
+    link: '#'
+  },
+  {
+    id: 2,
+    image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=600&fit=crop',
+    title: 'Skyhouse Alamsutera Bakal Luncurkan Hunian Dekat Stasiun LRT Ciracas',
+    date: 'October 2, 2023',
+    mediaSource: 'Kompas',
+    mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
+    link: '#'
+  },
+];
+
 // News Component
-const News = () => {
+const News = ({ newsItems = [] }) => {
   const newsBgRef = useRef(null);
 
   useEffect(() => {
@@ -13,7 +35,7 @@ const News = () => {
         const rect = newsBgRef.current.getBoundingClientRect();
         const elementTop = rect.top + scrollY;
         const offset = scrollY - elementTop;
-        
+
         // Apply parallax effect (move slower than scroll)
         newsBgRef.current.style.transform = `translateY(${offset * 0.5}px)`;
       }
@@ -23,62 +45,8 @@ const News = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const newsData = [
-    {
-      id: 1,
-      image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop',
-      title: 'Kolaborasi dengan Anabuki Group, Skyhouse Alamsutera Bangun Hunian Terbaru di Serpong, Tangerang Selatan',
-      date: 'September 18, 2024',
-      mediaSource: 'Kompas',
-      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
-      link: '#'
-    },
-    {
-      id: 2,
-      image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=600&fit=crop',
-      title: 'Skyhouse Alamsutera Bakal Luncurkan Hunian Dekat Stasiun LRT Ciracas',
-      date: 'October 2, 2023',
-      mediaSource: 'Kompas',
-      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
-      link: '#'
-    },
-    {
-      id: 3,
-      image: 'https://images.unsplash.com/photo-1628624747186-a941c476b7ef?w=800&h=600&fit=crop',
-      title: 'Skyhouse Alamsutera Hadirkan Konsep Rumah Ramah Lingkungan di Jakarta',
-      date: 'August 15, 2023',
-      mediaSource: 'Kompas',
-      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
-      link: '#'
-    },
-    {
-      id: 4,
-      image: 'https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=600&fit=crop',
-      title: 'Inovasi Terbaru dalam Desain Hunian Modern di Alam Sutera',
-      date: 'July 20, 2023',
-      mediaSource: 'Kompas',
-      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
-      link: '#'
-    },
-    {
-      id: 5,
-      image: 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=600&fit=crop',
-      title: 'Skyhouse Alamsutera Raih Penghargaan Developer Terbaik 2023',
-      date: 'June 10, 2023',
-      mediaSource: 'Kompas',
-      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
-      link: '#'
-    },
-    {
-      id: 6,
-      image: 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=600&fit=crop',
-      title: 'Program Subsidi Khusus untuk Pembeli Rumah Pertama',
-      date: 'May 5, 2023',
-      mediaSource: 'Kompas',
-      mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
-      link: '#'
-    }
-  ];
+  // Use provided newsItems or fall back to default data
+  const newsData = newsItems.length > 0 ? newsItems : defaultNewsData;
 
   return (
     <section className="section_news bg-white is-20 relative overflow-hidden">

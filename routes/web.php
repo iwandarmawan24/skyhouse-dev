@@ -33,15 +33,14 @@ use App\Http\Controllers\Frontend\GalleryController as FrontendGalleryController
 use App\Http\Controllers\Frontend\FacilityController as FrontendFacilityController;
 use App\Http\Controllers\Frontend\InstagramGalleryController as FrontendInstagramGalleryController;
 use App\Http\Controllers\Frontend\TopSalesController as FrontendTopSalesController;
+use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\NewsController;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 // Frontend Routes
-Route::get('/', function () {
-    return Inertia::render('Home');
-})->name('home');
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 // Frontend API Routes
 Route::get('/api/hero-banners', [FrontendHeroBannerController::class, 'index'])->name('api.hero-banners');
