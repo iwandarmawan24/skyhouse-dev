@@ -5,7 +5,7 @@ import PageLayout from '@/Components/Frontend/PageLayout';
 import '@css/frontend.css';
 import '@css/frontend/project-page.css';
 
-export default function Project({ projects = [], featuredProject = null }) {
+export default function Project({ projects = [] }) {
   const [visibleCount, setVisibleCount] = useState(3);
   
   // Strip HTML tags from text
@@ -60,62 +60,38 @@ export default function Project({ projects = [], featuredProject = null }) {
                 </div>
                 
                 {/* Content - Order changes based on even/odd for desktop, always second on mobile */}
-                <div 
+                <div
                   className={`flex-1 p-6 md:p-18 flex flex-col justify-center relative ${isEven ? 'order-2 md:order-1' : ''}`}
                   style={{
                     backgroundImage: `url(${project.image})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
-                    transform: 'scaleX(-1)',
                   }}
                 >
-                  <div 
-                    className="absolute inset-0 backdrop-blur-sm"
-                    style={{
-                      backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                    }}
-                  ></div>
-                  <div className="relative" style={{ transform: 'scaleX(-1)' }}>
-                    <div className="max-w-2xl">
-                      <span className="project-hero-category">
-                        {project.category} - {project.status}
-                      </span>
-                      <Heading as="h2">{project.title}</Heading>
-                      <Text className="!mt-4 !mb-8 !text-lg">{truncateText(project.short_description || stripHtml(project.description))}</Text>
-                      <div className="project-hero-meta !mb-4">
-                        <div className="project-hero-meta-item">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                          <span>{project.location}</span>
-                        </div>
-                        <div className="project-hero-meta-item">
-                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                            <rect x="3" y="3" width="7" height="7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <rect x="14" y="3" width="7" height="7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <rect x="14" y="14" width="7" height="7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <rect x="3" y="14" width="7" height="7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                          <span>{project.units} Units</span>
-                        </div>
+                  <div className="absolute inset-0 bg-black/40"></div>
+                  <div className="relative z-10 max-w-2xl">
+                    <span className="project-hero-category">
+                      {project.category} - {project.status}
+                    </span>
+                    <Heading as="h2" className="text-white">{project.title}</Heading>
+                    <Text className="!mt-4 !mb-8 !text-lg text-white/90">{project.short_description || truncateText(stripHtml(project.description))}</Text>
+                    <div className="project-hero-meta !mb-4 text-white/80">
+                      <div className="project-hero-meta-item">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                        <span>{project.location}</span>
                       </div>
-                      <Link href={`/project/${project.id}`}>
-                        <Button>View project details</Button>
-                      </Link>
                     </div>
+                    <Link href={`/project/${project.id}`}>
+                      <Button>View project details</Button>
+                    </Link>
                   </div>
                 </div>
               </section>
             );
           })}
-          
-          {/* Load More Button */}
-          {visibleCount < projects.length && (
-            <div className="flex justify-center mt-8">
-              <Button onClick={loadMore}>Load More</Button>
-            </div>
-          )}
         </div>
     </PageLayout>
   );

@@ -21,6 +21,7 @@ class TopSalesController extends Controller
             ->map(function ($sales) {
                 return [
                     'name' => $sales->name,
+                    'job_title' => $sales->job_title,
                     'position' => $sales->position,
                     'image' => $sales->image_url,
                 ];

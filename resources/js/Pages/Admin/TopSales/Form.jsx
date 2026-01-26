@@ -11,6 +11,7 @@ export default function Form({ topSales, availablePositions }) {
     const isEdit = topSales !== null;
     const { data, setData, post, processing, errors } = useForm({
         name: topSales?.name || '',
+        job_title: topSales?.job_title || '',
         position: topSales?.position || (availablePositions?.length > 0 ? availablePositions[availablePositions.length - 1] : 1),
         image_uid: topSales?.image_uid || null,
         is_active: topSales?.is_active ?? true,
@@ -70,6 +71,17 @@ export default function Form({ topSales, availablePositions }) {
                             onChange={(e) => setData('name', e.target.value)}
                             error={errors.name}
                             placeholder="Enter sales person name"
+                        />
+
+                        {/* Job Title */}
+                        <FormInput
+                            label="Job Title"
+                            name="job_title"
+                            value={data.job_title}
+                            onChange={(e) => setData('job_title', e.target.value)}
+                            error={errors.job_title}
+                            placeholder="Enter job title (e.g., Sales Executive)"
+                            maxLength={32}
                         />
 
                         {/* Position */}

@@ -427,55 +427,162 @@ export default function About() {
                     <h2>Top Sales</h2>
                     <p>Meet our best performing sales team</p>
                   </div>
-                  <div className="team-grid" style={{ justifyContent: 'center' }}>
-                    {topSales.map((member, index) => (
-                      <div key={index} className="team-card" style={{ position: 'relative' }}>
-                        {/* Rank Badge */}
-                        <div style={{
-                          position: 'absolute',
-                          top: '-10px',
-                          left: '50%',
-                          transform: 'translateX(-50%)',
-                          zIndex: 10,
-                          background: member.position === 1 ? '#FFD700' : member.position === 2 ? '#C0C0C0' : member.position === 3 ? '#CD7F32' : '#4A5568',
-                          color: member.position <= 3 ? '#1a1a1a' : '#fff',
-                          width: '36px',
-                          height: '36px',
-                          borderRadius: '50%',
+                  {/* Podium Layout for Top 3 */}
+                  <div style={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'flex-end',
+                    gap: '16px',
+                    marginBottom: '48px'
+                  }}>
+                    {/* Reorder: 2nd, 1st, 3rd for podium effect */}
+                    {[
+                      topSales.find(m => m.position === 2),
+                      topSales.find(m => m.position === 1),
+                      topSales.find(m => m.position === 3)
+                    ].filter(Boolean).map((member) => {
+                      const isFirst = member.position === 1;
+                      const isSecond = member.position === 2;
+
+                      const podiumHeight = isFirst ? '120px' : isSecond ? '80px' : '60px';
+                      const podiumColor = isFirst ? '#FFD700' : isSecond ? '#C0C0C0' : '#CD7F32';
+                      const cardScale = isFirst ? 1.1 : 1;
+
+                      return (
+                        <div key={member.position} style={{
                           display: 'flex',
+                          flexDirection: 'column',
                           alignItems: 'center',
-                          justifyContent: 'center',
-                          fontWeight: 'bold',
-                          fontSize: '14px',
-                          boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                          transform: `scale(${cardScale})`,
+                          zIndex: isFirst ? 10 : 1
                         }}>
-                          #{member.position}
-                        </div>
-                        <div className="team-image">
-                          {member.image ? (
-                            <img src={member.image} alt={member.name} />
-                          ) : (
-                            <div style={{
-                              width: '100%',
-                              height: '100%',
-                              background: '#e5e7eb',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}>
-                              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5">
-                                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
-                                <circle cx="12" cy="7" r="4" />
-                              </svg>
+                          {/* Profile Card */}
+                          <div className="team-card" style={{
+                            position: 'relative',
+                            marginBottom: '0',
+                            boxShadow: isFirst ? '0 8px 32px rgba(255, 215, 0, 0.3)' : '0 4px 16px rgba(0,0,0,0.1)'
+                          }}>
+                            {/* Crown/Medal for 1st place */}
+                            {isFirst && (
+                              <div style={{
+                                position: 'absolute',
+                                top: '-24px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                fontSize: '32px',
+                                zIndex: 20
+                              }}>
+                                👑
+                              </div>
+                            )}
+                            <div className="team-image">
+                              {member.image ? (
+                                <img src={member.image} alt={member.name} />
+                              ) : (
+                                <div style={{
+                                  width: '100%',
+                                  height: '100%',
+                                  background: '#e5e7eb',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center'
+                                }}>
+                                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5">
+                                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                    <circle cx="12" cy="7" r="4" />
+                                  </svg>
+                                </div>
+                              )}
                             </div>
-                          )}
+                            <div className="team-info">
+                              <h3 className="team-name">{member.name}</h3>
+                              {member.job_title && (
+                                <p className="team-role">{member.job_title}</p>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Podium Block */}
+                          <div style={{
+                            width: '100%',
+                            minWidth: '180px',
+                            height: podiumHeight,
+                            background: `linear-gradient(180deg, ${podiumColor} 0%, ${podiumColor}dd 100%)`,
+                            borderRadius: '8px 8px 0 0',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: 'inset 0 2px 4px rgba(255,255,255,0.3), 0 4px 8px rgba(0,0,0,0.2)',
+                            marginTop: '-8px'
+                          }}>
+                            <span style={{
+                              fontSize: isFirst ? '48px' : '36px',
+                              fontWeight: 'bold',
+                              color: '#1a1a1a',
+                              textShadow: '0 2px 4px rgba(255,255,255,0.5)'
+                            }}>
+                              {member.position}
+                            </span>
+                          </div>
                         </div>
-                        <div className="team-info">
-                          <h3 className="team-name">{member.name}</h3>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
+
+                  {/* Remaining Sales (4th, 5th, etc.) */}
+                  {topSales.filter(m => m.position > 3).length > 0 && (
+                    <div className="team-grid" style={{ justifyContent: 'center' }}>
+                      {topSales.filter(m => m.position > 3).map((member, index) => (
+                        <div key={index} className="team-card" style={{ position: 'relative' }}>
+                          <div style={{
+                            position: 'absolute',
+                            top: '-10px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            zIndex: 10,
+                            background: '#4A5568',
+                            color: '#fff',
+                            width: '36px',
+                            height: '36px',
+                            borderRadius: '50%',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontWeight: 'bold',
+                            fontSize: '14px',
+                            boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+                          }}>
+                            #{member.position}
+                          </div>
+                          <div className="team-image">
+                            {member.image ? (
+                              <img src={member.image} alt={member.name} />
+                            ) : (
+                              <div style={{
+                                width: '100%',
+                                height: '100%',
+                                background: '#e5e7eb',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                              }}>
+                                <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#9ca3af" strokeWidth="1.5">
+                                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                  <circle cx="12" cy="7" r="4" />
+                                </svg>
+                              </div>
+                            )}
+                          </div>
+                          <div className="team-info">
+                            <h3 className="team-name">{member.name}</h3>
+                            {member.job_title && (
+                              <p className="team-role">{member.job_title}</p>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
