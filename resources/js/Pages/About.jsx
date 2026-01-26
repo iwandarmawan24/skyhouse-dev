@@ -443,7 +443,6 @@ export default function About() {
                     ].filter(Boolean).map((member) => {
                       const isFirst = member.position === 1;
                       const isSecond = member.position === 2;
-                      const isThird = member.position === 3;
 
                       const podiumHeight = isFirst ? '120px' : isSecond ? '80px' : '60px';
                       const podiumColor = isFirst ? '#FFD700' : isSecond ? '#C0C0C0' : '#CD7F32';
