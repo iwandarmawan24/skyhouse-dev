@@ -184,7 +184,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             // Top Sales
             Route::post('/top-sales/update-order', [TopSalesController::class, 'updateOrder'])->name('top-sales.update-order');
-            Route::resource('top-sales', TopSalesController::class)->except(['show']);
+            Route::resource('top-sales', TopSalesController::class)->except(['show'])->parameters(['top-sales' => 'topSales']);
         });
 
         // Routes accessible by superadmin and admin only

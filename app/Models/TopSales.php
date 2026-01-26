@@ -13,8 +13,17 @@ class TopSales extends Model
     protected $keyType = 'string';
     public $incrementing = false;
 
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'uid';
+    }
+
     protected $fillable = [
         'name',
+        'job_title',
         'position',
         'image_uid',
         'is_active',
