@@ -202,7 +202,7 @@ const Hero = () => {
                 className={`slide_content ${index === currentSlide ? 'active' : ''}`}
               >
                 <div 
-                  className="flex flex-col items-center pt-24"
+                  className="flex flex-col items-center !pt-14 md:!pt-48"
                   style={{
                     opacity: showContent && index === currentSlide ? 1 : 0,
                     transform: showContent && index === currentSlide ? 'translateY(0)' : 'translateY(50px)',
@@ -212,8 +212,8 @@ const Hero = () => {
                   <img
                     src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
                     alt="Skyhouse Alamsutera"
-                    className="navbar_logo"
-                    style={{ width: '150px', height: 'auto', margin: '0 auto', marginBottom: '80px' }}
+                    className="navbar_logo !w-24 md:!w-36 lg:!w-[150px]"
+                    style={{ height: 'auto', margin: '0 auto', marginBottom: '50px' }}
                   />
                   <div 
                     className={`flex flex-col items-center bg-black/10 p-12 rounded-[50px] shadow-lg max-w-3xl ${showBlur && index === currentSlide ? 'backdrop-blur-md' : 'backdrop-blur-none'}`}
@@ -221,7 +221,7 @@ const Hero = () => {
                       transition: 'backdrop-filter 0.8s ease-out',
                     }}
                   >
-                    <Heading as="h1" variant="hero" color="white" className="text-center !mb-4 !leading-[4.8rem] text-shadow-lg">
+                    <Heading as="h1" variant="hero" color="white" className="text-center !mb-4 md:!leading-[4.8rem] xs:!leading-[1rem] text-shadow-lg !text-[32px] md:!text-[48px]">
                       <div dangerouslySetInnerHTML={{ __html: slide.title }} />
                     </Heading>
                     <Text className="text-center text-shadow-lg" color="white" size="md">

@@ -49,7 +49,7 @@ const Employee = () => {
         </div>
 
         <div 
-          className="flex gap-4 lg:gap-6 h-[500px] overflow-hidden max-w-6xl mx-auto"
+          className="flex gap-4 lg:gap-6 !h-[300px] md:!h-[500px] overflow-hidden max-w-6xl mx-auto"
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >

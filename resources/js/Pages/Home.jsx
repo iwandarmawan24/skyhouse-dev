@@ -29,7 +29,7 @@ export default function Home({ newsItems = [] }) {
   // }, []);
 
   return (
-    <PageLayout hideLogoOnTop={true}>
+    <PageLayout>
       <Hero />
       <About />
       <Location />
