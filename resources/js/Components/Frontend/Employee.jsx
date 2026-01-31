@@ -41,7 +41,7 @@ const Employee = () => {
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col !text-center items-center mb-12">
           <Heading as="h2" variant="section" color="skyhouse-ocean" className="mb-4">
-            Meet Our <span className="font-bodoni !italic">Team</span>
+            Top <span className="font-bodoni !italic">Sales</span> of the Month
           </Heading>
           <Text size="lg" color="slate" className="max-w-2xl mx-auto">
             Our dedicated professionals are here to help you find your perfect home

@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\MediaHighlight;
+use App\Models\Product;
+use App\Models\Facility;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -35,8 +37,43 @@ class HomeController extends Controller
                 ];
             });
 
+        // Fetch active facilities for LaunchProjects component
+        $facilities = Facility::active()
+            ->ordered()
+            ->get()
+            ->map(function ($facility) {
+                // Get first image from media_images for card display
+                $firstImage = $facility->media_images->first();
+
+                return [
+                    'id' => $facility->uid,
+                    'image' => $firstImage?->url ?? $facility->banner_image,
+                    'title' => $facility->name,
+                    'description' => $facility->description,
+                ];
+            });
+
+        // Fetch active projects for Projects component
+        $projects = Product::with('featuredImage')
+            ->active()
+            ->latest()
+            ->get()
+            ->map(function ($product) {
+                return [
+                    'id' => $product->uid,
+                    'image' => $product->featuredImage ? $product->featuredImage->url : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
+                    'location' => $product->location,
+                    'units' => 1,
+                    'title' => $product->name,
+                    'description' => $product->short_description ?? $product->description,
+                    'status' => $product->is_sold ? 'sold-out' : 'available',
+                ];
+            });
+
         return Inertia::render('Home', [
             'newsItems' => $newsItems,
+            'projects' => $projects,
+            'facilities' => $facilities,
         ]);
     }
 }
