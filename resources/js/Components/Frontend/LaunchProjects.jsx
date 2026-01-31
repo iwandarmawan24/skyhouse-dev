@@ -5,7 +5,7 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
 // LaunchProjects Component - Visit Kinary House
-const LaunchProjects = () => {
+const LaunchProjects = ({ facilities: backendFacilities = [] }) => {
   const bgRef = useRef(null);
   const [activeIndex, setActiveIndex] = useState(2);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -38,7 +38,8 @@ const LaunchProjects = () => {
     return () => clearInterval(interval);
   }, [isPaused, isModalOpen]);
 
-  const facilitiesData = [
+  // Fallback data if no backend data is available
+  const defaultFacilitiesData = [
     {
       id: 1,
       title: 'Swimming Pool',
@@ -83,6 +84,9 @@ const LaunchProjects = () => {
     }
   ];
 
+  // Use backend data if available, otherwise use default data
+  const facilitiesData = backendFacilities.length > 0 ? backendFacilities : defaultFacilitiesData;
+
   return (
     <section className="py-12 md:py-16 lg:py-20 px-4 md:px-8 lg:px-16 relative overflow-hidden">
       {/* Background with gradient mask */}
@@ -110,7 +114,7 @@ const LaunchProjects = () => {
                 <span className="font-bodoni !italic">Facilities</span>
               </Heading>
             </div>
-            <Button href="/facilities" variant="outline" className="ml-auto self-center">
+            <Button href="/facilities" variant="outline" className="ml-auto self-center hidden lg:flex">
               See all facilities
             </Button>
           </div>
@@ -173,6 +177,13 @@ const LaunchProjects = () => {
               }`}
             />
           ))}
+        </div>
+
+        {/* Mobile button positioned below slider */}
+        <div className="flex justify-center mt-6 lg:hidden">
+          <Button href="/facilities" variant="outline">
+            See all facilities
+          </Button>
         </div>
       </div>
 

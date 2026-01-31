@@ -7,10 +7,11 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 
 // Projects Component
-const Projects = () => {
+const Projects = ({ projects: backendProjects = [] }) => {
   const swiperRef = useRef(null);
 
-  const projectsData = [
+  // Fallback data if no backend data is available
+  const defaultProjectsData = [
     {
       id: 1,
       image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
@@ -48,6 +49,9 @@ const Projects = () => {
       status: 'built'
     }
   ];
+
+  // Use backend data if available, otherwise use default data
+  const projectsData = backendProjects.length > 0 ? backendProjects : defaultProjectsData;
 
   return (
     <section className="relative min-h-[600px] py-16 md:py-20 px-[5%]" style={{ backgroundColor: 'var(--color-cream)' }}>
