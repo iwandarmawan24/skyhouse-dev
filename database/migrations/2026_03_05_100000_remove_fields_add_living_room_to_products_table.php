@@ -25,6 +25,7 @@ return new class extends Migration
                 'latitude',
                 'longitude',
                 'room_area',
+                'balcon_size',
             ]);
         });
     }
@@ -47,6 +48,7 @@ return new class extends Migration
             $table->decimal('latitude', 10, 8)->nullable();
             $table->decimal('longitude', 11, 8)->nullable();
             $table->decimal('room_area', 10, 2)->nullable();
+            $table->decimal('balcon_size', 10, 2)->nullable();
         });
     }
 };
