@@ -89,7 +89,7 @@ export default function Event({ events }) {
                 <section className="news-top-banner">
                     <div className="events-banner-wrapper">
                         <img
-                            src="https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1920&h=600&fit=crop"
+                            src="/images/banner/Event-Banner.webp"
                             alt="Events Banner"
                             className="events-banner-image"
                         />

@@ -91,7 +91,7 @@ export default function MediaHighlights({ featured }) {
         <section className="news-top-banner">
           <div className="news-banner-image-wrapper">
             <img
-              src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=1920&h=600&fit=crop"
+              src="/images/banner/Media-Banner.webp"
               alt="Media Highlights Banner"
               className="news-banner-image"
             />
