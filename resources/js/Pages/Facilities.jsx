@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import { Heading, Text, Button } from '@/Components/Frontend/atoms';
 import '@css/frontend.css';
+import '@css/frontend/news-page.css';
 
 export default function Facilities({ facilities: backendFacilities = [] }) {
   const [flippedCard, setFlippedCard] = useState(null);
@@ -97,25 +98,24 @@ export default function Facilities({ facilities: backendFacilities = [] }) {
           backgroundSize: 'cover',
         }}
       >
-        {/* Description Section */}
-        <div className="container mx-auto px-4 py-16 md:py-32 pt-24 md:pt-48">
-          <div className="max-w-4xl mx-auto text-center">
-            <Heading as="h2" variant="section" color="charcoal" className="!mb-6">
-              Elevate Your Living Experience
-            </Heading>
-            <Text size="lg" color="charcoal" className="mb-8">
-              At Skyhouse, we believe that a home is more than just four walls. It's a lifestyle, a community, 
-              and a sanctuary where memories are made. Our carefully curated facilities are designed to enhance 
-              every aspect of your daily life, providing you with unparalleled comfort and convenience.
-            </Text>
-            <Text size="lg" color="charcoal">
-              From state-of-the-art fitness centers to serene relaxation spaces, every facility is thoughtfully 
-              planned to meet the diverse needs of our residents. Whether you're looking to stay active, spend 
-              quality time with family, or simply unwind after a long day, our premium amenities are here to 
-              support your lifestyle goals.
-            </Text>
+        {/* Top Banner Section */}
+        <section className="news-top-banner">
+          <div className="news-banner-image-wrapper">
+            <img
+              src="/images/banner/Facilities-Banner.webp"
+              alt="Facilities Banner"
+              className="news-banner-image"
+            />
+            {/* <div className="news-banner-overlay">
+              <div className="padding-global">
+                <div className="container-large">
+                  <h1 className="news-banner-title">Our Facilities</h1>
+                  <p className="news-banner-subtitle">Elevate your living experience with our premium amenities</p>
+                </div>
+              </div>
+            </div> */}
           </div>
-        </div>
+        </section>
 
         {/* Facilities Grid with Flip Cards */}
         <div className="bg-gray-50 py-16 md:py-24">
