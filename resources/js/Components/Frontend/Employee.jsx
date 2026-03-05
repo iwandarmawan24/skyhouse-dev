@@ -10,18 +10,20 @@ const Employee = ({
   const [activeIndex, setActiveIndex] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
 
-  if (members.length === 0) return null;
-
+  const displayMembers = members.slice(0, 3);
 
   useEffect(() => {
+    if (displayMembers.length === 0) return;
     const interval = setInterval(() => {
       if (!isPaused) {
-        setActiveIndex((prevIndex) => (prevIndex + 1) % members.length);
+        setActiveIndex((prevIndex) => (prevIndex + 1) % displayMembers.length);
       }
     }, 3500);
 
     return () => clearInterval(interval);
-  }, [isPaused, members.length]);
+  }, [isPaused, displayMembers.length]);
+
+  if (displayMembers.length === 0) return null;
 
   return (
     <section className={`py-16 md:py-24 ${className}`}>
@@ -40,7 +42,7 @@ const Employee = ({
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          {members.map((member, index) => (
+          {displayMembers.map((member, index) => (
             <div
               key={member.id || index}
               onClick={() => setActiveIndex(index)}

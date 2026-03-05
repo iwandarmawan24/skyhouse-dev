@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Setting;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Cache;
 use Inertia\Inertia;
 
 class SettingController extends Controller
@@ -55,9 +54,6 @@ class SettingController extends Controller
 
             if ($setting) {
                 $setting->update(['value' => $settingData['value']]);
-
-                // Clear cache for this setting
-                Cache::forget("setting_{$settingData['key']}");
             }
         }
 
@@ -69,9 +65,6 @@ class SettingController extends Controller
      */
     public function destroy(Setting $setting)
     {
-        // Clear cache for this setting
-        Cache::forget("setting_{$setting->key}");
-
         $setting->delete();
 
         return back()->with('success', 'Setting deleted successfully.');

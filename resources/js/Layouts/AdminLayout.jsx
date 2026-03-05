@@ -23,6 +23,7 @@ import {
     MapPin,
     HelpCircle,
     Trophy,
+    Briefcase,
 } from "lucide-react";
 
 import {
@@ -301,6 +302,12 @@ export default function AdminLayout({ children }) {
                 href: "/admin/contacts",
                 icon: Mail,
                 roles: ["superadmin", "admin"],
+            },
+            {
+                name: "Careers",
+                href: "/admin/careers",
+                icon: Briefcase,
+                roles: ["superadmin", "admin", "staff"],
             },
             {
                 name: "FAQs",
