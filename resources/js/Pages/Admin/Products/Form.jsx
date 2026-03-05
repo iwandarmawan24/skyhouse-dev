@@ -19,20 +19,11 @@ export default function Form({ product }) {
         short_description: product?.short_description || '',
         description: product?.description || '',
         price: product?.price || '',
-        land_area: product?.land_area || '',
-        building_area: product?.building_area || '',
         bedrooms: product?.bedrooms || '',
         bathrooms: product?.bathrooms || '',
-        floors: product?.floors || '',
-        garage: product?.garage || '',
+        living_room: product?.living_room ?? false,
         is_balcon_exist: product?.is_balcon_exist ?? false,
         balcon_size: product?.balcon_size || '',
-        room_area: product?.room_area || '',
-        location: product?.location || '',
-        city: product?.city || '',
-        province: product?.province || '',
-        latitude: product?.latitude || '',
-        longitude: product?.longitude || '',
         video_url: product?.video_url || '',
         video_360_url: product?.video_360_url || '',
         is_featured: product?.is_featured ?? false,
@@ -314,53 +305,6 @@ export default function Form({ product }) {
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">Specifications</h2>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                         <div>
-                            <label htmlFor="land_area" className="block text-sm font-medium text-gray-700 mb-2">
-                                Land Area (m²)
-                            </label>
-                            <input
-                                id="land_area"
-                                type="number"
-                                step="0.01"
-                                value={data.land_area}
-                                onChange={(e) => setData('land_area', e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="0"
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="building_area" className="block text-sm font-medium text-gray-700 mb-2">
-                                Building Area (m²)
-                            </label>
-                            <input
-                                id="building_area"
-                                type="number"
-                                step="0.01"
-                                value={data.building_area}
-                                onChange={(e) => setData('building_area', e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="0"
-                            />
-                        </div>
-
-                        {data.type === 'apartment' && (
-                            <div>
-                                <label htmlFor="room_area" className="block text-sm font-medium text-gray-700 mb-2">
-                                    Room Area (m²)
-                                </label>
-                                <input
-                                    id="room_area"
-                                    type="number"
-                                    step="0.01"
-                                    value={data.room_area}
-                                    onChange={(e) => setData('room_area', e.target.value)}
-                                    className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="0"
-                                />
-                            </div>
-                        )}
-
-                        <div>
                             <label htmlFor="bedrooms" className="block text-sm font-medium text-gray-700 mb-2">
                                 Bedrooms
                             </label>
@@ -389,31 +333,23 @@ export default function Form({ product }) {
                         </div>
 
                         <div>
-                            <label htmlFor="floors" className="block text-sm font-medium text-gray-700 mb-2">
-                                Floors
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Living Room
                             </label>
-                            <input
-                                id="floors"
-                                type="number"
-                                value={data.floors}
-                                onChange={(e) => setData('floors', e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="0"
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="garage" className="block text-sm font-medium text-gray-700 mb-2">
-                                Garage
-                            </label>
-                            <input
-                                id="garage"
-                                type="number"
-                                value={data.garage}
-                                onChange={(e) => setData('garage', e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="0"
-                            />
+                            <div className="flex items-center">
+                                <label className="relative inline-flex items-center cursor-pointer">
+                                    <input
+                                        type="checkbox"
+                                        checked={data.living_room}
+                                        onChange={(e) => setData('living_room', e.target.checked)}
+                                        className="sr-only peer"
+                                    />
+                                    <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                                    <span className="ms-3 text-sm font-medium text-gray-700">
+                                        Has Living Room
+                                    </span>
+                                </label>
+                            </div>
                         </div>
 
                         <div>
@@ -452,93 +388,6 @@ export default function Form({ product }) {
                                 />
                             </div>
                         )}
-                    </div>
-                </div>
-
-                {/* Location */}
-                <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Location</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="md:col-span-2">
-                            <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
-                                Address <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                id="location"
-                                type="text"
-                                value={data.location}
-                                onChange={(e) => setData('location', e.target.value)}
-                                className={`w-full px-4 py-2 rounded-lg border ${
-                                    errors.location ? 'border-red-500' : 'border-gray-300'
-                                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                                placeholder="Enter full address"
-                            />
-                            {errors.location && <p className="mt-1 text-sm text-red-600">{errors.location}</p>}
-                        </div>
-
-                        <div>
-                            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-                                City <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                id="city"
-                                type="text"
-                                value={data.city}
-                                onChange={(e) => setData('city', e.target.value)}
-                                className={`w-full px-4 py-2 rounded-lg border ${
-                                    errors.city ? 'border-red-500' : 'border-gray-300'
-                                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                                placeholder="Enter city"
-                            />
-                            {errors.city && <p className="mt-1 text-sm text-red-600">{errors.city}</p>}
-                        </div>
-
-                        <div>
-                            <label htmlFor="province" className="block text-sm font-medium text-gray-700 mb-2">
-                                Province <span className="text-red-500">*</span>
-                            </label>
-                            <input
-                                id="province"
-                                type="text"
-                                value={data.province}
-                                onChange={(e) => setData('province', e.target.value)}
-                                className={`w-full px-4 py-2 rounded-lg border ${
-                                    errors.province ? 'border-red-500' : 'border-gray-300'
-                                } focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-                                placeholder="Enter province"
-                            />
-                            {errors.province && <p className="mt-1 text-sm text-red-600">{errors.province}</p>}
-                        </div>
-
-                        <div>
-                            <label htmlFor="latitude" className="block text-sm font-medium text-gray-700 mb-2">
-                                Latitude
-                            </label>
-                            <input
-                                id="latitude"
-                                type="number"
-                                step="any"
-                                value={data.latitude}
-                                onChange={(e) => setData('latitude', e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="-6.200000"
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="longitude" className="block text-sm font-medium text-gray-700 mb-2">
-                                Longitude
-                            </label>
-                            <input
-                                id="longitude"
-                                type="number"
-                                step="any"
-                                value={data.longitude}
-                                onChange={(e) => setData('longitude', e.target.value)}
-                                className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="106.816666"
-                            />
-                        </div>
                     </div>
                 </div>
 

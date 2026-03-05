@@ -32,7 +32,7 @@ export default function Project({ projects = [] }) {
         <section className="project-top-banner">
           <div className="project-banner-image-wrapper">
             <img 
-              src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1920&h=600&fit=crop" 
+              src="/images/banner/Project-Banner.webp" 
               alt="Projects Banner" 
               className="project-banner-image"
             />
