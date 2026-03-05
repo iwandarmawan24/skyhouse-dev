@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\MediaHighlight;
+use App\Models\TopSales;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -35,8 +36,23 @@ class HomeController extends Controller
                 ];
             });
 
+        $topSales = TopSales::with('mediaImage')
+            ->active()
+            ->ordered()
+            ->limit(5)
+            ->get()
+            ->map(function ($sales) {
+                return [
+                    'id' => $sales->uid,
+                    'name' => $sales->name,
+                    'role' => $sales->job_title,
+                    'image' => $sales->image_url,
+                ];
+            });
+
         return Inertia::render('Home', [
             'newsItems' => $newsItems,
+            'topSales' => $topSales,
         ]);
     }
 }

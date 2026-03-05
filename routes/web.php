@@ -63,9 +63,7 @@ Route::get('/media-highlights', [NewsController::class, 'mediaHighlights'])->nam
 Route::get('/events', [FrontendEventController::class, 'index'])->name('events');
 Route::get('/events/{slug}', [FrontendEventController::class, 'show'])->name('events.detail');
 
-Route::get('/about', function () {
-    return Inertia::render('About');
-})->name('about');
+Route::get('/about', [\App\Http\Controllers\Frontend\AboutController::class, 'index'])->name('about');
 
 Route::get('/gallery', [FrontendGalleryController::class, 'index'])->name('gallery');
 
