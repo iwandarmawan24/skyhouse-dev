@@ -68,14 +68,14 @@ export default function Project({ projects = [] }) {
                     backgroundPosition: 'center',
                   }}
                 >
-                  <div className="absolute inset-0 bg-black/40"></div>
+                  <div className="absolute inset-0 bg-white/80 backdrop-blur-sm "></div>
                   <div className="relative z-10 max-w-2xl">
                     <span className="project-hero-category">
                       {project.category} - {project.status}
                     </span>
-                    <Heading as="h2" className="text-white">{project.title}</Heading>
-                    <Text className="!mt-4 !mb-8 !text-lg text-white/90">{project.short_description || truncateText(stripHtml(project.description))}</Text>
-                    <div className="project-hero-meta !mb-4 text-white/80">
+                    <Heading as="h2" className="text-skyhouse-ocean">{project.title}</Heading>
+                    <Text className="!mt-4 !mb-8 !text-lg text-black/90">{project.short_description || truncateText(stripHtml(project.description))}</Text>
+                    <div className="project-hero-meta !mb-4 text-black/80">
                       <div className="project-hero-meta-item">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
                           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
