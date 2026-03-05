@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import { Heading, Text, Button } from '@/Components/Frontend/atoms';
+import ImagePreviewModal from '@/Components/Frontend/ImagePreviewModal';
 import '@css/frontend.css';
+import '@css/frontend/news-page.css';
 
 export default function Facilities({ facilities: backendFacilities = [] }) {
-  const [flippedCard, setFlippedCard] = useState(null);
+  const [previewFacility, setPreviewFacility] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [cardsPerSlide, setCardsPerSlide] = useState(3);
 
@@ -97,25 +99,24 @@ export default function Facilities({ facilities: backendFacilities = [] }) {
           backgroundSize: 'cover',
         }}
       >
-        {/* Description Section */}
-        <div className="container mx-auto px-4 py-16 md:py-32 pt-24 md:pt-48">
-          <div className="max-w-4xl mx-auto text-center">
-            <Heading as="h2" variant="section" color="charcoal" className="!mb-6">
-              Elevate Your Living Experience
-            </Heading>
-            <Text size="lg" color="charcoal" className="mb-8">
-              At Skyhouse, we believe that a home is more than just four walls. It's a lifestyle, a community, 
-              and a sanctuary where memories are made. Our carefully curated facilities are designed to enhance 
-              every aspect of your daily life, providing you with unparalleled comfort and convenience.
-            </Text>
-            <Text size="lg" color="charcoal">
-              From state-of-the-art fitness centers to serene relaxation spaces, every facility is thoughtfully 
-              planned to meet the diverse needs of our residents. Whether you're looking to stay active, spend 
-              quality time with family, or simply unwind after a long day, our premium amenities are here to 
-              support your lifestyle goals.
-            </Text>
+        {/* Top Banner Section */}
+        <section className="news-top-banner">
+          <div className="news-banner-image-wrapper">
+            <img
+              src="/images/banner/Facilities-Banner.webp"
+              alt="Facilities Banner"
+              className="news-banner-image"
+            />
+            {/* <div className="news-banner-overlay">
+              <div className="padding-global">
+                <div className="container-large">
+                  <h1 className="news-banner-title">Our Facilities</h1>
+                  <p className="news-banner-subtitle">Elevate your living experience with our premium amenities</p>
+                </div>
+              </div>
+            </div> */}
           </div>
-        </div>
+        </section>
 
         {/* Facilities Grid with Flip Cards */}
         <div className="bg-gray-50 py-16 md:py-24">
@@ -125,7 +126,7 @@ export default function Facilities({ facilities: backendFacilities = [] }) {
                 Explore Our Facilities
               </Heading>
               <Text size="lg" color="slate">
-                Hover over each card to discover more details
+                Click on a card to view the full image
               </Text>
             </div>
 
@@ -134,38 +135,29 @@ export default function Facilities({ facilities: backendFacilities = [] }) {
                 {facilities.map((facility) => (
                   <div
                     key={facility.id}
-                    className="group h-80 perspective-1000"
-                    onMouseEnter={() => setFlippedCard(facility.id)}
-                    onMouseLeave={() => setFlippedCard(null)}
+                    className="group h-80 cursor-pointer"
+                    onClick={() => setPreviewFacility(facility)}
                   >
-                    <div className={`relative w-full h-full transition-transform duration-700 transform-style-3d ${
-                      flippedCard === facility.id ? 'rotate-y-180' : ''
-                    }`}>
-                      {/* Front of Card - Image */}
-                      <div className="absolute inset-0 backface-hidden rounded-lg overflow-hidden shadow-lg">
-                        <img
-                          src={facility.image}
-                          alt={facility.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-6">
+                    <div className="relative w-full h-full rounded-lg overflow-hidden shadow-lg">
+                      <img
+                        src={facility.image}
+                        alt={facility.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent flex items-end p-6">
+                        <div>
                           <Heading as="h3" variant="card" color="white" className="!text-2xl">
                             {facility.title}
                           </Heading>
+                          {facility.description && (
+                            <Text size="sm" color="white" className="mt-2 opacity-0 group-hover:opacity-90 transition-opacity duration-300">
+                              {facility.description}
+                            </Text>
+                          )}
                         </div>
                       </div>
-
-                      {/* Back of Card - Details */}
-                      <div className="absolute inset-0 backface-hidden rotate-y-180 bg-gradient-to-br from-skyhouse-ocean to-skyhouse-slate rounded-lg shadow-lg p-6 flex flex-col justify-center items-center text-center">
-                        <Heading as="h3" variant="card" color="white" className="!text-2xl mb-4">
-                          {facility.title}
-                        </Heading>
-                        <Text color="white" className="opacity-90">
-                          {facility.description}
-                        </Text>
                     </div>
                   </div>
-                </div>
                 ))}
               </div>
             ) : (
@@ -277,6 +269,14 @@ export default function Facilities({ facilities: backendFacilities = [] }) {
           transform: rotateY(180deg);
         }
       `}</style>
+
+      <ImagePreviewModal
+        isOpen={!!previewFacility}
+        onClose={() => setPreviewFacility(null)}
+        image={previewFacility?.image}
+        title={previewFacility?.title}
+        description={previewFacility?.description}
+      />
     </PageLayout>
   );
 }

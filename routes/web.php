@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\HeroBannerController;
 use App\Http\Controllers\Admin\InstagramGalleryController;
 use App\Http\Controllers\Admin\LocationMapController;
 use App\Http\Controllers\Admin\BrochureController;
+use App\Http\Controllers\Admin\CareerController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MediaLibraryController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\Frontend\GalleryController as FrontendGalleryController
 use App\Http\Controllers\Frontend\FacilityController as FrontendFacilityController;
 use App\Http\Controllers\Frontend\InstagramGalleryController as FrontendInstagramGalleryController;
 use App\Http\Controllers\Frontend\TopSalesController as FrontendTopSalesController;
+use App\Http\Controllers\Frontend\CareerController as FrontendCareerController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\NewsController;
 use Illuminate\Support\Facades\Cache;
@@ -63,13 +65,13 @@ Route::get('/media-highlights', [NewsController::class, 'mediaHighlights'])->nam
 Route::get('/events', [FrontendEventController::class, 'index'])->name('events');
 Route::get('/events/{slug}', [FrontendEventController::class, 'show'])->name('events.detail');
 
-Route::get('/about', function () {
-    return Inertia::render('About');
-})->name('about');
+Route::get('/about', [\App\Http\Controllers\Frontend\AboutController::class, 'index'])->name('about');
 
 Route::get('/gallery', [FrontendGalleryController::class, 'index'])->name('gallery');
 
 Route::get('/facilities', [FrontendFacilityController::class, 'index'])->name('facilities');
+
+Route::get('/careers', [FrontendCareerController::class, 'index'])->name('careers');
 
 Route::get('/contact-us', [\App\Http\Controllers\Frontend\ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [\App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');
@@ -179,6 +181,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             // Policies
             Route::resource('policies', PolicyController::class)->except(['show']);
+
+            // Careers
+            Route::post('/careers/update-order', [CareerController::class, 'updateOrder'])->name('careers.update-order');
+            Route::resource('careers', CareerController::class)->except(['show']);
 
             // FAQs
             Route::post('/faqs/update-order', [FaqController::class, 'updateOrder'])->name('faqs.update-order');

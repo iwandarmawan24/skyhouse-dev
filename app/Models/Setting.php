@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Cache;
 
 class Setting extends Model
 {
@@ -27,6 +26,7 @@ class Setting extends Model
                 $model->uid = (string) \Illuminate\Support\Str::uuid();
             }
         });
+
     }
 
     /**
@@ -34,10 +34,8 @@ class Setting extends Model
      */
     public static function get(string $key, $default = null)
     {
-        return Cache::remember("setting_{$key}", 3600, function () use ($key, $default) {
-            $setting = self::where('key', $key)->first();
-            return $setting ? $setting->value : $default;
-        });
+        $setting = self::where('key', $key)->first();
+        return $setting ? $setting->value : $default;
     }
 
     /**
@@ -45,8 +43,6 @@ class Setting extends Model
      */
     public static function set(string $key, $value, string $type = 'text', string $group = 'general')
     {
-        Cache::forget("setting_{$key}");
-
         return self::updateOrCreate(
             ['key' => $key],
             [
@@ -62,18 +58,8 @@ class Setting extends Model
      */
     public static function getGroup(string $group): array
     {
-        return Cache::remember("settings_group_{$group}", 3600, function () use ($group) {
-            return self::where('group', $group)
-                ->pluck('value', 'key')
-                ->toArray();
-        });
-    }
-
-    /**
-     * Clear all settings cache
-     */
-    public static function clearCache()
-    {
-        Cache::flush();
+        return self::where('group', $group)
+            ->pluck('value', 'key')
+            ->toArray();
     }
 }

@@ -38,7 +38,7 @@ export default function Home({ newsItems = [], facilities = [], projects = [] })
       <Projects projects={projects} />
       <ShowMoreBanner />
       {/* <Quiz /> */}
-      <Employee />
+      <Employee members={topSales} />
       {/* <Characters /> */}
       <News newsItems={newsItems} />
     </PageLayout>

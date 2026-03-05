@@ -71,28 +71,6 @@ class ProductController extends Controller
             $query->where('price', '<=', $request->max_price);
         }
 
-        // Filter by multiple cities
-        if ($request->filled('cities')) {
-            $cities = is_array($request->cities)
-                ? $request->cities
-                : array_filter(explode(',', $request->cities));
-
-            if (!empty($cities)) {
-                $query->whereIn('city', $cities);
-            }
-        }
-
-        // Filter by multiple provinces
-        if ($request->filled('provinces')) {
-            $provinces = is_array($request->provinces)
-                ? $request->provinces
-                : array_filter(explode(',', $request->provinces));
-
-            if (!empty($provinces)) {
-                $query->whereIn('province', $provinces);
-            }
-        }
-
         // Filter by featured
         if ($request->filled('featured')) {
             $query->where('is_featured', $request->boolean('featured'));
@@ -102,18 +80,12 @@ class ProductController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->where('name', 'ilike', "%{$search}%")
-                    ->orWhere('location', 'ilike', "%{$search}%")
-                    ->orWhere('city', 'ilike', "%{$search}%");
+                $q->where('name', 'ilike', "%{$search}%");
             });
         }
 
         // Server-side pagination (10 items per page)
         $products = $query->paginate(10)->withQueryString();
-
-        // Get unique cities and provinces for filter dropdowns
-        $cities = Product::select('city')->distinct()->orderBy('city')->pluck('city');
-        $provinces = Product::select('province')->distinct()->orderBy('province')->pluck('province');
 
         // Get price range
         $priceRange = [
@@ -123,10 +95,8 @@ class ProductController extends Controller
 
         return Inertia::render('Admin/Products/Index', [
             'products' => $products,
-            'filters' => $request->only(['types', 'statuses', 'featured', 'search', 'min_price', 'max_price', 'cities', 'provinces']),
+            'filters' => $request->only(['types', 'statuses', 'featured', 'search', 'min_price', 'max_price']),
             'filterOptions' => [
-                'cities' => $cities,
-                'provinces' => $provinces,
                 'priceRange' => $priceRange,
             ],
         ]);
@@ -153,20 +123,10 @@ class ProductController extends Controller
             'short_description' => 'nullable|string|max:500',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'land_area' => 'nullable|numeric|min:0',
-            'building_area' => 'nullable|numeric|min:0',
             'bedrooms' => 'nullable|integer|min:0',
             'bathrooms' => 'nullable|integer|min:0',
-            'floors' => 'nullable|integer|min:0',
-            'garage' => 'nullable|integer|min:0',
+            'living_room' => 'nullable|boolean',
             'is_balcon_exist' => 'nullable|boolean',
-            'balcon_size' => 'nullable|numeric|min:0',
-            'room_area' => 'nullable|numeric|min:0',
-            'location' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
             'facilities' => 'nullable|array',
             'video_url' => 'nullable|url|max:255',
             'video_360_url' => 'nullable|url|max:255',
@@ -217,20 +177,10 @@ class ProductController extends Controller
             'short_description' => 'nullable|string|max:500',
             'description' => 'required|string',
             'price' => 'required|numeric|min:0',
-            'land_area' => 'nullable|numeric|min:0',
-            'building_area' => 'nullable|numeric|min:0',
             'bedrooms' => 'nullable|integer|min:0',
             'bathrooms' => 'nullable|integer|min:0',
-            'floors' => 'nullable|integer|min:0',
-            'garage' => 'nullable|integer|min:0',
+            'living_room' => 'nullable|boolean',
             'is_balcon_exist' => 'nullable|boolean',
-            'balcon_size' => 'nullable|numeric|min:0',
-            'room_area' => 'nullable|numeric|min:0',
-            'location' => 'required|string|max:255',
-            'city' => 'required|string|max:255',
-            'province' => 'required|string|max:255',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
             'facilities' => 'nullable|array',
             'video_url' => 'nullable|url|max:255',
             'video_360_url' => 'nullable|url|max:255',

@@ -75,6 +75,9 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                     <a href="/gallery" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
                       Gallery
                     </a>
+                    <a href="/careers" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
+                      Careers
+                    </a>
                   </div>
                 )}
               </div>
@@ -169,6 +172,7 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
             <a href="/facilities" className="mobile-menu-link">Facilities</a>
             <a href="/gallery" className="mobile-menu-link">Gallery</a>
             <a href="/about" className="mobile-menu-link">About</a>
+            <a href="/careers" className="mobile-menu-link">Careers</a>
             <a href="/events" className="mobile-menu-link">Events</a>
             <a href="/media-highlights" className="mobile-menu-link">Media Highlights</a>
             <a href="/news" className="mobile-menu-link">News Articles</a>

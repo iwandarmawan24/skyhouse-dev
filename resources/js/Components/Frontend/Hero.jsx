@@ -224,8 +224,8 @@ const Hero = () => {
                     <Heading as="h1" variant="hero" color="white" className="text-center !mb-4 md:!leading-[4.8rem] xs:!leading-[1rem] text-shadow-lg !text-[32px] md:!text-[48px]">
                       <div dangerouslySetInnerHTML={{ __html: slide.title }} />
                     </Heading>
-                    <Text className="text-center text-shadow-lg" color="white" size="md">
-                      <div dangerouslySetInnerHTML={{ __html: slide.description }} />
+                    <Text as="div" className="text-center text-shadow-lg" color="white" size="md">
+                      <span dangerouslySetInnerHTML={{ __html: slide.description }} />
                     </Text>
                     <div className="block bg-white h-1 w-24 mx-auto mt-12 mb-2"></div>
                   </div>

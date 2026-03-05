@@ -1,5 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Button, Heading, Text } from '@/Components/Frontend/atoms';
+import ImagePreviewModal from '@/Components/Frontend/ImagePreviewModal';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -187,47 +188,16 @@ const LaunchProjects = ({ facilities: backendFacilities = [] }) => {
         </div>
       </div>
 
-      {/* Full size image modal */}
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 bg-black/80 flex items-center justify-center p-4"
-          style={{ zIndex: 10000 }}
-          onClick={() => {
-            setIsModalOpen(false);
-            setIsPaused(false);
-          }}
-        >
-          <div className="relative w-full h-full flex items-center justify-center">
-            <button
-              onClick={() => {
-                setIsModalOpen(false);
-                setIsPaused(false);
-              }}
-              className="absolute top-4 right-4 text-white hover:text-skyhouse-sunshine transition-colors z-10"
-            >
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M18 6L6 18M6 6l12 12" />
-              </svg>
-            </button>
-            <div className="relative max-w-full max-h-full">
-              <img
-                src={facilitiesData[activeIndex].image}
-                alt={facilitiesData[activeIndex].title}
-                className="max-w-full max-h-full object-contain rounded-lg shadow-2xl"
-                onClick={(e) => e.stopPropagation()}
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6 rounded-b-lg">
-                <Heading as="h3" variant="card" className="text-white mb-2">
-                  {facilitiesData[activeIndex].title}
-                </Heading>
-                <Text size="md" className="text-white/90">
-                  {facilitiesData[activeIndex].description}
-                </Text>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+      <ImagePreviewModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setIsPaused(false);
+        }}
+        image={facilitiesData[activeIndex].image}
+        title={facilitiesData[activeIndex].title}
+        description={facilitiesData[activeIndex].description}
+      />
 
       <style jsx>{`
         .launch-projects-pagination :global(.swiper-pagination-bullet),

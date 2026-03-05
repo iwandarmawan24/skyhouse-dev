@@ -14,22 +14,29 @@ class SettingSeeder extends Seeder
     {
         $settings = [
             // General
-            ['key' => 'site_name', 'value' => 'SkyHouse Property', 'type' => 'text', 'group' => 'general'],
-            ['key' => 'site_tagline', 'value' => 'Your Dream Property Partner', 'type' => 'text', 'group' => 'general'],
-            ['key' => 'site_description', 'value' => 'Platform properti terpercaya di Indonesia', 'type' => 'textarea', 'group' => 'general'],
+            ['key' => 'site_name', 'value' => 'Skyhouse Alamsutera', 'type' => 'text', 'group' => 'general'],
+            ['key' => 'site_tagline', 'value' => 'Living Beyond Expectation', 'type' => 'text', 'group' => 'general'],
+            ['key' => 'site_description', 'value' => 'Skyhouse Alam Sutera is a premium residential development offering modern living spaces in the heart of Alam Sutera, Tangerang.', 'type' => 'textarea', 'group' => 'general'],
+            ['key' => 'site_logo', 'value' => 'https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png', 'type' => 'text', 'group' => 'general'],
 
             // Contact
-            ['key' => 'contact_phone', 'value' => '+62 812-3456-7890', 'type' => 'text', 'group' => 'contact'],
-            ['key' => 'contact_email', 'value' => 'info@skyhouse.com', 'type' => 'text', 'group' => 'contact'],
-            ['key' => 'contact_address', 'value' => 'Jl. Sudirman No. 123, Jakarta', 'type' => 'textarea', 'group' => 'contact'],
-            ['key' => 'whatsapp_number', 'value' => '6281234567890', 'type' => 'text', 'group' => 'contact'],
-            ['key' => 'whatsapp_message', 'value' => 'Halo, saya tertarik dengan properti Anda', 'type' => 'text', 'group' => 'contact'],
+            ['key' => 'contact_phone', 'value' => '+62 21 5088 9900', 'type' => 'text', 'group' => 'contact'],
+            ['key' => 'contact_email', 'value' => 'info@skyhousealamsutera.com', 'type' => 'text', 'group' => 'contact'],
+            ['key' => 'contact_address', 'value' => 'Jl. Alamsutera Boulevard No.88, Pakulonan Barat, Kelapa Dua, Tangerang, Banten 15810', 'type' => 'textarea', 'group' => 'contact'],
+            ['key' => 'whatsapp_number', 'value' => '622150889900', 'type' => 'text', 'group' => 'contact'],
+            ['key' => 'whatsapp_message', 'value' => 'Halo, saya tertarik dengan properti Skyhouse Alamsutera', 'type' => 'text', 'group' => 'contact'],
 
             // Social Media
-            ['key' => 'social_facebook', 'value' => 'https://facebook.com/skyhouse', 'type' => 'text', 'group' => 'social'],
-            ['key' => 'social_instagram', 'value' => 'https://instagram.com/skyhouse', 'type' => 'text', 'group' => 'social'],
-            ['key' => 'social_twitter', 'value' => 'https://twitter.com/skyhouse', 'type' => 'text', 'group' => 'social'],
-            ['key' => 'social_youtube', 'value' => 'https://youtube.com/skyhouse', 'type' => 'text', 'group' => 'social'],
+            ['key' => 'social_tiktok', 'value' => 'https://www.tiktok.com/@skyhousealamsutera', 'type' => 'text', 'group' => 'social'],
+            ['key' => 'social_instagram', 'value' => 'https://www.instagram.com/skyhousealamsutera', 'type' => 'text', 'group' => 'social'],
+            ['key' => 'social_linkedin', 'value' => 'https://www.linkedin.com/company/skyhousealamsutera', 'type' => 'text', 'group' => 'social'],
+            ['key' => 'social_youtube', 'value' => 'https://www.youtube.com/@skyhousealamsutera', 'type' => 'text', 'group' => 'social'],
+            ['key' => 'social_facebook', 'value' => 'https://www.facebook.com/skyhousealamsutera', 'type' => 'text', 'group' => 'social'],
+
+            // SEO
+            ['key' => 'seo_meta_title', 'value' => 'Skyhouse Alamsutera - Living Beyond Expectation', 'type' => 'text', 'group' => 'seo'],
+            ['key' => 'seo_meta_description', 'value' => 'Discover premium residential living at Skyhouse Alam Sutera, Tangerang. Modern apartments with world-class facilities.', 'type' => 'textarea', 'group' => 'seo'],
+            ['key' => 'seo_og_image', 'value' => '/images/default-og-image.jpg', 'type' => 'text', 'group' => 'seo'],
 
             // KPR Calculator
             ['key' => 'kpr_interest_rate', 'value' => '8.5', 'type' => 'number', 'group' => 'calculator'],
@@ -37,7 +44,10 @@ class SettingSeeder extends Seeder
         ];
 
         foreach ($settings as $setting) {
-            Setting::create($setting);
+            Setting::updateOrCreate(
+                ['key' => $setting['key']],
+                $setting
+            );
         }
     }
 }

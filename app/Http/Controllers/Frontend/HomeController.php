@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\MediaHighlight;
+use App\Models\TopSales;
 use App\Models\Product;
 use App\Models\Facility;
 use Inertia\Inertia;
@@ -37,6 +38,21 @@ class HomeController extends Controller
                 ];
             });
 
+        $topSales = TopSales::with('mediaImage')
+            ->active()
+            ->ordered()
+            ->limit(5)
+            ->get()
+            ->map(
+                function ($sales) {
+                    return [
+                        'id' => $sales->uid,
+                        'name' => $sales->name,
+                        'role' => $sales->job_title,
+                        'image' => $sales->image_url
+                    ];
+                }
+            );
         // Fetch active facilities for LaunchProjects component
         $facilities = Facility::active()
             ->ordered()
@@ -72,6 +88,7 @@ class HomeController extends Controller
 
         return Inertia::render('Home', [
             'newsItems' => $newsItems,
+            'topSales' => $topSales,
             'projects' => $projects,
             'facilities' => $facilities,
         ]);
