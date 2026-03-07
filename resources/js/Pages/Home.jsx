@@ -17,7 +17,7 @@ import PageLayout from '@/Components/Frontend/PageLayout';
 import { initSmoothScroll } from '@/utils/smoothScroll';
 import '@css/frontend.css';
 
-export default function Home({ newsItems = [], facilities = [], projects = [] }) {
+export default function Home({ newsItems = [], facilities = [], projects = [], topSales = [] }) {
   // Smooth scroll disabled for now
   // useEffect(() => {
   //   const lenis = initSmoothScroll();
