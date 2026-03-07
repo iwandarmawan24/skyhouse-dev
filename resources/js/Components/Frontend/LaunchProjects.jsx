@@ -32,7 +32,7 @@ const LaunchProjects = ({ facilities: backendFacilities = [] }) => {
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isPaused && !isModalOpen) {
-        setActiveIndex((prevIndex) => (prevIndex + 1) % facilitiesData.length);
+        setActiveIndex((prevIndex) => facilitiesData.length > 0 ? (prevIndex + 1) % facilitiesData.length : 0);
       }
     }, 3500);
 
@@ -188,16 +188,18 @@ const LaunchProjects = ({ facilities: backendFacilities = [] }) => {
         </div>
       </div>
 
-      <ImagePreviewModal
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setIsPaused(false);
-        }}
-        image={facilitiesData[activeIndex].image}
-        title={facilitiesData[activeIndex].title}
-        description={facilitiesData[activeIndex].description}
-      />
+      {facilitiesData[activeIndex] && (
+        <ImagePreviewModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setIsPaused(false);
+          }}
+          image={facilitiesData[activeIndex].image}
+          title={facilitiesData[activeIndex].title}
+          description={facilitiesData[activeIndex].description}
+        />
+      )}
 
       <style jsx>{`
         .launch-projects-pagination :global(.swiper-pagination-bullet),
