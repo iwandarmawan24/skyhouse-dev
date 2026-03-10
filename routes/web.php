@@ -72,6 +72,7 @@ Route::get('/gallery', [FrontendGalleryController::class, 'index'])->name('galle
 Route::get('/facilities', [FrontendFacilityController::class, 'index'])->name('facilities');
 
 Route::get('/careers', [FrontendCareerController::class, 'index'])->name('careers');
+Route::get('/careers/{uid}', [FrontendCareerController::class, 'show'])->name('careers.detail');
 
 Route::get('/contact-us', [\App\Http\Controllers\Frontend\ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [\App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');
