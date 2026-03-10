@@ -1,5 +1,5 @@
 import React from "react";
-import { Head } from "@inertiajs/react";
+import { Head, Link } from "@inertiajs/react";
 import PageLayout from "@/Components/Frontend/PageLayout";
 import "@css/frontend.css";
 import "@css/frontend/news-page.css";
@@ -80,9 +80,11 @@ export default function Career({ careers }) {
                             {careers && careers.length > 0 ? (
                                 <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                                     {careers.map((career) => (
-                                        <div
+                                        <Link
                                             key={career.uid}
-                                            className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-100"
+                                            href={`/careers/${career.uid}`}
+                                            className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-100 block cursor-pointer"
+                                            style={{ textDecoration: 'none', color: 'inherit' }}
                                         >
                                             <div className="p-6">
                                                 <div className="flex items-center gap-2 mb-3">
@@ -97,7 +99,7 @@ export default function Career({ careers }) {
                                                     {decodeHtml(stripTags(career.body))}
                                                 </p>
                                             </div>
-                                        </div>
+                                        </Link>
                                     ))}
                                 </div>
                             ) : (

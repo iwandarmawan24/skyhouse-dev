@@ -17,4 +17,13 @@ class CareerController extends Controller
             'careers' => CareerResource::collection($careers)->resolve(),
         ]);
     }
+
+    public function show($uid)
+    {
+        $career = Career::active()->where('uid', $uid)->firstOrFail();
+
+        return Inertia::render('CareerDetail', [
+            'career' => (new CareerResource($career))->resolve(),
+        ]);
+    }
 }
