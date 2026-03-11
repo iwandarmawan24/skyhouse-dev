@@ -63,6 +63,57 @@ const FacilityCard = ({ images, title, description, className = "", rowSpan = ""
   );
 };
 
+const LifestyleSlider = ({ images, children, className = "" }) => {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [fadeIn, setFadeIn] = useState(true);
+  const [isHovered, setIsHovered] = useState(false);
+
+  useEffect(() => {
+    if (!isHovered) {
+      setCurrentImageIndex(0);
+      setFadeIn(true);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setFadeIn(false);
+      setTimeout(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % images.length);
+        setFadeIn(true);
+      }, 400);
+    }, 1400);
+    return () => clearInterval(interval);
+  }, [isHovered, images.length]);
+
+  return (
+    <div
+      className={`service-card relative rounded-3xl overflow-hidden group cursor-pointer ${className}`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <img
+        src={images[currentImageIndex]}
+        alt="Lifestyle"
+        className={`w-full h-full object-cover transition-all duration-700 ease-out group-hover:scale-110 ${fadeIn ? 'opacity-100' : 'opacity-0'}`}
+        style={{ transition: 'opacity 300ms ease-in-out, transform 700ms ease-out' }}
+      />
+      <div className="absolute top-4 left-4 flex gap-2 z-20">
+        {images.map((_, index) => (
+          <div
+            key={index}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+              index === currentImageIndex
+                ? 'bg-white w-6'
+                : 'bg-white/50'
+            }`}
+          />
+        ))}
+      </div>
+      {children}
+    </div>
+  );
+};
+
 const About = () => {
   return (
     <>
@@ -75,41 +126,43 @@ const About = () => {
       >
         <div className="max-w-7xl mx-auto">
           <div className="services-grid grid grid-cols-1 lg:grid-cols-2 gap-6 lg:grid-rows-3">
-            {/* Left Top - Co-working Space Card */}
-            <div className="service-card relative rounded-3xl overflow-hidden min-h-[350px] lg:row-span-2 group cursor-pointer order-2 lg:order-1">
-              <img
-                src="/images/facilities/jakarta.jpg"
-                alt="Co-working Space"
-                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-              />
+            {/* Left Top - Lifestyle Card */}
+            <LifestyleSlider
+              images={[
+                "/images/experiences/lifestyle/mall @ alam sutera.jpg",
+                "/images/experiences/lifestyle/jakarta-premium-outlet.jpg",
+                "/images/experiences/lifestyle/decathlon.jpg",
+              ]}
+              className="min-h-[350px] lg:row-span-2 order-2 lg:order-1"
+            >
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 md:bottom-12 md:left-12">
-                <Heading as="h3" variant="card" color="white" className="mb-2 text-base md:text-xl">Located<br />in the Heart of<br /> Jabodetabek<br /> Transportation</Heading>
+                <Heading as="h3" variant="card" color="white" className="mb-2 text-base md:text-xl">Vibrant<br />Lifestyle &<br /> Shopping<br /> at Your Doorstep</Heading>
                 <br className="hidden md:block" />
                 <Text size="sm" color="white" className="max-w-xs opacity-90 text-xs md:text-sm">
-                  Strategically positioned between Jakarta CBD, BSD CBD, and Soekarno-Hatta International Airport, right at the “Golden Triangle” of Greater Jakarta.
+                  Mall @ Alam Sutera, Living World, IKEA, Flavor Bliss, and Jakarta Premium Outlet—all just minutes away for your everyday convenience.
                 </Text>
               </div>
-            </div>
+            </LifestyleSlider>
 
             <FacilityCard
               images={[
-                "/images/facilities/2.jpg",
-                "/images/facilities/1.jpeg",
-                "/images/facilities/3.jpg"
+                "/images/experiences/lifestyle/living-world-alamsutera.jpg",
+                "/images/experiences/lifestyle/ikea-alam-sutera.webp",
+                "/images/experiences/lifestyle/flavor-bliss.jpeg"
               ]}
-              title="Complete Surroundings"
-              description="Mall @ Alam Sutera, Living World Mall, Flavor Bliss, Binus University, Omni Hospital, and other key facilities within 5–10 minutes."
+              title="Endless Entertainment"
+              description="Living World Mall, IKEA, Flavor Bliss, Decathlon, and Jakarta Premium Outlet—all within a short drive from home."
               className="order-4"
             />
 
-            {/* Architecture Card */}
+            {/* Experience Card */}
             <div className="service-card bg-gradient-to-br from-blue-50 to-cyan-100 rounded-3xl p-6 md:p-8 flex flex-col justify-center order-1 lg:order-3">
               <Heading as="h3" variant="card" className="mb-3 text-lg md:text-xl">Experience</Heading>
               <Heading as="h3" variant="card" bodoni className="mb-3 italic text-lg md:text-xl">Skyhouse Alam Sutera</Heading>
               <div className="block bg-blue-300 h-1 w-16 my-4"></div>
               <Text size="base" color="charcoal" className="text-sm md:text-base">
-                We offers a strategic location, complete surrounding facilities, high investment potential, and an efficient layout—making it an ideal choice for both living and investment.
+                Surrounded by top shopping malls, fresh groceries, leading universities, and thriving business hubs—everything you need is right at your fingertips.
               </Text>
               <div>
                 <Button
@@ -126,22 +179,24 @@ const About = () => {
 
             <FacilityCard
               images={[
-                "/images/facilities/studio-1.jpg",
-                "/images/facilities/studio-2.jpg",
+                "/images/experiences/univ/binus-alsut.jpg",
+                "/images/experiences/univ/binus-aso.jpg",
+                "/images/experiences/univ/sgu.jpeg",
+                "/images/experiences/univ/ubm.jpeg",
               ]}
-              title="High Investment Potential"
-              description="The most affordable studio-unit investment in Alam Sutera with strong potential for high ROI."
+              title="Top Universities Nearby"
+              description="Binus University, Swiss German University, and Universitas Bunda Mulia—ideal for students and academic professionals."
               className="order-4"
             />
 
             <FacilityCard
               images={[
-                "/images/facilities/room-1.jpg",
-                "/images/facilities/room-2.jpg",
-                "/images/facilities/room-3.jpg",
+                "/images/experiences/office/synergy-building.jpg",
+                "/images/experiences/office/alfa-tower.jpg",
+                "/images/experiences/office/kino.jpg",
               ]}
-              title="Efficient Layout"
-              description="Smart, professional design with zero wasted space and a 3-meter-wide cozy room for maximum comfort."
+              title="Thriving Business Hub"
+              description="Synergy Building, Alfa Tower, Kino Tower, and other major offices in Alam Sutera's growing commercial district."
               className="order-5"
             />
           </div>
