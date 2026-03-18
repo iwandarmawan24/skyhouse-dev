@@ -19,8 +19,6 @@ class HeroBannerResource extends JsonResource
 
         return [
             'uid' => $this->uid ?? $this->id,
-            'title' => $this->title,
-            'description' => $this->description,
             'image' => $this->image,
             'image_uid' => $this->image_uid,
             'image_url' => $imageUrl,
@@ -33,8 +31,7 @@ class HeroBannerResource extends JsonResource
                     'alt_text' => $this->bannerImage->alt_text,
                 ];
             }),
-            'button_text' => $this->button_text,
-            'button_link' => $this->button_link,
+            'banner_link' => $this->banner_link,
             'is_active' => (bool) $this->is_active,
             'order' => $this->order,
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),

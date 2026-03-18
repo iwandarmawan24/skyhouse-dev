@@ -11,12 +11,9 @@ class HeroBanner extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'title',
-        'description',
         'image',
         'image_uid',
-        'button_text',
-        'button_link',
+        'banner_link',
         'is_active',
         'order',
     ];

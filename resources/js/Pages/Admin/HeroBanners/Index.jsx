@@ -119,8 +119,7 @@ export default function Index({ banners }) {
                                             <TableHead className="w-[120px]">
                                                 Image
                                             </TableHead>
-                                            <TableHead>Title</TableHead>
-                                            <TableHead>Button</TableHead>
+                                            <TableHead>Banner Link</TableHead>
                                             <TableHead>Status</TableHead>
                                             <TableHead className="text-right">
                                                 Actions
@@ -190,15 +189,13 @@ export default function Index({ banners }) {
                                                             onClick={() =>
                                                                 handleImageClick(
                                                                     imageUrl,
-                                                                    banner.title
+                                                                    'Banner'
                                                                 )
                                                             }
                                                         >
                                                             <img
                                                                 src={imageUrl}
-                                                                alt={
-                                                                    banner.title
-                                                                }
+                                                                alt="Banner"
                                                                 className="w-full h-full object-cover rounded-lg"
                                                             />
                                                             <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity flex items-center justify-center rounded-lg">
@@ -221,36 +218,11 @@ export default function Index({ banners }) {
                                                         </div>
                                                     </TableCell>
 
-                                                    {/* Title */}
+                                                    {/* Banner Link */}
                                                     <TableCell>
-                                                        <div>
-                                                            <div className="font-medium">
-                                                                {banner.title}
-                                                            </div>
-                                                            {banner.description && (
-                                                                <div className="text-sm text-muted-foreground line-clamp-1">
-                                                                    {
-                                                                        banner.description
-                                                                    }
-                                                                </div>
-                                                            )}
-                                                        </div>
-                                                    </TableCell>
-
-                                                    {/* Button */}
-                                                    <TableCell>
-                                                        {banner.button_text ? (
-                                                            <div>
-                                                                <div className="font-medium">
-                                                                    {
-                                                                        banner.button_text
-                                                                    }
-                                                                </div>
-                                                                <div className="text-xs text-muted-foreground">
-                                                                    {
-                                                                        banner.button_link
-                                                                    }
-                                                                </div>
+                                                        {banner.banner_link ? (
+                                                            <div className="text-sm text-muted-foreground">
+                                                                {banner.banner_link}
                                                             </div>
                                                         ) : (
                                                             <span className="text-muted-foreground">

@@ -12,19 +12,15 @@ import {
 } from "@/Components/ui/Card";
 import { Input } from "@/Components/ui/Input";
 import { Label } from "@/Components/ui/Label";
-import { Textarea } from "@/Components/ui/Textarea";
 import { Switch } from "@/Components/ui/switch";
 import { MediaPicker } from "@/Components/MediaPicker";
 
 export default function Form({ banner }) {
     const isEdit = banner !== null;
     const { data, setData, post, processing, errors } = useForm({
-        title: banner?.title || "",
-        description: banner?.description || "",
         image: null,
         image_uid: banner?.image_uid || null,
-        button_text: banner?.button_text || "",
-        button_link: banner?.button_link || "",
+        banner_link: banner?.banner_link || "",
         is_active: banner?.is_active ?? true,
         _method: isEdit ? "PUT" : "POST",
     });
@@ -90,54 +86,6 @@ export default function Form({ banner }) {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            {/* Title */}
-                            <div className="space-y-2">
-                                <Label htmlFor="title">
-                                    Title{" "}
-                                    <span className="text-destructive">*</span>
-                                </Label>
-                                <Input
-                                    id="title"
-                                    value={data.title}
-                                    onChange={(e) =>
-                                        setData("title", e.target.value)
-                                    }
-                                    placeholder="Enter banner title"
-                                    className={
-                                        errors.title ? "border-destructive" : ""
-                                    }
-                                />
-                                {errors.title && (
-                                    <p className="text-sm text-destructive">
-                                        {errors.title}
-                                    </p>
-                                )}
-                            </div>
-
-                            {/* Description */}
-                            <div className="space-y-2">
-                                <Label htmlFor="description">Description</Label>
-                                <Textarea
-                                    id="description"
-                                    value={data.description}
-                                    onChange={(e) =>
-                                        setData("description", e.target.value)
-                                    }
-                                    placeholder="Enter banner description"
-                                    rows={4}
-                                    className={
-                                        errors.description
-                                            ? "border-destructive"
-                                            : ""
-                                    }
-                                />
-                                {errors.description && (
-                                    <p className="text-sm text-destructive">
-                                        {errors.description}
-                                    </p>
-                                )}
-                            </div>
-
                             {/* Image Upload - Media Library */}
                             <div className="space-y-2">
                                 <Label htmlFor="image">
@@ -231,61 +179,32 @@ export default function Form({ banner }) {
                                 )}
                             </div>
 
-                            {/* Button Text & Link */}
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                <div className="space-y-2">
-                                    <Label htmlFor="button_text">
-                                        Button Text
-                                    </Label>
-                                    <Input
-                                        id="button_text"
-                                        value={data.button_text}
-                                        onChange={(e) =>
-                                            setData(
-                                                "button_text",
-                                                e.target.value
-                                            )
-                                        }
-                                        placeholder="e.g., Learn More"
-                                        className={
-                                            errors.button_text
-                                                ? "border-destructive"
-                                                : ""
-                                        }
-                                    />
-                                    {errors.button_text && (
-                                        <p className="text-sm text-destructive">
-                                            {errors.button_text}
-                                        </p>
-                                    )}
-                                </div>
-
-                                <div className="space-y-2">
-                                    <Label htmlFor="button_link">
-                                        Button Link
-                                    </Label>
-                                    <Input
-                                        id="button_link"
-                                        value={data.button_link}
-                                        onChange={(e) =>
-                                            setData(
-                                                "button_link",
-                                                e.target.value
-                                            )
-                                        }
-                                        placeholder="e.g., /products"
-                                        className={
-                                            errors.button_link
-                                                ? "border-destructive"
-                                                : ""
-                                        }
-                                    />
-                                    {errors.button_link && (
-                                        <p className="text-sm text-destructive">
-                                            {errors.button_link}
-                                        </p>
-                                    )}
-                                </div>
+                            {/* Banner Link */}
+                            <div className="space-y-2">
+                                <Label htmlFor="banner_link">
+                                    Banner Link
+                                </Label>
+                                <Input
+                                    id="banner_link"
+                                    value={data.banner_link}
+                                    onChange={(e) =>
+                                        setData(
+                                            "banner_link",
+                                            e.target.value
+                                        )
+                                    }
+                                    placeholder="e.g., /products"
+                                    className={
+                                        errors.banner_link
+                                            ? "border-destructive"
+                                            : ""
+                                    }
+                                />
+                                {errors.banner_link && (
+                                    <p className="text-sm text-destructive">
+                                        {errors.banner_link}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Status Toggle */}
