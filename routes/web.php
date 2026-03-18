@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\CareerController;
 use App\Http\Controllers\Admin\ConstructionProgressController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\MilestoneController;
 use App\Http\Controllers\Admin\MediaLibraryController;
 use App\Http\Controllers\Admin\MediaHighlightController;
 use App\Http\Controllers\Admin\PolicyController;
@@ -132,6 +133,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Construction Progress
             Route::get('/construction-progress', [ConstructionProgressController::class, 'edit'])->name('construction-progress.edit');
             Route::put('/construction-progress', [ConstructionProgressController::class, 'update'])->name('construction-progress.update');
+
+            // Milestones
+            Route::post('/milestones/update-order', [MilestoneController::class, 'updateOrder'])->name('milestones.update-order');
+            Route::resource('milestones', MilestoneController::class)->except(['show']);
 
             // Brochures
             Route::get('/brochures/edit', [BrochureController::class, 'edit'])->name('brochures.edit');

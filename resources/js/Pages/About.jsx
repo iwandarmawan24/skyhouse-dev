@@ -8,7 +8,52 @@ import CTA from '@/Components/Frontend/CTA';
 import '@css/frontend.css';
 import '@css/frontend/about-page.css';
 
-export default function About({ topSales = [] }) {
+const defaultHistoryData = [
+  {
+    uid: '1',
+    year: '2015',
+    title: 'Foundation',
+    description: 'Skyhouse Alamsutera was founded with a vision to create sustainable and innovative residential communities in Indonesia.',
+    image_url: null,
+  },
+  {
+    uid: '2',
+    year: '2017',
+    title: 'First Project Launch',
+    description: 'Successfully launched our first residential project, setting new standards for quality living spaces in Tangerang Selatan.',
+    image_url: null,
+  },
+  {
+    uid: '3',
+    year: '2019',
+    title: 'Expansion',
+    description: 'Expanded operations and introduced smart home technology across all our developments, enhancing resident living experience.',
+    image_url: null,
+  },
+  {
+    uid: '4',
+    year: '2021',
+    title: 'Sustainability Initiative',
+    description: 'Launched green building initiative, incorporating eco-friendly materials and energy-efficient designs in all projects.',
+    image_url: null,
+  },
+  {
+    uid: '5',
+    year: '2023',
+    title: 'Award Recognition',
+    description: 'Received multiple industry awards for excellence in design, construction quality, and customer satisfaction.',
+    image_url: null,
+  },
+  {
+    uid: '6',
+    year: '2024',
+    title: 'International Partnership',
+    description: 'Formed strategic partnership with Anabuki Group to bring world-class residential solutions to Indonesian market.',
+    image_url: null,
+  },
+];
+
+export default function About({ topSales = [], milestones = [] }) {
   const [isMapVisible, setIsMapVisible] = useState(false);
   const mapRef = React.useRef(null);
 
@@ -36,38 +81,7 @@ export default function About({ topSales = [] }) {
   }, []);
 
 
-  const historyData = [
-    {
-      year: '2015',
-      title: 'Foundation',
-      description: 'Skyhouse Alamsutera was founded with a vision to create sustainable and innovative residential communities in Indonesia.'
-    },
-    {
-      year: '2017',
-      title: 'First Project Launch',
-      description: 'Successfully launched our first residential project, setting new standards for quality living spaces in Tangerang Selatan.'
-    },
-    {
-      year: '2019',
-      title: 'Expansion',
-      description: 'Expanded operations and introduced smart home technology across all our developments, enhancing resident living experience.'
-    },
-    {
-      year: '2021',
-      title: 'Sustainability Initiative',
-      description: 'Launched green building initiative, incorporating eco-friendly materials and energy-efficient designs in all projects.'
-    },
-    {
-      year: '2023',
-      title: 'Award Recognition',
-      description: 'Received multiple industry awards for excellence in design, construction quality, and customer satisfaction.'
-    },
-    {
-      year: '2024',
-      title: 'International Partnership',
-      description: 'Formed strategic partnership with Anabuki Group to bring world-class residential solutions to Indonesian market.'
-    }
-  ];
+  const historyData = milestones.length > 0 ? milestones : defaultHistoryData;
 
   const values = [
     {
@@ -338,11 +352,18 @@ export default function About({ topSales = [] }) {
                 </div>
                 <div className="history-timeline">
                   {historyData.map((item, index) => (
-                    <div key={index} className="timeline-item">
+                    <div key={item.uid || index} className="timeline-item">
                       <div className="timeline-content">
                         <div className="timeline-year">{item.year}</div>
                         <h3>{item.title}</h3>
                         <p>{item.description}</p>
+                        {item.image_url && (
+                          <img
+                            src={item.image_url}
+                            alt={item.title}
+                            className="mt-4 w-full h-40 object-cover rounded-lg"
+                          />
+                        )}
                       </div>
                     </div>
                   ))}
