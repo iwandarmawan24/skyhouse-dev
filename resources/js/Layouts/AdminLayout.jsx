@@ -24,6 +24,8 @@ import {
     HelpCircle,
     Trophy,
     Briefcase,
+    Award,
+    HardHat,
 } from "lucide-react";
 
 import {
@@ -76,6 +78,8 @@ export default function AdminLayout({ children }) {
         const homepagePaths = [
             "/admin/hero-banners",
             "/admin/location-map",
+            "/admin/awards",
+            "/admin/construction-progress",
         ];
         const isActive = homepagePaths.some((path) =>
             window.location.pathname.startsWith(path)
@@ -125,6 +129,8 @@ export default function AdminLayout({ children }) {
         const homepagePaths = [
             "/admin/hero-banners",
             "/admin/location-map",
+            "/admin/awards",
+            "/admin/construction-progress",
         ];
         return homepagePaths.some((path) =>
             window.location.pathname.startsWith(path)
@@ -202,6 +208,16 @@ export default function AdminLayout({ children }) {
                         name: "Location Map",
                         href: "/admin/location-map/edit",
                         icon: MapPin,
+                    },
+                    {
+                        name: "Awards",
+                        href: "/admin/awards",
+                        icon: Award,
+                    },
+                    {
+                        name: "Construction Progress",
+                        href: "/admin/construction-progress",
+                        icon: HardHat,
                     },
                 ],
             },
