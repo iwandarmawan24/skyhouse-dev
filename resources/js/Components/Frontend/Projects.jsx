@@ -91,6 +91,7 @@ const Projects = ({ projects: backendProjects = [] }) => {
                       units={project.units}
                       title={project.title}
                       description={project.description}
+                      href={`/project/${project.id}`}
                     />
                   </SwiperSlide>
                 ))}
