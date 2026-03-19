@@ -21,7 +21,6 @@ const CTA = () => {
         const response = await fetch('/api/instagram-gallery');
         const result = await response.json();
         if (result.success && result.data) {
-          // Filter out null values and use fallback for empty slots
           const images = result.data.map((url, index) => url || fallbackImages[index]);
           setInstagramImages(images);
         } else {
@@ -36,46 +35,84 @@ const CTA = () => {
     fetchInstagramImages();
   }, []);
 
-  // Use fallback while loading
   const displayImages = instagramImages.length > 0 ? instagramImages : fallbackImages;
 
   return (
-    <section className="section_cta background-color-brown is-bottom-rounded is-20">
-      <div className="padding-global">
-        <div className="py-24">
-          <div className="cta_component">
-            <div className="cta_left">
-              <div className="cta_card">
-                <Heading as="h2" variant="section">Get in touch with us to discover more about <span className="font-bodoni italic">Skyhouse!</span></Heading>
-                <Text>Ask anything, we will answer it immediately.</Text>
-                <Button href="/contact-us" variant="primary">
-                  Contact us
-                </Button>
-              </div>
-            </div>
-            <div className="cta_right">
-              <div className="instagram_grid">
-                {displayImages.map((image, index) => (
-                  <div key={index} className="instagram_grid-item">
-                    <img src={image} alt={`Instagram post ${index + 1}`} />
-                  </div>
-                ))}
-              </div>
-              <a
-                href="https://www.instagram.com/skyhouse_alamsuteraid/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="instagram_button"
-              >
-                <Text as="span">See our instagram</Text>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                  <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </a>
+    <section className="relative bg-skyhouse-ocean overflow-hidden">
+      {/* Large decorative italic text in background */}
+      <div className="pointer-events-none select-none absolute -top-6 left-0 right-0 flex justify-center overflow-hidden">
+        <span className="font-bodoni italic text-[clamp(80px,18vw,220px)] font-bold text-white/5 whitespace-nowrap leading-none">
+          Skyhouse
+        </span>
+      </div>
+
+      {/* Sunshine accent line at top */}
+      <div className="h-1 w-full bg-skyhouse-sunshine" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 lg:px-16 py-20 lg:py-28">
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+
+          {/* Left — CTA content */}
+          <div className="flex-1 flex flex-col gap-8">
+            {/* Label chip */}
+            <span className="inline-flex self-start items-center gap-2 bg-skyhouse-sunshine/10 border border-skyhouse-sunshine/40 text-skyhouse-sunshine text-sm font-semibold tracking-widest uppercase px-4 py-2 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-skyhouse-sunshine inline-block" />
+              Get in touch
+            </span>
+
+            <Heading as="h2" variant="section" color="white" weight="light" className="leading-snug">
+              Reach out to us and explore{' '}
+              <span className="font-bodoni italic text-skyhouse-sunshine">Skyhouse</span>{' '}
+              in more detail!
+            </Heading>
+
+            <Text className="text-white/70 text-lg max-w-md">
+              Feel free to ask anything, and our team will respond to you right away.
+            </Text>
+
+            <div className="flex flex-col sm:flex-row items-start gap-4">
+              <Button href="/contact-us" variant="sunshine" size="lg">
+                Contact us
+              </Button>
             </div>
           </div>
+
+          {/* Right — Instagram mosaic */}
+          <div className="flex-1 w-full max-w-lg lg:max-w-none flex flex-col gap-4">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+              {displayImages.map((image, index) => (
+                <div
+                  key={index}
+                  className={`overflow-hidden rounded-2xl`}
+                >
+                  <img
+                    src={image}
+                    alt={`Instagram post ${index + 1}`}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+                  />
+                </div>
+              ))}
+            </div>
+            <a
+              href="https://www.instagram.com/skyhouse_alamsuteraid/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-white/60 hover:text-skyhouse-sunshine transition-colors duration-200 text-base font-medium self-end"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <rect x="2" y="2" width="20" height="20" rx="5" stroke="currentColor" strokeWidth="2"/>
+                <circle cx="12" cy="12" r="4" stroke="currentColor" strokeWidth="2"/>
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+              </svg>
+              See our Instagram
+            </a>
+          </div>
+
         </div>
       </div>
+
+      {/* Sunshine accent line at bottom */}
+      <div className="h-1 w-full bg-skyhouse-sunshine" />
     </section>
   );
 };

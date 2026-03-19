@@ -89,36 +89,21 @@ class NewsController extends Controller
 
     public function show()
     {
-        // Get featured media highlight or article (latest one)
-        $featuredHighlight = MediaHighlight::with('media')
-            ->orderBy('publish_date', 'desc')
-            ->first();
-
+        // News page featured = latest featured article, or just latest published article
         $featuredArticle = Article::where('is_published', true)
             ->where('is_featured', true)
             ->orderBy('published_at', 'desc')
             ->first();
 
-        // Prepare featured item
+        if (!$featuredArticle) {
+            $featuredArticle = Article::where('is_published', true)
+                ->whereNotNull('published_at')
+                ->orderBy('published_at', 'desc')
+                ->first();
+        }
+
         $featured = null;
-        if ($featuredHighlight) {
-            $featured = [
-                'type' => 'media_highlight',
-                'title' => $featuredHighlight->title,
-                'description' => $featuredHighlight->title,
-                'image' => $featuredHighlight->image
-                    ? (str_starts_with($featuredHighlight->image, 'http')
-                        ? $featuredHighlight->image
-                        : asset('storage/' . $featuredHighlight->image))
-                    : 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&h=600&fit=crop',
-                'date' => $featuredHighlight->publish_date ? $featuredHighlight->publish_date->format('F d, Y') : null,
-                'mediaLogo' => $featuredHighlight->media && $featuredHighlight->media->logo
-                    ? (str_starts_with($featuredHighlight->media->logo, 'http')
-                        ? $featuredHighlight->media->logo
-                        : asset('storage/' . $featuredHighlight->media->logo))
-                    : 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
-            ];
-        } elseif ($featuredArticle) {
+        if ($featuredArticle) {
             $featured = [
                 'type' => 'article',
                 'title' => $featuredArticle->title,

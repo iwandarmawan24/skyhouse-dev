@@ -1,8 +1,8 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Heading, Text } from '@/Components/Frontend/atoms';
+import { Heading, Text } from '@/Components/Frontend/atoms'; // used in zoom layout top bar
 
-const ImagePreviewModal = ({ isOpen, onClose, image, title, description }) => {
+const ImagePreviewModal = ({ isOpen, onClose, image, title, description, layout = 'zoom' }) => {
   const [scale, setScale] = useState(1);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
@@ -110,6 +110,58 @@ const ImagePreviewModal = ({ isOpen, onClose, image, title, description }) => {
   }, [scale, handleReset]);
 
   if (!isOpen) return null;
+
+  // Side-by-side layout: fullscreen, image left, title+description panel right
+  if (layout === 'side-by-side') {
+    return createPortal(
+      <div className="fixed inset-0 bg-black/90 flex flex-col z-[9999]">
+        {/* Top bar */}
+        <div className="flex items-center justify-between px-4 py-3 bg-black/50 backdrop-blur-sm shrink-0">
+          <div />
+          <button
+            onClick={onClose}
+            className="p-1.5 text-white hover:text-skyhouse-sunshine transition-colors ml-4 shrink-0"
+            title="Close (Esc)"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+
+        {/* Body: image left, content right */}
+        <div className="flex flex-1 overflow-hidden flex-col md:flex-row">
+          {/* Image */}
+          <div className="flex-1 flex items-center justify-center overflow-hidden bg-black">
+            <img
+              src={image}
+              alt={title}
+              className="max-w-full max-h-full object-contain"
+            />
+          </div>
+
+          {/* Description panel */}
+          {(title || description) && (
+            <div className="w-full md:w-80 lg:w-96 bg-white/5 border-t md:border-t-0 md:border-l border-white/10 flex flex-col p-8 overflow-y-auto shrink-0">
+              {title && (
+                <h2 className="text-white text-2xl font-semibold mb-4 leading-snug">
+                  {title}
+                </h2>
+              )}
+              {description ? (
+                <p className="text-white/70 text-base leading-relaxed">
+                  {description}
+                </p>
+              ) : (
+                <p className="text-white/40 text-base italic">No description available.</p>
+              )}
+            </div>
+          )}
+        </div>
+      </div>,
+      document.body
+    );
+  }
 
   const isZoomed = scale > 1;
 

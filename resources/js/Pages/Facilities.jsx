@@ -150,7 +150,7 @@ export default function Facilities({ facilities: backendFacilities = [] }) {
                             {facility.title}
                           </Heading>
                           {facility.description && (
-                            <Text size="sm" color="white" className="mt-2 opacity-0 group-hover:opacity-90 transition-opacity duration-300">
+                            <Text size="sm" color="white" className="mt-2 line-clamp-1 opacity-0 group-hover:opacity-90 transition-opacity duration-300">
                               {facility.description}
                             </Text>
                           )}
@@ -270,13 +270,17 @@ export default function Facilities({ facilities: backendFacilities = [] }) {
         }
       `}</style>
 
-      <ImagePreviewModal
-        isOpen={!!previewFacility}
-        onClose={() => setPreviewFacility(null)}
-        image={previewFacility?.image}
-        title={previewFacility?.title}
-        description={previewFacility?.description}
-      />
+      {/* Facility detail modal */}
+      {previewFacility && (
+        <ImagePreviewModal
+          isOpen={!!previewFacility}
+          onClose={() => setPreviewFacility(null)}
+          image={previewFacility?.image}
+          title={previewFacility?.title}
+          description={previewFacility?.description}
+          layout="side-by-side"
+        />
+      )}
     </PageLayout>
   );
 }

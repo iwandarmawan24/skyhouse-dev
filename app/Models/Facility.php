@@ -57,7 +57,7 @@ class Facility extends Model
     public function getMediaImagesAttribute()
     {
         if (!$this->image_uids || !is_array($this->image_uids) || empty($this->image_uids)) {
-            return [];
+            return collect([]);
         }
 
         // Get all images that match the UIDs
