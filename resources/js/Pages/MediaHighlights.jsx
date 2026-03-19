@@ -118,6 +118,7 @@ export default function MediaHighlights({ featured }) {
                   <img
                     src={featuredNews.image}
                     alt={featuredNews.title}
+                    onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&h=600&fit=crop'; }}
                   />
                 </div>
                 <div className="news-hero-details">
@@ -132,6 +133,7 @@ export default function MediaHighlights({ featured }) {
                       src={featuredNews.mediaLogo}
                       alt="Media logo"
                       className="news-hero-logo"
+                      onError={(e) => { e.target.src = 'https://placehold.co/120x40/1E3A8A/white?text=NEWS'; }}
                     />
                   </div>
                   <h1 className="news-hero-title">
@@ -171,6 +173,7 @@ export default function MediaHighlights({ featured }) {
                         <img
                           src={item.image}
                           alt={item.title}
+                          onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&h=600&fit=crop'; }}
                         />
                       </div>
                       <div className="news-card-content">
@@ -185,6 +188,7 @@ export default function MediaHighlights({ featured }) {
                             src={item.mediaLogo}
                             alt="Media logo"
                             className="news-card-logo"
+                            onError={(e) => { e.target.src = 'https://placehold.co/120x40/1E3A8A/white?text=NEWS'; }}
                           />
                         </div>
                         <h3 className="news-card-title">

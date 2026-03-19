@@ -55,7 +55,7 @@ export default function News({ featured }) {
   const featuredNews = featured || {
     image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&h=600&fit=crop",
     date: "September 18, 2024",
-    mediaLogo: "https://placehold.co/120x40/1E3A8A/white?text=NEWS",
+    category: "News",
     title: "Kolaborasi dengan Anabuki Group, Skyhouse Alamsutera Bangun Hunian Terbaru di Serpong, Tangerang Selatan",
     description:
       "Kolaborasi ini akan memperkuat kerja operasional Skyhouse Alamsutera yang saat ini sedang membangun perumahan di daerah Tangerang Selatan",
@@ -125,14 +125,16 @@ export default function News({ featured }) {
                     <span className="news-hero-date">
                       {featuredNews.date}
                     </span>
-                    <span className="news-hero-separator">
-                      |
-                    </span>
-                    <img
-                      src={featuredNews.mediaLogo}
-                      alt="Media logo"
-                      className="news-hero-logo"
-                    />
+                    {featuredNews.category && (
+                      <>
+                        <span className="news-hero-separator">
+                          |
+                        </span>
+                        <span className="news-card-category">
+                          {featuredNews.category}
+                        </span>
+                      </>
+                    )}
                   </div>
                   <h1 className="news-hero-title">
                     {featuredNews.title}
