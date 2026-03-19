@@ -354,14 +354,16 @@ export default function ProjectDetail({ project }) {
                   Schedule a viewing or get more information about this property. Contact us to know more about pricing, availability, and special offers.
                 </Text>
 
-                <Button
-                  variant="sunshine"
-                  size="md"
-                  fullWidth
-                  className="mb-4"
-                >
-                  Contact Us
-                </Button>
+                <a href="/contact-us">
+                  <Button
+                    variant="sunshine"
+                    size="md"
+                    fullWidth
+                    className="mb-4"
+                  >
+                    Contact Us
+                  </Button>
+                </a>
 
                 {brochure && (
                   <Button
