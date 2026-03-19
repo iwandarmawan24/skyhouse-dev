@@ -51,7 +51,7 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                 onMouseLeave={() => setIsProjectsDropdownOpen(false)}
               >
                 <div className="navbar2_link flex items-center gap-1">
-                  Company
+                  About Us
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                   </svg>
@@ -67,7 +67,7 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                     }}
                   >
                     <a href="/about" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
-                      Company
+                      About Us
                     </a>
                     <a href="/facilities" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
                       Facilities

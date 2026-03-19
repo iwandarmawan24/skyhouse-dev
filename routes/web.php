@@ -14,9 +14,12 @@ use App\Http\Controllers\Admin\HeroBannerController;
 use App\Http\Controllers\Admin\InstagramGalleryController;
 use App\Http\Controllers\Admin\LocationMapController;
 use App\Http\Controllers\Admin\BrochureController;
+use App\Http\Controllers\Admin\AwardController;
 use App\Http\Controllers\Admin\CareerController;
+use App\Http\Controllers\Admin\ConstructionProgressController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\MilestoneController;
 use App\Http\Controllers\Admin\MediaLibraryController;
 use App\Http\Controllers\Admin\MediaHighlightController;
 use App\Http\Controllers\Admin\PolicyController;
@@ -34,7 +37,9 @@ use App\Http\Controllers\Frontend\GalleryController as FrontendGalleryController
 use App\Http\Controllers\Frontend\FacilityController as FrontendFacilityController;
 use App\Http\Controllers\Frontend\InstagramGalleryController as FrontendInstagramGalleryController;
 use App\Http\Controllers\Frontend\TopSalesController as FrontendTopSalesController;
+use App\Http\Controllers\Frontend\AwardController as FrontendAwardController;
 use App\Http\Controllers\Frontend\CareerController as FrontendCareerController;
+use App\Http\Controllers\Frontend\ConstructionProgressController as FrontendConstructionProgressController;
 use App\Http\Controllers\Frontend\HomeController;
 use App\Http\Controllers\Frontend\NewsController;
 use Illuminate\Support\Facades\Cache;
@@ -51,6 +56,8 @@ Route::get('/api/brochure', [FrontendBrochureController::class, 'show'])->name('
 Route::get('/api/faqs', [FrontendFaqController::class, 'index'])->name('api.faqs');
 Route::get('/api/instagram-gallery', [FrontendInstagramGalleryController::class, 'index'])->name('api.instagram-gallery');
 Route::get('/api/top-sales', [FrontendTopSalesController::class, 'index'])->name('api.top-sales');
+Route::get('/api/construction-progress', [FrontendConstructionProgressController::class, 'show'])->name('api.construction-progress');
+Route::get('/api/awards', [FrontendAwardController::class, 'show'])->name('api.awards');
 
 Route::get('/project', [\App\Http\Controllers\Frontend\ProjectController::class, 'index'])->name('project');
 
@@ -118,6 +125,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Location Map
             Route::get('/location-map/edit', [LocationMapController::class, 'edit'])->name('location-map.edit');
             Route::put('/location-map', [LocationMapController::class, 'update'])->name('location-map.update');
+
+            // Awards
+            Route::get('/awards', [AwardController::class, 'edit'])->name('awards.edit');
+            Route::put('/awards', [AwardController::class, 'update'])->name('awards.update');
+
+            // Construction Progress
+            Route::get('/construction-progress', [ConstructionProgressController::class, 'edit'])->name('construction-progress.edit');
+            Route::put('/construction-progress', [ConstructionProgressController::class, 'update'])->name('construction-progress.update');
+
+            // Milestones
+            Route::post('/milestones/update-order', [MilestoneController::class, 'updateOrder'])->name('milestones.update-order');
+            Route::resource('milestones', MilestoneController::class)->except(['show']);
 
             // Brochures
             Route::get('/brochures/edit', [BrochureController::class, 'edit'])->name('brochures.edit');

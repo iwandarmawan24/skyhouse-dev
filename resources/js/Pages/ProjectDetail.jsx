@@ -136,24 +136,23 @@ export default function ProjectDetail({ project }) {
                 </Heading>
               </div>
               <div className="flex flex-wrap gap-8">
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                  </svg>
-                  <Text className="!text-md" color="charcoal">{project.specifications.bedrooms} Bedrooms</Text>
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                  </svg>
-                  <Text className="!text-md" color="charcoal">{project.specifications.bathrooms} Bathrooms</Text>
-                </div>
-                <div className="flex items-center gap-2">
-                  <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
-                  </svg>
-                  <Text className="!text-md" color="charcoal">{project.specifications.land_area} m²</Text>
-                </div>
+                {project.specifications.bedrooms > 0 && (
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                    </svg>
+                    <Text className="!text-md" color="charcoal">{project.specifications.bedrooms} Bedrooms</Text>
+                  </div>
+                )}
+                {project.specifications.bathrooms > 0 && (
+                  <div className="flex items-center gap-2">
+                    <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <Text className="!text-md" color="charcoal">{project.specifications.bathrooms} Bathrooms</Text>
+                  </div>
+                )}
+
               </div>
             </div>
           </div>
@@ -195,60 +194,69 @@ export default function ProjectDetail({ project }) {
                   Specifications
                 </Heading>
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {project.specifications.bedrooms > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                        <Text size="sm" color="slate" className="!font-medium">Bedrooms</Text>
+                      </div>
+                      <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.bedrooms}</Text>
+                    </div>
+                  )}
+                  {project.specifications.bathrooms > 0 && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                        </svg>
+                        <Text size="sm" color="slate" className="!font-medium">Bathrooms</Text>
+                      </div>
+                      <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.bathrooms}</Text>
+                    </div>
+                  )}
+                  {project.specifications.living_room && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                        </svg>
+                        <Text size="sm" color="slate" className="!font-medium">Living Room</Text>
+                      </div>
+                      <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">Yes</Text>
+                    </div>
+                  )}
+                  {project.specifications.balcony && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                        </svg>
+                        <Text size="sm" color="slate" className="!font-medium">Balcony</Text>
+                      </div>
+                      <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">Yes</Text>
+                    </div>
+                  )}
+                  {project.specifications.kitchen && (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-2 mb-1">
+                        <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM4 20h16v2H4v-2z" />
+                        </svg>
+                        <Text size="sm" color="slate" className="!font-medium">Kitchen</Text>
+                      </div>
+                      <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">Yes</Text>
+                    </div>
+                  )}
                   <div className="space-y-2">
                     <div className="flex items-center gap-2 mb-1">
-                      <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                      <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                       </svg>
-                      <Text size="sm" color="slate" className="!font-medium">Land Area</Text>
+                      <Text size="sm" color="slate" className="!font-medium">Furnished</Text>
                     </div>
-                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.land_area} m²</Text>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 mb-1">
-                      <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
-                      </svg>
-                      <Text size="sm" color="slate" className="!font-medium">Building Area</Text>
-                    </div>
-                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.building_area} m²</Text>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 mb-1">
-                      <svg className="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 10h18M3 14h18m-9-4v8m-7 0h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                      </svg>
-                      <Text size="sm" color="slate" className="!font-medium">Bedrooms</Text>
-                    </div>
-                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.bedrooms}</Text>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 mb-1">
-                      <svg className="w-5 h-5 text-cyan-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
-                      </svg>
-                      <Text size="sm" color="slate" className="!font-medium">Bathrooms</Text>
-                    </div>
-                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.bathrooms}</Text>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 mb-1">
-                      <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
-                      <Text size="sm" color="slate" className="!font-medium">Floors</Text>
-                    </div>
-                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.floors}</Text>
-                  </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2 mb-1">
-                      <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6 0a1 1 0 001 1h2a1 1 0 001-1m0 0h1a1 1 0 001-1v-1a1 1 0 00-1-1h-1m-6 0H9" />
-                      </svg>
-                      <Text size="sm" color="slate" className="!font-medium">Carports</Text>
-                    </div>
-                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.carports}</Text>
+                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.furnished ? 'Yes' : 'No'}</Text>
                   </div>
                 </div>
               </div>
@@ -346,14 +354,16 @@ export default function ProjectDetail({ project }) {
                   Schedule a viewing or get more information about this property. Contact us to know more about pricing, availability, and special offers.
                 </Text>
 
-                <Button
-                  variant="sunshine"
-                  size="md"
-                  fullWidth
-                  className="mb-4"
-                >
-                  Contact Us
-                </Button>
+                <a href="/contact-us">
+                  <Button
+                    variant="sunshine"
+                    size="md"
+                    fullWidth
+                    className="mb-4"
+                  >
+                    Contact Us
+                  </Button>
+                </a>
 
                 {brochure && (
                   <Button

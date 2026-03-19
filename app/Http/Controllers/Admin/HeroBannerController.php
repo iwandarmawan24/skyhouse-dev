@@ -47,12 +47,9 @@ class HeroBannerController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image_uid' => 'nullable|exists:media_library,uid',
-            'button_text' => 'nullable|string|max:100',
-            'button_link' => 'nullable|string|max:255',
+            'banner_link' => 'nullable|string|max:255',
             'is_active' => 'required|boolean',
         ]);
 
@@ -94,12 +91,9 @@ class HeroBannerController extends Controller
     public function update(Request $request, HeroBanner $heroBanner)
     {
         $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image_uid' => 'nullable|exists:media_library,uid',
-            'button_text' => 'nullable|string|max:100',
-            'button_link' => 'nullable|string|max:255',
+            'banner_link' => 'nullable|string|max:255',
             'is_active' => 'required|boolean',
         ]);
 

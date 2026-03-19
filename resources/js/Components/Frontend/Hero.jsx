@@ -1,16 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import Button from '@/Components/Frontend/atoms/Button';
-import { Heading, Text } from '@/Components/Frontend/atoms';
 import axios from 'axios';
 
 // Default/fallback slide data
 const defaultSlides = [
   {
     id: 1,
-    title: 'Find the Place Where your Story Begins',
-    description: 'Discover your dream home with Skyhouse Alamsutera where comfort meets elegance in the heart of the city.',
-    button_text: 'Explore Our Projects',
-    button_link: '/project',
+    banner_link: '',
     image_url: '/images/hero/hero-sky-bg.png'
   }
 ];
@@ -21,8 +16,6 @@ const Hero = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [scrollY, setScrollY] = useState(0);
-  const [showContent, setShowContent] = useState(true);
-  const [showBlur, setShowBlur] = useState(true);
   const intervalRef = useRef(null);
 
   // Fetch hero banners from backend
@@ -33,21 +26,16 @@ const Hero = () => {
         const banners = response.data.data;
 
         if (banners && banners.length > 0) {
-          // Format the data to match our component structure
-          const formattedSlides = banners.map((banner, index) => ({
+          const formattedSlides = banners.map((banner) => ({
             id: banner.uid,
-            title: banner.title,
-            description: banner.description,
-            button_text: banner.button_text || 'Explore Our Projects',
-            button_link: banner.button_link || '/project',
-            image_url: banner.image_url || `/images/hero/hero-sky-bg.png`,
+            banner_link: banner.banner_link || '',
+            image_url: banner.image_url || '/images/hero/hero-sky-bg.png',
           }));
 
           setSlides(formattedSlides);
         }
       } catch (error) {
         console.error('Error fetching hero banners:', error);
-        // Use default slides if fetch fails
       } finally {
         setIsLoading(false);
       }
@@ -71,7 +59,7 @@ const Hero = () => {
     if (!isLoading && slides.length > 1) {
       intervalRef.current = setInterval(() => {
         handleNextSlide();
-      }, 5000); // Change slide every 5 seconds
+      }, 5000);
 
       return () => {
         if (intervalRef.current) {
@@ -84,69 +72,30 @@ const Hero = () => {
   const handleNextSlide = () => {
     if (!isAnimating) {
       setIsAnimating(true);
-      // Remove blur first
-      setShowBlur(false);
-      // Wait for blur animation to complete, then fade out content
+      setCurrentSlide((prev) => (prev + 1) % slides.length);
       setTimeout(() => {
-        setShowContent(false);
-        setTimeout(() => {
-          setCurrentSlide((prev) => (prev + 1) % slides.length);
-          setTimeout(() => {
-            setShowContent(true);
-            setIsAnimating(false);
-            // Trigger blur animation after content fade-in completes
-            setTimeout(() => {
-              setShowBlur(true);
-            }, 600); // Wait for content animation to finish
-          }, 300);
-        }, 400);
-      }, 800); // Wait for blur to fade out
+        setIsAnimating(false);
+      }, 600);
     }
   };
 
   const handlePrevSlide = () => {
     if (!isAnimating) {
       setIsAnimating(true);
-      // Remove blur first
-      setShowBlur(false);
-      // Wait for blur animation to complete, then fade out content
+      setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
       setTimeout(() => {
-        setShowContent(false);
-        setTimeout(() => {
-          setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
-          setTimeout(() => {
-            setShowContent(true);
-            setIsAnimating(false);
-            // Trigger blur animation after content fade-in completes
-            setTimeout(() => {
-              setShowBlur(true);
-            }, 600); // Wait for content animation to finish
-          }, 300);
-        }, 400);
-      }, 800); // Wait for blur to fade out
+        setIsAnimating(false);
+      }, 600);
     }
   };
 
   const goToSlide = (index) => {
     if (!isAnimating && index !== currentSlide) {
       setIsAnimating(true);
-      // Remove blur first
-      setShowBlur(false);
-      // Wait for blur animation to complete, then fade out content
+      setCurrentSlide(index);
       setTimeout(() => {
-        setShowContent(false);
-        setTimeout(() => {
-          setCurrentSlide(index);
-          setTimeout(() => {
-            setShowContent(true);
-            setIsAnimating(false);
-            // Trigger blur animation after content fade-in completes
-            setTimeout(() => {
-              setShowBlur(true);
-            }, 600); // Wait for content animation to finish
-          }, 300);
-        }, 400);
-      }, 800); // Wait for blur to fade out
+        setIsAnimating(false);
+      }, 600);
 
       // Reset interval
       if (intervalRef.current) {
@@ -155,6 +104,12 @@ const Hero = () => {
           handleNextSlide();
         }, 5000);
       }
+    }
+  };
+
+  const handleBannerClick = (bannerLink) => {
+    if (bannerLink) {
+      window.open(bannerLink, '_blank', 'noopener,noreferrer');
     }
   };
 
@@ -176,7 +131,7 @@ const Hero = () => {
         {slides.map((slide, index) => (
           <div
             key={slide.id}
-            className={`hero_slide ${index === currentSlide ? 'active' : ''}`}
+            className={`hero_slide ${index === currentSlide ? 'active' : ''} ${slide.banner_link ? 'cursor-pointer' : ''}`}
             style={{
               backgroundImage: `url(${slide.image_url})`,
               backgroundSize: 'cover',
@@ -184,69 +139,9 @@ const Hero = () => {
               backgroundRepeat: 'no-repeat',
               transform: `translateY(${scrollY * 0.5}px)`,
             }}
+            onClick={() => handleBannerClick(slide.banner_link)}
           />
         ))}
-      </div>
-
-      {/* Hero Content */}
-      <div className="padding-global" style={{ 
-        position: 'relative', 
-        zIndex: 20,
-        transform: `translateY(${scrollY * 0.2}px)`,
-      }}>
-        <div className="container-large">
-          {/* Slide Content with Fade */}
-            {slides.map((slide, index) => (
-              <div
-                key={slide.id}
-                className={`slide_content ${index === currentSlide ? 'active' : ''}`}
-              >
-                <div 
-                  className="flex flex-col items-center !pt-14 md:!pt-48"
-                  style={{
-                    opacity: showContent && index === currentSlide ? 1 : 0,
-                    transform: showContent && index === currentSlide ? 'translateY(0)' : 'translateY(50px)',
-                    transition: 'opacity 0.6s ease-out, transform 0.6s ease-out',
-                  }}
-                >
-                  <img
-                    src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
-                    alt="Skyhouse Alamsutera"
-                    className="navbar_logo !w-24 md:!w-36 lg:!w-[150px]"
-                    style={{ height: 'auto', margin: '0 auto', marginBottom: '50px' }}
-                  />
-                  <div 
-                    className={`flex flex-col items-center bg-black/10 p-12 rounded-[50px] shadow-lg max-w-3xl ${showBlur && index === currentSlide ? 'backdrop-blur-md' : 'backdrop-blur-none'}`}
-                    style={{
-                      transition: 'backdrop-filter 0.8s ease-out',
-                    }}
-                  >
-                    <Heading as="h1" variant="hero" color="white" className="text-center !mb-4 md:!leading-[4.8rem] xs:!leading-[1rem] text-shadow-lg !text-[32px] md:!text-[48px]">
-                      <div dangerouslySetInnerHTML={{ __html: slide.title }} />
-                    </Heading>
-                    <Text as="div" className="text-center text-shadow-lg" color="white" size="md">
-                      <span dangerouslySetInnerHTML={{ __html: slide.description }} />
-                    </Text>
-                    <div className="block bg-white h-1 w-24 mx-auto mt-12 mb-2"></div>
-                  </div>
-
-
-                  {slide.button_text && (
-                    <div className="-mt-6">
-                      <Button
-                        href={slide.button_link}
-                        variant="pill-light-sunshine"
-                        size="md"
-                        squash
-                      >
-                        {slide.button_text}
-                      </Button>
-                    </div>
-                  )}
-                </div>
-              </div>
-            ))}
-        </div>
       </div>
 
       {/* Navigation Controls - Only show if more than 1 slide */}

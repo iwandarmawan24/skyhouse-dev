@@ -4,18 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class HeroBanner extends Model
+class Milestone extends Model
 {
     protected $primaryKey = 'uid';
     protected $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = [
+        'year',
+        'title',
+        'description',
         'image',
         'image_uid',
-        'banner_link',
-        'is_active',
         'order',
+        'is_active',
     ];
 
     protected $casts = [
@@ -31,7 +33,6 @@ class HeroBanner extends Model
                 $model->uid = (string) \Illuminate\Support\Str::uuid();
             }
 
-            // Auto-assign order if not set
             if (empty($model->order)) {
                 $maxOrder = static::max('order') ?? 0;
                 $model->order = $maxOrder + 1;
@@ -39,26 +40,17 @@ class HeroBanner extends Model
         });
     }
 
-    /**
-     * Scope a query to only include active banners.
-     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
-    /**
-     * Scope a query to order by order field.
-     */
     public function scopeOrdered($query)
     {
         return $query->orderBy('order', 'asc');
     }
 
-    /**
-     * Get the banner image from media library.
-     */
-    public function bannerImage()
+    public function milestoneImage()
     {
         return $this->belongsTo(MediaLibrary::class, 'image_uid', 'uid');
     }

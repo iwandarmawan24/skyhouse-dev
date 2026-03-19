@@ -46,11 +46,11 @@ export const createColumns = (setShowDeleteConfirm, handleImageClick, selectedRo
             return (
                 <div
                     className="relative cursor-pointer group w-24 h-16"
-                    onClick={() => handleImageClick(imageUrl, banner.title)}
+                    onClick={() => handleImageClick(imageUrl, 'Banner')}
                 >
                     <img
                         src={imageUrl}
-                        alt={banner.title}
+                        alt="Banner"
                         className="w-full h-full object-cover rounded-lg"
                     />
                     <div className="absolute inset-0 bg-black opacity-0 group-hover:opacity-30 transition-opacity flex items-center justify-center rounded-lg">
@@ -63,45 +63,15 @@ export const createColumns = (setShowDeleteConfirm, handleImageClick, selectedRo
         },
     },
     {
-        accessorKey: "title",
-        header: ({ column }) => {
-            return (
-                <Button
-                    variant="ghost"
-                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                >
-                    Title
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            );
-        },
+        accessorKey: "banner_link",
+        header: "Banner Link",
         cell: ({ row }) => {
             const banner = row.original;
-            return (
-                <div>
-                    <div className="font-medium">{banner.title}</div>
-                    {banner.description && (
-                        <div className="text-sm text-muted-foreground line-clamp-1">
-                            {banner.description}
-                        </div>
-                    )}
-                </div>
-            );
-        },
-    },
-    {
-        accessorKey: "button_text",
-        header: "Button",
-        cell: ({ row }) => {
-            const banner = row.original;
-            if (!banner.button_text) {
+            if (!banner.banner_link) {
                 return <span className="text-muted-foreground">-</span>;
             }
             return (
-                <div>
-                    <div className="font-medium">{banner.button_text}</div>
-                    <div className="text-xs text-muted-foreground">{banner.button_link}</div>
-                </div>
+                <div className="text-sm text-muted-foreground">{banner.banner_link}</div>
             );
         },
     },

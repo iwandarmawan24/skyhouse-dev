@@ -10,6 +10,8 @@ import ShowMoreBanner from '@/Components/Frontend/ShowMoreBanner';
 import Quiz from '@/Components/Frontend/Quiz';
 import Employee from '@/Components/Frontend/Employee';
 import Characters from '@/Components/Frontend/Characters';
+import Awards from '@/Components/Frontend/Awards';
+import ConstructionProgress from '@/Components/Frontend/ConstructionProgress';
 import News from '@/Components/Frontend/News';
 import CTA from '@/Components/Frontend/CTA';
 import Footer from '@/Components/Frontend/Footer';
@@ -40,6 +42,8 @@ export default function Home({ newsItems = [], facilities = [], projects = [], t
       {/* <Quiz /> */}
       <Employee members={topSales} />
       {/* <Characters /> */}
+      <Awards />
+      <ConstructionProgress />
       <News newsItems={newsItems} />
     </PageLayout>
   )
