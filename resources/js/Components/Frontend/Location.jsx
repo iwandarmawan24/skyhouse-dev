@@ -1,10 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Heading, Text, Button } from '@/Components/Frontend/atoms';
-import ImagePreviewModal from '@/Components/Frontend/ImagePreviewModal';
 import axios from 'axios';
 
 const Location = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [locationData, setLocationData] = useState({
     title: 'Strategic Location in CBD of Alam Sutera',
     image_url: '/images/maps.jpg',
@@ -38,8 +36,7 @@ const Location = () => {
   }, []);
 
   return (
-    <>
-      <section
+    <section
       className="relative overflow-hidden px-4 md:px-8 lg:px-16 bg-skyhouse-ocean"
       style={{
         backgroundImage: `radial-gradient(circle, rgba(245, 216, 127, 0.15) 1px, transparent 2px)`,
@@ -51,16 +48,16 @@ const Location = () => {
         background: 'linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent)'
       }}></div>
 
-      <div className="container mx-auto relative z-0">
-        <div className="flex flex-col lg:flex-row gap-6 lg:gap-6 items-center">
+      <div className="container max-w-7xl mx-auto pt-8 relative z-0">
+        <div className="flex flex-col gap-6 lg:gap-6 items-center">
           {/* Left side - Content */}
-          <div className="text-center lg:text-left w-full lg:w-1/3 py-8 lg:py-12 px-4 lg:px-0">
+          <div className="text-center w-full py-8 lg:py-12 px-4 lg:px-0">
             <Heading
               as="h3"
               variant="section"
               color="white"
               weight="light"
-              className="text-center md:text-left text-2xl md:text-3xl lg:text-4xl"
+              className="text-center text-2xl md:text-3xl lg:text-4xl"
             >
               <div dangerouslySetInnerHTML={{ __html: locationData.title }} />
             </Heading>
@@ -71,45 +68,24 @@ const Location = () => {
               variant="pill-light-sunshine"
               size="md"
               squash
-              className="mt-6 lg:mt-8"
+              className="mt-2 lg:mt-8"
             >
               See Google Map
             </Button>
           </div>
 
           <div
-            className="w-full lg:w-2/3 h-[400px] md:h-[600px] lg:h-[600px] py-0 lg:py-12 px-4 lg:px-0 transition-transform duration-300 hover:-translate-y-6 cursor-pointer -mb-[200px] relative group"
-            onClick={() => setIsModalOpen(true)}
+            className="w-full px-4 lg:px-0 mb-12"
           >
             <img
               src={locationData.image_url}
               alt={locationData.title}
-              className="w-full h-full object-cover object-top rounded-[30px] lg:rounded-[50px] shadow-2xl"
+              className="w-full h-auto rounded-[30px] lg:rounded-[50px] shadow-2xl"
             />
-            {/* Click to expand button */}
-            <div className="absolute top-4 left-4 lg:top-8 lg:left-8 pointer-events-none">
-              <div className="bg-white/90 backdrop-blur-sm px-8 py-4 rounded-full shadow-lg flex items-center gap-3 transition-all duration-300 group-hover:scale-110">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="11" cy="11" r="8"></circle>
-                  <path d="M21 21l-4.35-4.35"></path>
-                  <line x1="11" y1="8" x2="11" y2="14"></line>
-                  <line x1="8" y1="11" x2="14" y2="11"></line>
-                </svg>
-                <span className="text-skyhouse-ocean font-medium text-lg">Click to expand</span>
-              </div>
-            </div>
           </div>
         </div>
       </div>
     </section>
-
-    <ImagePreviewModal
-      isOpen={isModalOpen}
-      onClose={() => setIsModalOpen(false)}
-      image={locationData.image_url}
-      title={locationData.title}
-    />
-    </>
   );
 };
 

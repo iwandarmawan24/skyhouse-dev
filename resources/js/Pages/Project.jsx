@@ -1,9 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { Link } from '@inertiajs/react';
 import { Button, Heading, Text } from '@/Components/Frontend/atoms';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import '@css/frontend.css';
 import '@css/frontend/project-page.css';
+
+function ProjectCarousel({ images = [], title }) {
+  const [current, setCurrent] = useState(0);
+  const total = images.length;
+
+  const prev = useCallback((e) => {
+    e.stopPropagation();
+    setCurrent(i => (i - 1 + total) % total);
+  }, [total]);
+
+  const next = useCallback((e) => {
+    e.stopPropagation();
+    setCurrent(i => (i + 1) % total);
+  }, [total]);
+
+  if (total === 0) return null;
+
+  return (
+    <div className="relative w-full h-full select-none">
+      {images.map((src, i) => (
+        <img
+          key={i}
+          src={src}
+          alt={`${title} — ${i + 1}`}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+            i === current ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+        />
+      ))}
+
+      {total > 1 && (
+        <>
+          <button
+            onClick={prev}
+            aria-label="Previous image"
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-skyhouse-ocean rounded-full w-9 h-9 flex items-center justify-center shadow transition"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button
+            onClick={next}
+            aria-label="Next image"
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white text-skyhouse-ocean rounded-full w-9 h-9 flex items-center justify-center shadow transition"
+          >
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+
+          <div className="absolute bottom-3 left-0 right-0 flex justify-center gap-1.5 z-10">
+            {images.map((_, i) => (
+              <button
+                key={i}
+                onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
+                aria-label={`Image ${i + 1}`}
+                className={`rounded-full transition-all duration-300 ${
+                  i === current ? 'bg-white w-5 h-2' : 'bg-white/50 w-2 h-2 hover:bg-white/80'
+                }`}
+              />
+            ))}
+          </div>
+
+          <span className="absolute top-3 right-3 z-10 bg-black/40 text-white text-xs font-medium px-2 py-1 rounded-full">
+            {current + 1} / {total}
+          </span>
+        </>
+      )}
+    </div>
+  );
+}
 
 export default function Project({ projects = [] }) {
   const [visibleCount, setVisibleCount] = useState(3);
@@ -54,9 +122,12 @@ export default function Project({ projects = [] }) {
             
             return (
               <section key={project.id} className="flex flex-col md:flex-row rounded-lg overflow-hidden items-stretch">
-                {/* Image - Order changes based on even/odd for desktop, always first on mobile */}
+                {/* Image carousel */}
                 <div className={`flex-1 relative min-h-[300px] md:min-h-0 ${isEven ? 'order-1 md:order-2' : ''}`}>
-                  <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover" />
+                  <ProjectCarousel
+                    images={project.gallery?.length ? project.gallery : [project.image]}
+                    title={project.title}
+                  />
                 </div>
                 
                 {/* Content - Order changes based on even/odd for desktop, always second on mobile */}

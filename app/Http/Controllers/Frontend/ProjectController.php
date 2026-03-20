@@ -25,17 +25,32 @@ class ProjectController extends Controller
                 // Map product type to status for filtering
                 $status = $product->is_sold ? 'sold-out' : 'available';
 
+                // Build gallery: featured first, then gallery images
+                $gallery = $product->gallery_images->map(fn($m) => $m->url)->toArray();
+                $featuredUrl = $product->featuredImage ? $product->featuredImage->url : null;
+                if ($featuredUrl && !in_array($featuredUrl, $gallery)) {
+                    array_unshift($gallery, $featuredUrl);
+                }
+                if (empty($gallery)) {
+                    $gallery = [
+                        'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
+                        'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=600&fit=crop',
+                        'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=600&fit=crop',
+                    ];
+                }
+
                 return [
                     'id' => $product->uid,
-                    'image' => $product->featuredImage ? $product->featuredImage->url : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
+                    'image' => $gallery[0],
+                    'gallery' => $gallery,
                     'location' => $product->location,
-                    'units' => 1, // Products don't have units field, you can add it or default to 1
+                    'units' => 1,
                     'title' => $product->name,
                     'short_description' => $product->short_description,
                     'description' => $product->description,
                     'status' => $status,
                     'category' => $product->type,
-                    'type' => $status, // For filtering
+                    'type' => $status,
                 ];
             });
 
