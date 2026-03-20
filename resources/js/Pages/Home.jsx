@@ -11,6 +11,7 @@ import Quiz from '@/Components/Frontend/Quiz';
 import Employee from '@/Components/Frontend/Employee';
 import Characters from '@/Components/Frontend/Characters';
 import Awards from '@/Components/Frontend/Awards';
+import VirtualTourBanner from '@/Components/Frontend/VirtualTourBanner';
 import ConstructionProgress from '@/Components/Frontend/ConstructionProgress';
 import News from '@/Components/Frontend/News';
 import CTA from '@/Components/Frontend/CTA';
@@ -42,6 +43,7 @@ export default function Home({ newsItems = [], facilities = [], projects = [], t
       {/* <Quiz /> */}
       <Employee members={topSales} />
       {/* <Characters /> */}
+      <VirtualTourBanner />
       <Awards />
       <ConstructionProgress />
       <News newsItems={newsItems} />
