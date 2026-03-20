@@ -49,9 +49,9 @@ const Location = () => {
       }}></div>
 
       <div className="container max-w-7xl mx-auto pt-8 relative z-0">
-        <div className="flex flex-col gap-6 lg:gap-6 items-center">
+        <div className="flex flex-col lg:flex-row gap-6 lg:gap-12 items-center py-8 lg:py-16">
           {/* Left side - Content */}
-          <div className="text-center w-full py-8 lg:py-12 px-4 lg:px-0">
+          <div className="text-center lg:text-left w-full lg:w-1/3 shrink-0 py-8 lg:py-12 px-4 lg:px-0">
             <Heading
               as="h3"
               variant="section"
@@ -75,12 +75,12 @@ const Location = () => {
           </div>
 
           <div
-            className="w-full px-4 lg:px-0 mb-12"
+            className="w-full lg:w-2/3 px-4 lg:px-0 mb-12 bg-white rounded-[30px] lg:rounded-[50px] p-3 lg:p-5 shadow-2xl max-h-[500px] overflow-hidden flex flex-row justify-center"
           >
             <img
               src={locationData.image_url}
               alt={locationData.title}
-              className="w-full h-auto rounded-[30px] lg:rounded-[50px] shadow-2xl"
+              style={{ width: 'max-content', height: '100%', maxHeight: '500px' }}
             />
           </div>
         </div>
