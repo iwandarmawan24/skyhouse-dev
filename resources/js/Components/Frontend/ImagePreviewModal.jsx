@@ -128,11 +128,6 @@ const ImagePreviewModal = ({ isOpen, onClose, image, title, description }) => {
               {title}
             </Heading>
           )}
-          {description && (
-            <Text size="sm" className="text-white/70 truncate hidden md:block">
-              {description}
-            </Text>
-          )}
         </div>
 
         <div className="flex items-center gap-2 shrink-0">
@@ -190,7 +185,7 @@ const ImagePreviewModal = ({ isOpen, onClose, image, title, description }) => {
       {/* Image area */}
       <div
         ref={containerRef}
-        className={`flex-1 flex items-center justify-center overflow-hidden ${isZoomed ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? '!cursor-grabbing' : ''}`}
+        className={`relative flex-1 flex items-center justify-center overflow-hidden ${isZoomed ? 'cursor-grab' : 'cursor-zoom-in'} ${isDragging ? '!cursor-grabbing' : ''}`}
         onWheel={handleWheel}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}
@@ -214,6 +209,13 @@ const ImagePreviewModal = ({ isOpen, onClose, image, title, description }) => {
           }}
           onClick={(e) => e.stopPropagation()}
         />
+        {description && !isZoomed && (
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 max-w-2xl px-4 py-2 text-center bg-black/60 backdrop-blur-sm rounded-lg" onClick={(e) => e.stopPropagation()}>
+            <Text size="sm" className="text-white/90 leading-relaxed">
+              {description}
+            </Text>
+          </div>
+        )}
       </div>
     </div>,
     document.body
