@@ -18,11 +18,10 @@ class NewsController extends Controller
         $perPage = 6;
 
         if ($type === 'articles') {
-            // Fetch published articles
-            $items = Article::with(['category', 'author'])
-                ->where('is_published', true)
-                ->whereNotNull('published_at')
-                ->orderBy('published_at', 'desc')
+            // Fetch articles
+            $items = Article::with(['category', 'author', 'featuredImageMedia'])
+                ->orderByDesc('published_at')
+                ->orderByDesc('created_at')
                 ->paginate($perPage);
 
             // Transform articles data
@@ -33,12 +32,10 @@ class NewsController extends Controller
                     'slug' => $article->slug,
                     'title' => $article->title,
                     'excerpt' => $article->excerpt,
-                    'image' => $article->featured_image
-                        ? (str_starts_with($article->featured_image, 'http')
-                            ? $article->featured_image
-                            : asset('storage/' . $article->featured_image))
-                        : 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&h=600&fit=crop',
-                    'date' => $article->published_at ? $article->published_at->format('F d, Y') : null,
+                    'image' => $article->featured_image_url,
+                    'date' => $article->published_at
+                        ? $article->published_at->format('F d, Y')
+                        : $article->created_at->format('F d, Y'),
                     'category' => $article->category->name ?? null,
                     'author' => $article->author->full_name ?? null,
                 ];
@@ -90,48 +87,26 @@ class NewsController extends Controller
 
     public function show()
     {
-        // Get featured media highlight or article (latest one)
-        $featuredHighlight = MediaHighlight::with(['media', 'highlightImage'])
-            ->orderBy('publish_date', 'desc')
+        // Get featured article (is_featured first, fallback to latest)
+        $featuredArticle = Article::with(['category', 'featuredImageMedia'])
+            ->orderByDesc('is_featured')
+            ->orderByDesc('published_at')
+            ->orderByDesc('created_at')
             ->first();
 
-        $featuredArticle = Article::where('is_published', true)
-            ->where('is_featured', true)
-            ->orderBy('published_at', 'desc')
-            ->first();
-
-        // Prepare featured item
         $featured = null;
-        if ($featuredHighlight) {
-            $featured = [
-                'type' => 'media_highlight',
-                'title' => $featuredHighlight->title,
-                'description' => $featuredHighlight->title,
-                'image' => $featuredHighlight->highlightImage?->url
-                    ?? ($featuredHighlight->image
-                        ? (str_starts_with($featuredHighlight->image, 'http')
-                            ? $featuredHighlight->image
-                            : asset('storage/' . $featuredHighlight->image))
-                        : null),
-                'date' => $featuredHighlight->publish_date ? $featuredHighlight->publish_date->format('F d, Y') : null,
-                'mediaLogo' => $featuredHighlight->media && $featuredHighlight->media->logo
-                    ? (str_starts_with($featuredHighlight->media->logo, 'http')
-                        ? $featuredHighlight->media->logo
-                        : asset('storage/' . $featuredHighlight->media->logo))
-                    : 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
-            ];
-        } elseif ($featuredArticle) {
+        if ($featuredArticle) {
             $featured = [
                 'type' => 'article',
+                'slug' => $featuredArticle->slug,
                 'title' => $featuredArticle->title,
                 'description' => $featuredArticle->excerpt,
-                'image' => $featuredArticle->featured_image
-                    ? (str_starts_with($featuredArticle->featured_image, 'http')
-                        ? $featuredArticle->featured_image
-                        : asset('storage/' . $featuredArticle->featured_image))
-                    : 'https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&h=600&fit=crop',
-                'date' => $featuredArticle->published_at ? $featuredArticle->published_at->format('F d, Y') : null,
+                'image' => $featuredArticle->featured_image_url,
+                'date' => $featuredArticle->published_at
+                    ? $featuredArticle->published_at->format('F d, Y')
+                    : $featuredArticle->created_at->format('F d, Y'),
                 'category' => $featuredArticle->category->name ?? null,
+                'url' => route('articles.detail', $featuredArticle->slug),
             ];
         }
 
@@ -166,6 +141,7 @@ class NewsController extends Controller
                         ? $featuredHighlight->media->logo
                         : asset('storage/' . $featuredHighlight->media->logo))
                     : 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
+                'url' => $featuredHighlight->article_url,
             ];
         }
 
@@ -179,8 +155,6 @@ class NewsController extends Controller
         // Find article by slug
         $article = Article::with(['category', 'author', 'editor'])
             ->where('slug', $slug)
-            ->where('is_published', true)
-            ->whereNotNull('published_at')
             ->firstOrFail();
 
         // Increment views

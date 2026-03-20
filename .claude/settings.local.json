@@ -1,4 +1,9 @@
 {
+  "env": {
+    "BASH_DEFAULT_TIMEOUT_MS": "300000",
+    "BASH_MAX_TIMEOUT_MS": "900000",
+    "ANTHROPIC_TIMEOUT": "300000"
+  },
   "permissions": {
     "allow": [
       "Bash(for component in table input label textarea select pagination badge alert card dialog form)",
@@ -19,14 +24,10 @@
       "Bash(./vendor/bin/sail artisan make:migration:*)",
       "Bash(./vendor/bin/sail artisan migrate:*)",
       "mcp__ide__getDiagnostics",
-      "Bash(./vendor/bin/sail artisan:*)"
+      "Bash(./vendor/bin/sail artisan:*)",
+      "Bash(docker ps:*)"
     ],
     "deny": [],
     "ask": []
-  },
-  "env": {
-    "BASH_DEFAULT_TIMEOUT_MS": "300000",
-    "BASH_MAX_TIMEOUT_MS": "900000",
-    "ANTHROPIC_TIMEOUT": "300000"
   }
 }
