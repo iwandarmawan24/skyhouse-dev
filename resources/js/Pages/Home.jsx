@@ -38,6 +38,7 @@ export default function Home({ newsItems = [], facilities = [], projects = [], t
       <Location />
       <LaunchProjects facilities={facilities} />
       <Projects projects={projects} />
+      <ShowMoreBanner />
       <VirtualTourBanner />
       <News newsItems={newsItems} />
       <Awards />
