@@ -37,16 +37,14 @@ export default function Home({ newsItems = [], facilities = [], projects = [], t
       <About />
       <Location />
       <LaunchProjects facilities={facilities} />
-      {/* <Benefits /> */}
       <Projects projects={projects} />
       <ShowMoreBanner />
-      {/* <Quiz /> */}
-      <Employee members={topSales} />
-      {/* <Characters /> */}
       <VirtualTourBanner />
+      <News newsItems={newsItems} />
       <Awards />
       <ConstructionProgress />
-      <News newsItems={newsItems} />
+      <Employee members={topSales} />
+      <CTA />
     </PageLayout>
   )
 }
