@@ -16,7 +16,7 @@ class HeroBannerController extends Controller
      */
     public function index()
     {
-        $banners = HeroBanner::with('bannerImage')
+        $banners = HeroBanner::with(['bannerImage', 'mobileBannerImage'])
             ->active()
             ->ordered()
             ->get();

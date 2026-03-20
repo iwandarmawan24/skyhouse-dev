@@ -52,14 +52,7 @@ export default function News({ featured }) {
     }
   };
 
-  const featuredNews = featured || {
-    image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=800&h=600&fit=crop",
-    date: "September 18, 2024",
-    category: "News",
-    title: "Kolaborasi dengan Anabuki Group, Skyhouse Alamsutera Bangun Hunian Terbaru di Serpong, Tangerang Selatan",
-    description:
-      "Kolaborasi ini akan memperkuat kerja operasional Skyhouse Alamsutera yang saat ini sedang membangun perumahan di daerah Tangerang Selatan",
-  };
+  const featuredNews = featured || null;
 
   return (
     <>
@@ -110,43 +103,49 @@ export default function News({ featured }) {
           </div>
         </section>
 
-        <section className="news-hero">
-          <div className="padding-global">
-            <div className="container-large">
-              <div className="news-hero-content">
-                <div className="news-hero-image">
-                  <img
-                    src={featuredNews.image}
-                    alt={featuredNews.title}
-                  />
-                </div>
-                <div className="news-hero-details">
-                  <div className="news-hero-meta">
-                    <span className="news-hero-date">
-                      {featuredNews.date}
-                    </span>
-                    {featuredNews.category && (
-                      <>
-                        <span className="news-hero-separator">
-                          |
-                        </span>
-                        <span className="news-card-category">
-                          {featuredNews.category}
-                        </span>
-                      </>
-                    )}
+        {featuredNews && (
+          <section className="news-hero">
+            <div className="padding-global">
+              <div className="container-large">
+                <Link
+                  href={featuredNews.url}
+                  className="news-hero-content"
+                  style={{ textDecoration: 'none', color: 'inherit' }}
+                >
+                  <div className="news-hero-image">
+                    <img
+                      src={featuredNews.image}
+                      alt={featuredNews.title}
+                    />
                   </div>
-                  <h1 className="news-hero-title">
-                    {featuredNews.title}
-                  </h1>
-                  <p className="news-hero-description">
-                    {featuredNews.description}
-                  </p>
-                </div>
+                  <div className="news-hero-details">
+                    <div className="news-hero-meta">
+                      <span className="news-hero-date">
+                        {featuredNews.date}
+                      </span>
+                      {featuredNews.category && (
+                        <>
+                          <span className="news-hero-separator">
+                            |
+                          </span>
+                          <span className="news-hero-category">
+                            {featuredNews.category}
+                          </span>
+                        </>
+                      )}
+                    </div>
+                    <h1 className="news-hero-title">
+                      {featuredNews.title}
+                    </h1>
+                    <p className="news-hero-description">
+                      {featuredNews.description}
+                    </p>
+                  </div>
+                </Link>
               </div>
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
         <section className="news-list-section background-color-cream">
           <div className="padding-global">
@@ -156,7 +155,7 @@ export default function News({ featured }) {
                   {items.length === 0 && !loading && (
                     <div className="col-span-full text-center py-12">
                       <p className="text-gray-500">
-                        No articles found.
+                        No news found.
                       </p>
                     </div>
                   )}

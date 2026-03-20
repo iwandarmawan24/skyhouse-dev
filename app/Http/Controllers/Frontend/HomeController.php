@@ -59,7 +59,7 @@ class HomeController extends Controller
             ->get()
             ->map(function ($facility) {
                 // Get first image from media_images for card display
-                $firstImage = $facility->media_images->first();
+                $firstImage = collect($facility->media_images)->first();
 
                 return [
                     'id' => $facility->uid,

@@ -113,7 +113,13 @@ export default function MediaHighlights({ featured }) {
         <section className="news-hero">
           <div className="padding-global">
             <div className="container-large">
-              <div className="news-hero-content">
+              <a
+                href={featuredNews.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="news-hero-content"
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
                 <div className="news-hero-image">
                   <img
                     src={featuredNews.image}
@@ -143,7 +149,7 @@ export default function MediaHighlights({ featured }) {
                     {featuredNews.description}
                   </p>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
         </section>

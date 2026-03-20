@@ -24,7 +24,7 @@ class HeroBannerController extends Controller
     public function index()
     {
         // Load bannerImage relationship to get media library images
-        $banners = HeroBanner::with('bannerImage')->ordered()->get();
+        $banners = HeroBanner::with(['bannerImage', 'mobileBannerImage'])->ordered()->get();
 
         return Inertia::render('Admin/HeroBanners/Index', [
             'banners' => HeroBannerResource::collection($banners)->resolve(),
@@ -49,6 +49,8 @@ class HeroBannerController extends Controller
         $validated = $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image_uid' => 'nullable|exists:media_library,uid',
+            'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'mobile_image_uid' => 'nullable|exists:media_library,uid',
             'banner_link' => 'nullable|string|max:255',
             'is_active' => 'required|boolean',
         ]);
@@ -58,12 +60,18 @@ class HeroBannerController extends Controller
             return back()->withErrors(['image' => 'Please provide an image either by uploading or selecting from media library.']);
         }
 
-        // Handle direct image upload (backward compatibility)
+        // Handle desktop image upload
         if ($request->hasFile('image')) {
             $imagePath = $request->file('image')->store('hero-banners', 'public');
             $validated['image'] = $imagePath;
-            // Clear image_uid if direct upload is used
             $validated['image_uid'] = null;
+        }
+
+        // Handle mobile image upload
+        if ($request->hasFile('mobile_image')) {
+            $mobilePath = $request->file('mobile_image')->store('hero-banners', 'public');
+            $validated['mobile_image'] = $mobilePath;
+            $validated['mobile_image_uid'] = null;
         }
 
         HeroBanner::create($validated);
@@ -78,7 +86,7 @@ class HeroBannerController extends Controller
     public function edit(HeroBanner $heroBanner)
     {
         // Load the banner image relationship
-        $heroBanner->load('bannerImage');
+        $heroBanner->load(['bannerImage', 'mobileBannerImage']);
 
         return Inertia::render('Admin/HeroBanners/Form', [
             'banner' => (new HeroBannerResource($heroBanner))->resolve(),
@@ -93,50 +101,52 @@ class HeroBannerController extends Controller
         $validated = $request->validate([
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image_uid' => 'nullable|exists:media_library,uid',
+            'mobile_image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'mobile_image_uid' => 'nullable|exists:media_library,uid',
             'banner_link' => 'nullable|string|max:255',
             'is_active' => 'required|boolean',
         ]);
 
         $oldImage = $heroBanner->image;
+        $oldMobileImage = $heroBanner->mobile_image;
 
-        // Priority 1: Handle direct image upload
+        // Handle desktop image
         if ($request->hasFile('image')) {
-            // Store new image first
             $imagePath = $request->file('image')->store('hero-banners', 'public');
             $validated['image'] = $imagePath;
-            // Clear image_uid when using direct upload
             $validated['image_uid'] = null;
-
-            // Update the record
-            $heroBanner->update($validated);
-
-            // Delete old image after successful update
             if ($oldImage) {
                 Storage::disk('public')->delete($oldImage);
             }
-        }
-        // Priority 2: Handle media library selection
-        elseif ($request->filled('image_uid')) {
-            // Clear old image field when using media library
+        } elseif ($request->filled('image_uid')) {
             $validated['image'] = null;
-
-            // Update the record
-            $heroBanner->update($validated);
-
-            // Delete old direct upload image if exists
             if ($oldImage) {
                 Storage::disk('public')->delete($oldImage);
             }
-        }
-        // Priority 3: No new image, keep existing
-        else {
-            // Remove image fields from validated data if no new file/uid provided
+        } else {
             unset($validated['image']);
             unset($validated['image_uid']);
-
-            // Update the record
-            $heroBanner->update($validated);
         }
+
+        // Handle mobile image
+        if ($request->hasFile('mobile_image')) {
+            $mobilePath = $request->file('mobile_image')->store('hero-banners', 'public');
+            $validated['mobile_image'] = $mobilePath;
+            $validated['mobile_image_uid'] = null;
+            if ($oldMobileImage) {
+                Storage::disk('public')->delete($oldMobileImage);
+            }
+        } elseif ($request->filled('mobile_image_uid')) {
+            $validated['mobile_image'] = null;
+            if ($oldMobileImage) {
+                Storage::disk('public')->delete($oldMobileImage);
+            }
+        } else {
+            unset($validated['mobile_image']);
+            unset($validated['mobile_image_uid']);
+        }
+
+        $heroBanner->update($validated);
 
         return redirect()->route('admin.hero-banners.index')
             ->with('success', 'Hero banner updated successfully.');

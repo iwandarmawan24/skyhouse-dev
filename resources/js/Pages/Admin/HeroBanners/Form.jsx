@@ -1,7 +1,7 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import { Link, router, useForm } from "@inertiajs/react";
 import { useState } from "react";
-import { ChevronLeft, Upload, X, ZoomIn, ZoomOut } from "lucide-react";
+import { ChevronLeft, Upload, X, ZoomIn, ZoomOut, Monitor, Smartphone } from "lucide-react";
 import { Button } from "@/Components/ui/Button";
 import {
     Card,
@@ -20,20 +20,27 @@ export default function Form({ banner }) {
     const { data, setData, post, processing, errors } = useForm({
         image: null,
         image_uid: banner?.image_uid || null,
+        mobile_image: null,
+        mobile_image_uid: banner?.mobile_image_uid || null,
         banner_link: banner?.banner_link || "",
         is_active: banner?.is_active ?? true,
         _method: isEdit ? "PUT" : "POST",
     });
 
-    // MediaPicker state
+    // Desktop MediaPicker state
     const [showMediaPicker, setShowMediaPicker] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(
         banner?.banner_image || null
     );
 
-    // Image preview and modal state
+    // Mobile MediaPicker state
+    const [showMobileMediaPicker, setShowMobileMediaPicker] = useState(false);
+    const [selectedMobileMedia, setSelectedMobileMedia] = useState(
+        banner?.mobile_banner_image || null
+    );
+
+    // Desktop image preview
     const [imagePreview, setImagePreview] = useState(() => {
-        // Priority: use banner.image if exists, otherwise use banner.image_url
         if (banner?.image) {
             return banner.image.startsWith("http")
                 ? banner.image
@@ -41,15 +48,32 @@ export default function Form({ banner }) {
         }
         return banner?.image_url || null;
     });
+
+    // Mobile image preview
+    const [mobileImagePreview, setMobileImagePreview] = useState(() => {
+        if (banner?.mobile_image) {
+            return banner.mobile_image.startsWith("http")
+                ? banner.mobile_image
+                : `/storage/${banner.mobile_image}`;
+        }
+        return banner?.mobile_image_url || null;
+    });
+
     const [showImageModal, setShowImageModal] = useState(false);
     const [imageScale, setImageScale] = useState(1);
+    const [modalImageSrc, setModalImageSrc] = useState(null);
+
+    const openImageModal = (src) => {
+        setModalImageSrc(src);
+        setImageScale(1);
+        setShowImageModal(true);
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const url = isEdit
             ? `/admin/hero-banners/${banner.uid}`
             : "/admin/hero-banners";
-        console.log("Submitting to URL:", url);
         post(url);
     };
 
@@ -86,16 +110,22 @@ export default function Form({ banner }) {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
-                            {/* Image Upload - Media Library */}
+                            {/* Desktop Image Upload */}
                             <div className="space-y-2">
                                 <Label htmlFor="image">
-                                    Banner Image{" "}
-                                    {!isEdit && (
-                                        <span className="text-destructive">
-                                            *
-                                        </span>
-                                    )}
+                                    <div className="flex items-center gap-2">
+                                        <Monitor className="h-4 w-4" />
+                                        Desktop Banner Image{" "}
+                                        {!isEdit && (
+                                            <span className="text-destructive">
+                                                *
+                                            </span>
+                                        )}
+                                    </div>
                                 </Label>
+                                <p className="text-xs text-muted-foreground">
+                                    Recommended: 1920x1080px or wider (16:9 landscape)
+                                </p>
 
                                 {selectedMedia || imagePreview ? (
                                     <div className="space-y-4">
@@ -106,12 +136,13 @@ export default function Form({ banner }) {
                                                     selectedMedia?.thumbnail_url ||
                                                     imagePreview
                                                 }
-                                                alt="Preview"
+                                                alt="Desktop Preview"
                                                 className="w-full h-64 object-cover cursor-pointer transition-transform group-hover:scale-105"
-                                                onClick={() => {
-                                                    setShowImageModal(true);
-                                                    setImageScale(1);
-                                                }}
+                                                onClick={() =>
+                                                    openImageModal(
+                                                        selectedMedia?.url || imagePreview
+                                                    )
+                                                }
                                             />
                                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
                                                 <ZoomIn className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -140,7 +171,6 @@ export default function Form({ banner }) {
                                     </div>
                                 ) : (
                                     <div className="space-y-3">
-                                        {/* Media Library Button */}
                                         <Button
                                             type="button"
                                             variant="outline"
@@ -175,6 +205,98 @@ export default function Form({ banner }) {
                                 {isEdit && !selectedMedia && !imagePreview && (
                                     <p className="text-sm text-muted-foreground">
                                         Leave empty to keep the current image
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Mobile Image Upload */}
+                            <div className="space-y-2">
+                                <Label htmlFor="mobile_image">
+                                    <div className="flex items-center gap-2">
+                                        <Smartphone className="h-4 w-4" />
+                                        Mobile Banner Image
+                                        <span className="text-xs font-normal text-muted-foreground">
+                                            (optional)
+                                        </span>
+                                    </div>
+                                </Label>
+                                <p className="text-xs text-muted-foreground">
+                                    Recommended: 1080x1920px (9:16 portrait). Falls back to desktop image if not set.
+                                </p>
+
+                                {selectedMobileMedia || mobileImagePreview ? (
+                                    <div className="space-y-4">
+                                        <div className="relative group rounded-lg overflow-hidden border max-w-xs">
+                                            <img
+                                                src={
+                                                    selectedMobileMedia?.url ||
+                                                    selectedMobileMedia?.thumbnail_url ||
+                                                    mobileImagePreview
+                                                }
+                                                alt="Mobile Preview"
+                                                className="w-full h-80 object-cover cursor-pointer transition-transform group-hover:scale-105"
+                                                onClick={() =>
+                                                    openImageModal(
+                                                        selectedMobileMedia?.url || mobileImagePreview
+                                                    )
+                                                }
+                                            />
+                                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-all flex items-center justify-center">
+                                                <ZoomIn className="w-8 h-8 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                                            </div>
+                                            <Button
+                                                type="button"
+                                                variant="destructive"
+                                                size="icon"
+                                                className="absolute top-2 right-2"
+                                                onClick={() => {
+                                                    setSelectedMobileMedia(null);
+                                                    setMobileImagePreview(null);
+                                                    setData("mobile_image_uid", null);
+                                                    setData("mobile_image", null);
+                                                }}
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                        {selectedMobileMedia && (
+                                            <p className="text-sm text-muted-foreground">
+                                                Selected from Media Library:{" "}
+                                                {selectedMobileMedia.filename}
+                                            </p>
+                                        )}
+                                    </div>
+                                ) : (
+                                    <div className="space-y-3">
+                                        <Button
+                                            type="button"
+                                            variant="outline"
+                                            onClick={() =>
+                                                setShowMobileMediaPicker(true)
+                                            }
+                                            className="max-w-xs h-48 border-2 border-dashed hover:border-primary transition-colors"
+                                        >
+                                            <div className="flex flex-col items-center justify-center">
+                                                <Smartphone className="w-8 h-8 text-muted-foreground mb-3" />
+                                                <span className="text-sm font-medium text-foreground mb-1">
+                                                    Select Mobile Image
+                                                </span>
+                                                <span className="text-xs text-muted-foreground">
+                                                    From Media Library
+                                                </span>
+                                            </div>
+                                        </Button>
+                                    </div>
+                                )}
+
+                                {errors.mobile_image && (
+                                    <p className="text-sm text-destructive">
+                                        {errors.mobile_image}
+                                    </p>
+                                )}
+                                {errors.mobile_image_uid && (
+                                    <p className="text-sm text-destructive">
+                                        {errors.mobile_image_uid}
                                     </p>
                                 )}
                             </div>
@@ -250,13 +372,12 @@ export default function Form({ banner }) {
             </div>
 
             {/* Image Preview Modal */}
-            {showImageModal && (selectedMedia || imagePreview) && (
+            {showImageModal && modalImageSrc && (
                 <div
                     className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4"
                     onClick={() => setShowImageModal(false)}
                 >
                     <div className="relative max-w-7xl max-h-screen">
-                        {/* Close Button */}
                         <Button
                             variant="ghost"
                             size="icon"
@@ -266,7 +387,6 @@ export default function Form({ banner }) {
                             <X className="h-6 w-6" />
                         </Button>
 
-                        {/* Zoom Controls */}
                         <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 z-10 flex items-center gap-2 bg-black/50 rounded-full px-4 py-2">
                             <Button
                                 variant="ghost"
@@ -310,13 +430,12 @@ export default function Form({ banner }) {
                             </Button>
                         </div>
 
-                        {/* Image */}
                         <div
                             className="overflow-auto max-h-[90vh]"
                             onClick={(e) => e.stopPropagation()}
                         >
                             <img
-                                src={selectedMedia?.url || imagePreview}
+                                src={modalImageSrc}
                                 alt="Preview"
                                 style={{
                                     transform: `scale(${imageScale})`,
@@ -329,16 +448,29 @@ export default function Form({ banner }) {
                 </div>
             )}
 
-            {/* MediaPicker Modal */}
+            {/* Desktop MediaPicker Modal */}
             <MediaPicker
                 open={showMediaPicker}
                 onClose={() => setShowMediaPicker(false)}
                 onSelect={(media) => {
                     setSelectedMedia(media);
-                    console.log("Selected media:", media);
                     setData("image_uid", media.uid);
-                    setImagePreview(null); // Clear old preview if switching to media library
+                    setImagePreview(null);
                     setShowMediaPicker(false);
+                }}
+                accept="image"
+                folder="hero-banners"
+            />
+
+            {/* Mobile MediaPicker Modal */}
+            <MediaPicker
+                open={showMobileMediaPicker}
+                onClose={() => setShowMobileMediaPicker(false)}
+                onSelect={(media) => {
+                    setSelectedMobileMedia(media);
+                    setData("mobile_image_uid", media.uid);
+                    setMobileImagePreview(null);
+                    setShowMobileMediaPicker(false);
                 }}
                 accept="image"
                 folder="hero-banners"

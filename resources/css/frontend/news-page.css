@@ -59,11 +59,14 @@
   background-color: var(--color-cream);
 }
 
-.news-hero-content {
+a.news-hero-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 4rem;
   align-items: center;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 
 .news-hero-image {
