@@ -10,7 +10,6 @@ const PageLayout = ({ showBackgroundDefault = false, hideLogoOnTop = false, chil
     <div className="page-wrapper">
       <Navigation hideLogoOnTop={hideLogoOnTop} showBackgroundDefault={showBackgroundDefault} />
       <main className="main-wrapper">{children}</main>
-      <CTA />
       <Footer />
       
       {/* WhatsApp Floating Button */}

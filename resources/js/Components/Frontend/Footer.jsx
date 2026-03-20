@@ -82,10 +82,8 @@ const Footer = () => {
             <div className="footer_section">
               <Heading as="h4" variant="subsection">Company</Heading>
               <a href="/about">About</a>
-              <a href="/csr">CSR</a>
               <a href="/careers">Careers</a>
               <a href="/news">News</a>
-              <a href="/agent-portal">Agent Portal</a>
             </div>
 
             <div className="footer_section">
