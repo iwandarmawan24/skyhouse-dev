@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useCallback } from 'react';
 import axios from 'axios';
 
 // Default/fallback slide data
@@ -16,7 +16,16 @@ const Hero = () => {
   const [isAnimating, setIsAnimating] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [scrollY, setScrollY] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
   const intervalRef = useRef(null);
+
+  // Detect mobile viewport
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   // Fetch hero banners from backend
   useEffect(() => {
@@ -30,6 +39,7 @@ const Hero = () => {
             id: banner.uid,
             banner_link: banner.banner_link || '',
             image_url: banner.image_url || '/images/hero/hero-sky-bg.png',
+            mobile_image_url: banner.mobile_image_url || null,
           }));
 
           setSlides(formattedSlides);
@@ -128,20 +138,26 @@ const Hero = () => {
     <header className="section_hero is-bottom-rounded relative overflow-hidden">
       {/* Background Slides with Fade Effect */}
       <div className="hero_slider_wrapper">
-        {slides.map((slide, index) => (
-          <div
-            key={slide.id}
-            className={`hero_slide ${index === currentSlide ? 'active' : ''} ${slide.banner_link ? 'cursor-pointer' : ''}`}
-            style={{
-              backgroundImage: `url(${slide.image_url})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center center',
-              backgroundRepeat: 'no-repeat',
-              transform: `translateY(${scrollY * 0.5}px)`,
-            }}
-            onClick={() => handleBannerClick(slide.banner_link)}
-          />
-        ))}
+        {slides.map((slide, index) => {
+          const bgImage = isMobile && slide.mobile_image_url
+            ? slide.mobile_image_url
+            : slide.image_url;
+
+          return (
+            <div
+              key={slide.id}
+              className={`hero_slide ${index === currentSlide ? 'active' : ''} ${slide.banner_link ? 'cursor-pointer' : ''}`}
+              style={{
+                backgroundImage: `url(${bgImage})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center center',
+                backgroundRepeat: 'no-repeat',
+                transform: `translateY(${scrollY * 0.5}px)`,
+              }}
+              onClick={() => handleBannerClick(slide.banner_link)}
+            />
+          );
+        })}
       </div>
 
       {/* Navigation Controls - Only show if more than 1 slide */}

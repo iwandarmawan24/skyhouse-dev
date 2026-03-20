@@ -13,6 +13,8 @@ class HeroBanner extends Model
     protected $fillable = [
         'image',
         'image_uid',
+        'mobile_image',
+        'mobile_image_uid',
         'banner_link',
         'is_active',
         'order',
@@ -61,5 +63,13 @@ class HeroBanner extends Model
     public function bannerImage()
     {
         return $this->belongsTo(MediaLibrary::class, 'image_uid', 'uid');
+    }
+
+    /**
+     * Get the mobile banner image from media library.
+     */
+    public function mobileBannerImage()
+    {
+        return $this->belongsTo(MediaLibrary::class, 'mobile_image_uid', 'uid');
     }
 }
