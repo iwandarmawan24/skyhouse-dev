@@ -4,24 +4,29 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ConstructionProgress extends Model
+class ConstructionProgressItem extends Model
 {
-    protected $table = 'construction_progress';
+    protected $table = 'construction_progress_items';
     protected $primaryKey = 'uid';
     protected $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = [
-        'title',
-        'description',
-        'image',
+        'construction_progress_uid',
+        'progress_date',
         'image_uid',
         'is_active',
     ];
 
     protected $casts = [
+        'progress_date' => 'date',
         'is_active' => 'boolean',
     ];
+
+    public function getRouteKeyName()
+    {
+        return 'uid';
+    }
 
     protected static function boot()
     {
@@ -34,27 +39,18 @@ class ConstructionProgress extends Model
         });
     }
 
-    /**
-     * Scope a query to only include active records.
-     */
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
     }
 
-    /**
-     * Get the image from media library.
-     */
-    public function progressImage()
+    public function constructionProgress()
     {
-        return $this->belongsTo(MediaLibrary::class, 'image_uid', 'uid');
+        return $this->belongsTo(ConstructionProgress::class, 'construction_progress_uid', 'uid');
     }
 
-    /**
-     * Get the construction progress items.
-     */
-    public function items()
+    public function itemImage()
     {
-        return $this->hasMany(ConstructionProgressItem::class, 'construction_progress_uid', 'uid');
+        return $this->belongsTo(MediaLibrary::class, 'image_uid', 'uid');
     }
 }
