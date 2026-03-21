@@ -25,7 +25,14 @@
       "Bash(./vendor/bin/sail artisan migrate:*)",
       "mcp__ide__getDiagnostics",
       "Bash(./vendor/bin/sail artisan:*)",
-      "Bash(docker ps:*)"
+      "Bash(docker ps:*)",
+      "Bash(find /Users/yayasandarmawan/Documents/wan-lab/skyhouse-dev -maxdepth 2 -type f \\\\\\(-name *.config.* -o -name .env* -o -name sanity.json -o -name strapi* \\\\\\))",
+      "Bash(grep -r \"sanity\\\\|strapi\\\\|contentful\\\\|firebase\\\\|supabase\\\\|cms\" /Users/yayasandarmawan/Documents/wan-lab/skyhouse-dev --include=*.json --include=*.php --include=*.js --include=*.ts)",
+      "Bash(grep -r \"ConstructionProgress\\\\|construction_progress\" /Users/yayasandarmawan/Documents/wan-lab/skyhouse-dev --include=*.php --include=*.jsx --include=*.tsx)",
+      "Bash(grep -E \"Controller\\\\.php$\")",
+      "Bash(grep -r 'extends Model' /Users/yayasandarmawan/Documents/wan-lab/skyhouse-dev/app/Models --include=*.php)",
+      "Bash(grep -r \"MediaLibrary\\\\|intervention\\\\|image\" /Users/yayasandarmawan/Documents/wan-lab/skyhouse-dev/app/Http/Controllers/Admin --include=*.php)",
+      "Bash(docker compose:*)"
     ],
     "deny": [],
     "ask": []

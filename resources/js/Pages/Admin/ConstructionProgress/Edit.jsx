@@ -1,7 +1,15 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import { useForm } from "@inertiajs/react";
+import { Link, useForm, router } from "@inertiajs/react";
 import { useState } from "react";
-import { X, ZoomIn, ZoomOut, Image as ImageIcon } from "lucide-react";
+import {
+    X,
+    ZoomIn,
+    ZoomOut,
+    Image as ImageIcon,
+    Plus,
+    Pencil,
+    Trash2,
+} from "lucide-react";
 import { Button } from "@/Components/ui/Button";
 import {
     Card,
@@ -14,8 +22,25 @@ import { Input } from "@/Components/ui/Input";
 import { Label } from "@/Components/ui/Label";
 import { Textarea } from "@/Components/ui/Textarea";
 import { MediaPicker } from "@/Components/MediaPicker";
+import {
+    Table,
+    TableBody,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "@/Components/ui/Table";
+import { Badge } from "@/Components/ui/Badge";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+} from "@/Components/ui/Dialog";
 
-export default function Edit({ constructionProgress }) {
+export default function Edit({ constructionProgress, items = [] }) {
     const { data, setData, post, processing, errors } = useForm({
         title: constructionProgress?.title || "Construction Progress",
         description: constructionProgress?.description || "",
@@ -36,6 +61,9 @@ export default function Edit({ constructionProgress }) {
     const [showImageModal, setShowImageModal] = useState(false);
     const [imageScale, setImageScale] = useState(1);
 
+    // Delete confirmation state
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         post("/admin/construction-progress");
@@ -52,6 +80,12 @@ export default function Edit({ constructionProgress }) {
         setData("image_uid", media.uid);
         setImagePreview(media.url);
         setShowMediaPicker(false);
+    };
+
+    const handleDeleteItem = (uid) => {
+        router.delete(`/admin/construction-progress-items/${uid}`, {
+            onSuccess: () => setShowDeleteConfirm(null),
+        });
     };
 
     return (
@@ -215,6 +249,131 @@ export default function Edit({ constructionProgress }) {
                         </CardContent>
                     </Card>
                 </form>
+
+                {/* Progress Items List */}
+                <Card>
+                    <CardHeader>
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <CardTitle>Progress Items</CardTitle>
+                                <CardDescription>
+                                    List of construction progress by month and
+                                    year, ordered by date
+                                </CardDescription>
+                            </div>
+                            <Link href="/admin/construction-progress-items/create">
+                                <Button>
+                                    <Plus className="w-4 h-4 mr-2" />
+                                    Add Progress
+                                </Button>
+                            </Link>
+                        </div>
+                    </CardHeader>
+                    <CardContent>
+                        {items.length > 0 ? (
+                            <div className="rounded-md border">
+                                <Table>
+                                    <TableHeader>
+                                        <TableRow>
+                                            <TableHead className="w-[120px]">
+                                                Image
+                                            </TableHead>
+                                            <TableHead>Date</TableHead>
+                                            <TableHead>Status</TableHead>
+                                            <TableHead className="text-right">
+                                                Actions
+                                            </TableHead>
+                                        </TableRow>
+                                    </TableHeader>
+                                    <TableBody>
+                                        {items.map((item) => (
+                                            <TableRow key={item.uid}>
+                                                <TableCell>
+                                                    {item.image_url ? (
+                                                        <img
+                                                            src={item.image_url}
+                                                            alt={
+                                                                item.progress_month
+                                                            }
+                                                            className="w-20 h-14 object-cover rounded"
+                                                        />
+                                                    ) : (
+                                                        <div className="w-20 h-14 bg-muted rounded flex items-center justify-center">
+                                                            <ImageIcon className="h-4 w-4 text-muted-foreground" />
+                                                        </div>
+                                                    )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <span className="font-semibold text-base">
+                                                        {item.progress_month}
+                                                    </span>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Badge
+                                                        variant={
+                                                            item.is_active
+                                                                ? "success"
+                                                                : "secondary"
+                                                        }
+                                                    >
+                                                        {item.is_active
+                                                            ? "Active"
+                                                            : "Inactive"}
+                                                    </Badge>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <div className="flex items-center justify-end gap-1">
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-8 w-8"
+                                                            asChild
+                                                        >
+                                                            <Link
+                                                                href={`/admin/construction-progress-items/${item.uid}/edit`}
+                                                            >
+                                                                <Pencil className="h-4 w-4" />
+                                                            </Link>
+                                                        </Button>
+                                                        <Button
+                                                            variant="ghost"
+                                                            size="icon"
+                                                            className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                                                            onClick={() =>
+                                                                setShowDeleteConfirm(
+                                                                    item.uid
+                                                                )
+                                                            }
+                                                        >
+                                                            <Trash2 className="h-4 w-4" />
+                                                        </Button>
+                                                    </div>
+                                                </TableCell>
+                                            </TableRow>
+                                        ))}
+                                    </TableBody>
+                                </Table>
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center py-12 text-center">
+                                <ImageIcon className="h-12 w-12 text-muted-foreground mb-4" />
+                                <h3 className="text-lg font-semibold">
+                                    No progress items yet
+                                </h3>
+                                <p className="text-sm text-muted-foreground mb-6">
+                                    Add construction progress photos organized
+                                    by month and year.
+                                </p>
+                                <Link href="/admin/construction-progress-items/create">
+                                    <Button>
+                                        <Plus className="w-4 h-4 mr-2" />
+                                        Add Progress
+                                    </Button>
+                                </Link>
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
             </div>
 
             {/* Media Picker Modal */}
@@ -282,6 +441,36 @@ export default function Edit({ constructionProgress }) {
                     </div>
                 </div>
             )}
+
+            {/* Delete Confirmation Dialog */}
+            <Dialog
+                open={!!showDeleteConfirm}
+                onOpenChange={() => setShowDeleteConfirm(null)}
+            >
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Delete Progress Item</DialogTitle>
+                        <DialogDescription>
+                            Are you sure you want to delete this progress item?
+                            This action cannot be undone.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <DialogFooter>
+                        <Button
+                            variant="outline"
+                            onClick={() => setShowDeleteConfirm(null)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={() => handleDeleteItem(showDeleteConfirm)}
+                        >
+                            Delete
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </AdminLayout>
     );
 }

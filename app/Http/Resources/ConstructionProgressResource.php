@@ -32,6 +32,7 @@ class ConstructionProgressResource extends JsonResource
                     'alt_text' => $this->progressImage->alt_text,
                 ];
             }),
+            'items' => ConstructionProgressItemResource::collection($this->whenLoaded('items')),
             'is_active' => (bool) $this->is_active,
             'created_at' => $this->created_at?->format('Y-m-d H:i:s'),
             'updated_at' => $this->updated_at?->format('Y-m-d H:i:s'),

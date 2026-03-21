@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\BrochureController;
 use App\Http\Controllers\Admin\AwardController;
 use App\Http\Controllers\Admin\CareerController;
 use App\Http\Controllers\Admin\ConstructionProgressController;
+use App\Http\Controllers\Admin\ConstructionProgressItemController;
 use App\Http\Controllers\Admin\FaqController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MilestoneController;
@@ -133,6 +134,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Construction Progress
             Route::get('/construction-progress', [ConstructionProgressController::class, 'edit'])->name('construction-progress.edit');
             Route::put('/construction-progress', [ConstructionProgressController::class, 'update'])->name('construction-progress.update');
+
+            // Construction Progress Items
+            Route::get('/construction-progress-items/create', [ConstructionProgressItemController::class, 'create'])->name('construction-progress-items.create');
+            Route::post('/construction-progress-items', [ConstructionProgressItemController::class, 'store'])->name('construction-progress-items.store');
+            Route::get('/construction-progress-items/{item}/edit', [ConstructionProgressItemController::class, 'edit'])->name('construction-progress-items.edit');
+            Route::put('/construction-progress-items/{item}', [ConstructionProgressItemController::class, 'update'])->name('construction-progress-items.update');
+            Route::delete('/construction-progress-items/{item}', [ConstructionProgressItemController::class, 'destroy'])->name('construction-progress-items.destroy');
 
             // Milestones
             Route::post('/milestones/update-order', [MilestoneController::class, 'updateOrder'])->name('milestones.update-order');

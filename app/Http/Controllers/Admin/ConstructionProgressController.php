@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ConstructionProgressItemResource;
 use App\Http\Resources\ConstructionProgressResource;
 use App\Models\ConstructionProgress;
 use Illuminate\Http\Request;
@@ -26,8 +27,14 @@ class ConstructionProgressController extends Controller
             $constructionProgress->load('progressImage');
         }
 
+        $items = $constructionProgress->items()
+            ->with('itemImage')
+            ->orderBy('progress_date', 'desc')
+            ->get();
+
         return Inertia::render('Admin/ConstructionProgress/Edit', [
             'constructionProgress' => (new ConstructionProgressResource($constructionProgress))->resolve(),
+            'items' => ConstructionProgressItemResource::collection($items)->resolve(),
         ]);
     }
 

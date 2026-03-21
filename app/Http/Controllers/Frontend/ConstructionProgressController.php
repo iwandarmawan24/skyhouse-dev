@@ -13,7 +13,14 @@ class ConstructionProgressController extends Controller
      */
     public function show()
     {
-        $constructionProgress = ConstructionProgress::with('progressImage')
+        $constructionProgress = ConstructionProgress::with([
+                'progressImage',
+                'items' => function ($query) {
+                    $query->active()
+                        ->with('itemImage')
+                        ->orderBy('progress_date', 'desc');
+                },
+            ])
             ->active()
             ->first();
 
