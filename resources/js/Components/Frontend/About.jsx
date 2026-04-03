@@ -137,10 +137,10 @@ const About = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 md:bottom-12 md:left-12">
-                <Heading as="h3" variant="card" color="white" className="mb-2 text-base md:text-xl">Vibrant<br />Lifestyle &<br /> Shopping<br /> at Your Doorstep</Heading>
+                <Heading as="h3" variant="card" color="white" className="mb-2 text-base md:text-xl">Daily Freshness,<br />Effortlessly Close<br /></Heading>
                 <br className="hidden md:block" />
                 <Text size="sm" color="white" className="max-w-xs opacity-90 text-xs md:text-sm">
-                  Mall @ Alam Sutera, Living World, IKEA, Flavor Bliss, and Jakarta Premium Outlet—all just minutes away for your everyday convenience.
+                  From premium fruit markets to modern grocery stores like AEON and All Fresh, enjoy convenient access to quality ingredients every day.
                 </Text>
               </div>
             </LifestyleSlider>
