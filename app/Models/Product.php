@@ -40,7 +40,7 @@ class Product extends Model
         'living_room' => 'boolean',
         'is_balcon_exist' => 'boolean',
         'kitchen' => 'boolean',
-        'is_furnished' => 'boolean',
+        'is_furnished' => 'string',
         'facilities' => 'array',
         'gallery_uids' => 'array',
         'is_featured' => 'boolean',

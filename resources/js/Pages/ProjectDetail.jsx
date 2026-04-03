@@ -256,7 +256,7 @@ export default function ProjectDetail({ project }) {
                       </svg>
                       <Text size="sm" color="slate" className="!font-medium">Furnished</Text>
                     </div>
-                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl">{project.specifications.furnished ? 'Yes' : 'No'}</Text>
+                    <Text size="xl" weight="bold" color="charcoal" className="!text-2xl capitalize">{project.specifications.furnished ? project.specifications.furnished.replace('-', ' ') : 'Unfurnished'}</Text>
                   </div>
                 </div>
               </div>

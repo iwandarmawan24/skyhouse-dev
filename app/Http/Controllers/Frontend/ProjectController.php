@@ -141,7 +141,7 @@ class ProjectController extends Controller
                 'living_room' => (bool) $product->living_room,
                 'balcony' => (bool) $product->is_balcon_exist,
                 'kitchen' => (bool) $product->kitchen,
-                'furnished' => (bool) $product->is_furnished,
+                'furnished' => $product->is_furnished ?? 'unfurnished',
             ],
             'gallery' => $gallery,
             'facilities' => $product->facilities ?? [],
