@@ -24,7 +24,7 @@ const FacilityCard = ({ images, title, description, className = "", rowSpan = ""
   }, [isHovered, images.length]);
 
   return (
-    <div 
+    <div
       className={`service-card relative rounded-3xl overflow-hidden h-[300px] md:h-[400px] group cursor-pointer transform transition-transform duration-300 hover:scale-105 hover:shadow-lg ${rowSpan} ${className}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -36,23 +36,22 @@ const FacilityCard = ({ images, title, description, className = "", rowSpan = ""
         style={{ transition: 'opacity 300ms ease-in-out, transform 700ms ease-out' }}
       />
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-      
+
       {/* Slider Indicator Dots */}
       {/* {isHovered && ( */}
-        <div className="absolute top-4 left-4 flex gap-2 z-20">
-          {images.map((_, index) => (
-            <div
-              key={index}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                index === currentImageIndex 
-                  ? 'bg-white w-6' 
-                  : 'bg-white/50'
+      <div className="absolute top-4 left-4 flex gap-2 z-20">
+        {images.map((_, index) => (
+          <div
+            key={index}
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentImageIndex
+                ? 'bg-white w-6'
+                : 'bg-white/50'
               }`}
-            />
-          ))}
-        </div>
+          />
+        ))}
+      </div>
       {/* )} */}
-      
+
       <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6">
         <Heading as="h3" variant="card" color="white" className="mb-2 text-sm md:text-base" dangerouslySetInnerHTML={{ __html: title }} />
         <Text size="sm" color="white" className="max-w-sm opacity-90 text-xs md:text-sm">
@@ -101,11 +100,10 @@ const LifestyleSlider = ({ images, children, className = "" }) => {
         {images.map((_, index) => (
           <div
             key={index}
-            className={`w-2 h-2 rounded-full transition-all duration-300 ${
-              index === currentImageIndex
+            className={`w-2 h-2 rounded-full transition-all duration-300 ${index === currentImageIndex
                 ? 'bg-white w-6'
                 : 'bg-white/50'
-            }`}
+              }`}
           />
         ))}
       </div>
@@ -120,7 +118,7 @@ const About = () => {
       {/* Facilities Section */}
       <section
         className="services-section bg-skyhouse-ocean py-20 px-4 md:px-8 lg:px-16"
-        style={{ 
+        style={{
           backgroundImage: 'url(/images/hero/bg-blur.png)'
         }}
       >
@@ -130,8 +128,11 @@ const About = () => {
             <LifestyleSlider
               images={[
                 "/images/experiences/lifestyle/mall @ alam sutera.jpg",
-                "/images/experiences/lifestyle/jakarta-premium-outlet.jpg",
-                "/images/experiences/lifestyle/decathlon.jpg",
+                "/images/experiences/lifestyle/revaeon.jpg",
+                "/images/experiences/lifestyle/revallfresh.jpg",
+                "/images/experiences/lifestyle/revdutabuah.jpg",
+                "/images/experiences/lifestyle/revpasar8.jpg",
+                "/images/experiences/lifestyle/revrumahbuah.jpg",
               ]}
               className="min-h-[350px] lg:row-span-2 order-2 lg:order-1"
             >
@@ -149,7 +150,10 @@ const About = () => {
               images={[
                 "/images/experiences/lifestyle/living-world-alamsutera.jpg",
                 "/images/experiences/lifestyle/ikea-alam-sutera.webp",
-                "/images/experiences/lifestyle/flavor-bliss.jpeg"
+                "/images/experiences/lifestyle/flavor-bliss.jpeg",
+                "/images/experiences/lifestyle/flavor-bliss.jpg",
+                "/images/experiences/lifestyle/jakarta-premium-outlet.jpg",
+                "/images/experiences/lifestyle/decathlon.jpg",
               ]}
               title="Endless Entertainment"
               description="Living World Mall, IKEA, Flavor Bliss, Decathlon, and Jakarta Premium Outlet—all within a short drive from home."
