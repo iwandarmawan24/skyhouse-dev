@@ -150,7 +150,6 @@ const About = () => {
               images={[
                 "/images/experiences/lifestyle/living-world-alamsutera.jpg",
                 "/images/experiences/lifestyle/ikea-alam-sutera.webp",
-                "/images/experiences/lifestyle/flavor-bliss.jpeg",
                 "/images/experiences/lifestyle/flavor-bliss.jpg",
                 "/images/experiences/lifestyle/jakarta-premium-outlet.jpg",
                 "/images/experiences/lifestyle/decathlon.jpg",
