@@ -31,6 +31,7 @@ export default function Form({ product }) {
         is_sold: product?.is_sold ?? false,
         is_active: product?.is_active ?? true,
         featured_image_uid: product?.featured_image_uid || null,
+        card_image_uid: product?.card_image_uid || null,
         gallery_uids: product?.gallery_uids || [],
         _method: isEdit ? 'PUT' : 'POST',
     });
@@ -41,6 +42,7 @@ export default function Form({ product }) {
 
     // Preview state for MediaLibrary images
     const [featuredImagePreview, setFeaturedImagePreview] = useState(product?.featured_image || null);
+    const [cardImagePreview, setCardImagePreview] = useState(product?.card_image || null);
     const [galleryPreviews, setGalleryPreviews] = useState(product?.gallery_images || []);
 
     // Slider management state
@@ -415,42 +417,83 @@ export default function Form({ product }) {
                 <div className="bg-white rounded-xl shadow-sm p-6">
                     <h2 className="text-lg font-semibold text-gray-900 mb-4">Images</h2>
 
-                    {/* Featured Image */}
-                    <div className="mb-6">
-                        <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Featured Image
-                        </label>
-                        {featuredImagePreview ? (
-                            <div className="relative inline-block">
-                                <img
-                                    src={featuredImagePreview.url || featuredImagePreview.thumbnail_url}
-                                    alt={featuredImagePreview.alt_text || 'Featured Image'}
-                                    className="w-48 h-48 object-cover rounded-lg border-2 border-gray-300"
-                                />
+                    {/* Featured Image & Card Image */}
+                    <div className="mb-6 flex flex-wrap gap-6">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Featured Image
+                            </label>
+                            <p className="text-xs text-gray-500 mb-2">Used inside the project detail page</p>
+                            {featuredImagePreview ? (
+                                <div className="relative inline-block">
+                                    <img
+                                        src={featuredImagePreview.url || featuredImagePreview.thumbnail_url}
+                                        alt={featuredImagePreview.alt_text || 'Featured Image'}
+                                        className="w-48 h-48 object-cover rounded-lg border-2 border-gray-300"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setFeaturedImagePreview(null);
+                                            setData('featured_image_uid', null);
+                                        }}
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            ) : (
                                 <button
                                     type="button"
                                     onClick={() => {
-                                        setFeaturedImagePreview(null);
-                                        setData('featured_image_uid', null);
+                                        setMediaPickerMode('featured');
+                                        setShowMediaPicker(true);
                                     }}
-                                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition"
+                                    className="border-2 border-dashed border-gray-300 rounded-lg p-8 w-48 h-48 flex flex-col items-center justify-center hover:border-blue-500 transition-colors group"
                                 >
-                                    <X className="h-4 w-4" />
+                                    <ImageIcon className="h-12 w-12 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                                    <p className="mt-2 text-sm text-gray-600 group-hover:text-blue-600">Select Image</p>
                                 </button>
-                            </div>
-                        ) : (
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setMediaPickerMode('featured');
-                                    setShowMediaPicker(true);
-                                }}
-                                className="border-2 border-dashed border-gray-300 rounded-lg p-8 w-48 h-48 flex flex-col items-center justify-center hover:border-blue-500 transition-colors group"
-                            >
-                                <ImageIcon className="h-12 w-12 text-gray-400 group-hover:text-blue-500 transition-colors" />
-                                <p className="mt-2 text-sm text-gray-600 group-hover:text-blue-600">Select Image</p>
-                            </button>
-                        )}
+                            )}
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-2">
+                                Card Image
+                            </label>
+                            <p className="text-xs text-gray-500 mb-2">Shown on the project card/listing</p>
+                            {cardImagePreview ? (
+                                <div className="relative inline-block">
+                                    <img
+                                        src={cardImagePreview.url || cardImagePreview.thumbnail_url}
+                                        alt={cardImagePreview.alt_text || 'Card Image'}
+                                        className="w-48 h-48 object-cover rounded-lg border-2 border-gray-300"
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => {
+                                            setCardImagePreview(null);
+                                            setData('card_image_uid', null);
+                                        }}
+                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition"
+                                    >
+                                        <X className="h-4 w-4" />
+                                    </button>
+                                </div>
+                            ) : (
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setMediaPickerMode('card');
+                                        setShowMediaPicker(true);
+                                    }}
+                                    className="border-2 border-dashed border-gray-300 rounded-lg p-8 w-48 h-48 flex flex-col items-center justify-center hover:border-blue-500 transition-colors group"
+                                >
+                                    <ImageIcon className="h-12 w-12 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                                    <p className="mt-2 text-sm text-gray-600 group-hover:text-blue-600">Select Image</p>
+                                </button>
+                            )}
+                        </div>
                     </div>
 
                     {/* Gallery Images */}
@@ -713,6 +756,10 @@ export default function Form({ product }) {
                         // Single image for featured
                         setFeaturedImagePreview(media);
                         setData('featured_image_uid', media.uid);
+                    } else if (mediaPickerMode === 'card') {
+                        // Single image for card
+                        setCardImagePreview(media);
+                        setData('card_image_uid', media.uid);
                     } else if (mediaPickerMode === 'gallery') {
                         // Multiple images for gallery
                         const mediaArray = Array.isArray(media) ? media : [media];

@@ -28,6 +28,8 @@ class ConstructionProgressItemController extends Controller
         $validated = $request->validate([
             'progress_date' => 'required|date',
             'image_uid' => 'required|exists:media_library,uid',
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
             'is_active' => 'required|boolean',
         ]);
 
@@ -54,6 +56,8 @@ class ConstructionProgressItemController extends Controller
         $validated = $request->validate([
             'progress_date' => 'required|date',
             'image_uid' => 'required|exists:media_library,uid',
+            'title' => 'nullable|string|max:255',
+            'description' => 'nullable|string',
             'is_active' => 'required|boolean',
         ]);
 

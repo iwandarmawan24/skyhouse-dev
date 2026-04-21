@@ -5,7 +5,7 @@ import "@css/frontend.css";
 import "@css/frontend/news-page.css";
 import axios from "axios";
 
-export default function MediaHighlights({ featured }) {
+export default function MediaHighlights({ featured, pageInfo = null }) {
   const pageTitle = "Media Highlights - Skyhouse Alamsutera";
   const pageDescription = "Stay informed with our latest media coverage and press releases from Skyhouse Alamsutera.";
   const pageImage = featured?.image || window.location.origin + "/images/default-og-image.jpg";
@@ -91,7 +91,7 @@ export default function MediaHighlights({ featured }) {
         <section className="news-top-banner">
           <div className="news-banner-image-wrapper">
             <img
-              src="/images/banner/Media-Banner.webp"
+              src={pageInfo?.banner_image || "/images/banner/Media-Banner.webp"}
               alt="Media Highlights Banner"
               className="news-banner-image"
             />
@@ -99,10 +99,10 @@ export default function MediaHighlights({ featured }) {
               <div className="padding-global">
                 <div className="container-large">
                   <h1 className="news-banner-title">
-                    Media Highlights
+                    {pageInfo?.title || "Media Highlights"}
                   </h1>
                   <p className="news-banner-subtitle">
-                    Stay informed with our latest media coverage and press releases
+                    {pageInfo?.subtitle || "Stay informed with our latest media coverage and press releases"}
                   </p>
                 </div>
               </div>

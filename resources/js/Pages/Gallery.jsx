@@ -21,7 +21,7 @@ export default function Gallery({ galleries = [] }) {
   const tabs = [
     { id: 'all', label: 'All Photos' },
     { id: 'facilities', label: 'Facilities' },
-    { id: 'units', label: 'Units' },
+    { id: 'units', label: 'Types' },
     { id: 'events', label: 'Events' },
   ];
 

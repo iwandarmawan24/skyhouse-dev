@@ -5,7 +5,7 @@ import ImagePreviewModal from '@/Components/Frontend/ImagePreviewModal';
 import '@css/frontend.css';
 import '@css/frontend/news-page.css';
 
-export default function Facilities({ facilities: backendFacilities = [] }) {
+export default function Facilities({ facilities: backendFacilities = [], pageInfo = null }) {
   const [previewFacility, setPreviewFacility] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [cardsPerSlide, setCardsPerSlide] = useState(3);
@@ -103,18 +103,18 @@ export default function Facilities({ facilities: backendFacilities = [] }) {
         <section className="news-top-banner">
           <div className="news-banner-image-wrapper">
             <img
-              src="/images/banner/Facilities-Banner.webp"
+              src={pageInfo?.banner_image || "/images/banner/Facilities-Banner.webp"}
               alt="Facilities Banner"
               className="news-banner-image"
             />
-            {/* <div className="news-banner-overlay">
+            <div className="news-banner-overlay">
               <div className="padding-global">
                 <div className="container-large">
-                  <h1 className="news-banner-title">Our Facilities</h1>
-                  <p className="news-banner-subtitle">Elevate your living experience with our premium amenities</p>
+                  <h1 className="news-banner-title">{pageInfo?.title || "Our Facilities"}</h1>
+                  <p className="news-banner-subtitle">{pageInfo?.subtitle || "Elevate your living experience with our premium amenities"}</p>
                 </div>
               </div>
-            </div> */}
+            </div>
           </div>
         </section>
 

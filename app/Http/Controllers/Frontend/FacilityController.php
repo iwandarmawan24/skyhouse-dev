@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Facility;
+use App\Models\FacilitiesPageInfo;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -31,8 +32,16 @@ class FacilityController extends Controller
                 ];
             });
 
+        $info = FacilitiesPageInfo::with('bannerImage')->first();
+        $pageInfo = [
+            'banner_image' => $info?->bannerImage?->url ?? '/images/banner/Facilities-Banner.webp',
+            'title' => $info?->title ?? 'Our Facilities',
+            'subtitle' => $info?->subtitle ?? 'Elevate your living experience with our premium amenities',
+        ];
+
         return Inertia::render('Facilities', [
             'facilities' => $facilities,
+            'pageInfo' => $pageInfo,
         ]);
     }
 }

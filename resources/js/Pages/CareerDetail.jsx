@@ -5,7 +5,7 @@ import "@css/frontend.css";
 import "@css/frontend/news-page.css";
 import "@css/frontend/news-detail.css";
 
-export default function CareerDetail({ career }) {
+export default function CareerDetail({ career, applyEmail = null }) {
     const pageTitle = `${career.title} - Skyhouse Alamsutera`;
     const pageDescription = career.body?.replace(/<[^>]*>/g, '').substring(0, 155) || "Career opportunity at Skyhouse Alamsutera";
     const pageImage = window.location.origin + "/images/default-og-image.jpg";
@@ -94,23 +94,41 @@ export default function CareerDetail({ career }) {
                                 />
                             </div>
 
-                            {/* Back to Careers */}
-                            <div style={{ marginTop: '3rem', textAlign: 'center' }}>
+                            {/* Actions */}
+                            <div style={{ marginTop: '3rem', textAlign: 'center', display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
                                 <Link
                                     href="/careers"
                                     style={{
                                         display: 'inline-block',
                                         padding: '1rem 2rem',
-                                        background: '#1E3A8A',
-                                        color: 'white',
+                                        background: 'transparent',
+                                        color: '#1E3A8A',
+                                        border: '2px solid #1E3A8A',
                                         textDecoration: 'none',
                                         borderRadius: '8px',
                                         fontWeight: '600',
-                                        transition: 'background 0.3s',
+                                        transition: 'all 0.3s',
                                     }}
                                 >
                                     ← Back to Careers
                                 </Link>
+                                {applyEmail && (
+                                    <a
+                                        href={`mailto:${applyEmail}?subject=${encodeURIComponent(`Job Application: ${career.title}`)}`}
+                                        style={{
+                                            display: 'inline-block',
+                                            padding: '1rem 2rem',
+                                            background: '#1E3A8A',
+                                            color: 'white',
+                                            textDecoration: 'none',
+                                            borderRadius: '8px',
+                                            fontWeight: '600',
+                                            transition: 'background 0.3s',
+                                        }}
+                                    >
+                                        Apply Now
+                                    </a>
+                                )}
                             </div>
                         </div>
                     </div>

@@ -15,6 +15,8 @@ class ConstructionProgressItem extends Model
         'construction_progress_uid',
         'progress_date',
         'image_uid',
+        'title',
+        'description',
         'is_active',
     ];
 

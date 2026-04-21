@@ -7,8 +7,10 @@ use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\EventsPageInfoController;
 use App\Http\Controllers\Admin\FacilityController;
 use App\Http\Controllers\Admin\FacilitySliderController;
+use App\Http\Controllers\Admin\FacilitiesPageInfoController;
 use App\Http\Controllers\Admin\GalleryController;
 use App\Http\Controllers\Admin\HeroBannerController;
 use App\Http\Controllers\Admin\InstagramGalleryController;
@@ -16,6 +18,7 @@ use App\Http\Controllers\Admin\LocationMapController;
 use App\Http\Controllers\Admin\BrochureController;
 use App\Http\Controllers\Admin\AwardController;
 use App\Http\Controllers\Admin\CareerController;
+use App\Http\Controllers\Admin\CareerSettingController;
 use App\Http\Controllers\Admin\ConstructionProgressController;
 use App\Http\Controllers\Admin\ConstructionProgressItemController;
 use App\Http\Controllers\Admin\FaqController;
@@ -23,11 +26,18 @@ use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\MilestoneController;
 use App\Http\Controllers\Admin\MediaLibraryController;
 use App\Http\Controllers\Admin\MediaHighlightController;
+use App\Http\Controllers\Admin\MediaHighlightsPageInfoController;
 use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TopSalesController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VirtualTourBannerController;
+use App\Http\Controllers\Admin\ProjectPageInfoController;
+use App\Http\Controllers\Admin\AboutCompanyInfoController;
+use App\Http\Controllers\Admin\AboutHeroController;
+use App\Http\Controllers\Admin\AboutMissionController;
+use App\Http\Controllers\Admin\AboutValueController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Frontend\EventController as FrontendEventController;
 use App\Http\Controllers\Frontend\HeroBannerController as FrontendHeroBannerController;
@@ -150,6 +160,33 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/brochures/edit', [BrochureController::class, 'edit'])->name('brochures.edit');
             Route::put('/brochures', [BrochureController::class, 'update'])->name('brochures.update');
 
+            // Virtual Tour Banner
+            Route::get('/virtual-tour-banner/edit', [VirtualTourBannerController::class, 'edit'])->name('virtual-tour-banner.edit');
+            Route::put('/virtual-tour-banner', [VirtualTourBannerController::class, 'update'])->name('virtual-tour-banner.update');
+
+            // Project Page Info
+            Route::get('/project-page-info/edit', [ProjectPageInfoController::class, 'edit'])->name('project-page-info.edit');
+            Route::put('/project-page-info', [ProjectPageInfoController::class, 'update'])->name('project-page-info.update');
+
+            // About Us Page Sections
+            Route::prefix('about')->name('about.')->group(function () {
+                // Company Intro (singleton)
+                Route::get('/company-intro/edit', [AboutCompanyInfoController::class, 'edit'])->name('company-intro.edit');
+                Route::put('/company-intro', [AboutCompanyInfoController::class, 'update'])->name('company-intro.update');
+
+                // Hero (singleton)
+                Route::get('/hero/edit', [AboutHeroController::class, 'edit'])->name('hero.edit');
+                Route::put('/hero', [AboutHeroController::class, 'update'])->name('hero.update');
+
+                // Mission (singleton)
+                Route::get('/mission/edit', [AboutMissionController::class, 'edit'])->name('mission.edit');
+                Route::put('/mission', [AboutMissionController::class, 'update'])->name('mission.update');
+
+                // Core Values (repeating)
+                Route::post('/values/update-order', [AboutValueController::class, 'updateOrder'])->name('values.update-order');
+                Route::resource('values', AboutValueController::class)->except(['show'])->parameters(['values' => 'value']);
+            });
+
             // Products
             Route::resource('products', ProductController::class)->except(['show']);
             Route::post('/products/{product}/update-image-order', [ProductController::class, 'updateImageOrder'])->name('products.update-image-order');
@@ -186,8 +223,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Media Highlights
             Route::resource('media-highlights', MediaHighlightController::class)->except(['show']);
 
+            // Media Highlights Page Info
+            Route::get('/media-highlights-page-info/edit', [MediaHighlightsPageInfoController::class, 'edit'])->name('media-highlights-page-info.edit');
+            Route::put('/media-highlights-page-info', [MediaHighlightsPageInfoController::class, 'update'])->name('media-highlights-page-info.update');
+
             // Events
             Route::resource('events', EventController::class)->except(['show']);
+
+            // Events Page Info
+            Route::get('/events-page-info/edit', [EventsPageInfoController::class, 'edit'])->name('events-page-info.edit');
+            Route::put('/events-page-info', [EventsPageInfoController::class, 'update'])->name('events-page-info.update');
 
             // Facilities
             Route::resource('facilities', FacilityController::class)->except(['show']);
@@ -196,6 +241,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Facility Sliders
             Route::post('/facility-sliders/update-order', [FacilitySliderController::class, 'updateOrder'])->name('facility-sliders.update-order');
             Route::resource('facility-sliders', FacilitySliderController::class)->except(['show']);
+
+            // Facilities Page Info
+            Route::get('/facilities-page-info/edit', [FacilitiesPageInfoController::class, 'edit'])->name('facilities-page-info.edit');
+            Route::put('/facilities-page-info', [FacilitiesPageInfoController::class, 'update'])->name('facilities-page-info.update');
 
             // Galleries
             Route::post('/galleries/update-order', [GalleryController::class, 'updateOrder'])->name('galleries.update-order');
@@ -213,6 +262,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Careers
             Route::post('/careers/update-order', [CareerController::class, 'updateOrder'])->name('careers.update-order');
             Route::resource('careers', CareerController::class)->except(['show']);
+
+            // Career Settings
+            Route::get('/career-settings/edit', [CareerSettingController::class, 'edit'])->name('career-settings.edit');
+            Route::put('/career-settings', [CareerSettingController::class, 'update'])->name('career-settings.update');
 
             // FAQs
             Route::post('/faqs/update-order', [FaqController::class, 'updateOrder'])->name('faqs.update-order');

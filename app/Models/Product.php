@@ -28,6 +28,7 @@ class Product extends Model
         'video_url',
         'video_360_url',
         'featured_image_uid',
+        'card_image_uid',
         'gallery_uids',
         'views',
         'is_featured',
@@ -81,6 +82,14 @@ class Product extends Model
     public function featuredImage()
     {
         return $this->belongsTo(MediaLibrary::class, 'featured_image_uid', 'uid');
+    }
+
+    /**
+     * Get card image from media library
+     */
+    public function cardImage()
+    {
+        return $this->belongsTo(MediaLibrary::class, 'card_image_uid', 'uid');
     }
 
     /**

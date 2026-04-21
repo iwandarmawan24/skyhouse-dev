@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Frontend;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CareerResource;
 use App\Models\Career;
+use App\Models\CareerSetting;
 use Inertia\Inertia;
 
 class CareerController extends Controller
@@ -24,6 +25,7 @@ class CareerController extends Controller
 
         return Inertia::render('CareerDetail', [
             'career' => (new CareerResource($career))->resolve(),
+            'applyEmail' => CareerSetting::first()?->apply_email,
         ]);
     }
 }

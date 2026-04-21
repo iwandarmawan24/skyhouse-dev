@@ -3,7 +3,15 @@
 namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\AboutCompanyInfoResource;
+use App\Http\Resources\AboutHeroResource;
+use App\Http\Resources\AboutMissionResource;
+use App\Http\Resources\AboutValueResource;
 use App\Http\Resources\MilestoneResource;
+use App\Models\AboutCompanyInfo;
+use App\Models\AboutHero;
+use App\Models\AboutMission;
+use App\Models\AboutValue;
 use App\Models\Milestone;
 use App\Models\TopSales;
 use Inertia\Inertia;
@@ -32,9 +40,18 @@ class AboutController extends Controller
             ->ordered()
             ->get();
 
+        $companyInfo = AboutCompanyInfo::first();
+        $hero = AboutHero::first();
+        $mission = AboutMission::first();
+        $values = AboutValue::with('iconImage')->active()->ordered()->get();
+
         return Inertia::render('About', [
             'topSales' => $topSales,
             'milestones' => MilestoneResource::collection($milestones)->resolve(),
+            'companyInfo' => $companyInfo ? (new AboutCompanyInfoResource($companyInfo))->resolve() : null,
+            'hero' => $hero ? (new AboutHeroResource($hero))->resolve() : null,
+            'mission' => $mission ? (new AboutMissionResource($mission))->resolve() : null,
+            'values' => AboutValueResource::collection($values)->resolve(),
         ]);
     }
 }

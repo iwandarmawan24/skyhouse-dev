@@ -53,7 +53,14 @@ const defaultHistoryData = [
   },
 ];
 
-export default function About({ topSales = [], milestones = [] }) {
+export default function About({
+  topSales = [],
+  milestones = [],
+  companyInfo = null,
+  hero = null,
+  mission = null,
+  values: cmsValues = [],
+}) {
   const [isMapVisible, setIsMapVisible] = useState(false);
   const mapRef = React.useRef(null);
 
@@ -83,28 +90,21 @@ export default function About({ topSales = [], milestones = [] }) {
 
   const historyData = milestones.length > 0 ? milestones : defaultHistoryData;
 
-  const values = [
-    {
-      icon: '🎯',
-      title: 'Excellence',
-      description: 'We strive for excellence in every project, from design to construction to after-sales service.'
-    },
-    {
-      icon: '🤝',
-      title: 'Integrity',
-      description: 'We conduct our business with honesty, transparency, and ethical practices in all our dealings.'
-    },
-    {
-      icon: '💡',
-      title: 'Innovation',
-      description: 'We embrace innovation and technology to create smarter, more efficient living spaces.'
-    },
-    {
-      icon: '🌱',
-      title: 'Sustainability',
-      description: 'We are committed to environmentally responsible development and sustainable practices.'
-    }
+  const defaultValues = [
+    { icon: '🎯', title: 'Excellence', description: 'We strive for excellence in every project, from design to construction to after-sales service.' },
+    { icon: '🤝', title: 'Integrity', description: 'We conduct our business with honesty, transparency, and ethical practices in all our dealings.' },
+    { icon: '💡', title: 'Innovation', description: 'We embrace innovation and technology to create smarter, more efficient living spaces.' },
+    { icon: '🌱', title: 'Sustainability', description: 'We are committed to environmentally responsible development and sustainable practices.' },
   ];
+
+  const values = cmsValues.length > 0
+    ? cmsValues.map(v => ({
+        icon: v.icon_emoji,
+        iconUrl: v.icon_url,
+        title: v.title,
+        description: v.description,
+      }))
+    : defaultValues;
 
   const achievements = [
     {
@@ -300,8 +300,8 @@ export default function About({ topSales = [], milestones = [] }) {
             <div className="flex flex-col lg:flex-row gap-6">
               <div className="w-full lg:w-1/3 order-1 lg:order-2">
                 <div className="block rounded-3xl p-0 md:p-8 flex flex-col">
-                  <Heading as="h2" variant="card" className="mb-3">About</Heading>
-                  <Heading as="h2" variant="card" bodoni className="mb-3 italic">Company</Heading>
+                  <Heading as="h2" variant="card" className="mb-3">{companyInfo?.heading_line_1 || 'About'}</Heading>
+                  <Heading as="h2" variant="card" bodoni className="mb-3 italic">{companyInfo?.heading_line_2 || 'Company'}</Heading>
                   <div className="block bg-blue-300 h-1 w-16 my-4"></div>
                 </div>
               </div>
@@ -309,11 +309,15 @@ export default function About({ topSales = [], milestones = [] }) {
                 <Text
                   as="span"
                   size="lg"
-                  className="block"
+                  className="block whitespace-pre-line"
                   style={{ textAlign: 'justify' }}
                 >
-                  <b>Risland Holdings</b> is a Hong Kong–based multinational real estate company engaged in residential development, commercial real estate, property management, and infrastructure construction and operation. By 2018, it had developed projects across multiple countries, including the United States, New Zealand, Thailand, India, and Indonesia.
-                  In Indonesia, Risland combines its leading design concepts with local market needs through its premium apartment line, Sky House, which has been present in the market for two years. Sky House Alam Sutera+ is the second Sky House project in Indonesia.
+                  {companyInfo?.description || (
+                    <>
+                      <b>Risland Holdings</b> is a Hong Kong–based multinational real estate company engaged in residential development, commercial real estate, property management, and infrastructure construction and operation. By 2018, it had developed projects across multiple countries, including the United States, New Zealand, Thailand, India, and Indonesia.
+                      In Indonesia, Risland combines its leading design concepts with local market needs through its premium apartment line, Sky House, which has been present in the market for two years. Sky House Alam Sutera+ is the second Sky House project in Indonesia.
+                    </>
+                  )}
                 </Text>
               </div>
             </div>
@@ -325,15 +329,14 @@ export default function About({ topSales = [], milestones = [] }) {
             <div className="container-large">
               <div className="padding-section-large">
                 <div className="about-hero-content">
-                  <h1 className="about-hero-title">Building Dreams, Creating Communities</h1>
-                  <p className="about-hero-subtitle">
-                    At Skyhouse Alamsutera, we believe that a home is more than just a place to live—it's where life's most precious moments unfold.
-                    Since our inception, we have been dedicated to creating residential communities that inspire, comfort, and endure.
+                  <h1 className="about-hero-title">
+                    {hero?.title || 'Building Dreams, Creating Communities'}
+                  </h1>
+                  <p className="about-hero-subtitle whitespace-pre-line">
+                    {hero?.subtitle || "At Skyhouse Alamsutera, we believe that a home is more than just a place to live—it's where life's most precious moments unfold. Since our inception, we have been dedicated to creating residential communities that inspire, comfort, and endure."}
                   </p>
-                  <p className="about-hero-description">
-                    Our commitment goes beyond constructing buildings; we craft living experiences that enhance the quality of life for every resident.
-                    With innovative designs, sustainable practices, and a customer-centric approach, we have established ourselves as a trusted name
-                    in Indonesia's real estate industry.
+                  <p className="about-hero-description whitespace-pre-line">
+                    {hero?.description || "Our commitment goes beyond constructing buildings; we craft living experiences that enhance the quality of life for every resident. With innovative designs, sustainable practices, and a customer-centric approach, we have established ourselves as a trusted name in Indonesia's real estate industry."}
                   </p>
                 </div>
               </div>
@@ -385,17 +388,26 @@ export default function About({ topSales = [], milestones = [] }) {
                 <div className="values-grid">
                   {values.map((value, index) => (
                     <div key={index} className="value-card">
-                      <div className="value-icon">{value.icon}</div>
+                      <div className="value-icon">
+                        {value.iconUrl ? (
+                          <img
+                            src={value.iconUrl}
+                            alt={value.title}
+                            className="w-16 h-16 object-contain mx-auto"
+                          />
+                        ) : (
+                          value.icon
+                        )}
+                      </div>
                       <h3 className="value-title">{value.title}</h3>
                       <p className="value-description">{value.description}</p>
                     </div>
                   ))}
                 </div>
                 <div className="mission-statement">
-                  <h3>Our Mission</h3>
-                  <p>
-                    To be Indonesia's premier residential developer by creating exceptional living environments that combine innovative design,
-                    quality construction, and sustainable practices, while fostering vibrant communities where families thrive and create lasting memories.
+                  <h3>{mission?.title || 'Our Mission'}</h3>
+                  <p className="whitespace-pre-line">
+                    {mission?.statement || "To be Indonesia's premier residential developer by creating exceptional living environments that combine innovative design, quality construction, and sustainable practices, while fostering vibrant communities where families thrive and create lasting memories."}
                   </p>
                 </div>
               </div>
