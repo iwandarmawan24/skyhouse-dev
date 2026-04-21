@@ -24,6 +24,10 @@ import {
     Award,
     HardHat,
     History,
+    Info,
+    Heart,
+    Target,
+    Sparkles,
 } from "lucide-react";
 
 import {
@@ -149,6 +153,11 @@ export default function AdminLayout({ children }) {
                         href: "/admin/construction-progress",
                         icon: HardHat,
                     },
+                    {
+                        name: "Virtual Tour Banner",
+                        href: "/admin/virtual-tour-banner/edit",
+                        icon: ImageIcon,
+                    },
                 ],
             },
             {
@@ -161,6 +170,11 @@ export default function AdminLayout({ children }) {
                         name: "All Products",
                         href: "/admin/products",
                         icon: Package,
+                    },
+                    {
+                        name: "Page Information",
+                        href: "/admin/project-page-info/edit",
+                        icon: ImageIcon,
                     },
                     {
                         name: "Brochures",
@@ -183,6 +197,11 @@ export default function AdminLayout({ children }) {
                         name: "Sliders",
                         href: "/admin/facility-sliders",
                     },
+                    {
+                        name: "Page Information",
+                        href: "/admin/facilities-page-info/edit",
+                        icon: ImageIcon,
+                    },
                 ],
             },
             {
@@ -192,10 +211,37 @@ export default function AdminLayout({ children }) {
                 roles: ["superadmin", "admin", "staff"],
             },
             {
-                name: "Milestones",
-                href: "/admin/milestones",
-                icon: History,
+                name: "About Us",
+                icon: Info,
+                hasSubmenu: true,
                 roles: ["superadmin", "admin", "staff"],
+                submenu: [
+                    {
+                        name: "Company Intro",
+                        href: "/admin/about/company-intro/edit",
+                        icon: FileText,
+                    },
+                    {
+                        name: "Hero Section",
+                        href: "/admin/about/hero/edit",
+                        icon: Sparkles,
+                    },
+                    {
+                        name: "Milestones",
+                        href: "/admin/milestones",
+                        icon: History,
+                    },
+                    {
+                        name: "Core Values",
+                        href: "/admin/about/values",
+                        icon: Heart,
+                    },
+                    {
+                        name: "Mission",
+                        href: "/admin/about/mission/edit",
+                        icon: Target,
+                    },
+                ],
             },
         ],
         content: [
@@ -221,13 +267,30 @@ export default function AdminLayout({ children }) {
                         name: "Media Highlights",
                         href: "/admin/media-highlights",
                     },
+                    {
+                        name: "Media Highlights Page",
+                        href: "/admin/media-highlights-page-info/edit",
+                        icon: ImageIcon,
+                    },
                 ],
             },
             {
                 name: "Events",
-                href: "/admin/events",
                 icon: Calendar,
+                hasSubmenu: true,
                 roles: ["superadmin", "admin", "staff"],
+                submenu: [
+                    {
+                        name: "All Events",
+                        href: "/admin/events",
+                        icon: Calendar,
+                    },
+                    {
+                        name: "Page Information",
+                        href: "/admin/events-page-info/edit",
+                        icon: ImageIcon,
+                    },
+                ],
             },
             {
                 name: "Gallery",
@@ -251,9 +314,21 @@ export default function AdminLayout({ children }) {
             },
             {
                 name: "Careers",
-                href: "/admin/careers",
                 icon: Briefcase,
+                hasSubmenu: true,
                 roles: ["superadmin", "admin", "staff"],
+                submenu: [
+                    {
+                        name: "All Careers",
+                        href: "/admin/careers",
+                        icon: Briefcase,
+                    },
+                    {
+                        name: "Settings",
+                        href: "/admin/career-settings/edit",
+                        icon: Settings,
+                    },
+                ],
             },
             {
                 name: "FAQs",

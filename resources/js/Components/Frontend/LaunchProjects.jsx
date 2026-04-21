@@ -129,7 +129,7 @@ const LaunchProjects = ({ facilities: backendFacilities = [] }) => {
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
         >
-          {facilitiesData.map((facility, index) => (
+          {facilitiesData.slice(0, 12).map((facility, index) => (
             <div
               key={facility.id}
               onClick={() => {

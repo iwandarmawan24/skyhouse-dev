@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Event;
+use App\Models\EventsPageInfo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -40,8 +41,16 @@ class EventController extends Controller
                 ];
             });
 
+        $info = EventsPageInfo::with('bannerImage')->first();
+        $pageInfo = [
+            'banner_image' => $info?->bannerImage?->url ?? '/images/banner/Event-Banner.webp',
+            'title' => $info?->title ?? 'Events & Activities',
+            'subtitle' => $info?->subtitle ?? 'Discover our upcoming events and past activities',
+        ];
+
         return Inertia::render('Event', [
             'events' => $events,
+            'pageInfo' => $pageInfo,
         ]);
     }
 

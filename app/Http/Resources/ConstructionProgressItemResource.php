@@ -18,6 +18,8 @@ class ConstructionProgressItemResource extends JsonResource
             'progress_month' => $this->progress_date?->format('F Y'),
             'image_uid' => $this->image_uid,
             'image_url' => $imageUrl,
+            'title' => $this->title,
+            'description' => $this->description,
             'item_image' => $this->whenLoaded('itemImage', function () {
                 return [
                     'uid' => $this->itemImage->uid,

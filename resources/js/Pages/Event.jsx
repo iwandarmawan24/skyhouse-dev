@@ -4,7 +4,7 @@ import PageLayout from "@/Components/Frontend/PageLayout";
 import "@css/frontend.css";
 import "@css/frontend/events-page.css";
 
-export default function Event({ events }) {
+export default function Event({ events, pageInfo = null }) {
     // SEO data for Events page
     const pageTitle = "Events & Activities - Skyhouse Alamsutera";
     const pageDescription = "Join us at our exciting events and activities showcasing our housing products and community lifestyle at Skyhouse Alamsutera.";
@@ -89,7 +89,7 @@ export default function Event({ events }) {
                 <section className="news-top-banner">
                     <div className="events-banner-wrapper">
                         <img
-                            src="/images/banner/Event-Banner.webp"
+                            src={pageInfo?.banner_image || "/images/banner/Event-Banner.webp"}
                             alt="Events Banner"
                             className="events-banner-image"
                         />
@@ -97,10 +97,10 @@ export default function Event({ events }) {
                             <div className="padding-global events-banner-content">
                                 <div className="container-large">
                                     <h1 className="events-banner-title">
-                                        Events & Activities
+                                        {pageInfo?.title || "Events & Activities"}
                                     </h1>
                                     <p className="events-banner-subtitle">
-                                        Discover our upcoming events and past activities
+                                        {pageInfo?.subtitle || "Discover our upcoming events and past activities"}
                                     </p>
                                 </div>
                             </div>

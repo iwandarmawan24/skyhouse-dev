@@ -73,7 +73,7 @@ function ProjectCarousel({ images = [], title }) {
   );
 }
 
-export default function Project({ projects = [] }) {
+export default function Project({ projects = [], pageInfo = null }) {
   const [visibleCount, setVisibleCount] = useState(3);
   
   // Strip HTML tags from text
@@ -99,16 +99,16 @@ export default function Project({ projects = [] }) {
         {/* Top Banner Section */}
         <section className="project-top-banner">
           <div className="project-banner-image-wrapper">
-            <img 
-              src="/images/banner/Project-Banner.webp" 
-              alt="Projects Banner" 
+            <img
+              src={pageInfo?.banner_image || '/images/banner/Project-Banner.webp'}
+              alt="Projects Banner"
               className="project-banner-image"
             />
             <div className="project-banner-overlay">
               <div className="padding-global">
                 <div className="container-large">
-                  <h1 className="project-banner-title">Our Projects</h1>
-                  <p className="project-banner-subtitle">Discover our portfolio of exceptional residential developments</p>
+                  <h1 className="project-banner-title">{pageInfo?.title || 'Our Projects'}</h1>
+                  <p className="project-banner-subtitle">{pageInfo?.subtitle || 'Discover our portfolio of exceptional residential developments'}</p>
                 </div>
               </div>
             </div>
@@ -146,17 +146,8 @@ export default function Project({ projects = [] }) {
                     </span>
                     <Heading as="h2" className="text-skyhouse-ocean">{project.title}</Heading>
                     <Text className="!mt-4 !mb-8 !text-lg text-black/90">{project.short_description || truncateText(stripHtml(project.description))}</Text>
-                    <div className="project-hero-meta !mb-4 text-black/80">
-                      <div className="project-hero-meta-item">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          <circle cx="12" cy="10" r="3" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        </svg>
-                        <span>{project.location}</span>
-                      </div>
-                    </div>
                     <Link href={`/project/${project.id}`}>
-                      <Button>View project details</Button>
+                      <Button>Room Details</Button>
                     </Link>
                   </div>
                 </div>

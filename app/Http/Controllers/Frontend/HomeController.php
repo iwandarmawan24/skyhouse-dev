@@ -7,6 +7,7 @@ use App\Models\MediaHighlight;
 use App\Models\TopSales;
 use App\Models\Product;
 use App\Models\Facility;
+use App\Models\VirtualTourBanner;
 use Inertia\Inertia;
 
 class HomeController extends Controller
@@ -71,14 +72,14 @@ class HomeController extends Controller
             });
 
         // Fetch active projects for Projects component
-        $projects = Product::with('featuredImage')
+        $projects = Product::with('featuredImage', 'cardImage')
             ->active()
             ->latest()
             ->get()
             ->map(function ($product) {
                 return [
                     'id' => $product->uid,
-                    'image' => $product->featuredImage ? $product->featuredImage->url : 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
+                    'image' => $product->cardImage?->url ?? $product->featuredImage?->url ?? 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
                     'location' => $product->location,
                     'units' => 1,
                     'title' => $product->name,
@@ -87,11 +88,19 @@ class HomeController extends Controller
                 ];
             });
 
+        // Fetch virtual tour banner
+        $virtualTourBanner = VirtualTourBanner::with('image')->active()->first();
+        $virtualTour = [
+            'image' => $virtualTourBanner?->image?->url ?? '/images/360/360 feature.png',
+            'url' => $virtualTourBanner?->url ?? 'https://epic.spindonesia.com/skyhousealsut/index.html',
+        ];
+
         return Inertia::render('Home', [
             'newsItems' => $newsItems,
             'topSales' => $topSales,
             'projects' => $projects,
             'facilities' => $facilities,
+            'virtualTour' => $virtualTour,
         ]);
     }
 }

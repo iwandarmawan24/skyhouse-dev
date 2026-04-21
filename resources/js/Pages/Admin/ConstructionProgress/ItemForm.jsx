@@ -21,6 +21,8 @@ export default function ItemForm({ item }) {
             ? item.progress_date.substring(0, 7)
             : "",
         image_uid: item?.image_uid || null,
+        title: item?.title || "",
+        description: item?.description || "",
         is_active: item?.is_active ?? true,
         _method: isEdit ? "PUT" : "POST",
     });
@@ -111,6 +113,56 @@ export default function ItemForm({ item }) {
                                     This will be used as the title for this
                                     progress entry (e.g., "March 2026")
                                 </p>
+                            </div>
+
+                            {/* Title */}
+                            <div className="space-y-2">
+                                <Label htmlFor="title">Title</Label>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    value={data.title}
+                                    onChange={(e) =>
+                                        setData("title", e.target.value)
+                                    }
+                                    placeholder="Optional title for this progress entry"
+                                    className={`flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                                        errors.title
+                                            ? "border-destructive"
+                                            : ""
+                                    }`}
+                                />
+                                {errors.title && (
+                                    <p className="text-sm text-destructive">
+                                        {errors.title}
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Description */}
+                            <div className="space-y-2">
+                                <Label htmlFor="description">
+                                    Description
+                                </Label>
+                                <textarea
+                                    id="description"
+                                    value={data.description}
+                                    onChange={(e) =>
+                                        setData("description", e.target.value)
+                                    }
+                                    placeholder="Optional description for this progress entry"
+                                    rows={4}
+                                    className={`flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
+                                        errors.description
+                                            ? "border-destructive"
+                                            : ""
+                                    }`}
+                                />
+                                {errors.description && (
+                                    <p className="text-sm text-destructive">
+                                        {errors.description}
+                                    </p>
+                                )}
                             </div>
 
                             {/* Image */}

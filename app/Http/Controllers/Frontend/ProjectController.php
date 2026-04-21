@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Frontend;
 
 use App\Http\Controllers\Controller;
 use App\Models\Product;
-use Illuminate\Http\Request;
+use App\Models\ProjectPageInfo;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -16,14 +16,13 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        // Fetch active products (projects) from database
+        // Fetch active products (projects) from database — include sold, just mark as Not Available
         $projects = Product::with('featuredImage')
-            ->active()
+            ->where('is_active', true)
             ->latest()
             ->get()
             ->map(function ($product) {
-                // Map product type to status for filtering
-                $status = $product->is_sold ? 'sold-out' : 'available';
+                $status = $product->is_sold ? 'Not Available' : 'Available';
 
                 // Build gallery: featured first, then gallery images
                 $gallery = $product->gallery_images->map(fn($m) => $m->url)->toArray();
@@ -74,7 +73,7 @@ class ProjectController extends Controller
             'id' => $featuredProject->uid,
             'image' => $featuredProject->featuredImage ? $featuredProject->featuredImage->url : 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop',
             'category' => ucfirst($featuredProject->type),
-            'status' => $featuredProject->is_sold ? 'Sold Out' : 'Available',
+            'status' => $featuredProject->is_sold ? 'Not Available' : 'Available',
             'title' => $featuredProject->name,
             'short_description' => $featuredProject->short_description,
             'description' => $featuredProject->description,
@@ -82,9 +81,18 @@ class ProjectController extends Controller
             'units' => 1, // Products don't have units field
         ] : null;
 
+        // Project page hero info (banner image, title, subtitle)
+        $info = ProjectPageInfo::with('bannerImage')->first();
+        $pageInfo = [
+            'banner_image' => $info?->bannerImage?->url ?? '/images/banner/Project-Banner.webp',
+            'title' => $info?->title ?? 'Our Projects',
+            'subtitle' => $info?->subtitle ?? 'Discover our portfolio of exceptional residential developments',
+        ];
+
         return Inertia::render('Project', [
             'projects' => $projects,
             'featuredProject' => $featuredProjectData,
+            'pageInfo' => $pageInfo,
         ]);
     }
 
@@ -99,7 +107,7 @@ class ProjectController extends Controller
         // Fetch product (project) from database
         $product = Product::with('featuredImage')
             ->where('uid', $id)
-            ->active()
+            ->where('is_active', true)
             ->firstOrFail();
 
         // Increment views

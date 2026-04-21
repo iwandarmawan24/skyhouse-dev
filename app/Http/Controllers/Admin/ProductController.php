@@ -135,6 +135,7 @@ class ProductController extends Controller
             'is_featured' => 'required|boolean',
             'is_active' => 'required|boolean',
             'featured_image_uid' => 'nullable|exists:media_library,uid',
+            'card_image_uid' => 'nullable|exists:media_library,uid',
             'gallery_uids' => 'nullable|array',
             'gallery_uids.*' => 'exists:media_library,uid',
         ]);
@@ -158,7 +159,7 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        $product->load('featuredImage', 'sliders.mediaImage');
+        $product->load('featuredImage', 'cardImage', 'sliders.mediaImage');
 
         // Load gallery images
         $product->gallery_images = $product->gallery_images;
@@ -192,6 +193,7 @@ class ProductController extends Controller
             'is_sold' => 'required|boolean',
             'is_active' => 'required|boolean',
             'featured_image_uid' => 'nullable|exists:media_library,uid',
+            'card_image_uid' => 'nullable|exists:media_library,uid',
             'gallery_uids' => 'nullable|array',
             'gallery_uids.*' => 'exists:media_library,uid',
         ]);
