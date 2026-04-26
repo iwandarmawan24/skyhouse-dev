@@ -42,7 +42,7 @@ const CTA = () => {
       {/* Large decorative italic text in background */}
       <div className="pointer-events-none select-none absolute -top-6 left-0 right-0 flex justify-center overflow-hidden">
         <span className="font-bodoni italic text-[clamp(80px,18vw,220px)] font-bold text-white/5 whitespace-nowrap leading-none">
-          Skyhouse
+          Sky House
         </span>
       </div>
 
@@ -50,7 +50,7 @@ const CTA = () => {
       <div className="h-1 w-full bg-skyhouse-sunshine" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 lg:px-16 py-20 lg:py-28">
-        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+        <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
 
           {/* Left — CTA content */}
           <div className="flex-1 flex flex-col gap-8">
@@ -60,9 +60,9 @@ const CTA = () => {
               Get in touch
             </span>
 
-            <Heading as="h2" variant="section" color="white" weight="light" className="leading-snug">
+            <Heading as="h3" variant="section" color="white" weight="light" className="leading-snug">
               Reach out to us and explore{' '}
-              <span className="font-bodoni italic text-skyhouse-sunshine">Skyhouse</span>{' '}
+              <span className="font-bodoni italic text-skyhouse-sunshine">Sky House Alam Sutera<span className="font-sans not-italic text-[0.5em] align-super font-semibold">+</span></span>{' '}
               in more detail!
             </Heading>
 
@@ -78,12 +78,12 @@ const CTA = () => {
           </div>
 
           {/* Right — Instagram mosaic */}
-          <div className="flex-1 w-full max-w-lg lg:max-w-none flex flex-col gap-4">
-            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+          <div className="flex-[1.5] w-full flex flex-col gap-4">
+            <div className="grid grid-cols-3 gap-3">
               {displayImages.map((image, index) => (
                 <div
                   key={index}
-                  className={`overflow-hidden rounded-2xl`}
+                  className="aspect-square overflow-hidden rounded-2xl"
                 >
                   <img
                     src={image}

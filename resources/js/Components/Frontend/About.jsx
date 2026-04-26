@@ -1,10 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Heading, Text, Button } from '@/Components/Frontend/atoms';
 
 const FacilityCard = ({ images, title, description, className = "", rowSpan = "" }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
+  const intervalRef = useRef(null);
+
+  const goToIndex = (index) => {
+    setFadeIn(false);
+    setTimeout(() => {
+      setCurrentImageIndex((index + images.length) % images.length);
+      setFadeIn(true);
+    }, 300);
+  };
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    goToIndex(currentImageIndex - 1);
+  };
+
+  const handleNext = (e) => {
+    e.stopPropagation();
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    goToIndex(currentImageIndex + 1);
+  };
 
   useEffect(() => {
     if (!isHovered) {
@@ -13,14 +34,14 @@ const FacilityCard = ({ images, title, description, className = "", rowSpan = ""
       return;
     }
 
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       setFadeIn(false);
       setTimeout(() => {
         setCurrentImageIndex((prev) => (prev + 1) % images.length);
         setFadeIn(true);
       }, 400);
     }, 1400);
-    return () => clearInterval(interval);
+    return () => clearInterval(intervalRef.current);
   }, [isHovered, images.length]);
 
   return (
@@ -38,7 +59,6 @@ const FacilityCard = ({ images, title, description, className = "", rowSpan = ""
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
       {/* Slider Indicator Dots */}
-      {/* {isHovered && ( */}
       <div className="absolute top-4 left-4 flex gap-2 z-20">
         {images.map((_, index) => (
           <div
@@ -50,7 +70,30 @@ const FacilityCard = ({ images, title, description, className = "", rowSpan = ""
           />
         ))}
       </div>
-      {/* )} */}
+
+      {/* Navigation Arrows */}
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={handlePrev}
+            aria-label="Previous image"
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-300 hover:bg-white/20 hover:scale-110"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button
+            onClick={handleNext}
+            aria-label="Next image"
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-300 hover:bg-white/20 hover:scale-110"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </>
+      )}
 
       <div className="absolute bottom-4 left-4 md:bottom-6 md:left-6">
         <Heading as="h3" variant="card" color="white" className="mb-2 text-sm md:text-base" dangerouslySetInnerHTML={{ __html: title }} />
@@ -66,6 +109,27 @@ const LifestyleSlider = ({ images, children, className = "" }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [fadeIn, setFadeIn] = useState(true);
   const [isHovered, setIsHovered] = useState(false);
+  const intervalRef = useRef(null);
+
+  const goToIndex = (index) => {
+    setFadeIn(false);
+    setTimeout(() => {
+      setCurrentImageIndex((index + images.length) % images.length);
+      setFadeIn(true);
+    }, 300);
+  };
+
+  const handlePrev = (e) => {
+    e.stopPropagation();
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    goToIndex(currentImageIndex - 1);
+  };
+
+  const handleNext = (e) => {
+    e.stopPropagation();
+    if (intervalRef.current) clearInterval(intervalRef.current);
+    goToIndex(currentImageIndex + 1);
+  };
 
   useEffect(() => {
     if (!isHovered) {
@@ -74,14 +138,14 @@ const LifestyleSlider = ({ images, children, className = "" }) => {
       return;
     }
 
-    const interval = setInterval(() => {
+    intervalRef.current = setInterval(() => {
       setFadeIn(false);
       setTimeout(() => {
         setCurrentImageIndex((prev) => (prev + 1) % images.length);
         setFadeIn(true);
       }, 400);
     }, 1400);
-    return () => clearInterval(interval);
+    return () => clearInterval(intervalRef.current);
   }, [isHovered, images.length]);
 
   return (
@@ -107,6 +171,31 @@ const LifestyleSlider = ({ images, children, className = "" }) => {
           />
         ))}
       </div>
+
+      {/* Navigation Arrows */}
+      {images.length > 1 && (
+        <>
+          <button
+            onClick={handlePrev}
+            aria-label="Previous image"
+            className="absolute left-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-300 hover:bg-white/20 hover:scale-110"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <button
+            onClick={handleNext}
+            aria-label="Next image"
+            className="absolute right-3 top-1/2 -translate-y-1/2 z-30 flex items-center justify-center w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm border border-white/30 text-white transition-all duration-300 hover:bg-white/20 hover:scale-110"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
+        </>
+      )}
+
       {children}
     </div>
   );
@@ -162,7 +251,7 @@ const About = () => {
             {/* Experience Card */}
             <div className="service-card bg-gradient-to-br from-blue-50 to-cyan-100 rounded-3xl p-6 md:p-8 flex flex-col justify-center order-1 lg:order-3">
               <Heading as="h3" variant="card" className="mb-3 text-lg md:text-xl">Experience</Heading>
-              <Heading as="h3" variant="card" bodoni className="mb-3 italic text-lg md:text-xl">Skyhouse Alam Sutera</Heading>
+              <Heading as="h3" variant="card" bodoni className="mb-3 italic text-lg md:text-xl">Sky House Alam Sutera<span className="font-sans not-italic text-[0.55em] align-super font-semibold">+</span></Heading>
               <div className="block bg-blue-300 h-1 w-16 my-4"></div>
               <Text size="base" color="charcoal" className="text-sm md:text-base">
                 Surrounded by top shopping malls, fresh groceries, leading universities, and thriving business hubs—everything you need is right at your fingertips.
@@ -194,7 +283,6 @@ const About = () => {
 
             <FacilityCard
               images={[
-                "/images/experiences/office/synergy-building.jpg",
                 "/images/experiences/office/alfa-tower.jpg",
                 "/images/experiences/office/kino.jpg",
               ]}

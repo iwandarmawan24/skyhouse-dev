@@ -31,7 +31,7 @@ const Quiz = () => {
           <div className="text-align-center">
             <Heading as="h2" variant="section" color="ocean" className="text-center m-0">Discover your <span className="font-bodoni italic">Dream</span> Home</Heading>
             <Text size="lg" color="ocean" className="text-center">
-              Let Skyhouse turn your dream home wish into a wonderful reality!
+              Let Sky House turn your dream home wish into a wonderful reality!
             </Text>
             <div className="margin-top margin-medium">
               <Button 

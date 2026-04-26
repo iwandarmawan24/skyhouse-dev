@@ -9,7 +9,7 @@ const Characters = () => {
         <div className="container-large">
           <div className="padding-section-large">
             <div className="character_component">
-              <Heading as="h2" variant="section">Meet the Characters in Every Skyhouse Projects</Heading>
+              <Heading as="h2" variant="section">Meet the Characters in Every Sky House Projects</Heading>
               <Text size="lg">
                 They're simply adorable, loads of fun, and guaranteed to bring a big smile to your day!
               </Text>

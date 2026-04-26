@@ -41,10 +41,6 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
         <div className="navbar_container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
           <div className="navbar_menu" style={{ flex: '1', justifyContent: 'flex-start' }}>
             <div className="navbar-menu_wrapper ml-4">
-              <a href="/project" className="navbar2_link">
-                Projects
-              </a>
-
               <div 
                 className="relative"
                 onMouseEnter={() => setIsProjectsDropdownOpen(true)}
@@ -69,9 +65,6 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                     <a href="/about" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
                       About Us
                     </a>
-                    <a href="/facilities" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
-                      Facilities
-                    </a>
                     <a href="/gallery" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
                       Gallery
                     </a>
@@ -81,6 +74,14 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                   </div>
                 )}
               </div>
+
+              <a href="/project" className="navbar2_link">
+                Type
+              </a>
+
+              <a href="/facilities" className="navbar2_link">
+                Facilities
+              </a>
 
               <a href="/events" className="navbar2_link">
                 Events
@@ -134,7 +135,7 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
           >
             <img
               src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
-              alt="Skyhouse Alamsutera"
+              alt="Sky House Alamsutera"
               className="navbar_logo"
             />
           </a>
