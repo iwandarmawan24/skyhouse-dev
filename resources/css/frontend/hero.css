@@ -289,26 +289,27 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 25;
-  background-color: rgba(46, 62, 80, 0.25);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background-color: rgba(46, 62, 80, 0.55);
+  backdrop-filter: blur(16px);
+  border: 2px solid rgba(255, 255, 255, 0.45);
   border-radius: 50%;
-  width: 48px;
-  height: 48px;
+  width: 68px;
+  height: 68px;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   color: white;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 .slider_nav:hover {
   background-color: var(--color-skyhouse-sunshine);
   border-color: var(--color-skyhouse-sunshine);
   color: var(--color-skyhouse-ocean);
-  transform: translateY(-50%) scale(1.1);
-  box-shadow: 0 0 20px rgba(245, 216, 127, 0.4);
+  transform: translateY(-50%) scale(1.08);
+  box-shadow: 0 6px 28px rgba(245, 216, 127, 0.5);
 }
 
 .slider_nav:active {
@@ -474,8 +475,8 @@
 
   /* Slider Navigation - Mobile */
   .slider_nav {
-    width: 40px;
-    height: 40px;
+    width: 54px;
+    height: 54px;
   }
 
   .slider_nav_prev {

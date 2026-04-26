@@ -238,7 +238,7 @@ export default function Contact({ formLoadTime, products = [] }) {
                         <textarea
                           id="message"
                           name="message"
-                          placeholder="Dear Skyhouse team, I wanna ask about..."
+                          placeholder="Dear Sky House team, I wanna ask about..."
                           rows="5"
                           value={data.message}
                           onChange={(e) => setData('message', e.target.value)}
@@ -386,7 +386,7 @@ export default function Contact({ formLoadTime, products = [] }) {
                         </svg>
                       </div>
                       <div className="contact-detail-content">
-                        <h3>Skyhouse HQ Alam Sutera</h3>
+                        <h3>Sky House HQ Alam Sutera</h3>
                         <p>
                           Jl. Alamsutera Boulevard No.88,
                           Pakulonan Barat, Kelapa Dua,

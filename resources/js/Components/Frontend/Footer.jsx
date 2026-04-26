@@ -10,7 +10,7 @@ const Footer = () => {
   const contact = settings?.contact || {};
   const social = settings?.social || {};
 
-  const siteName = general.site_name || 'Skyhouse Alamsutera';
+  const siteName = general.site_name || 'Sky House Alam Sutera+';
   const siteLogo = general.site_logo || 'https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png';
   const address = contact.contact_address || 'Jl. Alamsutera Boulevard No.88, Pakulonan Barat, Kelapa Dua, Tangerang, Banten 15810';
   const phone = contact.contact_phone || '+62 21 5088 9900';
@@ -69,14 +69,8 @@ const Footer = () => {
             </div>
 
             <div className="footer_section">
-              <Heading as="h4" variant="subsection">Address</Heading>
+              <Heading as="h4" variant="subsection">Marketing Gallery</Heading>
               <Text>{address}</Text>
-            </div>
-
-            <div className="footer_section">
-              <Heading as="h4" variant="subsection">Contact</Heading>
-              <a href={`tel:${phone.replace(/\s/g, '')}`}>{phone}</a>
-              <a href={`mailto:${email}`}>{email}</a>
             </div>
 
             <div className="footer_section">
@@ -84,6 +78,12 @@ const Footer = () => {
               <a href="/about">About</a>
               <a href="/careers">Careers</a>
               <a href="/news">News</a>
+            </div>
+
+            <div className="footer_section">
+              <Heading as="h4" variant="subsection">Contact Us</Heading>
+              <a href={`tel:${phone.replace(/\s/g, '')}`}>{phone}</a>
+              <a href={`mailto:${email}`}>{email}</a>
             </div>
 
             <div className="footer_section">

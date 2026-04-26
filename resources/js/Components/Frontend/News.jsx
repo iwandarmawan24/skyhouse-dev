@@ -7,7 +7,7 @@ const defaultNewsData = [
   {
     id: 1,
     image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&h=600&fit=crop',
-    title: 'Kolaborasi dengan Anabuki Group, Skyhouse Alamsutera Bangun Hunian Terbaru di Serpong, Tangerang Selatan',
+    title: 'Kolaborasi dengan Anabuki Group, Sky House Alamsutera Bangun Hunian Terbaru di Serpong, Tangerang Selatan',
     date: 'September 18, 2024',
     mediaSource: 'Kompas',
     mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',
@@ -16,7 +16,7 @@ const defaultNewsData = [
   {
     id: 2,
     image: 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=800&h=600&fit=crop',
-    title: 'Skyhouse Alamsutera Bakal Luncurkan Hunian Dekat Stasiun LRT Ciracas',
+    title: 'Sky House Alamsutera Bakal Luncurkan Hunian Dekat Stasiun LRT Ciracas',
     date: 'October 2, 2023',
     mediaSource: 'Kompas',
     mediaLogo: 'https://placehold.co/120x40/1E3A8A/white?text=NEWS',

@@ -11,7 +11,7 @@ const Benefits = () => {
             <div className="benefit_component">
               <div className="benefit_wrapper">
                 <div className="benefit_content">
-                  <Heading as="h2" variant="section">Skyhouse Alam Sutera, Makes Everything Better</Heading>
+                  <Heading as="h2" variant="section">Sky House Alam Sutera, Makes Everything Better</Heading>
                   <Text>A convenient application to support all your household needs</Text>
                   <Button href="/easton-home" variant="primary">
                     Explore more
@@ -20,7 +20,7 @@ const Benefits = () => {
                 <div className="benefit_image">
                   <img
                     src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&h=600&fit=crop"
-                    alt="Skyhouse Home App"
+                    alt="Sky House Home App"
                   />
                 </div>
               </div>
@@ -28,7 +28,7 @@ const Benefits = () => {
                 <div className="benefit_image">
                   <img
                     src="https://images.unsplash.com/photo-1545205597-3d9d02c29597?w=800&h=600&fit=crop"
-                    alt="Skyhouse Facilities"
+                    alt="Sky House Facilities"
                   />
                 </div>
                 <div className="benefit_content">

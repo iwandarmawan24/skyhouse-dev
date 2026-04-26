@@ -13,7 +13,7 @@ const defaultHistoryData = [
     uid: '1',
     year: '2015',
     title: 'Foundation',
-    description: 'Skyhouse Alamsutera was founded with a vision to create sustainable and innovative residential communities in Indonesia.',
+    description: 'Sky House Alam Sutera+ was founded with a vision to create sustainable and innovative residential communities in Indonesia.',
     image_url: null,
   },
   {
@@ -333,7 +333,7 @@ export default function About({
                     {hero?.title || 'Building Dreams, Creating Communities'}
                   </h1>
                   <p className="about-hero-subtitle whitespace-pre-line">
-                    {hero?.subtitle || "At Skyhouse Alamsutera, we believe that a home is more than just a place to live—it's where life's most precious moments unfold. Since our inception, we have been dedicated to creating residential communities that inspire, comfort, and endure."}
+                    {hero?.subtitle || "At Sky House Alam Sutera+, we believe that a home is more than just a place to live—it's where life's most precious moments unfold. Since our inception, we have been dedicated to creating residential communities that inspire, comfort, and endure."}
                   </p>
                   <p className="about-hero-description whitespace-pre-line">
                     {hero?.description || "Our commitment goes beyond constructing buildings; we craft living experiences that enhance the quality of life for every resident. With innovative designs, sustainable practices, and a customer-centric approach, we have established ourselves as a trusted name in Indonesia's real estate industry."}
@@ -351,7 +351,7 @@ export default function About({
               <div className="padding-section-large">
                 <div className="section-header">
                   <h2>Our Journey</h2>
-                  <p>A timeline of milestones that shaped Skyhouse Alamsutera</p>
+                  <p>A timeline of milestones that shaped Sky House Alam Sutera+</p>
                 </div>
                 <div className="history-timeline">
                   {historyData.map((item, index) => (
