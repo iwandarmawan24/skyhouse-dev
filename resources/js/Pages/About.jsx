@@ -60,6 +60,7 @@ export default function About({
   hero = null,
   mission = null,
   values: cmsValues = [],
+  achievements: cmsAchievements = [],
 }) {
   const [isMapVisible, setIsMapVisible] = useState(false);
   const mapRef = React.useRef(null);
@@ -106,24 +107,16 @@ export default function About({
       }))
     : defaultValues;
 
-  const achievements = [
-    {
-      number: '50+',
-      label: 'Projects Completed'
-    },
-    {
-      number: '5,000+',
-      label: 'Happy Families'
-    },
-    {
-      number: '15+',
-      label: 'Industry Awards'
-    },
-    {
-      number: '99%',
-      label: 'Customer Satisfaction'
-    }
+  const defaultAchievements = [
+    { number: '50+', label: 'Projects Completed' },
+    { number: '5,000+', label: 'Happy Families' },
+    { number: '15+', label: 'Industry Awards' },
+    { number: '99%', label: 'Customer Satisfaction' },
   ];
+
+  const achievements = cmsAchievements.length > 0
+    ? cmsAchievements.map(a => ({ number: a.number, label: a.label }))
+    : defaultAchievements;
 
 
   return (

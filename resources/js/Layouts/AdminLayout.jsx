@@ -237,6 +237,11 @@ export default function AdminLayout({ children }) {
                         icon: Heart,
                     },
                     {
+                        name: "Achievements",
+                        href: "/admin/about/achievements",
+                        icon: Trophy,
+                    },
+                    {
                         name: "Mission",
                         href: "/admin/about/mission/edit",
                         icon: Target,
@@ -258,6 +263,11 @@ export default function AdminLayout({ children }) {
                     {
                         name: "Categories",
                         href: "/admin/article-categories",
+                    },
+                    {
+                        name: "News Page",
+                        href: "/admin/news-page-info/edit",
+                        icon: ImageIcon,
                     },
                     {
                         name: "Media Outlets",

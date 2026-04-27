@@ -27,6 +27,7 @@ use App\Http\Controllers\Admin\MilestoneController;
 use App\Http\Controllers\Admin\MediaLibraryController;
 use App\Http\Controllers\Admin\MediaHighlightController;
 use App\Http\Controllers\Admin\MediaHighlightsPageInfoController;
+use App\Http\Controllers\Admin\NewsPageInfoController;
 use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingController;
@@ -37,6 +38,7 @@ use App\Http\Controllers\Admin\ProjectPageInfoController;
 use App\Http\Controllers\Admin\AboutCompanyInfoController;
 use App\Http\Controllers\Admin\AboutHeroController;
 use App\Http\Controllers\Admin\AboutMissionController;
+use App\Http\Controllers\Admin\AboutAchievementController;
 use App\Http\Controllers\Admin\AboutValueController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Frontend\EventController as FrontendEventController;
@@ -185,6 +187,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 // Core Values (repeating)
                 Route::post('/values/update-order', [AboutValueController::class, 'updateOrder'])->name('values.update-order');
                 Route::resource('values', AboutValueController::class)->except(['show'])->parameters(['values' => 'value']);
+
+                // Achievements (repeating)
+                Route::post('/achievements/update-order', [AboutAchievementController::class, 'updateOrder'])->name('achievements.update-order');
+                Route::resource('achievements', AboutAchievementController::class)->except(['show'])->parameters(['achievements' => 'achievement']);
             });
 
             // Products
@@ -226,6 +232,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
             // Media Highlights Page Info
             Route::get('/media-highlights-page-info/edit', [MediaHighlightsPageInfoController::class, 'edit'])->name('media-highlights-page-info.edit');
             Route::put('/media-highlights-page-info', [MediaHighlightsPageInfoController::class, 'update'])->name('media-highlights-page-info.update');
+
+            // News Page Info
+            Route::get('/news-page-info/edit', [NewsPageInfoController::class, 'edit'])->name('news-page-info.edit');
+            Route::put('/news-page-info', [NewsPageInfoController::class, 'update'])->name('news-page-info.update');
 
             // Events
             Route::resource('events', EventController::class)->except(['show']);

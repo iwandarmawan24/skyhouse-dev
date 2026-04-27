@@ -5,7 +5,7 @@ import "@css/frontend.css";
 import "@css/frontend/news-page.css";
 import axios from "axios";
 
-export default function News({ featured }) {
+export default function News({ featured, pageInfo = null }) {
   const pageTitle = "Latest News & Articles - Skyhouse Alamsutera";
   const pageDescription = "Stay informed with our latest property news, developments, and achievements from Skyhouse Alamsutera.";
   const pageImage = featured?.image || window.location.origin + "/images/default-og-image.jpg";
@@ -84,7 +84,7 @@ export default function News({ featured }) {
         <section className="news-top-banner">
           <div className="news-banner-image-wrapper">
             <img
-              src="/images/banner/Article-Banner.webp"
+              src={pageInfo?.banner_image || "/images/banner/Article-Banner.webp"}
               alt="News Banner"
               className="news-banner-image"
             />
@@ -92,10 +92,10 @@ export default function News({ featured }) {
               <div className="padding-global">
                 <div className="container-large">
                   <h1 className="news-banner-title">
-                    News & Articles
+                    {pageInfo?.title || "News & Articles"}
                   </h1>
                   <p className="news-banner-subtitle">
-                    Stay informed with our latest articles and updates
+                    {pageInfo?.subtitle || "Stay informed with our latest articles and updates"}
                   </p>
                 </div>
               </div>

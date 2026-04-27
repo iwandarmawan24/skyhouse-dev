@@ -179,19 +179,19 @@ export function MediaPicker({
 
     return (
         <Dialog open={open} onOpenChange={onClose}>
-            <DialogContent className="max-w-5xl h-[80vh] flex flex-col p-0">
+            <DialogContent className="max-w-5xl h-[80vh] flex flex-col p-0 gap-0 overflow-hidden">
                 <DialogHeader className="px-6 py-4 border-b">
                     <DialogTitle>Select Media</DialogTitle>
                 </DialogHeader>
 
-                <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col">
+                <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col min-h-0">
                     <TabsList className="px-6 border-b rounded-none bg-transparent">
                         <TabsTrigger value="library">Media Library</TabsTrigger>
                         <TabsTrigger value="upload">Upload Files</TabsTrigger>
                     </TabsList>
 
                     {/* Media Library Tab */}
-                    <TabsContent value="library" className="flex-1 flex flex-col px-6 py-4 overflow-hidden">
+                    <TabsContent value="library" className="flex-1 flex flex-col px-6 py-4 overflow-hidden min-h-0">
                         {/* Search */}
                         <div className="mb-4">
                             <div className="relative">
@@ -206,7 +206,7 @@ export function MediaPicker({
                         </div>
 
                         {/* Media Grid */}
-                        <div className="flex-1 overflow-y-auto">
+                        <div className="flex-1 overflow-y-auto min-h-0">
                             {loading && page === 1 ? (
                                 <div className="flex items-center justify-center h-full">
                                     <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />

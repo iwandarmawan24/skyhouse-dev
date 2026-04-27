@@ -33,7 +33,9 @@
       "Bash(grep -r 'extends Model' /Users/yayasandarmawan/Documents/wan-lab/skyhouse-dev/app/Models --include=*.php)",
       "Bash(grep -r \"MediaLibrary\\\\|intervention\\\\|image\" /Users/yayasandarmawan/Documents/wan-lab/skyhouse-dev/app/Http/Controllers/Admin --include=*.php)",
       "Bash(docker compose:*)",
-      "Bash(./vendor/bin/sail npm *)"
+      "Bash(./vendor/bin/sail npm *)",
+      "Read(//opt/homebrew/bin/**)",
+      "Bash(command -v docker)"
     ],
     "deny": [],
     "ask": []

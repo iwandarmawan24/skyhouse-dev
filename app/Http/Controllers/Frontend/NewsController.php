@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Article;
 use App\Models\MediaHighlight;
 use App\Models\MediaHighlightsPageInfo;
+use App\Models\NewsPageInfo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -111,8 +112,16 @@ class NewsController extends Controller
             ];
         }
 
+        $info = NewsPageInfo::with('bannerImage')->first();
+        $pageInfo = [
+            'banner_image' => $info?->bannerImage?->url ?? '/images/banner/Article-Banner.webp',
+            'title' => $info?->title ?? 'News & Articles',
+            'subtitle' => $info?->subtitle ?? 'Stay informed with our latest articles and updates',
+        ];
+
         return Inertia::render('News', [
             'featured' => $featured,
+            'pageInfo' => $pageInfo,
         ]);
     }
 
