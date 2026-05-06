@@ -33,14 +33,15 @@ export default function Index({ contacts, filters }) {
         search: filters.search || '',
     });
 
-    const buildExportUrl = () => {
+    const buildExportUrl = (type = 'csv') => {
         const params = new URLSearchParams();
         if (localFilters.status) params.set('status', localFilters.status);
         if (localFilters.subject) params.set('subject', localFilters.subject);
         if (localFilters.project) params.set('project', localFilters.project);
         if (localFilters.search) params.set('search', localFilters.search);
         const qs = params.toString();
-        return `/admin/contacts/export${qs ? '?' + qs : ''}`;
+        const base = type === 'excel' ? '/admin/contacts/export-excel' : '/admin/contacts/export';
+        return `${base}${qs ? '?' + qs : ''}`;
     };
 
     const handleDelete = (id) => {
@@ -100,12 +101,20 @@ export default function Index({ contacts, filters }) {
                     <h1 className="text-2xl font-bold text-gray-900">Contact Leads</h1>
                     <p className="text-gray-600 mt-1">Manage customer inquiries and contact requests</p>
                 </div>
-                <a href={buildExportUrl()} download>
-                    <Button variant="outline" className="flex items-center gap-2">
-                        <Download className="h-4 w-4" />
-                        Export CSV
-                    </Button>
-                </a>
+                <div className="flex items-center gap-2">
+                    <a href={buildExportUrl('csv')} download>
+                        <Button variant="outline" className="flex items-center gap-2">
+                            <Download className="h-4 w-4" />
+                            Export CSV
+                        </Button>
+                    </a>
+                    <a href={buildExportUrl('excel')} download>
+                        <Button variant="outline" className="flex items-center gap-2 text-green-700 border-green-600 hover:bg-green-50">
+                            <Download className="h-4 w-4" />
+                            Export Excel
+                        </Button>
+                    </a>
+                </div>
             </div>
 
             {/* Filters */}

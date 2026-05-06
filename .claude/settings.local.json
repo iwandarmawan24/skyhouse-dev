@@ -35,7 +35,8 @@
       "Bash(docker compose:*)",
       "Bash(./vendor/bin/sail npm *)",
       "Read(//opt/homebrew/bin/**)",
-      "Bash(command -v docker)"
+      "Bash(command -v docker)",
+      "Bash(composer show *)"
     ],
     "deny": [],
     "ask": []

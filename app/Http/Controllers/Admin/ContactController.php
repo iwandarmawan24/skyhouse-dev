@@ -55,6 +55,52 @@ class ContactController extends Controller
      */
     public function export(Request $request): StreamedResponse
     {
+        $contacts = $this->filteredQuery($request)->get();
+        $filename = 'contacts-' . now()->format('Y-m-d') . '.csv';
+
+        return response()->streamDownload(function () use ($contacts) {
+            $handle = fopen('php://output', 'w');
+            fputcsv($handle, ['Name', 'Email', 'Phone', 'Residence', 'Subject', 'Project', 'Message', 'Status', 'Date']);
+
+            foreach ($contacts as $contact) {
+                fputcsv($handle, $this->contactRow($contact));
+            }
+
+            fclose($handle);
+        }, $filename, ['Content-Type' => 'text/csv']);
+    }
+
+    /**
+     * Export contacts as Excel (.xls), respecting active filters.
+     */
+    public function exportExcel(Request $request)
+    {
+        $contacts  = $this->filteredQuery($request)->get();
+        $filename  = 'contacts-' . now()->format('Y-m-d') . '.xls';
+        $headers   = ['Name', 'Email', 'Phone', 'Residence', 'Subject', 'Project', 'Message', 'Status', 'Date'];
+
+        $html  = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">';
+        $html .= '<head><meta charset="UTF-8"></head><body><table border="1">';
+        $html .= '<tr>' . implode('', array_map(fn($h) => "<th><b>{$h}</b></th>", $headers)) . '</tr>';
+
+        foreach ($contacts as $contact) {
+            $cells = array_map(
+                fn($val) => '<td>' . htmlspecialchars((string) ($val ?? '')) . '</td>',
+                $this->contactRow($contact)
+            );
+            $html .= '<tr>' . implode('', $cells) . '</tr>';
+        }
+
+        $html .= '</table></body></html>';
+
+        return response($html, 200, [
+            'Content-Type'        => 'application/vnd.ms-excel',
+            'Content-Disposition' => "attachment; filename=\"{$filename}\"",
+        ]);
+    }
+
+    private function filteredQuery(Request $request)
+    {
         $query = ContactSubmission::latest();
 
         if ($request->filled('status')) {
@@ -75,39 +121,29 @@ class ContactController extends Controller
             });
         }
 
-        $contacts = $query->get();
-        $filename = 'contacts-' . now()->format('Y-m-d') . '.csv';
+        return $query;
+    }
 
-        return response()->streamDownload(function () use ($contacts) {
-            $handle = fopen('php://output', 'w');
+    private function contactRow(ContactSubmission $contact): array
+    {
+        $subjectMap = [
+            'inquiry'  => 'General Inquiry',
+            'purchase' => 'Purchase Information',
+            'visit'    => 'Schedule Visit',
+            'other'    => 'Other',
+        ];
 
-            fputcsv($handle, ['Name', 'Email', 'Phone', 'Residence', 'Subject', 'Project', 'Message', 'Status', 'Date']);
-
-            $subjectMap = [
-                'inquiry'  => 'General Inquiry',
-                'purchase' => 'Purchase Information',
-                'visit'    => 'Schedule Visit',
-                'other'    => 'Other',
-            ];
-
-            foreach ($contacts as $contact) {
-                fputcsv($handle, [
-                    $contact->full_name,
-                    $contact->email,
-                    $contact->phone,
-                    $contact->residence,
-                    $subjectMap[$contact->subject] ?? $contact->subject,
-                    $contact->project === 'kinary' ? 'Kinary House' : ($contact->project ?? ''),
-                    $contact->message,
-                    $contact->status,
-                    $contact->created_at->format('Y-m-d H:i'),
-                ]);
-            }
-
-            fclose($handle);
-        }, $filename, [
-            'Content-Type' => 'text/csv',
-        ]);
+        return [
+            $contact->full_name,
+            $contact->email,
+            $contact->phone,
+            $contact->residence,
+            $subjectMap[$contact->subject] ?? $contact->subject,
+            $contact->project === 'kinary' ? 'Kinary House' : ($contact->project ?? ''),
+            $contact->message,
+            $contact->status,
+            $contact->created_at->format('Y-m-d H:i'),
+        ];
     }
 
     /**
