@@ -104,10 +104,9 @@ class ProjectController extends Controller
      */
     public function show($id)
     {
-        // Fetch product (project) from database
+        // Fetch product (project) from database — allow access even if inactive
         $product = Product::with('featuredImage')
             ->where('uid', $id)
-            ->where('is_active', true)
             ->firstOrFail();
 
         // Increment views

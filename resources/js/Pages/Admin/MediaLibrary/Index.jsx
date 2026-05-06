@@ -271,7 +271,7 @@ export default function Index({ media, folders, stats, filters }) {
                                     <DropdownMenuTrigger asChild>
                                         <Button variant="outline" className="gap-2">
                                             <Filter className="h-4 w-4" />
-                                            Type
+                                            Rooms
                                             {localFilters.type && (
                                                 <Badge variant="secondary" className="ml-1 rounded-full px-1.5 py-0">
                                                     1

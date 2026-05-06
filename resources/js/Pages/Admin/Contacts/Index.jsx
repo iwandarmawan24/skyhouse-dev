@@ -22,7 +22,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from '@/Components/ui/Dialog';
-import { Search, Mail, Eye, Trash2 } from 'lucide-react';
+import { Search, Mail, Eye, Trash2, Download } from 'lucide-react';
 
 export default function Index({ contacts, filters }) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
@@ -32,6 +32,16 @@ export default function Index({ contacts, filters }) {
         project: filters.project || '',
         search: filters.search || '',
     });
+
+    const buildExportUrl = () => {
+        const params = new URLSearchParams();
+        if (localFilters.status) params.set('status', localFilters.status);
+        if (localFilters.subject) params.set('subject', localFilters.subject);
+        if (localFilters.project) params.set('project', localFilters.project);
+        if (localFilters.search) params.set('search', localFilters.search);
+        const qs = params.toString();
+        return `/admin/contacts/export${qs ? '?' + qs : ''}`;
+    };
 
     const handleDelete = (id) => {
         router.delete(`/admin/contacts/${id}`, {
@@ -85,9 +95,17 @@ export default function Index({ contacts, filters }) {
     return (
         <AdminLayout>
             {/* Page Header */}
-            <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">Contact Leads</h1>
-                <p className="text-gray-600 mt-1">Manage customer inquiries and contact requests</p>
+            <div className="mb-6 flex items-center justify-between">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900">Contact Leads</h1>
+                    <p className="text-gray-600 mt-1">Manage customer inquiries and contact requests</p>
+                </div>
+                <a href={buildExportUrl()} download>
+                    <Button variant="outline" className="flex items-center gap-2">
+                        <Download className="h-4 w-4" />
+                        Export CSV
+                    </Button>
+                </a>
             </div>
 
             {/* Filters */}

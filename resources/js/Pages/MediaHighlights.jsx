@@ -145,9 +145,7 @@ export default function MediaHighlights({ featured, pageInfo = null }) {
                   <h1 className="news-hero-title">
                     {featuredNews.title}
                   </h1>
-                  <p className="news-hero-description">
-                    {featuredNews.description}
-                  </p>
+
                 </div>
               </a>
             </div>

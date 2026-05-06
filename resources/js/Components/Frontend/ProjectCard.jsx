@@ -7,9 +7,11 @@ const ProjectCard = ({
   title,
   short_description,
   description,
+  status,
   href
 }) => {
   const CardWrapper = href ? 'a' : 'div';
+  const isUnavailable = status === 'sold-out';
 
   // Strip HTML tags and create excerpt
   const getPlainTextExcerpt = (html, maxLength = 120) => {
@@ -25,13 +27,28 @@ const ProjectCard = ({
 
   return (
     <CardWrapper href={href} className="project-card">
-      <div className="project-card-image">
+      <div className="project-card-image" style={{ position: 'relative' }}>
         <img src={image} alt={title} />
+        {isUnavailable && (
+          <span style={{
+            position: 'absolute',
+            top: '12px',
+            left: '12px',
+            backgroundColor: 'rgba(0,0,0,0.6)',
+            color: '#fff',
+            fontSize: '0.75rem',
+            fontWeight: '600',
+            padding: '4px 10px',
+            borderRadius: '4px',
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+          }}>
+            Unavailable
+          </span>
+        )}
       </div>
       <div className="project-card-content">
         <div className="project-card-meta">
-          <span className="project-card-location">{location}</span>
-          <span className="project-card-units">{units} Units</span>
         </div>
         <h3 className="project-card-title">{title}</h3>
         <p className="project-card-description">{displayText}</p>

@@ -191,10 +191,10 @@ export default function Facilities({ facilities: backendFacilities = [], pageInf
                     style={{ transform: `translateX(-${currentSlide * 100}%)` }}
                   >
                     {Array.from({ length: Math.ceil(greatFeatures.length / cardsPerSlide) }).map((_, slideIndex) => (
-                      <div key={slideIndex} className="w-full flex-shrink-0">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      <div key={slideIndex} className="w-full flex-shrink-0 flex justify-center">
+                        <div className="flex flex-wrap justify-center gap-6 w-full">
                           {greatFeatures.slice(slideIndex * cardsPerSlide, slideIndex * cardsPerSlide + cardsPerSlide).map((feature, index) => (
-                            <div key={slideIndex * 3 + index} className="bg-white rounded-lg shadow-lg p-6 text-center">
+                            <div key={slideIndex * 3 + index} className="bg-white rounded-lg shadow-lg p-6 text-center w-full md:w-[calc(33.333%-1rem)]">
                               <div className="inline-flex items-center justify-center w-16 h-16 bg-skyhouse-ocean/10 rounded-full mb-4">
                                 <div className="text-skyhouse-ocean scale-75">
                                   {feature.icon}

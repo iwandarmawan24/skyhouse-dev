@@ -290,6 +290,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::middleware('role:superadmin,admin')->group(function () {
             // Contacts / Leads
             Route::get('/contacts', [ContactController::class, 'index'])->name('contacts.index');
+            Route::get('/contacts/export', [ContactController::class, 'export'])->name('contacts.export');
             Route::get('/contacts/{contact}', [ContactController::class, 'show'])->name('contacts.show');
             Route::patch('/contacts/{contact}/mark-read', [ContactController::class, 'markAsRead'])->name('contacts.mark-read');
             Route::delete('/contacts/{contact}', [ContactController::class, 'destroy'])->name('contacts.destroy');

@@ -121,31 +121,31 @@ export default function Project({ projects = [], pageInfo = null }) {
             const isEven = index % 2 === 1;
             
             return (
-              <section key={project.id} className="flex flex-col md:flex-row rounded-lg overflow-hidden items-stretch">
+              <section key={project.id} className="flex flex-col md:flex-row rounded-lg overflow-hidden shadow-sm">
                 {/* Image carousel */}
-                <div className={`flex-1 relative min-h-[300px] md:min-h-0 ${isEven ? 'order-1 md:order-2' : ''}`}>
+                <div className={`relative h-64 md:h-auto md:flex-1 ${isEven ? 'md:order-2' : ''}`}>
                   <ProjectCarousel
                     images={project.gallery?.length ? project.gallery : [project.image]}
                     title={project.title}
                   />
                 </div>
-                
-                {/* Content - Order changes based on even/odd for desktop, always second on mobile */}
+
+                {/* Content */}
                 <div
-                  className={`flex-1 p-6 md:p-18 flex flex-col justify-center relative ${isEven ? 'order-2 md:order-1' : ''}`}
+                  className={`md:flex-1 p-6 md:p-12 flex flex-col justify-center relative ${isEven ? 'md:order-1' : ''}`}
                   style={{
                     backgroundImage: `url(${project.image})`,
                     backgroundSize: 'cover',
                     backgroundPosition: 'center',
                   }}
                 >
-                  <div className="absolute inset-0 bg-white/80 backdrop-blur-sm "></div>
-                  <div className="relative z-10 max-w-2xl">
+                  <div className="absolute inset-0 bg-white md:bg-white/80 md:backdrop-blur-sm"></div>
+                  <div className="relative z-10">
                     <span className="project-hero-category">
                       {project.category} - {project.status}
                     </span>
                     <Heading as="h2" className="text-skyhouse-ocean">{project.title}</Heading>
-                    <Text className="!mt-4 !mb-8 !text-lg text-black/90">{project.short_description || truncateText(stripHtml(project.description))}</Text>
+                    <Text className="!mt-4 !mb-8 text-black/90">{project.short_description || truncateText(stripHtml(project.description))}</Text>
                     <Link href={`/project/${project.id}`}>
                       <Button>Room Details</Button>
                     </Link>

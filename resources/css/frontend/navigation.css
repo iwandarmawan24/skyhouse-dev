@@ -59,7 +59,7 @@
 .navbar2_link {
   color: white;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 600;
   padding: 0.5rem 0;
   position: relative;
   transition: all 0.3s ease;
@@ -124,6 +124,7 @@
   visibility: hidden;
   transition: all 0.3s ease;
   pointer-events: none;
+  
 }
 
 .navbar2_dropdown-list.is-open {

@@ -248,7 +248,7 @@ export default function Index({ products, filters, filterOptions }) {
                                     <DropdownMenuTrigger asChild>
                                         <Button variant="outline" className="gap-2">
                                             <Filter className="h-4 w-4" />
-                                            Type
+                                            Rooms
                                             {localFilters.types.length > 0 && (
                                                 <Badge variant="secondary" className="ml-1 rounded-full px-1.5 py-0">
                                                     {localFilters.types.length}
