@@ -75,12 +75,12 @@ const Location = () => {
           </div>
 
           <div
-            className="w-full lg:w-2/3 px-4 lg:px-0 mb-12 bg-white rounded-[30px] lg:rounded-[50px] p-3 lg:p-5 shadow-2xl max-h-[500px] overflow-hidden flex flex-row justify-center"
+            className="w-full lg:w-2/3 px-4 lg:px-0 mb-8 md:mb-12 bg-white rounded-[30px] lg:rounded-[50px] p-3 lg:p-5 shadow-2xl overflow-hidden"
           >
             <img
               src={locationData.image_url}
               alt={locationData.title}
-              style={{ width: 'max-content', height: '100%', maxHeight: '500px' }}
+              className="w-full h-auto block"
             />
           </div>
         </div>

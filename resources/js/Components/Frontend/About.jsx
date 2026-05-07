@@ -223,7 +223,7 @@ const About = () => {
                 "/images/experiences/lifestyle/revpasar8.jpg",
                 "/images/experiences/lifestyle/revrumahbuah.jpg",
               ]}
-              className="min-h-[350px] lg:row-span-2 order-2 lg:order-1"
+              className="min-h-[350px] lg:row-span-2 order-1 lg:order-1"
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 md:bottom-12 md:left-12">
@@ -249,7 +249,7 @@ const About = () => {
             />
 
             {/* Experience Card */}
-            <div className="service-card bg-gradient-to-br from-blue-50 to-cyan-100 rounded-3xl p-6 md:p-8 flex flex-col justify-center order-1 lg:order-3">
+            <div className="service-card bg-gradient-to-br from-blue-50 to-cyan-100 rounded-3xl p-6 md:p-8 flex flex-col justify-center order-2 lg:order-3">
               <Heading as="h3" variant="card" className="mb-3 text-lg md:text-xl">Experience</Heading>
               <Heading as="h3" variant="card" bodoni className="mb-3 italic text-lg md:text-xl">Sky House Alam Sutera<span className="font-sans not-italic text-[0.55em] align-super font-semibold">+</span></Heading>
               <div className="block bg-blue-300 h-1 w-16 my-4"></div>

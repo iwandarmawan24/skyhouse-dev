@@ -67,7 +67,7 @@ const News = ({ newsItems = [] }) => {
       <div className="padding-global relative z-10">
         <div className="container-large">
           <div className="padding-section-large">
-            <div className="flex flex-row items-center justify-between mb-12">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-8 sm:mb-12 gap-4">
               <Heading as="h2" variant="section" className="flex-1 !leading-12">Follow our <span className="font-bodoni italic">Updates</span></Heading>
               <Button 
                 href="/news" 

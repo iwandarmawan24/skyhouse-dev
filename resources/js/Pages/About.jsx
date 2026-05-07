@@ -286,7 +286,7 @@ export default function About({
               </div>
             </div>
 
-            <img src="/images/hero/risland-logo.jpeg" alt="Risland Logo" className="w-64 h-64 md:w-48 md:h-48 pointer-events-none rounded-full mx-auto md:mx-0 md:absolute md:bottom-0 md:left-0" />
+            <img src="/images/hero/risland-logo.jpeg" alt="Risland Logo" className="w-32 h-32 md:w-48 md:h-48 pointer-events-none rounded-full mx-auto md:mx-0 md:absolute md:bottom-0 md:left-0" />
           </div>
 
           <div className="container sm:px-4 md:px-12 lg:px-24 mx-auto relative z-10">
