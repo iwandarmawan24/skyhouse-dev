@@ -17,12 +17,11 @@ const PageLayout = ({ showBackgroundDefault = false, hideLogoOnTop = false, chil
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-5 right-5 w-24 h-24 md:bottom-6 md:right-6 md:w-[78px] md:h-[78px] bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(37,211,102,0.4)] hover:shadow-[0_6px_16px_rgba(37,211,102,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 ease-in-out z-[1000]"
+        className="fixed bottom-4 right-4 w-14 h-14 md:bottom-6 md:right-6 md:w-[78px] md:h-[78px] bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(37,211,102,0.4)] hover:shadow-[0_6px_16px_rgba(37,211,102,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 ease-in-out z-[1000]"
         aria-label="Contact us on WhatsApp"
       >
         <svg
-          width="48"
-          height="48"
+          className="w-7 h-7 md:w-12 md:h-12"
           viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

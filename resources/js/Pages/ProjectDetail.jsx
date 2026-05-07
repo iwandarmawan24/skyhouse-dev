@@ -125,7 +125,7 @@ export default function ProjectDetail({ project }) {
         </div>
 
         {/* Main Content */}
-        <div className="container mx-auto px-12 py-12 md:py-16">
+        <div className="container mx-auto px-4 md:px-12 py-8 md:py-16">
           {/* Price and Quick Info */}
           <div className="mb-12">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 p-6 bg-gray-50 rounded-lg">
@@ -158,7 +158,7 @@ export default function ProjectDetail({ project }) {
           </div>
 
           {/* Two Column Layout */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-24">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-24">
             {/* Left Column - Main Content */}
             <div className="lg:col-span-2 space-y-12">
               {/* Description Section */}
