@@ -232,6 +232,7 @@ export default function Form({ gallery }) {
                 multiple={false}
                 accept="image"
                 folder="gallery"
+                recommendedSize="1200 × 800px"
             />
         </AdminLayout>
     );

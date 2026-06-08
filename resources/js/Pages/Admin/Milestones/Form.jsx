@@ -279,6 +279,7 @@ export default function Form({ milestone }) {
                 }}
                 accept="image"
                 folder="milestones"
+                recommendedSize="800 × 600px"
             />
 
             {showImageModal && (selectedMedia || imagePreview) && (

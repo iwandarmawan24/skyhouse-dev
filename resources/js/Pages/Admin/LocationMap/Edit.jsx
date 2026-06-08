@@ -235,6 +235,7 @@ export default function Edit({ locationMap }) {
                 onSelect={handleMediaSelect}
                 accept="image"
                 folder="location-maps"
+                recommendedSize="1200 × 800px"
             />
 
             {/* Image Preview Modal */}

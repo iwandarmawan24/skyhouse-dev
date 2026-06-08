@@ -10,7 +10,7 @@ const ShowMoreBanner = () => {
           <div className="show-more-wrapper">
             <a href="/project" className="banner_component">
               <div className="project_button-text">
-                <Heading as="h3" variant="subsection">Show More Room Type</Heading>
+                <Heading as="h3" variant="subsection">Show More Unit Type</Heading>
               </div>
               <div className="project_arrow">
                 <svg xmlns="http://www.w3.org/2000/svg" width="29.541" height="22.323" viewBox="0 0 29.541 22.323">

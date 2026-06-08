@@ -36,7 +36,8 @@
       "Bash(./vendor/bin/sail npm *)",
       "Read(//opt/homebrew/bin/**)",
       "Bash(command -v docker)",
-      "Bash(composer show *)"
+      "Bash(composer show *)",
+      "Bash(php8.3 artisan *)"
     ],
     "deny": [],
     "ask": []

@@ -147,7 +147,7 @@ export default function Project({ projects = [], pageInfo = null }) {
                     <Heading as="h2" className="text-skyhouse-ocean">{project.title}</Heading>
                     <Text className="!mt-4 !mb-8 text-black/90">{project.short_description || truncateText(stripHtml(project.description))}</Text>
                     <Link href={`/project/${project.id}`}>
-                      <Button>Room Details</Button>
+                      <Button>Unit Details</Button>
                     </Link>
                   </div>
                 </div>

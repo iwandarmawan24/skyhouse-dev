@@ -207,6 +207,7 @@ export default function Form({ facility }) {
                 multiple={true}
                 accept="image"
                 folder="facilities"
+                recommendedSize="1200 × 800px"
             />
         </AdminLayout>
     );

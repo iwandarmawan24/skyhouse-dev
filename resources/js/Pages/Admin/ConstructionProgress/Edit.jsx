@@ -383,6 +383,7 @@ export default function Edit({ constructionProgress, items = [] }) {
                 onSelect={handleMediaSelect}
                 accept="image"
                 folder="construction-progress"
+                recommendedSize="1200 × 800px"
             />
 
             {/* Image Preview Modal */}

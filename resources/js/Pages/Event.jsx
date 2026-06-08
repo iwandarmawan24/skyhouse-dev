@@ -189,7 +189,7 @@ export default function Event({ events, pageInfo = null }) {
                                                         {event.title}
                                                     </h3>
                                                     <p className="event-card-description">
-                                                        {decodeHtml(event.description_excerpt || event.description)}
+                                                        {event.short_description || decodeHtml(event.description_excerpt || event.description)}
                                                     </p>
                                                     <div className="event-card-link">
                                                         Learn More

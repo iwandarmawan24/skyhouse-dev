@@ -13,6 +13,7 @@ export default function Form({ event }) {
     const isEdit = event !== null;
     const { data, setData, post, processing, errors } = useForm({
         title: event?.title || '',
+        short_description: event?.short_description || '',
         description: event?.description || '',
         event_date: event?.event_date_only || '',
         event_time: event?.event_time || '',
@@ -98,6 +99,19 @@ export default function Form({ event }) {
                             onChange={(e) => setData('title', e.target.value)}
                             error={errors.title}
                             placeholder="Enter event title"
+                        />
+
+                        {/* Short Description */}
+                        <FormTextarea
+                            label="Short Description"
+                            name="short_description"
+                            required
+                            value={data.short_description}
+                            onChange={(e) => setData('short_description', e.target.value)}
+                            error={errors.short_description}
+                            placeholder="Brief summary of the event (1-2 sentences)"
+                            rows={3}
+                            helperText={`${data.short_description.length}/500`}
                         />
 
                         {/* Description */}
@@ -330,6 +344,7 @@ export default function Form({ event }) {
                 multiple={false}
                 accept="image"
                 folder="events"
+                recommendedSize="1200 × 630px"
             />
         </AdminLayout>
     );

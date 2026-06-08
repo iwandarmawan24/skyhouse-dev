@@ -166,6 +166,7 @@ export default function Edit({ award }) {
                 onSelect={handleMediaSelect}
                 accept="image"
                 folder="awards"
+                recommendedSize="400 × 400px"
             />
 
             {/* Image Preview Modal */}

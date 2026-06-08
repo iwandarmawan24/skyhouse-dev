@@ -572,6 +572,7 @@ export default function Form({ article, categories, users }) {
                 multiple={false}
                 accept="image"
                 folder="articles"
+                recommendedSize="1200 × 630px"
             />
         </AdminLayout>
     );

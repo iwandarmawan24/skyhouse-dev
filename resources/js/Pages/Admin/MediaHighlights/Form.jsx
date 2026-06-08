@@ -231,6 +231,7 @@ export default function Form({ highlight, mediaList }) {
                 multiple={false}
                 accept="image"
                 folder="media-highlights"
+                recommendedSize="1200 × 800px"
             />
         </AdminLayout>
     );

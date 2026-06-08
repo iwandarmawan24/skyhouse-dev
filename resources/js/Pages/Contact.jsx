@@ -218,7 +218,7 @@ export default function Contact({ formLoadTime, products = [] }) {
                             required
                           >
                             <option value="">
-                              Select room type...
+                              Select unit type...
                             </option>
                             {products.map((product) => (
                               <option key={product.uid} value={product.name}>

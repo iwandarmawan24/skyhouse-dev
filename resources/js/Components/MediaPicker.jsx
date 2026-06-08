@@ -25,24 +25,14 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-/**
- * MediaPicker Component
- * WordPress-like media picker for selecting or uploading media files
- *
- * @param {boolean} open - Control dialog visibility
- * @param {function} onClose - Callback when dialog closes
- * @param {function} onSelect - Callback when media is selected (receives media object or array)
- * @param {boolean} multiple - Allow multiple selection
- * @param {string} accept - File type filter (image, video, document, or mime types)
- * @param {string} folder - Default folder for uploads
- */
 export function MediaPicker({
     open,
     onClose,
     onSelect,
     multiple = false,
     accept = 'image',
-    folder = null
+    folder = null,
+    recommendedSize = null,
 }) {
     const [activeTab, setActiveTab] = useState('library');
     const [media, setMedia] = useState([]);
@@ -182,6 +172,11 @@ export function MediaPicker({
             <DialogContent className="max-w-5xl h-[80vh] flex flex-col p-0 gap-0 overflow-hidden">
                 <DialogHeader className="px-6 py-4 border-b">
                     <DialogTitle>Select Media</DialogTitle>
+                    {recommendedSize && (
+                        <p className="text-sm text-muted-foreground mt-1">
+                            Recommended size: <span className="font-medium text-foreground">{recommendedSize}</span>
+                        </p>
+                    )}
                 </DialogHeader>
 
                 <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1 flex flex-col min-h-0">
@@ -315,6 +310,11 @@ export function MediaPicker({
                                 <p className="text-xs text-muted-foreground mt-4">
                                     Maximum file size: 10MB
                                 </p>
+                                {recommendedSize && (
+                                    <p className="text-xs text-blue-600 mt-1">
+                                        Recommended size: {recommendedSize}
+                                    </p>
+                                )}
                             </label>
                         </div>
                     </TabsContent>

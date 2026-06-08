@@ -3,6 +3,7 @@ import { Head } from "@inertiajs/react";
 import PageLayout from "@/Components/Frontend/PageLayout";
 import "@css/frontend.css";
 import "@css/frontend/news-page.css";
+import "@css/frontend/events-page.css";
 import axios from "axios";
 
 export default function MediaHighlights({ featured, pageInfo = null }) {
@@ -207,7 +208,7 @@ export default function MediaHighlights({ featured, pageInfo = null }) {
                   <div className="news-load-more">
                     <button
                       onClick={handleLoadMore}
-                      className="button is-secondary"
+                      className="events-load-more-btn"
                       disabled={loading}
                     >
                       {loading ? "Loading..." : "Load More"}

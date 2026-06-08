@@ -460,6 +460,7 @@ export default function Form({ banner }) {
                 }}
                 accept="image"
                 folder="hero-banners"
+                recommendedSize="1920 × 1080px"
             />
 
             {/* Mobile MediaPicker Modal */}
@@ -474,6 +475,7 @@ export default function Form({ banner }) {
                 }}
                 accept="image"
                 folder="hero-banners"
+                recommendedSize="768 × 1024px"
             />
         </AdminLayout>
     );

@@ -192,6 +192,7 @@ export default function Edit({ banner }) {
                 onSelect={handleMediaSelect}
                 accept="image"
                 folder="virtual-tour"
+                recommendedSize="1920 × 1080px"
             />
         </AdminLayout>
     );

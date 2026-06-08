@@ -354,6 +354,7 @@ export default function Form({ value }) {
                 }}
                 accept="image"
                 folder="about-values"
+                recommendedSize="400 × 400px"
             />
         </AdminLayout>
     );

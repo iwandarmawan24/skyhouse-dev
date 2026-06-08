@@ -1,6 +1,8 @@
 import AdminLayout from '@/Layouts/AdminLayout';
 import { useForm, usePage } from '@inertiajs/react';
 import { useState } from 'react';
+import { MediaPicker } from '@/Components/MediaPicker';
+import { X, Image as ImageIcon } from 'lucide-react';
 
 export default function Edit({ about }) {
     const { flash } = usePage().props;
@@ -10,25 +12,12 @@ export default function Edit({ about }) {
         mission: about?.mission || '',
         vision: about?.vision || '',
         team_description: about?.team_description || '',
-        image: null,
+        image_uid: about?.image_uid || null,
         _method: 'PUT',
     });
 
-    const [imagePreview, setImagePreview] = useState(
-        about?.image ? (about.image.startsWith('http') ? about.image : `/storage/${about.image}`) : null
-    );
-
-    const handleImageChange = (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setData('image', file);
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
+    const [imagePreview, setImagePreview] = useState(about?.featured_image || null);
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -143,51 +132,39 @@ export default function Edit({ about }) {
 
                 {/* Featured Image */}
                 <div className="bg-white rounded-xl shadow-sm p-6">
-                    <h2 className="text-lg font-semibold text-gray-900 mb-4">Featured Image</h2>
-                    <div className="space-y-4">
-                        {imagePreview && (
-                            <div className="relative w-full h-64 rounded-lg overflow-hidden bg-gray-100">
-                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                            </div>
-                        )}
-                        <div className="flex items-center justify-center w-full">
-                            <label
-                                htmlFor="image"
-                                className="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
-                            >
-                                <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                    <svg
-                                        className="w-8 h-8 mb-4 text-gray-500"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
-                                        />
-                                    </svg>
-                                    <p className="mb-2 text-sm text-gray-500">
-                                        <span className="font-semibold">Click to upload</span> or drag and drop
-                                    </p>
-                                    <p className="text-xs text-gray-500">PNG, JPG, JPEG or WEBP (MAX. 2MB)</p>
-                                </div>
-                                <input
-                                    id="image"
-                                    type="file"
-                                    className="hidden"
-                                    accept="image/jpeg,image/png,image/jpg,image/webp"
-                                    onChange={handleImageChange}
-                                />
-                            </label>
-                        </div>
-                        {errors.image && <p className="mt-1 text-sm text-red-600">{errors.image}</p>}
-                        {about?.image && (
-                            <p className="text-sm text-gray-500">Leave empty to keep the current image</p>
-                        )}
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-lg font-semibold text-gray-900">Featured Image</h2>
+                        <span className="text-xs text-gray-500">Recommended: 1200 × 800px</span>
                     </div>
+                    {imagePreview ? (
+                        <div className="relative inline-block">
+                            <img
+                                src={imagePreview.url || imagePreview.thumbnail_url}
+                                alt={imagePreview.alt_text || 'Featured Image'}
+                                className="w-64 h-48 object-cover rounded-lg border-2 border-gray-300"
+                            />
+                            <button
+                                type="button"
+                                onClick={() => {
+                                    setImagePreview(null);
+                                    setData('image_uid', null);
+                                }}
+                                className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 transition"
+                            >
+                                <X className="h-4 w-4" />
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            type="button"
+                            onClick={() => setShowMediaPicker(true)}
+                            className="border-2 border-dashed border-gray-300 rounded-lg p-8 w-64 h-48 flex flex-col items-center justify-center hover:border-blue-500 transition-colors group"
+                        >
+                            <ImageIcon className="h-12 w-12 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                            <p className="mt-2 text-sm text-gray-600 group-hover:text-blue-600">Select from Media Library</p>
+                        </button>
+                    )}
+                    {errors.image_uid && <p className="mt-2 text-sm text-red-600">{errors.image_uid}</p>}
                 </div>
 
                 {/* Submit Button */}
@@ -203,6 +180,19 @@ export default function Edit({ about }) {
                     </div>
                 </div>
             </form>
+
+            <MediaPicker
+                open={showMediaPicker}
+                onClose={() => setShowMediaPicker(false)}
+                onSelect={(media) => {
+                    setImagePreview(media);
+                    setData('image_uid', media.uid);
+                    setShowMediaPicker(false);
+                }}
+                accept="image"
+                folder="about"
+                recommendedSize="1200 × 800px"
+            />
         </AdminLayout>
     );
 }

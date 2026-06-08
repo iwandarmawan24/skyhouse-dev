@@ -162,6 +162,7 @@ export default function RichTextEditor({
                 multiple={false}
                 accept="image"
                 folder="articles"
+                recommendedSize="1200 × 630px"
             />
 
             <style>{`

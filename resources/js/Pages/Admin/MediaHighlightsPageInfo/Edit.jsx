@@ -188,6 +188,7 @@ export default function Edit({ info }) {
                 onSelect={handleMediaSelect}
                 accept="image"
                 folder="media-highlights-page"
+                recommendedSize="1920 × 600px"
             />
         </AdminLayout>
     );

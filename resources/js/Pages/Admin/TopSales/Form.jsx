@@ -211,6 +211,7 @@ export default function Form({ topSales, availablePositions }) {
                 multiple={false}
                 accept="image"
                 folder="top-sales"
+                recommendedSize="400 × 400px"
             />
         </AdminLayout>
     );

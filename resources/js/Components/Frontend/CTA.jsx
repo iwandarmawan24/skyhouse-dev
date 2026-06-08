@@ -54,12 +54,6 @@ const CTA = () => {
 
           {/* Left — CTA content */}
           <div className="flex-1 flex flex-col gap-8">
-            {/* Label chip */}
-            <span className="inline-flex self-start items-center gap-2 bg-skyhouse-sunshine/10 border border-skyhouse-sunshine/40 text-skyhouse-sunshine text-sm font-semibold tracking-widest uppercase px-4 py-2 rounded-full">
-              <span className="w-1.5 h-1.5 rounded-full bg-skyhouse-sunshine inline-block" />
-              Get in touch
-            </span>
-
             <Heading as="h3" variant="section" color="white" weight="light" className="leading-snug">
               Reach out to us and explore{' '}
               <span className="font-bodoni italic text-skyhouse-sunshine">Sky House Alam Sutera<span className="font-sans not-italic text-[0.5em] align-super font-semibold">+</span></span>{' '}

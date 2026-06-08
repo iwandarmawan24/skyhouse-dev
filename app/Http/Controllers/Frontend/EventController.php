@@ -28,6 +28,7 @@ class EventController extends Controller
                     'uid' => $event->uid,
                     'slug' => $hasSlugColumn ? $event->slug : $event->uid,
                     'title' => $event->title,
+                    'short_description' => $event->short_description,
                     'description' => $event->description,
                     'description_excerpt' => $this->getPlainTextExcerpt($event->description, 120),
                     'image' => $event->image,

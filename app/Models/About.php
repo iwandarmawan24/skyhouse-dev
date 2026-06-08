@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\MediaLibrary;
 use Illuminate\Database\Eloquent\Model;
 
 class About extends Model
@@ -18,12 +19,18 @@ class About extends Model
         'mission',
         'milestones',
         'team',
+        'image_uid',
     ];
 
     protected $casts = [
         'milestones' => 'array',
         'team' => 'array',
     ];
+
+    public function featuredImage()
+    {
+        return $this->belongsTo(MediaLibrary::class, 'image_uid', 'uid');
+    }
 
     protected static function boot()
     {

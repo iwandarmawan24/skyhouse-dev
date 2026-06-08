@@ -141,7 +141,7 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
           </a>
 
           <div className="hidden lg:block">
-            <Button 
+            <Button
               href="/contact-us"
               variant="sunshine"
               size="sm"

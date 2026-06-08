@@ -167,10 +167,15 @@ export default function ItemForm({ item }) {
 
                             {/* Image */}
                             <div className="space-y-2">
-                                <Label>
-                                    Image{" "}
-                                    <span className="text-destructive">*</span>
-                                </Label>
+                                <div className="flex items-center justify-between">
+                                    <Label>
+                                        Image{" "}
+                                        <span className="text-destructive">*</span>
+                                    </Label>
+                                    <span className="text-xs text-muted-foreground">
+                                        Recommended: 1200 × 800px
+                                    </span>
+                                </div>
 
                                 {selectedMedia || imagePreview ? (
                                     <div className="space-y-4">
@@ -294,6 +299,7 @@ export default function ItemForm({ item }) {
                 }}
                 accept="image"
                 folder="construction-progress"
+                recommendedSize="1200 × 800px"
             />
 
             {showImageModal && (selectedMedia || imagePreview) && (

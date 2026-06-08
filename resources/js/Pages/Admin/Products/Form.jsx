@@ -748,6 +748,13 @@ export default function Form({ product }) {
             <MediaPicker
                 open={showMediaPicker}
                 onClose={() => setShowMediaPicker(false)}
+                recommendedSize={
+                    mediaPickerMode === 'featured' ? '1200 × 800px' :
+                    mediaPickerMode === 'card' ? '400 × 400px' :
+                    mediaPickerMode === 'gallery' ? '1200 × 800px' :
+                    mediaPickerMode === 'slider' ? '1920 × 1080px' :
+                    null
+                }
                 onSelect={(media) => {
                     if (mediaPickerMode === 'featured') {
                         // Single image for featured

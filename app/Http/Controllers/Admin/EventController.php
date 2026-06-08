@@ -85,6 +85,7 @@ class EventController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'short_description' => 'required|string|max:500',
             'description' => 'required|string',
             'event_date' => 'required|date',
             'event_time' => 'required',
@@ -171,6 +172,7 @@ class EventController extends Controller
 
         $validated = $request->validate([
             'title' => 'required|string|max:255',
+            'short_description' => 'required|string|max:500',
             'description' => 'required|string',
             'event_date' => 'required|date',
             'event_time' => 'required',

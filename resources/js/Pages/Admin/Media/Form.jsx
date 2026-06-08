@@ -189,6 +189,7 @@ export default function Form({ media }) {
                 multiple={false}
                 accept="image"
                 folder="media-logos"
+                recommendedSize="400 × 200px"
             />
         </AdminLayout>
     );

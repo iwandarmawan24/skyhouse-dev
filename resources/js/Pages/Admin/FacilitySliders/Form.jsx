@@ -201,6 +201,7 @@ export default function Form({ slider }) {
                 multiple={false}
                 accept="image"
                 folder="facilities"
+                recommendedSize="1920 × 1080px"
             />
         </AdminLayout>
     );

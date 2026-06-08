@@ -198,6 +198,7 @@ export default function Index({ galleries }) {
                 multiple={false}
                 accept="image"
                 folder="instagram-gallery"
+                recommendedSize="1080 × 1080px"
             />
 
             {/* Delete Confirmation Dialog */}
