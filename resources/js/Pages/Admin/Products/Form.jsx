@@ -271,7 +271,7 @@ export default function Form({ product }) {
 
                         <div className="md:col-span-2">
                             <label htmlFor="short_description" className="block text-sm font-medium text-gray-700 mb-2">
-                                Short Description
+                                Short Description <span className="text-red-500">*</span>
                             </label>
                             <textarea
                                 id="short_description"
@@ -284,9 +284,6 @@ export default function Form({ product }) {
                                 rows={3}
                             />
                             {errors.short_description && <p className="mt-1 text-sm text-red-600">{errors.short_description}</p>}
-                            <p className="mt-1 text-sm text-gray-500">
-                                A brief summary of the property (optional)
-                            </p>
                         </div>
 
                         <div className="md:col-span-2">
