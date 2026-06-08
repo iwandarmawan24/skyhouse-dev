@@ -104,10 +104,10 @@ const LaunchProjects = ({ facilities: backendFacilities = [] }) => {
       
 
       {/* Facilities Section */}
-      <div className="max-w-7xl mx-auto relative z-10 mt-16 lg:mt-4 px-4">
+      <div className="max-w-7xl mx-auto relative z-10 mt-8 lg:mt-4 px-4">
         <div className="text-center mb-8 lg:mb-12">
-          <div className="flex">
-            <div>
+          <div className="flex flex-col items-center lg:flex-row">
+            <div className="flex flex-col items-center lg:items-start">
               <Heading as="h3" variant="section" className="mb-4">
                 Premium
               </Heading>

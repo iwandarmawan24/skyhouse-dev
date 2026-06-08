@@ -303,7 +303,7 @@ a.news-hero-content {
     padding: 4rem 0 2.5rem;
   }
 
-  .news-hero-content {
+  a.news-hero-content {
     grid-template-columns: 1fr;
     gap: 2rem;
   }
