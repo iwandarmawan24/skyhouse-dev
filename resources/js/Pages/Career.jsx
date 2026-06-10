@@ -5,22 +5,11 @@ import "@css/frontend.css";
 import "@css/frontend/news-page.css";
 
 export default function Career({ careers }) {
+    const careerList = careers ?? [];
     const pageTitle = "Careers - Skyhouse Alamsutera";
     const pageDescription = "Explore career opportunities at Skyhouse Alamsutera. Join our team and grow with us.";
     const pageImage = window.location.origin + "/images/default-og-image.jpg";
     const pageUrl = window.location.origin + "/careers";
-
-    const decodeHtml = (html) => {
-        if (!html) return '';
-        const txt = document.createElement('textarea');
-        txt.innerHTML = html;
-        return txt.value;
-    };
-
-    const stripTags = (html) => {
-        if (!html) return '';
-        return html.replace(/<[^>]*>/g, '');
-    };
 
     return (
         <>
@@ -77,54 +66,41 @@ export default function Career({ careers }) {
                 <section className="padding-section-large">
                     <div className="padding-global">
                         <div className="container-large">
-                            {careers && careers.length > 0 ? (
-                                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                                    {careers.map((career) => (
+                            <div className="flex flex-col lg:flex-row lg:items-start gap-10 lg:gap-0">
+                                {/* Left: heading + desc */}
+                                <div className="lg:w-5/12 lg:pr-12">
+                                    <h2 className="text-4xl md:text-5xl font-extrabold text-gray-900 leading-tight mb-6">
+                                        Build Your<br />
+                                        <span className="font-bodoni italic" style={{ color: "#1153BD" }}>Dream Career</span>
+                                        <br />With Us
+                                    </h2>
+                                    <br />
+                                    <p className="text-gray-500 text-base leading-relaxed">
+                                        Be part of a passionate team shaping the future of premium living. We're looking for talented people who are driven, creative, and ready to grow.
+                                    </p>
+                                </div>
+
+                                {/* Divider — only desktop */}
+                                <div className="hidden lg:block w-px bg-gray-200 self-stretch mx-8" />
+
+                                {/* Right: job list */}
+                                <div className="lg:flex-1">
+                                    {careerList.length > 0 ? careerList.map((career) => (
                                         <Link
                                             key={career.uid}
                                             href={`/careers/${career.uid}`}
-                                            className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border border-gray-100 block cursor-pointer"
-                                            style={{ textDecoration: 'none', color: 'inherit' }}
+                                            className="group flex items-center justify-between px-6 py-4 border border-gray-200 rounded-full mb-3 no-underline font-semibold text-gray-900 bg-white transition-all duration-200 hover:bg-[#1153BD] hover:text-white hover:border-[#1153BD]"
                                         >
-                                            <div className="p-6">
-                                                <div className="flex items-center gap-2 mb-3">
-                                                    <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-blue-100 text-skyhouse-ocean">
-                                                        {career.position}
-                                                    </span>
-                                                </div>
-                                                <h3 className="text-xl font-bold text-gray-900 mb-3">
-                                                    {career.title}
-                                                </h3>
-                                                <p className="text-gray-600 text-sm line-clamp-3">
-                                                    {decodeHtml(stripTags(career.body))}
-                                                </p>
-                                            </div>
+                                            <span>{career.title}</span>
+                                            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+                                                <path d="M4 10h12M11 5l5 5-5 5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                            </svg>
                                         </Link>
-                                    ))}
+                                    )) : (
+                                        <p className="text-gray-400 text-sm py-4">No open positions at the moment. Check back soon.</p>
+                                    )}
                                 </div>
-                            ) : (
-                                <div className="text-center py-20">
-                                    <svg
-                                        className="mx-auto h-16 w-16 text-gray-300 mb-4"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="1.5"
-                                            d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                                        />
-                                    </svg>
-                                    <p className="text-xl font-semibold text-gray-500">
-                                        No open positions at the moment
-                                    </p>
-                                    <p className="text-gray-400 mt-2">
-                                        Check back later for new opportunities
-                                    </p>
-                                </div>
-                            )}
+                            </div>
                         </div>
                     </div>
                 </section>
