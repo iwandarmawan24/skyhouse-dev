@@ -44,7 +44,7 @@ class CareerController extends Controller
     public function edit(Career $career)
     {
         return Inertia::render('Admin/Careers/Form', [
-            'career' => new CareerResource($career),
+            'career' => (new CareerResource($career))->resolve(),
         ]);
     }
 
