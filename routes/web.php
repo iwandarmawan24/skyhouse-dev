@@ -97,6 +97,9 @@ Route::get('/careers/{uid}', [FrontendCareerController::class, 'show'])->name('c
 Route::get('/contact-us', [\App\Http\Controllers\Frontend\ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [\App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');
 
+Route::get('/terms', [\App\Http\Controllers\Frontend\PolicyController::class, 'terms'])->name('terms');
+Route::get('/privacy', [\App\Http\Controllers\Frontend\PolicyController::class, 'privacy'])->name('privacy');
+
 // Components Showcase Route
 Route::get('/components', function () {
     return Inertia::render('ComponentsShowcase');

@@ -1,5 +1,5 @@
 import React from 'react';
-import { usePage } from '@inertiajs/react';
+import { usePage, Link } from '@inertiajs/react';
 import { Heading, Text } from '@/Components/Frontend/atoms';
 
 // Footer Component
@@ -104,8 +104,8 @@ const Footer = () => {
           <div className="footer_bottom">
             <Text>&copy; {new Date().getFullYear()} {siteName}. All rights reserved.</Text>
             <div className="footer_bottom-links">
-              <a href="/terms">Terms and Conditions</a>
-              <a href="/privacy">Privacy Policy</a>
+              <Link href="/terms">Terms and Conditions</Link>
+              <Link href="/privacy">Privacy Policy</Link>
             </div>
           </div>
         </div>

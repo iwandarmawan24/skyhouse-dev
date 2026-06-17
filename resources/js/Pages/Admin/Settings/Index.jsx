@@ -14,8 +14,11 @@ export default function Index({ settings }) {
         });
     });
 
-    const { data, setData } = useForm(initialSettings);
-    const [processing, setProcessing] = useState(false);
+    const { data, setData, put, processing, transform } = useForm(initialSettings);
+
+    transform((data) => ({
+        settings: Object.keys(data).map((key) => ({ key, value: data[key] })),
+    }));
 
     // Form for adding new setting
     const { data: newSettingData, setData: setNewSettingData, post, processing: addProcessing, reset, errors } = useForm({
@@ -27,16 +30,7 @@ export default function Index({ settings }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
-        const settingsArray = Object.keys(data).map((key) => ({
-            key,
-            value: data[key],
-        }));
-
-        router.put('/admin/settings', { settings: settingsArray }, {
-            onStart: () => setProcessing(true),
-            onFinish: () => setProcessing(false),
-        });
+        put('/admin/settings');
     };
 
     const handleAddSetting = (e) => {
@@ -132,10 +126,15 @@ export default function Index({ settings }) {
                 </button>
             </div>
 
-            {/* Success Message */}
+            {/* Flash Messages */}
             {flash.success && (
                 <div className="mb-6 bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg">
                     {flash.success}
+                </div>
+            )}
+            {flash.error && (
+                <div className="mb-6 bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+                    {flash.error}
                 </div>
             )}
 
