@@ -14,10 +14,13 @@ class PolicyController extends Controller
 
         return Inertia::render('Policy', [
             'policy' => $policy ? [
-                'title' => $policy->title ?? 'Terms and Conditions',
-                'content' => $policy->content,
+                'title'     => $policy->title ?? 'Terms and Conditions',
+                'content'   => $policy->content,
+                'version'   => $policy->version,
+                'updatedAt' => $policy->updated_at?->format('d M Y'),
             ] : null,
-            'pageTitle' => 'Terms and Conditions',
+            'pageTitle'  => 'Terms and Conditions',
+            'policyType' => 'terms',
         ]);
     }
 
@@ -27,10 +30,13 @@ class PolicyController extends Controller
 
         return Inertia::render('Policy', [
             'policy' => $policy ? [
-                'title' => $policy->title ?? 'Privacy Policy',
-                'content' => $policy->content,
+                'title'     => $policy->title ?? 'Privacy Policy',
+                'content'   => $policy->content,
+                'version'   => $policy->version,
+                'updatedAt' => $policy->updated_at?->format('d M Y'),
             ] : null,
-            'pageTitle' => 'Privacy Policy',
+            'pageTitle'  => 'Privacy Policy',
+            'policyType' => 'privacy',
         ]);
     }
 }
