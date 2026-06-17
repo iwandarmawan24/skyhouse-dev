@@ -14,7 +14,8 @@ export default function Index({ settings }) {
         });
     });
 
-    const { data, setData, put, processing } = useForm(initialSettings);
+    const { data, setData } = useForm(initialSettings);
+    const [processing, setProcessing] = useState(false);
 
     // Form for adding new setting
     const { data: newSettingData, setData: setNewSettingData, post, processing: addProcessing, reset, errors } = useForm({
@@ -27,14 +28,14 @@ export default function Index({ settings }) {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        // Convert form data to array format expected by controller
         const settingsArray = Object.keys(data).map((key) => ({
             key,
             value: data[key],
         }));
 
-        put('/admin/settings', {
-            data: { settings: settingsArray },
+        router.put('/admin/settings', { settings: settingsArray }, {
+            onStart: () => setProcessing(true),
+            onFinish: () => setProcessing(false),
         });
     };
 
