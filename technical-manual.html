@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skyhouse — Technical Architecture Manual</title>
+<style>
+:root {
+  --blue: #1e40af; --blue-light: #3b82f6; --blue-bg: #eff6ff;
+  --gray: #6b7280; --gray-bg: #f9fafb; --border: #e5e7eb;
+  --text: #111827; --text-muted: #6b7280; --white: #ffffff;
+  --green: #16a34a; --red: #dc2626; --yellow: #d97706; --orange: #ea580c;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--text); background: var(--gray-bg); font-size: 14px; line-height: 1.6; }
+
+/* Layout */
+.wrapper { display: flex; min-height: 100vh; }
+nav#toc { width: 260px; min-width: 260px; background: var(--blue); color: white; position: fixed; top: 0; left: 0; height: 100vh; overflow-y: auto; z-index: 100; padding: 0 0 40px; }
+nav#toc .logo { padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.15); }
+nav#toc .logo h2 { font-size: 15px; font-weight: 700; color: white; line-height: 1.3; }
+nav#toc .logo span { font-size: 11px; color: rgba(255,255,255,0.6); display: block; margin-top: 3px; }
+nav#toc ul { list-style: none; padding: 8px 0; }
+nav#toc ul li a { display: block; padding: 7px 16px; color: rgba(255,255,255,0.8); text-decoration: none; font-size: 12.5px; border-left: 3px solid transparent; transition: all .15s; }
+nav#toc ul li a:hover, nav#toc ul li a.active { background: rgba(255,255,255,0.1); color: white; border-left-color: var(--blue-light); }
+nav#toc .section-group { padding: 12px 16px 4px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,0.4); }
+nav#toc ul li a.sub { padding-left: 28px; font-size: 12px; color: rgba(255,255,255,0.65); }
+
+main { margin-left: 260px; flex: 1; }
+
+/* Cover */
+.cover { background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 50%, #2563eb 100%); color: white; padding: 80px 60px; min-height: 340px; position: relative; overflow: hidden; }
+.cover::before { content: ""; position: absolute; top: -80px; right: -80px; width: 400px; height: 400px; border-radius: 50%; background: rgba(255,255,255,0.05); }
+.cover h1 { font-size: 36px; font-weight: 800; line-height: 1.2; letter-spacing: -0.5px; position: relative; }
+.cover .subtitle { font-size: 16px; color: rgba(255,255,255,0.75); margin-top: 10px; position: relative; }
+.cover .meta { margin-top: 36px; display: flex; gap: 32px; flex-wrap: wrap; position: relative; }
+.cover .meta-item { }
+.cover .meta-item .label { font-size: 10px; text-transform: uppercase; letter-spacing: .08em; color: rgba(255,255,255,0.5); margin-bottom: 4px; }
+.cover .meta-item .value { font-size: 14px; font-weight: 600; color: white; }
+.stack-badges { margin-top: 28px; display: flex; gap: 8px; flex-wrap: wrap; position: relative; }
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.2); border-radius: 20px; font-size: 12px; color: white; font-weight: 500; }
+
+/* Sections */
+.content { padding: 40px 48px; max-width: 1100px; }
+.section { margin-bottom: 56px; }
+.section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; padding-bottom: 12px; border-bottom: 2px solid var(--border); }
+.section-num { background: var(--blue); color: white; width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; flex-shrink: 0; }
+.section-header h2 { font-size: 22px; font-weight: 700; color: var(--text); }
+
+h3 { font-size: 16px; font-weight: 700; color: var(--blue); margin: 28px 0 12px; border-left: 3px solid var(--blue-light); padding-left: 10px; }
+h4 { font-size: 14px; font-weight: 700; color: var(--text); margin: 18px 0 8px; }
+
+/* Cards */
+.card { background: white; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 16px; }
+.card-header { padding: 12px 16px; background: var(--blue-bg); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
+.card-header h4 { margin: 0; font-size: 14px; font-weight: 700; color: var(--blue); }
+.card-body { padding: 16px; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; margin: 12px 0; border-radius: 8px; border: 1px solid var(--border); }
+table { width: 100%; border-collapse: collapse; background: white; font-size: 13px; }
+thead { background: var(--blue); color: white; }
+thead th { padding: 10px 14px; text-align: left; font-weight: 600; font-size: 12px; }
+tbody tr:nth-child(even) { background: var(--gray-bg); }
+tbody td { padding: 9px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+tbody tr:last-child td { border-bottom: none; }
+code { background: #f1f5f9; color: #0f172a; padding: 2px 6px; border-radius: 4px; font-family: "SF Mono", Monaco, "Cascadia Code", Consolas, monospace; font-size: 12px; }
+pre { background: #0f172a; color: #e2e8f0; padding: 16px; border-radius: 8px; overflow-x: auto; font-family: "SF Mono", Monaco, monospace; font-size: 12.5px; line-height: 1.7; margin: 12px 0; }
+pre code { background: none; color: inherit; padding: 0; }
+
+/* Status badges */
+.status { display: inline-flex; align-items: center; gap: 4px; padding: 3px 9px; border-radius: 12px; font-size: 11.5px; font-weight: 600; }
+.status-ok { background: #dcfce7; color: var(--green); }
+.status-warn { background: #fef9c3; color: #854d0e; }
+.status-del { background: #fee2e2; color: var(--red); }
+.status-blue { background: var(--blue-bg); color: var(--blue); }
+.status-orange { background: #fff7ed; color: var(--orange); }
+
+/* Role badges */
+.role { display: inline-flex; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 600; }
+.role-super { background: #fef3c7; color: #92400e; }
+.role-admin { background: #dbeafe; color: #1e40af; }
+.role-staff { background: #f0fdf4; color: #166534; }
+.role-all { background: #f3f4f6; color: #374151; }
+
+/* Flow diagram */
+.flow { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 14px 0; }
+.flow-row { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 8px 0; }
+.flow-box { background: var(--blue-bg); border: 1px solid #bfdbfe; border-radius: 6px; padding: 6px 12px; font-size: 12.5px; font-weight: 600; color: var(--blue); }
+.flow-box.model { background: #f0fdf4; border-color: #86efac; color: #166534; }
+.flow-box.page { background: #fdf4ff; border-color: #d8b4fe; color: #6b21a8; }
+.flow-box.db { background: #fff7ed; border-color: #fdba74; color: #9a3412; }
+.flow-box.mw { background: #fef9c3; border-color: #fcd34d; color: #854d0e; }
+.flow-arrow { color: var(--gray); font-size: 16px; }
+
+/* Grid */
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.grid3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+/* Audit list */
+.audit-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.audit-item:last-child { border-bottom: none; }
+.audit-file { font-family: monospace; font-size: 12px; color: #1e293b; flex: 1; }
+.audit-reason { color: var(--text-muted); font-size: 12px; }
+
+/* Print */
+@media print {
+  nav#toc { display: none; }
+  main { margin-left: 0; }
+  .content { padding: 20px; }
+  .cover { background: var(--blue) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .card { break-inside: avoid; }
+  .section { break-before: auto; }
+}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<!-- SIDEBAR TOC -->
+<nav id="toc">
+  <div class="logo">
+    <h2>Skyhouse CMS</h2>
+    <span>Technical Architecture Manual</span>
+  </div>
+  <ul>
+    <li class="section-group">Overview</li>
+    <li><a href="#cover">Cover</a></li>
+    <li class="section-group">Sections</li>
+    <li><a href="#s1">1 · Architecture Overview</a></li>
+    <li><a href="#s1-lifecycle" class="sub">Request Lifecycle</a></li>
+    <li><a href="#s1-middleware" class="sub">Middleware Stack</a></li>
+    <li><a href="#s1-roles" class="sub">Role Hierarchy</a></li>
+    <li><a href="#s2">2 · Controllers Reference</a></li>
+    <li><a href="#s2-admin" class="sub">Admin Controllers</a></li>
+    <li><a href="#s2-frontend" class="sub">Frontend Controllers</a></li>
+    <li><a href="#s3">3 · Models Reference</a></li>
+    <li><a href="#s4">4 · Pages &amp; Components</a></li>
+    <li><a href="#s4-pages" class="sub">Admin Pages</a></li>
+    <li><a href="#s4-frontend-pages" class="sub">Frontend Pages</a></li>
+    <li><a href="#s4-components" class="sub">Components</a></li>
+    <li><a href="#s5">5 · Feature Flow Maps</a></li>
+    <li><a href="#s5-hero" class="sub">Hero Banners</a></li>
+    <li><a href="#s5-products" class="sub">Products</a></li>
+    <li><a href="#s5-articles" class="sub">Articles</a></li>
+    <li><a href="#s5-events" class="sub">Events</a></li>
+    <li><a href="#s5-contacts" class="sub">Contacts</a></li>
+    <li><a href="#s5-media" class="sub">Media Library</a></li>
+    <li><a href="#s6">6 · Database Schema</a></li>
+    <li><a href="#s7">7 · Repo Audit</a></li>
+  </ul>
+</nav>
+
+<main>
+<!-- COVER -->
+<div class="cover" id="cover">
+  <h1>Skyhouse<br>Technical Architecture Manual</h1>
+  <p class="subtitle">Fullstack Property CMS — Complete developer reference</p>
+  <div class="meta">
+    <div class="meta-item"><div class="label">Generated</div><div class="value">2026-06-18</div></div>
+    <div class="meta-item"><div class="label">Branch</div><div class="value">master</div></div>
+    <div class="meta-item"><div class="label">Backend</div><div class="value">Laravel 11 / PHP 8.2+</div></div>
+    <div class="meta-item"><div class="label">Frontend</div><div class="value">React 19 + Inertia.js 2.0</div></div>
+    <div class="meta-item"><div class="label">Database</div><div class="value">PostgreSQL 16</div></div>
+    <div class="meta-item"><div class="label">Server</div><div class="value">BiznetGio VPS + Nginx</div></div>
+  </div>
+  <div class="stack-badges">
+    <span class="badge">Laravel 11</span>
+    <span class="badge">React 19</span>
+    <span class="badge">Inertia.js 2.0</span>
+    <span class="badge">Tailwind CSS 4.0</span>
+    <span class="badge">PostgreSQL 16</span>
+    <span class="badge">Redis 7</span>
+    <span class="badge">Vite 7</span>
+    <span class="badge">TipTap WYSIWYG</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- SECTION 1: ARCHITECTURE OVERVIEW -->
+<div class="section" id="s1">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2>Architecture Overview</h2>
+  </div>
+
+  <h3 id="s1-lifecycle">Request Lifecycle</h3>
+  <div class="flow">
+    <p style="font-size:13px; color:#6b7280; margin-bottom:14px;">Setiap HTTP request melewati pipeline berikut:</p>
+    <div class="flow-row">
+      <div class="flow-box">Browser / Client</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Nginx</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">PHP-FPM</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">public/index.php</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">bootstrap/app.php</div>
+    </div>
+    <div class="flow-row" style="margin-top:8px;">
+      <div class="flow-box">Global Middleware</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box mw">HandleInertiaRequests</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box mw">Auth / Role</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">routes/web.php</div>
+    </div>
+    <div class="flow-row" style="margin-top:8px;">
+      <div class="flow-box">Controller</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Eloquent Model</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box db">PostgreSQL</div>
+    </div>
+    <div class="flow-row" style="margin-top:8px;">
+      <div class="flow-box">Inertia::render()</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">React Page Component</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Child Components</div>
+    </div>
+    <p style="margin-top:12px; font-size:12px; color:#6b7280;">
+      Admin routes: <code>app</code> Blade template → <code>AdminLayout.jsx</code><br>
+      Frontend routes: <code>frontend</code> Blade template → <code>PageLayout.jsx</code> / page-specific layout
+    </p>
+  </div>
+
+  <h3 id="s1-middleware">Middleware Stack</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Middleware</th><th>File</th><th>Fungsi</th><th>Diterapkan di</th></tr></thead>
+      <tbody>
+        <tr><td><code>HandleInertiaRequests</code></td><td>app/Http/Middleware/HandleInertiaRequests.php</td><td>Share global Inertia props (auth, flash, settings). Route <code>admin/*</code> → template <code>app</code>; frontend → template <code>frontend</code></td><td>Semua web routes</td></tr>
+        <tr><td><code>auth</code></td><td>Framework built-in</td><td>Redirect guest ke <code>/admin/login</code></td><td>Semua admin routes (kecuali login/register)</td></tr>
+        <tr><td><code>guest</code></td><td>Framework built-in</td><td>Redirect authenticated user ke <code>/admin/dashboard</code></td><td>Admin login & register routes</td></tr>
+        <tr><td><code>role:superadmin,admin,staff</code></td><td>app/Http/Middleware/CheckRole.php</td><td>Cek role user; juga cek <code>status=active</code>. Abort 403 jika tidak authorized</td><td>Mayoritas admin CRUD routes</td></tr>
+        <tr><td><code>role:superadmin,admin</code></td><td>app/Http/Middleware/CheckRole.php</td><td>Hanya superadmin dan admin</td><td>Contacts, About Us</td></tr>
+        <tr><td><code>role:superadmin</code></td><td>app/Http/Middleware/CheckRole.php</td><td>Hanya superadmin</td><td>Settings, User Management</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 id="s1-roles">Role Hierarchy</h3>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-header"><h4>🔴 superadmin</h4></div>
+      <div class="card-body" style="font-size:13px;">
+        Akses penuh ke semua fitur termasuk:<br>
+        • Settings management<br>
+        • User management<br>
+        • Contacts &amp; leads<br>
+        • About Us content<br>
+        • Semua CRUD CMS
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h4>🟡 admin</h4></div>
+      <div class="card-body" style="font-size:13px;">
+        Akses ke semua konten CMS termasuk:<br>
+        • Contacts &amp; leads<br>
+        • About Us<br>
+        • Semua CRUD konten<br>
+        ✗ Settings<br>
+        ✗ User management
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header"><h4>🟢 staff</h4></div>
+      <div class="card-body" style="font-size:13px;">
+        Akses terbatas ke konten:<br>
+        • Hero Banners, Products<br>
+        • Articles, Events<br>
+        • Facilities, Media<br>
+        ✗ Contacts/Leads<br>
+        ✗ Settings, Users
+      </div>
+    </div>
+  </div>
+
+  <h3>Services</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Service</th><th>File</th><th>Fungsi</th></tr></thead>
+      <tbody>
+        <tr><td><code>MediaService</code></td><td>app/Services/MediaService.php</td><td>Handle upload, resize, dan manajemen file media. Diinjeksi ke HeroBannerController dan ProductController</td></tr>
+        <tr><td><code>SeoScoreCalculator</code></td><td>app/Services/SeoScoreCalculator.php</td><td>Kalkulasi SEO score berdasarkan title, content, slug, meta fields, dan focus keyword. Digunakan di ArticleController</td></tr>
+        <tr><td><code>SitemapService</code></td><td>app/Services/SitemapService.php</td><td>Generate sitemap.xml dengan caching. Di-trigger via artisan command <code>sitemap:generate</code> dan Route <code>/sitemap.xml</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Scheduled Tasks (routes/console.php)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Command</th><th>Schedule</th><th>Fungsi</th></tr></thead>
+      <tbody>
+        <tr><td><code>sitemap:generate</code></td><td>Daily (00:00 WIB)</td><td>Generate sitemap.xml untuk SEO</td></tr>
+        <tr><td><code>articles:publish-scheduled</code></td><td>Every 30 min (production)</td><td>Auto-publish artikel dengan status <code>scheduled</code> yang sudah melewati <code>scheduled_at</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- SECTION 2: CONTROLLERS REFERENCE -->
+<div class="section" id="s2">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2>Controllers Reference</h2>
+  </div>
+
+  <h3 id="s2-admin">Admin Controllers</h3>
+  <p style="font-size:13px; color:#6b7280; margin-bottom:16px;">Semua admin controller berada di <code>app/Http/Controllers/Admin/</code> dan di-prefix route dengan <code>/admin</code>.</p>
+
+  <!-- Auth -->
+  <div class="card">
+    <div class="card-header"><h4>AuthController</h4><span style="font-size:12px; color:#6b7280; margin-left:auto;">app/Http/Controllers/Admin/AuthController.php</span></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Method</th><th>Route</th><th>Role</th><th>Inertia Page</th><th>Aksi</th></tr></thead>
+          <tbody>
+            <tr><td><code>showLogin()</code></td><td>GET /admin/login</td><td><span class="role role-all">guest</span></td><td>Admin/Auth/Login</td><td>Tampilkan form login</td></tr>
+            <tr><td><code>login()</code></td><td>POST /admin/login</td><td><span class="role role-all">guest</span></td><td>—</td><td>Validasi credentials, redirect ke dashboard</td></tr>
+            <tr><td><code>logout()</code></td><td>POST /admin/logout</td><td><span class="role role-all">auth</span></td><td>—</td><td>Logout + redirect ke login</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="card">
+    <div class="card-header"><h4>DashboardController</h4><span style="font-size:12px; color:#6b7280; margin-left:auto;">app/Http/Controllers/Admin/DashboardController.php</span></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Method</th><th>Route</th><th>Role</th><th>Inertia Page</th><th>Data Props</th></tr></thead>
+          <tbody>
+            <tr><td><code>index()</code></td><td>GET /admin/dashboard</td><td><span class="role role-all">auth</span></td><td>Admin/Dashboard</td><td>stats (total_products, active_products, featured_products, total_articles, published_articles, total_contacts, unread_contacts, upcoming_events), recent_contacts (with product), recent_products (with featuredImage)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hero Banners -->
+  <div class="card">
+    <div class="card-header"><h4>HeroBannerController</h4><span style="font-size:12px; color:#6b7280; margin-left:auto;">Injects MediaService</span></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Method</th><th>Route</th><th>Role</th><th>Inertia Page</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>index()</code></td><td>GET /admin/hero-banners</td><td><span class="role role-staff">staff+</span></td><td>Admin/HeroBanners/Index</td><td>With bannerImage + mobileBannerImage</td></tr>
+            <tr><td><code>create()</code></td><td>GET /admin/hero-banners/create</td><td><span class="role role-staff">staff+</span></td><td>Admin/HeroBanners/Form</td><td>banner: null</td></tr>
+            <tr><td><code>store()</code></td><td>POST /admin/hero-banners</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Validates image (file upload or media_uid), mobile_image optional, banner_link, is_active</td></tr>
+            <tr><td><code>edit($heroBanner)</code></td><td>GET /admin/hero-banners/{uid}/edit</td><td><span class="role role-staff">staff+</span></td><td>Admin/HeroBanners/Form</td><td>With bannerImage + mobileBannerImage relationships</td></tr>
+            <tr><td><code>update()</code></td><td>PUT /admin/hero-banners/{uid}</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Handles old file deletion if switching to media library</td></tr>
+            <tr><td><code>destroy()</code></td><td>DELETE /admin/hero-banners/{uid}</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Deletes image from storage</td></tr>
+            <tr><td><code>bulkDelete()</code></td><td>POST /admin/hero-banners/bulk-delete</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Mass delete with storage cleanup</td></tr>
+            <tr><td><code>updateOrder()</code></td><td>POST /admin/hero-banners/update-order</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Update order field untuk drag-and-drop sorting</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Products -->
+  <div class="card">
+    <div class="card-header"><h4>ProductController</h4><span style="font-size:12px; color:#6b7280; margin-left:auto;">Injects MediaService</span></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Method</th><th>Route</th><th>Role</th><th>Inertia Page</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>index()</code></td><td>GET /admin/products</td><td><span class="role role-staff">staff+</span></td><td>Admin/Products/Index</td><td>Filter: types, statuses, featured, search, min/max_price. Paginate 10. With featuredImage</td></tr>
+            <tr><td><code>create()</code></td><td>GET /admin/products/create</td><td><span class="role role-staff">staff+</span></td><td>Admin/Products/Form</td><td>product: null</td></tr>
+            <tr><td><code>store()</code></td><td>POST /admin/products</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>type: house/apartment/land. bedrooms: nullable string. featured_image_uid, card_image_uid, gallery_uids[]</td></tr>
+            <tr><td><code>edit($product)</code></td><td>GET /admin/products/{uid}/edit</td><td><span class="role role-staff">staff+</span></td><td>Admin/Products/Form</td><td>With featuredImage, cardImage, sliders.mediaImage, gallery_images</td></tr>
+            <tr><td><code>update()</code></td><td>PUT /admin/products/{uid}</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>is_sold field available on update only</td></tr>
+            <tr><td><code>destroy()</code></td><td>DELETE /admin/products/{uid}</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Hard delete</td></tr>
+            <tr><td><code>addSlider()</code></td><td>POST /admin/products/{uid}/sliders</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Auto-set order</td></tr>
+            <tr><td><code>updateSlider()</code></td><td>PUT /admin/products/{uid}/sliders/{slider}</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>—</td></tr>
+            <tr><td><code>deleteSlider()</code></td><td>DELETE /admin/products/{uid}/sliders/{slider}</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>—</td></tr>
+            <tr><td><code>updateSliderOrder()</code></td><td>POST /admin/products/{uid}/sliders/update-order</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>—</td></tr>
+            <tr><td><code>updateImageOrder()</code></td><td>POST /admin/products/{uid}/update-image-order</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Update gallery_uids array order</td></tr>
+            <tr><td><code>setPrimaryImage()</code></td><td>POST /admin/products/{uid}/set-primary-image</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Set featured_image_uid</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Articles -->
+  <div class="card">
+    <div class="card-header"><h4>ArticleController</h4><span style="font-size:12px; color:#6b7280; margin-left:auto;">Uses SeoScoreCalculator</span></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Method</th><th>Route</th><th>Role</th><th>Inertia Page</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>index()</code></td><td>GET /admin/articles</td><td><span class="role role-staff">staff+</span></td><td>Admin/Articles/Index</td><td>Filter: categories[], statuses[], search. Paginate 5. With category, author</td></tr>
+            <tr><td><code>create()</code></td><td>GET /admin/articles/create</td><td><span class="role role-staff">staff+</span></td><td>Admin/Articles/Form</td><td>Props: categories (active), users (active)</td></tr>
+            <tr><td><code>store()</code></td><td>POST /admin/articles</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Status: draft/scheduled/published. SEO score auto-calc jika focus_keywords ada. Warn jika scheduled_at di masa lalu</td></tr>
+            <tr><td><code>edit($article)</code></td><td>GET /admin/articles/{uid}/edit</td><td><span class="role role-staff">staff+</span></td><td>Admin/Articles/Form</td><td>With category, author, editor, user. Tags converted ke comma-string</td></tr>
+            <tr><td><code>update()</code></td><td>PUT /admin/articles/{uid}</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Sets last_edited_at. Handles media library switch</td></tr>
+            <tr><td><code>destroy()</code></td><td>DELETE /admin/articles/{uid}</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Deletes featured_image from storage</td></tr>
+            <tr><td><code>analyzeSeo()</code></td><td>POST /admin/articles/analyze-seo</td><td><span class="role role-staff">staff+</span></td><td>—</td><td>Returns JSON: {score, checks[]} via SeoScoreCalculator</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Article Categories -->
+  <div class="card">
+    <div class="card-header"><h4>ArticleCategoryController · EventController · FacilityController</h4></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Controller</th><th>Routes</th><th>Role</th><th>Page</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>ArticleCategoryController</td><td>resource /admin/article-categories (no show)</td><td><span class="role role-staff">staff+</span></td><td>Admin/ArticleCategories/Index, Form</td><td>CRUD untuk kategori artikel</td></tr>
+            <tr><td>EventController</td><td>resource /admin/events (no show)</td><td><span class="role role-staff">staff+</span></td><td>Admin/Events/Index, Form</td><td>SEO fields, image_uid, slug auto-gen</td></tr>
+            <tr><td>FacilityController</td><td>resource /admin/facilities (no show) + update-image-order</td><td><span class="role role-staff">staff+</span></td><td>Admin/Facilities/Index, Form</td><td>image_uids[] (multi-image gallery), icon, slug</td></tr>
+            <tr><td>FacilitySliderController</td><td>resource + update-order</td><td><span class="role role-staff">staff+</span></td><td>Admin/FacilitySliders/Index, Form</td><td>Slider khusus untuk halaman facilities</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Media Library -->
+  <div class="card">
+    <div class="card-header"><h4>MediaLibraryController</h4><span style="font-size:12px; color:#6b7280; margin-left:auto;">WordPress-like media manager</span></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Method</th><th>Route</th><th>Role</th><th>Page / Response</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><code>index()</code></td><td>GET /admin/media-library</td><td><span class="role role-staff">staff+</span></td><td>Admin/MediaLibrary/Index</td><td>Browse all media dengan filter &amp; search</td></tr>
+            <tr><td><code>upload()</code></td><td>POST /admin/media-library/upload</td><td><span class="role role-staff">staff+</span></td><td>JSON</td><td>Upload file, generate thumbnail variant, record metadata</td></tr>
+            <tr><td><code>picker()</code></td><td>GET /admin/media-library/picker</td><td><span class="role role-staff">staff+</span></td><td>JSON</td><td>Endpoint khusus untuk MediaPicker component</td></tr>
+            <tr><td><code>show($media)</code></td><td>GET /admin/media-library/{uid}</td><td><span class="role role-staff">staff+</span></td><td>JSON</td><td>Detail media item</td></tr>
+            <tr><td><code>update($media)</code></td><td>PATCH /admin/media-library/{uid}</td><td><span class="role role-staff">staff+</span></td><td>JSON</td><td>Update alt_text, caption, description, tags</td></tr>
+            <tr><td><code>replace($media)</code></td><td>POST /admin/media-library/{uid}/replace</td><td><span class="role role-staff">staff+</span></td><td>JSON</td><td>Replace file, keep UID/metadata</td></tr>
+            <tr><td><code>destroy($media)</code></td><td>DELETE /admin/media-library/{uid}</td><td><span class="role role-staff">staff+</span></td><td>JSON</td><td>Soft delete + delete file dari storage</td></tr>
+            <tr><td><code>bulkDelete()</code></td><td>POST /admin/media-library/bulk-delete</td><td><span class="role role-staff">staff+</span></td><td>JSON</td><td>Mass delete</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contacts & Users -->
+  <div class="card">
+    <div class="card-header"><h4>ContactController · UserController · SettingController</h4></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Controller</th><th>Routes</th><th>Role</th><th>Pages</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>ContactController</td><td>index, show, mark-read, destroy, export, export-excel</td><td><span class="role role-admin">admin+</span></td><td>Admin/Contacts/Index, Show</td><td>Uses ContactSubmission model. Export CSV &amp; XLSX (built-in, no library). Filter: status, subject, project, search</td></tr>
+            <tr><td>UserController</td><td>resource /admin/users (no show)</td><td><span class="role role-super">superadmin</span></td><td>Admin/Users/Index, Form</td><td>Roles: staff/superadmin. Cannot delete own account</td></tr>
+            <tr><td>SettingController</td><td>index, store, update, destroy</td><td><span class="role role-super">superadmin</span></td><td>Admin/Settings/Index</td><td>Key-value store. Groups: general, contact, social, sections</td></tr>
+            <tr><td>PolicyController</td><td>resource /admin/policies (no show)</td><td><span class="role role-staff">staff+</span></td><td>Admin/Policies/Index, Form</td><td>Types: terms, privacy. Has title, slug, version fields</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Remaining Admin Controllers summary -->
+  <div class="card">
+    <div class="card-header"><h4>Singleton Page Controllers (edit + update only)</h4></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Controller</th><th>GET Route</th><th>PUT Route</th><th>Page</th><th>Model</th></tr></thead>
+          <tbody>
+            <tr><td>LocationMapController</td><td>/admin/location-map/edit</td><td>/admin/location-map</td><td>Admin/LocationMap/Edit</td><td>LocationMap</td></tr>
+            <tr><td>AwardController</td><td>/admin/awards</td><td>/admin/awards</td><td>Admin/Awards/Edit</td><td>Award</td></tr>
+            <tr><td>ConstructionProgressController</td><td>/admin/construction-progress</td><td>/admin/construction-progress</td><td>Admin/ConstructionProgress/Edit</td><td>ConstructionProgress</td></tr>
+            <tr><td>BrochureController</td><td>/admin/brochures/edit</td><td>/admin/brochures</td><td>Admin/Brochures/Edit</td><td>Brochure</td></tr>
+            <tr><td>VirtualTourBannerController</td><td>/admin/virtual-tour-banner/edit</td><td>/admin/virtual-tour-banner</td><td>Admin/VirtualTourBanners/Edit</td><td>VirtualTourBanner</td></tr>
+            <tr><td>AboutCompanyInfoController</td><td>/admin/about/company-intro/edit</td><td>/admin/about/company-intro</td><td>Admin/AboutCompanyInfo/Edit</td><td>AboutCompanyInfo</td></tr>
+            <tr><td>AboutHeroController</td><td>/admin/about/hero/edit</td><td>/admin/about/hero</td><td>Admin/AboutHero/Edit</td><td>AboutHero</td></tr>
+            <tr><td>AboutMissionController</td><td>/admin/about/mission/edit</td><td>/admin/about/mission</td><td>Admin/AboutMission/Edit</td><td>AboutMission</td></tr>
+            <tr><td>AboutSectionInfoController</td><td>/admin/about/section-info/edit</td><td>/admin/about/section-info</td><td>Admin/About/SectionInfo</td><td>Setting (group: sections)</td></tr>
+            <tr><td>ProjectPageInfoController</td><td>/admin/project-page-info/edit</td><td>/admin/project-page-info</td><td>Admin/ProjectPageInfo/Edit</td><td>ProjectPageInfo</td></tr>
+            <tr><td>EventsPageInfoController</td><td>/admin/events-page-info/edit</td><td>/admin/events-page-info</td><td>Admin/EventsPageInfo/Edit</td><td>EventsPageInfo</td></tr>
+            <tr><td>FacilitiesPageInfoController</td><td>/admin/facilities-page-info/edit</td><td>/admin/facilities-page-info</td><td>Admin/FacilitiesPageInfo/Edit</td><td>FacilitiesPageInfo</td></tr>
+            <tr><td>NewsPageInfoController</td><td>/admin/news-page-info/edit</td><td>/admin/news-page-info</td><td>Admin/NewsPageInfo/Edit</td><td>NewsPageInfo</td></tr>
+            <tr><td>MediaHighlightsPageInfoController</td><td>/admin/media-highlights-page-info/edit</td><td>/admin/media-highlights-page-info</td><td>Admin/MediaHighlightsPageInfo/Edit</td><td>MediaHighlightsPageInfo</td></tr>
+            <tr><td>CareerSettingController</td><td>/admin/career-settings/edit</td><td>/admin/career-settings</td><td>Admin/CareerSettings/Edit</td><td>CareerSetting</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- CRUD Controllers -->
+  <div class="card">
+    <div class="card-header"><h4>CRUD Controllers (resource routes + update-order)</h4></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Controller</th><th>Route Prefix</th><th>Role</th><th>Pages</th><th>Extra Routes</th></tr></thead>
+          <tbody>
+            <tr><td>MilestoneController</td><td>/admin/milestones</td><td><span class="role role-staff">staff+</span></td><td>Milestones/Index, Form</td><td>update-order</td></tr>
+            <tr><td>GalleryController</td><td>/admin/galleries</td><td><span class="role role-staff">staff+</span></td><td>Galleries/Index, Form</td><td>update-order</td></tr>
+            <tr><td>MediaHighlightController</td><td>/admin/media-highlights</td><td><span class="role role-staff">staff+</span></td><td>MediaHighlights/Index, Form</td><td>—</td></tr>
+            <tr><td>MediaController</td><td>/admin/media</td><td><span class="role role-staff">staff+</span></td><td>Media/Index, Form</td><td>—</td></tr>
+            <tr><td>CareerController</td><td>/admin/careers</td><td><span class="role role-staff">staff+</span></td><td>Careers/Index, Form</td><td>update-order</td></tr>
+            <tr><td>FaqController</td><td>/admin/faqs</td><td><span class="role role-staff">staff+</span></td><td>Faqs/Index, Form</td><td>update-order</td></tr>
+            <tr><td>TopSalesController</td><td>/admin/top-sales</td><td><span class="role role-staff">staff+</span></td><td>TopSales/Index, Form</td><td>update-order</td></tr>
+            <tr><td>AboutValueController</td><td>/admin/about/values</td><td><span class="role role-staff">staff+</span></td><td>AboutValues/Index, Form</td><td>update-order</td></tr>
+            <tr><td>AboutAchievementController</td><td>/admin/about/achievements</td><td><span class="role role-staff">staff+</span></td><td>AboutAchievements/Index, Form</td><td>update-order</td></tr>
+            <tr><td>HomepageExperienceCardController</td><td>/admin/homepage-experience</td><td><span class="role role-staff">staff+</span></td><td>HomepageExperience/Index, Form, Edit</td><td>main-card update, update-order</td></tr>
+            <tr><td>ConstructionProgressItemController</td><td>/admin/construction-progress-items</td><td><span class="role role-staff">staff+</span></td><td>ConstructionProgress/ItemForm</td><td>—</td></tr>
+            <tr><td>InstagramGalleryController</td><td>/admin/instagram-gallery</td><td><span class="role role-staff">staff+</span></td><td>InstagramGallery/Index</td><td>update-position, delete-position, toggle-active</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <h3 id="s2-frontend">Frontend Controllers</h3>
+  <p style="font-size:13px; color:#6b7280; margin-bottom:14px;">Berada di <code>app/Http/Controllers/Frontend/</code>. Tidak ada middleware auth — semua public.</p>
+
+  <div class="card">
+    <div class="card-header"><h4>Frontend Page Controllers (Inertia render)</h4></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Controller</th><th>Route</th><th>Inertia Page</th><th>Key Props</th></tr></thead>
+          <tbody>
+            <tr><td>HomeController::index</td><td>GET /</td><td>Home</td><td>newsItems, topSales, projects, facilities, virtualTour, experience, experienceCards</td></tr>
+            <tr><td>NewsController::show</td><td>GET /news</td><td>News</td><td>featured (article), pageInfo</td></tr>
+            <tr><td>NewsController::detail</td><td>GET /articles/{slug}</td><td>ArticleDetail</td><td>article (full data), relatedArticles, seo</td></tr>
+            <tr><td>NewsController::mediaHighlights</td><td>GET /media-highlights</td><td>MediaHighlights</td><td>featured (media highlight), pageInfo</td></tr>
+            <tr><td>EventController::index</td><td>GET /events</td><td>Event</td><td>events[], pageInfo</td></tr>
+            <tr><td>EventController::show</td><td>GET /events/{slug}</td><td>EventDetail</td><td>event (full data + SEO)</td></tr>
+            <tr><td>ProjectController::index</td><td>GET /project</td><td>Project</td><td>products[], pageInfo</td></tr>
+            <tr><td>ProjectController::show</td><td>GET /project/{id}</td><td>ProjectDetail</td><td>product (with images, sliders)</td></tr>
+            <tr><td>AboutController::index</td><td>GET /about</td><td>About</td><td>companyInfo, hero, mission, values[], achievements[], awards</td></tr>
+            <tr><td>FacilityController::index</td><td>GET /facilities</td><td>Facilities</td><td>facilities[] (with images), pageInfo</td></tr>
+            <tr><td>GalleryController::index</td><td>GET /gallery</td><td>Gallery</td><td>galleries[], categories[]</td></tr>
+            <tr><td>CareerController::index</td><td>GET /careers</td><td>Career</td><td>careers[], settings</td></tr>
+            <tr><td>CareerController::show</td><td>GET /careers/{uid}</td><td>CareerDetail</td><td>career</td></tr>
+            <tr><td>ContactController::index</td><td>GET /contact-us</td><td>Contact</td><td>settings, products[]</td></tr>
+            <tr><td>PolicyController::terms</td><td>GET /terms</td><td>Policy</td><td>policy (terms), version</td></tr>
+            <tr><td>PolicyController::privacy</td><td>GET /privacy</td><td>Policy</td><td>policy (privacy), version</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h4>Frontend API Controllers (JSON response)</h4></div>
+    <div class="card-body">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Route</th><th>Controller</th><th>Response</th></tr></thead>
+          <tbody>
+            <tr><td>GET /api/hero-banners</td><td>Frontend/HeroBannerController::index</td><td>Active banners ordered by order field</td></tr>
+            <tr><td>GET /api/location-map</td><td>Frontend/LocationMapController::show</td><td>Location map data (embed URL, etc.)</td></tr>
+            <tr><td>GET /api/brochure</td><td>Frontend/BrochureController::show</td><td>Brochure download URL</td></tr>
+            <tr><td>GET /api/faqs</td><td>Frontend/FaqController::index</td><td>Active FAQs ordered</td></tr>
+            <tr><td>GET /api/instagram-gallery</td><td>Frontend/InstagramGalleryController::index</td><td>Active Instagram gallery items</td></tr>
+            <tr><td>GET /api/top-sales</td><td>Frontend/TopSalesController::index</td><td>Active top sales staff</td></tr>
+            <tr><td>GET /api/construction-progress</td><td>Frontend/ConstructionProgressController::show</td><td>Construction progress + items</td></tr>
+            <tr><td>GET /api/awards</td><td>Frontend/AwardController::show</td><td>Awards data</td></tr>
+            <tr><td>GET /api/news</td><td>NewsController::index</td><td>Paginated articles or media highlights (type param)</td></tr>
+            <tr><td>POST /contact</td><td>Frontend/ContactController::store</td><td>Save ContactSubmission, redirect back</td></tr>
+            <tr><td>GET /sitemap.xml</td><td>Route closure → SitemapService</td><td>XML sitemap (cached)</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3: MODELS REFERENCE -->
+<div class="section" id="s3">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2>Models Reference</h2>
+  </div>
+  <p style="font-size:13px; color:#6b7280; margin-bottom:20px;">Semua model menggunakan UUID (<code>uid</code>) sebagai primary key, bukan auto-increment integer. UUID di-generate via <code>boot()</code> + <code>Str::uuid()</code>.</p>
+
+  <!-- User -->
+  <div class="card">
+    <div class="card-header"><h4>User</h4><span style="font-size:12px;color:#6b7280;margin-left:auto;">app/Models/User.php · Table: users</span></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>uid</td><td>uuid (PK)</td><td>Auto-generated UUID</td></tr>
+          <tr><td>name</td><td>string</td><td>Mirror dari full_name</td></tr>
+          <tr><td>username</td><td>string unique</td><td>Alphanumeric + dots/dashes</td></tr>
+          <tr><td>full_name</td><td>string</td><td>Nama lengkap</td></tr>
+          <tr><td>email</td><td>string unique</td><td>—</td></tr>
+          <tr><td>password</td><td>hashed string</td><td>Cast: hashed</td></tr>
+          <tr><td>role</td><td>enum</td><td>superadmin / staff (admin di CheckRole tapi tidak di migration awal — lihat middleware)</td></tr>
+          <tr><td>status</td><td>enum</td><td>active / inactive</td></tr>
+          <tr><td>email_verified_at</td><td>datetime nullable</td><td>Cast: datetime</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:12px; color:#6b7280; margin-top:8px;">Methods: <code>isSuperAdmin()</code>, <code>isActive()</code></p>
+    </div>
+  </div>
+
+  <!-- Article -->
+  <div class="card">
+    <div class="card-header"><h4>Article</h4><span style="font-size:12px;color:#6b7280;margin-left:auto;">app/Models/Article.php · Table: articles</span></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Type</th><th>Cast</th></tr></thead>
+        <tbody>
+          <tr><td>uid</td><td>uuid PK</td><td>—</td></tr>
+          <tr><td>article_category_uid</td><td>uuid FK</td><td>→ article_categories</td></tr>
+          <tr><td>user_uid / author_uid / editor_uid</td><td>uuid FK</td><td>→ users</td></tr>
+          <tr><td>title, subtitle, slug</td><td>string</td><td>slug unique</td></tr>
+          <tr><td>excerpt</td><td>text nullable</td><td>—</td></tr>
+          <tr><td>content</td><td>longText</td><td>TipTap HTML</td></tr>
+          <tr><td>featured_image</td><td>string nullable</td><td>Path or URL</td></tr>
+          <tr><td>featured_image_uid</td><td>uuid FK nullable</td><td>→ media_library</td></tr>
+          <tr><td>tags</td><td>json</td><td>array</td></tr>
+          <tr><td>meta_title, meta_description, meta_keywords</td><td>string nullable</td><td>—</td></tr>
+          <tr><td>focus_keywords</td><td>string nullable</td><td>—</td></tr>
+          <tr><td>seo_score</td><td>integer nullable</td><td>0–100</td></tr>
+          <tr><td>status</td><td>enum</td><td>draft / scheduled / published</td></tr>
+          <tr><td>is_published</td><td>boolean</td><td>default false</td></tr>
+          <tr><td>published_at / scheduled_at / last_edited_at</td><td>datetime nullable</td><td>datetime</td></tr>
+          <tr><td>views</td><td>integer</td><td>default 0</td></tr>
+          <tr><td>is_featured</td><td>boolean</td><td>default false</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:12px; color:#6b7280; margin-top:8px;">
+        Relations: <code>category()</code> BelongsTo ArticleCategory · <code>author()</code> <code>editor()</code> <code>user()</code> BelongsTo User · <code>featuredImageMedia()</code> BelongsTo MediaLibrary<br>
+        Scopes: <code>scopePublished()</code> <code>scopeFeatured()</code><br>
+        Appends: <code>computed_status</code> (draft/scheduled/published dinamis) · <code>featured_image_url</code><br>
+        Override: <code>serializeDate()</code> → format WIB (Y-m-d H:i:s)
+      </p>
+    </div>
+  </div>
+
+  <!-- Product -->
+  <div class="card">
+    <div class="card-header"><h4>Product</h4><span style="font-size:12px;color:#6b7280;margin-left:auto;">app/Models/Product.php · Table: products</span></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>name, slug</td><td>string</td><td>slug auto-gen dari name, unique</td></tr>
+          <tr><td>type</td><td>enum</td><td>house / apartment / land</td></tr>
+          <tr><td>short_description</td><td>string max:500</td><td>Untuk card preview</td></tr>
+          <tr><td>description</td><td>text</td><td>TipTap HTML</td></tr>
+          <tr><td>price</td><td>decimal(15,2)</td><td>—</td></tr>
+          <tr><td>bedrooms</td><td>string nullable</td><td>Changed to string (e.g. "2+1")</td></tr>
+          <tr><td>bathrooms</td><td>integer nullable</td><td>—</td></tr>
+          <tr><td>living_room</td><td>boolean</td><td>—</td></tr>
+          <tr><td>is_balcon_exist</td><td>boolean</td><td>—</td></tr>
+          <tr><td>kitchen</td><td>boolean</td><td>—</td></tr>
+          <tr><td>is_furnished</td><td>string</td><td>furnished / semi-furnished / unfurnished</td></tr>
+          <tr><td>facilities</td><td>json array</td><td>Daftar fasilitas produk</td></tr>
+          <tr><td>video_url, video_360_url</td><td>string nullable</td><td>YouTube/embed URL</td></tr>
+          <tr><td>featured_image_uid</td><td>uuid FK</td><td>→ media_library</td></tr>
+          <tr><td>card_image_uid</td><td>uuid FK</td><td>→ media_library (untuk card/thumbnail)</td></tr>
+          <tr><td>gallery_uids</td><td>json array</td><td>Array UUID → media_library</td></tr>
+          <tr><td>is_featured, is_sold, is_active</td><td>boolean</td><td>—</td></tr>
+          <tr><td>views</td><td>integer</td><td>default 0</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:12px; color:#6b7280; margin-top:8px;">
+        Relations: <code>featuredImage()</code> <code>cardImage()</code> BelongsTo MediaLibrary · <code>sliders()</code> HasMany ProductSlider<br>
+        Appends: <code>gallery_images</code> (computed dari gallery_uids, sorted)<br>
+        Scopes: <code>scopeActive()</code> <code>scopeFeatured()</code> <code>scopeOfType($type)</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- HeroBanner -->
+  <div class="card">
+    <div class="card-header"><h4>HeroBanner</h4><span style="font-size:12px;color:#6b7280;margin-left:auto;">Table: hero_banners</span></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>image</td><td>string nullable</td><td>Legacy file upload path</td></tr>
+          <tr><td>image_uid</td><td>uuid FK nullable</td><td>→ media_library (preferred)</td></tr>
+          <tr><td>mobile_image</td><td>string nullable</td><td>Legacy mobile image</td></tr>
+          <tr><td>mobile_image_uid</td><td>uuid FK nullable</td><td>→ media_library</td></tr>
+          <tr><td>banner_link</td><td>string nullable</td><td>URL link jika banner di-klik</td></tr>
+          <tr><td>is_active</td><td>boolean</td><td>—</td></tr>
+          <tr><td>order</td><td>integer</td><td>Auto-assign (max+1)</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:12px; color:#6b7280; margin-top:8px;">Scopes: <code>scopeActive()</code> <code>scopeOrdered()</code> · Relations: <code>bannerImage()</code> <code>mobileBannerImage()</code> BelongsTo MediaLibrary</p>
+    </div>
+  </div>
+
+  <!-- Event -->
+  <div class="card">
+    <div class="card-header"><h4>Event</h4><span style="font-size:12px;color:#6b7280;margin-left:auto;">Table: events</span></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>title, short_description, description</td><td>string/text</td><td>—</td></tr>
+          <tr><td>image</td><td>string nullable</td><td>Legacy</td></tr>
+          <tr><td>image_uid</td><td>uuid FK nullable</td><td>→ media_library</td></tr>
+          <tr><td>event_date</td><td>datetime</td><td>Cast datetime, serialized WIB</td></tr>
+          <tr><td>location</td><td>string</td><td>—</td></tr>
+          <tr><td>registration_link</td><td>string nullable</td><td>—</td></tr>
+          <tr><td>max_participants / current_participants</td><td>integer</td><td>—</td></tr>
+          <tr><td>is_active</td><td>boolean</td><td>—</td></tr>
+          <tr><td>slug</td><td>string unique</td><td>—</td></tr>
+          <tr><td>meta_title, meta_description, meta_keywords, focus_keyword</td><td>string nullable</td><td>SEO fields</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:12px; color:#6b7280; margin-top:8px;">
+        Appends: <code>event_date_formatted</code> (M d, Y) · <code>event_date_only</code> (Y-m-d) · <code>event_time</code> (H:i) · <code>is_past</code> (bool) · <code>image_url</code><br>
+        Scopes: <code>scopeActive()</code> <code>scopeUpcoming()</code> <code>scopePast()</code><br>
+        Methods: <code>isFull()</code> <code>incrementParticipants()</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- Facility -->
+  <div class="card">
+    <div class="card-header"><h4>Facility</h4><span style="font-size:12px;color:#6b7280;margin-left:auto;">Table: facilities</span></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>name, description</td><td>string/text</td><td>—</td></tr>
+          <tr><td>banner_image</td><td>string nullable</td><td>Legacy image path</td></tr>
+          <tr><td>icon</td><td>string nullable</td><td>Icon class or emoji</td></tr>
+          <tr><td>slug</td><td>string nullable</td><td>URL-friendly name</td></tr>
+          <tr><td>image_uids</td><td>json array</td><td>Array UUID → media_library</td></tr>
+          <tr><td>order</td><td>integer</td><td>Sort order</td></tr>
+          <tr><td>is_active</td><td>boolean</td><td>—</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:12px; color:#6b7280; margin-top:8px;">Appends: <code>media_images</code> (sorted dari image_uids) · Scopes: <code>scopeActive()</code> <code>scopeOrdered()</code></p>
+    </div>
+  </div>
+
+  <!-- MediaLibrary -->
+  <div class="card">
+    <div class="card-header"><h4>MediaLibrary</h4><span style="font-size:12px;color:#6b7280;margin-left:auto;">Table: media_library · Uses SoftDeletes</span></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Field</th><th>Type</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>filename</td><td>string</td><td>Original filename</td></tr>
+          <tr><td>filepath</td><td>string</td><td>Path in storage disk</td></tr>
+          <tr><td>file_type</td><td>string</td><td>image / video / document</td></tr>
+          <tr><td>mime_type</td><td>string</td><td>—</td></tr>
+          <tr><td>file_size</td><td>integer</td><td>Bytes</td></tr>
+          <tr><td>disk</td><td>string</td><td>default: public</td></tr>
+          <tr><td>width / height</td><td>integer nullable</td><td>Image dimensions</td></tr>
+          <tr><td>alt_text, caption, description</td><td>string/text nullable</td><td>SEO metadata</td></tr>
+          <tr><td>metadata</td><td>json nullable</td><td>EXIF data etc.</td></tr>
+          <tr><td>folder, tags</td><td>string/json nullable</td><td>Organization</td></tr>
+          <tr><td>uploaded_by</td><td>uuid FK</td><td>→ users</td></tr>
+        </tbody>
+      </table></div>
+      <p style="font-size:12px; color:#6b7280; margin-top:8px;">
+        Appends: <code>url</code> · <code>thumbnail_url</code> · <code>file_size_human</code><br>
+        Relations: <code>uploader()</code> BelongsTo User · <code>variants()</code> HasMany MediaVariant · <code>usage()</code> HasMany MediaUsage · <code>mediables()</code> HasMany Mediable<br>
+        Boot: deleting hook → delete files from storage (force delete only)<br>
+        Route key: <code>uid</code>
+      </p>
+    </div>
+  </div>
+
+  <!-- Other models summary -->
+  <div class="card">
+    <div class="card-header"><h4>Other Models Summary</h4></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Model</th><th>Table</th><th>Key Fields</th><th>Relations</th></tr></thead>
+        <tbody>
+          <tr><td>ArticleCategory</td><td>article_categories</td><td>name, slug, description, is_active</td><td>HasMany Article</td></tr>
+          <tr><td>Career</td><td>careers</td><td>title, position, body (TipTap), order, is_active</td><td>—</td></tr>
+          <tr><td>CareerSetting</td><td>career_settings</td><td>title, description, is_active</td><td>—</td></tr>
+          <tr><td>Contact</td><td>contacts</td><td>name, email, phone, subject, product_uid, message, is_read</td><td>BelongsTo Product</td></tr>
+          <tr><td>ContactSubmission</td><td>contact_submissions</td><td>full_name, residence, email, phone, subject, project, message, status (new/in_progress/resolved), notes</td><td>—</td></tr>
+          <tr><td>MediaHighlight</td><td>media_highlights</td><td>media_uid, title, publish_date, image, image_uid, article_url</td><td>BelongsTo Media (outlet) · BelongsTo MediaLibrary (highlightImage)</td></tr>
+          <tr><td>Media (outlet)</td><td>media</td><td>name, logo, logo_uid</td><td>HasMany MediaHighlight</td></tr>
+          <tr><td>Policy</td><td>policies</td><td>type (terms/privacy), title, slug, content, version</td><td>—</td></tr>
+          <tr><td>Setting</td><td>settings</td><td>key (unique), value, type, group</td><td>—</td></tr>
+          <tr><td>HeroBanner</td><td>hero_banners</td><td>(see above)</td><td>—</td></tr>
+          <tr><td>ConstructionProgress</td><td>construction_progress</td><td>title, description, image, image_uid, is_active</td><td>HasMany ConstructionProgressItem</td></tr>
+          <tr><td>ConstructionProgressItem</td><td>construction_progress_items</td><td>construction_progress_uid, title, description, image_uid, order</td><td>BelongsTo ConstructionProgress</td></tr>
+          <tr><td>VirtualTourBanner</td><td>virtual_tour_banners</td><td>image_uid, url, is_active</td><td>BelongsTo MediaLibrary</td></tr>
+          <tr><td>HomepageExperience</td><td>homepage_experience</td><td>main_description, card_daily_title/desc, card_entertainment_title/desc, card_university_title/desc, card_business_title/desc</td><td>—</td></tr>
+          <tr><td>HomepageExperienceCard</td><td>homepage_experience_cards</td><td>title, description, order, is_active</td><td>—</td></tr>
+          <tr><td>TopSales</td><td>top_sales</td><td>name, job_title, image (path), image_uid, order, is_active</td><td>BelongsTo MediaLibrary (mediaImage)</td></tr>
+          <tr><td>Faq</td><td>faqs</td><td>question, answer, order, is_active</td><td>—</td></tr>
+          <tr><td>Gallery</td><td>galleries</td><td>title, image_uid, category, order</td><td>BelongsTo MediaLibrary</td></tr>
+          <tr><td>InstagramGallery</td><td>instagram_galleries</td><td>url, image_uid, position, is_active</td><td>—</td></tr>
+          <tr><td>Brochure</td><td>brochures</td><td>title, file_url, file_uid, is_active</td><td>—</td></tr>
+          <tr><td>Award</td><td>awards</td><td>title, description, image_uid, is_active</td><td>—</td></tr>
+          <tr><td>Milestone</td><td>milestones</td><td>year, title, description, order</td><td>—</td></tr>
+          <tr><td>LocationMap</td><td>location_maps</td><td>embed_url, address, latitude, longitude</td><td>—</td></tr>
+          <tr><td>FacilitySlider</td><td>facility_sliders</td><td>title, description, image_uid, order, is_active</td><td>BelongsTo MediaLibrary</td></tr>
+          <tr><td>ProductSlider</td><td>product_sliders</td><td>product_uid, image_uid, title, description, order, is_active</td><td>BelongsTo Product · BelongsTo MediaLibrary</td></tr>
+          <tr><td>MediaVariant</td><td>media_variants</td><td>media_uid, variant_name (thumbnail/small/medium/large), filepath, width, height, file_size, mime_type</td><td>BelongsTo MediaLibrary</td></tr>
+          <tr><td>MediaUsage / Mediable</td><td>media_usage / mediables</td><td>Polymorphic tracking</td><td>BelongsTo MediaLibrary</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4: PAGES & COMPONENTS -->
+<div class="section" id="s4">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2>Pages &amp; Components Reference</h2>
+  </div>
+
+  <h3 id="s4-pages">Admin Pages (resources/js/Pages/Admin/)</h3>
+  <div class="card">
+    <div class="card-header"><h4>Admin Page Inventory</h4></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Page File</th><th>Props dari Controller</th><th>Komponen Utama</th></tr></thead>
+        <tbody>
+          <tr><td>Admin/Dashboard.jsx</td><td>stats{}, recent_contacts[], recent_products[]</td><td>AdminLayout, stat cards, recent tables</td></tr>
+          <tr><td>Admin/Auth/Login.jsx</td><td>—</td><td>Form login (email, password)</td></tr>
+          <tr><td>Admin/Auth/Register.jsx</td><td>—</td><td>Form register (hidden endpoint)</td></tr>
+          <tr><td>Admin/HeroBanners/Index.jsx</td><td>banners[] (with image URLs)</td><td>DataTable dengan columns.jsx, bulk-delete, drag-sort</td></tr>
+          <tr><td>Admin/HeroBanners/Form.jsx</td><td>banner (null|object)</td><td>MediaPicker, Input, Toggle is_active</td></tr>
+          <tr><td>Admin/Products/Index.jsx</td><td>products (paginated), filters{}, filterOptions{priceRange}</td><td>DataTable, filter sidebar, price range slider</td></tr>
+          <tr><td>Admin/Products/Form.jsx</td><td>product (null|object with images+sliders)</td><td>MediaPicker (featured+card+gallery), RichTextEditor, slider management, FormField</td></tr>
+          <tr><td>Admin/Articles/Index.jsx</td><td>articles (paginated), categories[], filters{}</td><td>DataTable dengan columns.jsx, filter by category/status</td></tr>
+          <tr><td>Admin/Articles/Form.jsx</td><td>article (null|object), categories[], users[]</td><td>RichTextEditor (TipTap), SeoAnalyzer, MediaPicker, datetime scheduler, status toggle</td></tr>
+          <tr><td>Admin/Events/Index.jsx</td><td>events (paginated)</td><td>DataTable dengan columns.jsx</td></tr>
+          <tr><td>Admin/Events/Form.jsx</td><td>event (null|object)</td><td>MediaPicker, datetime input, RichTextEditor, SEO fields</td></tr>
+          <tr><td>Admin/Facilities/Index.jsx</td><td>facilities (paginated)</td><td>DataTable dengan columns.jsx</td></tr>
+          <tr><td>Admin/Facilities/Form.jsx</td><td>facility (null|object with media_images)</td><td>MediaPicker (multi-image gallery), image order management</td></tr>
+          <tr><td>Admin/Contacts/Index.jsx</td><td>contacts (paginated), filters{}</td><td>DataTable, filter by status/subject/project, export buttons</td></tr>
+          <tr><td>Admin/Contacts/Show.jsx</td><td>contact (full object)</td><td>Contact detail, status update, notes</td></tr>
+          <tr><td>Admin/Users/Index.jsx</td><td>users (paginated), filters{}</td><td>DataTable dengan search/role/status filter</td></tr>
+          <tr><td>Admin/Users/Form.jsx</td><td>user (null|object)</td><td>Form: email, username, full_name, role, status, password</td></tr>
+          <tr><td>Admin/Settings/Index.jsx</td><td>settings{} grouped</td><td>Tab groups: general, contact, social, sections</td></tr>
+          <tr><td>Admin/Policies/Index.jsx</td><td>policies[]</td><td>List terms &amp; privacy policies</td></tr>
+          <tr><td>Admin/Policies/Form.jsx</td><td>policy (null|object)</td><td>RichTextEditor, title, slug, version, type select</td></tr>
+          <tr><td>Admin/MediaLibrary/Index.jsx</td><td>media (paginated), filters{}</td><td>Grid/list view, upload zone, bulk select, MediaPicker integration</td></tr>
+          <tr><td>Admin/Careers/Index.jsx</td><td>careers[], (paginated)</td><td>DataTable, drag-reorder</td></tr>
+          <tr><td>Admin/Careers/Form.jsx</td><td>career (null|object)</td><td>RichTextEditor (body), title, position, is_active</td></tr>
+          <tr><td>Admin/HomepageExperience/Index.jsx</td><td>cards[], mainCard{}</td><td>Card list dengan reorder, main card edit panel</td></tr>
+          <tr><td>Admin/HomepageExperience/Form.jsx</td><td>card (null|object)</td><td>title, description, order, is_active</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <h3 id="s4-frontend-pages">Frontend Pages (resources/js/Pages/)</h3>
+  <div class="card">
+    <div class="card-header"><h4>Frontend Page Inventory</h4></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Page File</th><th>Route</th><th>Props</th><th>Komponen Utama</th></tr></thead>
+        <tbody>
+          <tr><td>Home.jsx</td><td>GET /</td><td>newsItems, topSales, projects, facilities, virtualTour, experience, experienceCards</td><td>Hero, LaunchProjects, Projects, Location, News, Employee, CTA, VirtualTourBanner, ConstructionProgress</td></tr>
+          <tr><td>News.jsx</td><td>GET /news</td><td>featured, pageInfo</td><td>Navigation, PageLayout, NewsItem, LaravelPagination · Fetches /api/news via axios</td></tr>
+          <tr><td>ArticleDetail.jsx</td><td>GET /articles/{slug}</td><td>article, relatedArticles, seo</td><td>Full article view, OG meta tags, related articles sidebar</td></tr>
+          <tr><td>MediaHighlights.jsx</td><td>GET /media-highlights</td><td>featured, pageInfo</td><td>Similar to News, fetches media highlights via API</td></tr>
+          <tr><td>Event.jsx</td><td>GET /events</td><td>events[], pageInfo</td><td>Event cards grid, past/upcoming filter</td></tr>
+          <tr><td>EventDetail.jsx</td><td>GET /events/{slug}</td><td>event</td><td>Event detail, registration button, meta/SEO</td></tr>
+          <tr><td>Project.jsx</td><td>GET /project</td><td>products[], pageInfo</td><td>ProjectCard per product, filter by type</td></tr>
+          <tr><td>ProjectDetail.jsx</td><td>GET /project/{id}</td><td>product (with images, sliders)</td><td>Image gallery slider, specs table, contact form</td></tr>
+          <tr><td>About.jsx</td><td>GET /about</td><td>companyInfo, hero, mission, values[], achievements[], awards</td><td>About sections, mission cards, values grid</td></tr>
+          <tr><td>Facilities.jsx</td><td>GET /facilities</td><td>facilities[], pageInfo</td><td>Facility cards with image gallery</td></tr>
+          <tr><td>Gallery.jsx</td><td>GET /gallery</td><td>galleries[], categories[]</td><td>Masonry grid, category filter, ImagePreviewModal</td></tr>
+          <tr><td>Career.jsx</td><td>GET /careers</td><td>careers[], settings</td><td>Career listing cards</td></tr>
+          <tr><td>CareerDetail.jsx</td><td>GET /careers/{uid}</td><td>career</td><td>Job description (TipTap HTML render)</td></tr>
+          <tr><td>Contact.jsx</td><td>GET /contact-us</td><td>settings, products[]</td><td>Contact form (POST /contact), map embed, WhatsApp link</td></tr>
+          <tr><td>Policy.jsx</td><td>GET /terms, /privacy</td><td>policy, version</td><td>Policy content renderer, dynamic TOC, version badge</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <h3 id="s4-components">Components (resources/js/Components/)</h3>
+
+  <div class="card">
+    <div class="card-header"><h4>Shared / Admin Components</h4></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Component</th><th>Props</th><th>Dipakai di</th></tr></thead>
+        <tbody>
+          <tr><td>DataTable.jsx</td><td>columns, data, onSort, pagination, selectable</td><td>Semua admin Index pages</td></tr>
+          <tr><td>MediaPicker.jsx</td><td>value, onChange, multiple, accept, label</td><td>HeroBanners/Form, Products/Form, Articles/Form, Events/Form, Facilities/Form, MediaHighlights/Form</td></tr>
+          <tr><td>RichTextEditor.jsx</td><td>value, onChange, placeholder</td><td>Articles/Form, Products/Form, Events/Form, Careers/Form, Policies/Form</td></tr>
+          <tr><td>SeoAnalyzer.jsx</td><td>content, title, slug, metaTitle, metaDesc, focusKeyword, onScore</td><td>Articles/Form (realtime SEO analysis)</td></tr>
+          <tr><td>LaravelPagination.jsx</td><td>links, meta</td><td>News.jsx, MediaHighlights.jsx</td></tr>
+          <tr><td>PageLoader.jsx</td><td>—</td><td>Global loading indicator (Inertia progress)</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h4>UI Components (resources/js/Components/ui/)</h4></div>
+    <div class="card-body">
+      <p style="font-size:13px; color:#6b7280; margin-bottom:10px;">Design system atoms untuk admin panel. Semua meng-extend shadcn/ui primitives dengan Tailwind 4.</p>
+      <div class="table-wrap"><table>
+        <thead><tr><th>Component</th><th>Dipakai di</th></tr></thead>
+        <tbody>
+          <tr><td>Alert.jsx</td><td>Flash messages (sedang dimigrasikan ke Toaster)</td></tr>
+          <tr><td>Badge.jsx</td><td>Status labels, role indicators</td></tr>
+          <tr><td>Button.jsx</td><td>Universal — semua form dan action buttons</td></tr>
+          <tr><td>Card.jsx</td><td>Dashboard stats, content cards</td></tr>
+          <tr><td>Dialog.jsx</td><td>Delete confirmation modals</td></tr>
+          <tr><td>Form.jsx / FormField.jsx</td><td>Form wrapper dengan error display</td></tr>
+          <tr><td>Input.jsx / Textarea.jsx</td><td>Text inputs</td></tr>
+          <tr><td>Label.jsx</td><td>Form labels</td></tr>
+          <tr><td>Select.jsx</td><td>Dropdown selects</td></tr>
+          <tr><td>Table.jsx</td><td>Base table (used by DataTable)</td></tr>
+          <tr><td>Toaster.jsx / sonner.jsx</td><td>Toast notifications (menggunakan sonner library)</td></tr>
+          <tr><td>Pagination.jsx</td><td>Admin pagination</td></tr>
+          <tr><td>sidebar.jsx</td><td>Admin sidebar layout</td></tr>
+          <tr><td>breadcrumb.jsx</td><td>Page breadcrumbs</td></tr>
+          <tr><td>dropdown-menu.jsx</td><td>Action menus in DataTable</td></tr>
+          <tr><td>alert-dialog.jsx</td><td>Destructive confirmations</td></tr>
+          <tr><td>tabs.jsx</td><td>Settings page tabs</td></tr>
+          <tr><td>switch.jsx</td><td>is_active toggles</td></tr>
+          <tr><td>checkbox.jsx</td><td>Bulk select in DataTable</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h4>Frontend Components (resources/js/Components/Frontend/)</h4></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Component</th><th>Fungsi</th><th>Dipakai di</th></tr></thead>
+        <tbody>
+          <tr><td>Navigation.jsx</td><td>Top navigation bar dengan links dan mobile hamburger</td><td>PageLayout.jsx (semua frontend pages)</td></tr>
+          <tr><td>Footer.jsx</td><td>Footer dengan social links, contact info dari settings</td><td>PageLayout.jsx</td></tr>
+          <tr><td>PageLayout.jsx</td><td>Wrapper layout: Navigation + children + Footer</td><td>About, Facilities, Gallery, Career, Contact, Policy, News, Event</td></tr>
+          <tr><td>Hero.jsx</td><td>Full-screen hero slider (fetches /api/hero-banners)</td><td>Home.jsx</td></tr>
+          <tr><td>Projects.jsx</td><td>Project/product card grid dengan filter</td><td>Home.jsx</td></tr>
+          <tr><td>ProjectCard.jsx</td><td>Single product card dengan image, title, status badge</td><td>Projects.jsx, Project.jsx</td></tr>
+          <tr><td>LaunchProjects.jsx</td><td>Facility cards section (dari facilities data)</td><td>Home.jsx</td></tr>
+          <tr><td>News.jsx (Frontend)</td><td>News section dengan 3 news items horizontal</td><td>Home.jsx</td></tr>
+          <tr><td>NewsItem.jsx</td><td>Single news item card</td><td>News component</td></tr>
+          <tr><td>Location.jsx</td><td>Map embed section (fetches /api/location-map)</td><td>Home.jsx</td></tr>
+          <tr><td>Employee.jsx (TopSales)</td><td>Top sales team carousel (fetches /api/top-sales)</td><td>Home.jsx</td></tr>
+          <tr><td>CTA.jsx</td><td>Call-to-action section</td><td>Home.jsx</td></tr>
+          <tr><td>VirtualTourBanner.jsx</td><td>360° virtual tour banner dengan link</td><td>Home.jsx</td></tr>
+          <tr><td>ConstructionProgress.jsx</td><td>Progress section (fetches /api/construction-progress)</td><td>Home.jsx</td></tr>
+          <tr><td>About.jsx (Frontend)</td><td>About section component</td><td>About.jsx page</td></tr>
+          <tr><td>Awards.jsx</td><td>Awards display (fetches /api/awards)</td><td>Home.jsx / About.jsx</td></tr>
+          <tr><td>Benefits.jsx</td><td>Benefits/features section</td><td>Home.jsx</td></tr>
+          <tr><td>Characters.jsx</td><td>Character/mascot section</td><td>Home.jsx</td></tr>
+          <tr><td>Quiz.jsx</td><td>Interactive quiz component</td><td>Home.jsx</td></tr>
+          <tr><td>ShowMoreBanner.jsx</td><td>"See more" CTA banner</td><td>Various pages</td></tr>
+          <tr><td>ImagePreviewModal.jsx</td><td>Lightbox modal untuk image preview</td><td>Gallery.jsx</td></tr>
+          <tr><td>atoms/Button.jsx</td><td>Frontend-specific button atom</td><td>Frontend components</td></tr>
+          <tr><td>atoms/Heading.jsx</td><td>Section heading dengan styling</td><td>Frontend components</td></tr>
+          <tr><td>atoms/Text.jsx</td><td>Body text atom</td><td>Frontend components</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><h4>Layout Components</h4></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>File</th><th>Fungsi</th><th>Root Template</th></tr></thead>
+        <tbody>
+          <tr><td>resources/js/Layouts/AdminLayout.jsx</td><td>Sidebar navigation (shadcn sidebar), toast provider, breadcrumbs, auth user display</td><td>resources/views/app.blade.php</td></tr>
+          <tr><td>Components/layout/Header.jsx</td><td>Admin top header bar</td><td>Digunakan dalam AdminLayout</td></tr>
+          <tr><td>Components/layout/Main.jsx</td><td>Main content wrapper</td><td>Digunakan dalam AdminLayout</td></tr>
+          <tr><td>Components/Frontend/PageLayout.jsx</td><td>Frontend page wrapper (Navigation + Footer)</td><td>resources/views/frontend.blade.php</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 5: FEATURE FLOW MAPS -->
+<div class="section" id="s5">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2>Feature Flow Maps</h2>
+  </div>
+  <p style="font-size:13px; color:#6b7280; margin-bottom:20px;">Trace lengkap dari route hingga render untuk setiap fitur utama.</p>
+
+  <!-- HERO BANNERS -->
+  <h3 id="s5-hero">Hero Banners</h3>
+  <div class="flow">
+    <div class="flow-row"><strong style="font-size:12px;color:#6b7280;">ADMIN CRUD:</strong></div>
+    <div class="flow-row">
+      <div class="flow-box">GET /admin/hero-banners</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box mw">auth + role:staff+</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">HeroBannerController@index</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">HeroBanner::with(bannerImage, mobileBannerImage).ordered()</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Admin/HeroBanners/Index</div>
+    </div>
+    <div class="flow-row" style="margin-top:8px;">
+      <div class="flow-box">POST /admin/hero-banners</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">validate(image|image_uid, mobile_image_uid, banner_link, is_active)</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">HeroBanner::create()</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box db">hero_banners</div>
+    </div>
+    <div class="flow-row" style="margin-top:8px;"><strong style="font-size:12px;color:#6b7280;">FRONTEND (Homepage):</strong></div>
+    <div class="flow-row">
+      <div class="flow-box">GET /api/hero-banners</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">HeroBanner::active().ordered()</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">JSON response</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Frontend/Hero.jsx</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Slider carousel</div>
+    </div>
+    <div style="margin-top:12px; font-size:12px; color:#6b7280;">
+      <strong>Fields editable:</strong> image (file upload OR media_uid), mobile_image (optional), banner_link, is_active, order (via drag-sort)<br>
+      <strong>Validasi:</strong> image required (either file or uid). image: mimes jpeg/png/jpg/webp max 2MB<br>
+      <strong>Order:</strong> <code>updateOrder()</code> via POST /update-order → updates <code>order</code> field setiap banner
+    </div>
+  </div>
+
+  <!-- PRODUCTS -->
+  <h3 id="s5-products">Products (Properti)</h3>
+  <div class="flow">
+    <div class="flow-row"><strong style="font-size:12px;color:#6b7280;">ADMIN:</strong></div>
+    <div class="flow-row">
+      <div class="flow-box">GET /admin/products</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box mw">role:staff+</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">ProductController@index</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Product::with(featuredImage).paginate(10)</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Admin/Products/Index</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">POST /admin/products</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">validate(name, type, price, bedrooms(string), featured_image_uid, card_image_uid, gallery_uids[])</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Product::create()</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box db">products</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">POST /admin/products/{uid}/sliders</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">ProductSlider::create()</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box db">product_sliders</div>
+    </div>
+    <div class="flow-row" style="margin-top:8px;"><strong style="font-size:12px;color:#6b7280;">FRONTEND:</strong></div>
+    <div class="flow-row">
+      <div class="flow-box">GET /project</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Product::with(featuredImage, cardImage)</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Project.jsx → ProjectCard.jsx[]</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">GET /project/{id}</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Product::with(images, sliders, mediaImage)</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">ProjectDetail.jsx</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Image gallery, specs, contact CTA</div>
+    </div>
+    <div style="margin-top:12px; font-size:12px; color:#6b7280;">
+      <strong>Fields editable:</strong> name, type (house/apartment/land), short_description, description (TipTap), price, bedrooms (string), bathrooms, living_room, balcony, kitchen, is_furnished (furnished/semi/unfurnished), facilities (JSON array), video_url, video_360_url, featured_image_uid, card_image_uid, gallery_uids[], is_featured, is_active, is_sold (update only)<br>
+      <strong>Sliders:</strong> terpisah di product_sliders (image_uid, title, description, order)
+    </div>
+  </div>
+
+  <!-- ARTICLES -->
+  <h3 id="s5-articles">Articles (Blog & News)</h3>
+  <div class="flow">
+    <div class="flow-row"><strong style="font-size:12px;color:#6b7280;">ADMIN CREATE/EDIT:</strong></div>
+    <div class="flow-row">
+      <div class="flow-box">GET /admin/articles/create</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Admin/Articles/Form</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">RichTextEditor + SeoAnalyzer + MediaPicker</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">POST /admin/articles</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">validate(title, category, content, status, scheduled_at)</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">SeoScoreCalculator → seo_score</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Article::create()</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box db">articles</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">Scheduler (every 30 min)</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Article::where status=scheduled, scheduled_at &lt;= now()</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">set is_published=true, published_at=scheduled_at</div>
+    </div>
+    <div class="flow-row" style="margin-top:8px;"><strong style="font-size:12px;color:#6b7280;">FRONTEND:</strong></div>
+    <div class="flow-row">
+      <div class="flow-box">GET /news</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">News.jsx</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">axios GET /api/news?type=articles&amp;page=N</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Article::paginate(6)</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">GET /articles/{slug}</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Article::where(slug)->with(category, author, editor)</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">increment views</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">ArticleDetail.jsx (+ OG tags)</div>
+    </div>
+    <div style="margin-top:12px; font-size:12px; color:#6b7280;">
+      <strong>SEO Realtime:</strong> POST /admin/articles/analyze-seo → SeoScoreCalculator → JSON {score, checks[]}<br>
+      <strong>Status logic:</strong> draft (is_published=false, no scheduled) | scheduled (is_published=false, future scheduled_at) | published (is_published=true)<br>
+      <strong>Validasi schedule:</strong> Warn jika scheduled_at sudah lewat, require ignore_schedule_warning=true untuk override
+    </div>
+  </div>
+
+  <!-- EVENTS -->
+  <h3 id="s5-events">Events</h3>
+  <div class="flow">
+    <div class="flow-row">
+      <div class="flow-box">Admin CRUD /admin/events</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box mw">role:staff+</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Event model</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box db">events</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">GET /events</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Event::active().orderBy(event_date)</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Event.jsx → event cards</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">GET /events/{slug}</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">Event::where(slug or uid)</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">EventDetail.jsx</div>
+    </div>
+    <div style="margin-top:12px; font-size:12px; color:#6b7280;">
+      <strong>Fields:</strong> title, short_description, description (TipTap), image_uid, event_date (datetime WIB), location, registration_link, max/current_participants, slug, meta SEO fields<br>
+      <strong>Appends:</strong> event_date_formatted, event_time, is_past, image_url
+    </div>
+  </div>
+
+  <!-- CONTACTS -->
+  <h3 id="s5-contacts">Contacts / Leads</h3>
+  <div class="flow">
+    <div class="flow-row"><strong style="font-size:12px;color:#6b7280;">SUBMIT:</strong></div>
+    <div class="flow-row">
+      <div class="flow-box">POST /contact</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Frontend/ContactController@store</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">ContactSubmission::create()</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box db">contact_submissions</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;"><strong style="font-size:12px;color:#6b7280;">ADMIN VIEW:</strong></div>
+    <div class="flow-row">
+      <div class="flow-box">GET /admin/contacts</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box mw">role:admin+</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">ContactSubmission::paginate(15)</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Admin/Contacts/Index</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">GET /admin/contacts/{id}</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Auto set status: new → in_progress</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Admin/Contacts/Show</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">GET /admin/contacts/export</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">CSV StreamedResponse</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">GET /admin/contacts/export-excel</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">XLSX built-in (ZipArchive, no library)</div>
+    </div>
+    <div style="margin-top:12px; font-size:12px; color:#6b7280;">
+      <strong>Fields form:</strong> full_name, residence, email, phone, subject (inquiry/purchase/visit/other), project (kinary), message<br>
+      <strong>Status lifecycle:</strong> new → in_progress (auto saat view) → resolved (manual PATCH)
+    </div>
+  </div>
+
+  <!-- MEDIA LIBRARY -->
+  <h3 id="s5-media">Media Library</h3>
+  <div class="flow">
+    <div class="flow-row">
+      <div class="flow-box page">Admin Page/Form dengan MediaPicker</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">axios GET /admin/media-library/picker</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box model">MediaLibrary::paginate()</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box page">Grid picker UI</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box page">User upload file</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">POST /admin/media-library/upload</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">MediaService: store file, generate thumbnail variant</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box db">media_library + media_variants</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box page">User select media</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Returns uid to parent form</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Form stores {field}_uid in model</div>
+    </div>
+    <div class="flow-row" style="margin-top:6px;">
+      <div class="flow-box">Delete media</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Soft delete MediaLibrary record</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-box">Boot hook: delete file + variants from storage (force delete)</div>
+    </div>
+    <div style="margin-top:12px; font-size:12px; color:#6b7280;">
+      <strong>Storage disk:</strong> public (Laravel storage/app/public symlinked ke public/storage)<br>
+      <strong>Variants:</strong> thumbnail auto-generated on upload via MediaService<br>
+      <strong>URL resolution:</strong> MediaLibrary::getUrlAttribute() → Storage::disk(disk)::url(filepath)
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 6: DATABASE SCHEMA -->
+<div class="section" id="s6">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2>Database Schema</h2>
+  </div>
+  <p style="font-size:13px; color:#6b7280; margin-bottom:20px;">PostgreSQL 16. Semua tabel menggunakan <code>uuid</code> sebagai primary key (<code>uid</code>) kecuali <code>contact_submissions</code> (bigint id).</p>
+
+  <h3>Core Tables</h3>
+  <div class="grid2">
+    <div class="card">
+      <div class="card-header"><h4>users</h4></div>
+      <div class="card-body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Column</th><th>Type</th><th>Constraints</th></tr></thead>
+          <tbody>
+            <tr><td>uid</td><td>uuid</td><td>PK</td></tr>
+            <tr><td>name</td><td>string</td><td>—</td></tr>
+            <tr><td>username</td><td>string</td><td>unique</td></tr>
+            <tr><td>full_name</td><td>string</td><td>—</td></tr>
+            <tr><td>email</td><td>string</td><td>unique</td></tr>
+            <tr><td>password</td><td>string (hashed)</td><td>—</td></tr>
+            <tr><td>role</td><td>string</td><td>superadmin/admin/staff</td></tr>
+            <tr><td>status</td><td>string</td><td>active/inactive</td></tr>
+            <tr><td>email_verified_at</td><td>timestamp</td><td>nullable</td></tr>
+            <tr><td>remember_token</td><td>string</td><td>nullable</td></tr>
+            <tr><td>created_at / updated_at</td><td>timestamp</td><td>—</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h4>articles</h4></div>
+      <div class="card-body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Column</th><th>Type</th><th>Constraints</th></tr></thead>
+          <tbody>
+            <tr><td>uid</td><td>uuid</td><td>PK</td></tr>
+            <tr><td>article_category_uid</td><td>uuid</td><td>FK → article_categories</td></tr>
+            <tr><td>user_uid / author_uid / editor_uid</td><td>uuid</td><td>FK → users</td></tr>
+            <tr><td>title / subtitle</td><td>string</td><td>—</td></tr>
+            <tr><td>slug</td><td>string</td><td>unique, index</td></tr>
+            <tr><td>excerpt</td><td>text</td><td>nullable</td></tr>
+            <tr><td>content</td><td>longText</td><td>—</td></tr>
+            <tr><td>featured_image</td><td>string</td><td>nullable</td></tr>
+            <tr><td>featured_image_uid</td><td>uuid</td><td>nullable, FK → media_library</td></tr>
+            <tr><td>tags</td><td>json</td><td>nullable</td></tr>
+            <tr><td>meta_title / meta_description / meta_keywords / focus_keywords</td><td>string</td><td>nullable</td></tr>
+            <tr><td>seo_score</td><td>integer</td><td>nullable, 0–100</td></tr>
+            <tr><td>status</td><td>string</td><td>draft/scheduled/published</td></tr>
+            <tr><td>is_published</td><td>boolean</td><td>default false</td></tr>
+            <tr><td>published_at / scheduled_at / last_edited_at</td><td>timestamp</td><td>nullable</td></tr>
+            <tr><td>views</td><td>integer</td><td>default 0</td></tr>
+            <tr><td>is_featured</td><td>boolean</td><td>default false</td></tr>
+            <tr><td>type</td><td>enum</td><td>internal/external</td></tr>
+            <tr><td>external_url / video_url</td><td>string</td><td>nullable</td></tr>
+          </tbody>
+        </table></div>
+        <p style="font-size:11px;color:#6b7280;margin-top:6px;">Index: (article_category_uid, is_published), slug</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-header"><h4>products</h4></div>
+      <div class="card-body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Column</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>uid</td><td>uuid PK</td></tr>
+            <tr><td>name / slug</td><td>string (slug unique)</td></tr>
+            <tr><td>type</td><td>enum: house/apartment/land</td></tr>
+            <tr><td>short_description</td><td>string nullable</td></tr>
+            <tr><td>description</td><td>text</td></tr>
+            <tr><td>price</td><td>decimal(15,2)</td></tr>
+            <tr><td>bedrooms</td><td>string nullable (e.g. "2+1")</td></tr>
+            <tr><td>bathrooms</td><td>integer nullable</td></tr>
+            <tr><td>living_room / is_balcon_exist / kitchen</td><td>boolean</td></tr>
+            <tr><td>is_furnished</td><td>string: furnished/semi-furnished/unfurnished</td></tr>
+            <tr><td>facilities</td><td>json nullable</td></tr>
+            <tr><td>video_url / video_360_url</td><td>string nullable</td></tr>
+            <tr><td>featured_image_uid / card_image_uid</td><td>uuid FK → media_library</td></tr>
+            <tr><td>gallery_uids</td><td>json array of uuid</td></tr>
+            <tr><td>views</td><td>integer default 0</td></tr>
+            <tr><td>is_featured / is_sold / is_active</td><td>boolean</td></tr>
+          </tbody>
+        </table></div>
+        <p style="font-size:11px;color:#6b7280;margin-top:6px;">Index: (type, is_active), slug</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h4>hero_banners</h4></div>
+      <div class="card-body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Column</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>uid</td><td>uuid PK</td></tr>
+            <tr><td>image</td><td>string nullable (legacy)</td></tr>
+            <tr><td>image_uid</td><td>uuid FK → media_library</td></tr>
+            <tr><td>mobile_image</td><td>string nullable (legacy)</td></tr>
+            <tr><td>mobile_image_uid</td><td>uuid FK → media_library</td></tr>
+            <tr><td>banner_link</td><td>string nullable</td></tr>
+            <tr><td>is_active</td><td>boolean</td></tr>
+            <tr><td>order</td><td>integer</td></tr>
+          </tbody>
+        </table></div>
+        <p style="font-size:11px;color:#6b7280;margin-top:6px;">Note: removed order field (Dec 2025) then re-added. Also removed old fields (Mar 2026).</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-header"><h4>events</h4></div>
+      <div class="card-body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Column</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>uid</td><td>uuid PK</td></tr>
+            <tr><td>title / short_description</td><td>string</td></tr>
+            <tr><td>description</td><td>text</td></tr>
+            <tr><td>image</td><td>string nullable (legacy)</td></tr>
+            <tr><td>image_uid</td><td>uuid FK → media_library</td></tr>
+            <tr><td>event_date</td><td>dateTime, index</td></tr>
+            <tr><td>location</td><td>string</td></tr>
+            <tr><td>registration_link</td><td>string nullable</td></tr>
+            <tr><td>max_participants / current_participants</td><td>integer</td></tr>
+            <tr><td>is_active</td><td>boolean</td></tr>
+            <tr><td>slug</td><td>string unique</td></tr>
+            <tr><td>meta_title / meta_description / meta_keywords / focus_keyword</td><td>string nullable</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h4>media_library</h4></div>
+      <div class="card-body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Column</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>uid</td><td>uuid PK (HasUuids)</td></tr>
+            <tr><td>filename / filepath</td><td>string</td></tr>
+            <tr><td>file_type / mime_type</td><td>string</td></tr>
+            <tr><td>file_size</td><td>bigint (bytes)</td></tr>
+            <tr><td>disk</td><td>string default: public</td></tr>
+            <tr><td>width / height</td><td>integer nullable</td></tr>
+            <tr><td>alt_text / caption / description</td><td>string/text nullable</td></tr>
+            <tr><td>metadata</td><td>json nullable</td></tr>
+            <tr><td>folder / tags</td><td>string/json nullable</td></tr>
+            <tr><td>uploaded_by</td><td>uuid FK → users</td></tr>
+            <tr><td>deleted_at</td><td>timestamp (SoftDeletes)</td></tr>
+          </tbody>
+        </table></div>
+        <p style="font-size:11px;color:#6b7280;margin-top:6px;">Related: media_variants (thumbnail sizes), mediables (polymorphic), media_usage</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-header"><h4>contact_submissions</h4></div>
+      <div class="card-body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Column</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>id</td><td>bigint PK (auto-increment)</td></tr>
+            <tr><td>full_name</td><td>string</td></tr>
+            <tr><td>residence</td><td>string</td></tr>
+            <tr><td>email / phone</td><td>string</td></tr>
+            <tr><td>subject</td><td>string</td></tr>
+            <tr><td>project</td><td>string</td></tr>
+            <tr><td>message</td><td>text</td></tr>
+            <tr><td>status</td><td>enum: new/in_progress/resolved</td></tr>
+            <tr><td>notes</td><td>text nullable</td></tr>
+          </tbody>
+        </table></div>
+        <p style="font-size:11px;color:#6b7280;margin-top:6px;">Note: berbeda dari tabel <code>contacts</code> (legacy, link ke products). contact_submissions adalah form baru yang aktif digunakan.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><h4>settings</h4></div>
+      <div class="card-body">
+        <div class="table-wrap"><table>
+          <thead><tr><th>Column</th><th>Type</th></tr></thead>
+          <tbody>
+            <tr><td>uid</td><td>uuid PK</td></tr>
+            <tr><td>key</td><td>string unique, index</td></tr>
+            <tr><td>value</td><td>text nullable</td></tr>
+            <tr><td>type</td><td>string: text/textarea/image/number/boolean</td></tr>
+            <tr><td>group</td><td>string: general/contact/social/sections/seo/calculator</td></tr>
+          </tbody>
+        </table></div>
+        <p style="font-size:11px;color:#6b7280;margin-top:6px;">Shared globally via HandleInertiaRequests → all pages receive settings prop</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Supporting Tables Summary</h3>
+  <div class="card">
+    <div class="card-header"><h4>All Tables</h4></div>
+    <div class="card-body">
+      <div class="table-wrap"><table>
+        <thead><tr><th>Table</th><th>Primary Key</th><th>Purpose</th><th>Key Relations</th></tr></thead>
+        <tbody>
+          <tr><td>article_categories</td><td>uuid</td><td>Blog categories</td><td>HasMany articles</td></tr>
+          <tr><td>careers</td><td>uuid</td><td>Job listings</td><td>—</td></tr>
+          <tr><td>career_settings</td><td>uuid</td><td>Careers page config (title, desc)</td><td>—</td></tr>
+          <tr><td>contacts</td><td>uuid</td><td>Legacy contact form (links to product)</td><td>BelongsTo products</td></tr>
+          <tr><td>contact_submissions</td><td>bigint</td><td>Active contact form submissions</td><td>—</td></tr>
+          <tr><td>construction_progress</td><td>uuid</td><td>Singleton construction info</td><td>HasMany construction_progress_items</td></tr>
+          <tr><td>construction_progress_items</td><td>uuid</td><td>Progress milestone items</td><td>BelongsTo construction_progress</td></tr>
+          <tr><td>facilities</td><td>uuid</td><td>Residential facilities</td><td>HasMany facility_images (legacy)</td></tr>
+          <tr><td>facility_images</td><td>uuid</td><td>Legacy facility images</td><td>BelongsTo facilities</td></tr>
+          <tr><td>facility_sliders</td><td>uuid</td><td>Facilities page slider images</td><td>—</td></tr>
+          <tr><td>galleries</td><td>uuid</td><td>Photo gallery with categories</td><td>—</td></tr>
+          <tr><td>homepage_experience</td><td>uuid</td><td>Singleton experience section</td><td>—</td></tr>
+          <tr><td>homepage_experience_cards</td><td>uuid</td><td>Dynamic experience cards</td><td>—</td></tr>
+          <tr><td>instagram_galleries</td><td>uuid</td><td>Instagram feed section</td><td>—</td></tr>
+          <tr><td>location_maps</td><td>uuid</td><td>Singleton map config</td><td>—</td></tr>
+          <tr><td>media</td><td>uuid</td><td>Media outlets (Kompas, Detik, etc.)</td><td>HasMany media_highlights</td></tr>
+          <tr><td>media_highlights</td><td>uuid</td><td>Press coverage items</td><td>BelongsTo media + media_library</td></tr>
+          <tr><td>media_highlights_page_info</td><td>uuid</td><td>Singleton: media highlights page header</td><td>—</td></tr>
+          <tr><td>media_variants</td><td>uuid</td><td>Image size variants (thumbnail etc)</td><td>BelongsTo media_library</td></tr>
+          <tr><td>mediables</td><td>uuid</td><td>Polymorphic media attachments</td><td>BelongsTo media_library</td></tr>
+          <tr><td>media_usage</td><td>uuid</td><td>Track where media is used</td><td>BelongsTo media_library</td></tr>
+          <tr><td>milestones</td><td>uuid</td><td>Company timeline milestones</td><td>—</td></tr>
+          <tr><td>news_page_info</td><td>uuid</td><td>Singleton: news page header</td><td>—</td></tr>
+          <tr><td>policies</td><td>uuid</td><td>Terms &amp; privacy policies</td><td>—</td></tr>
+          <tr><td>product_images</td><td>uuid</td><td>Legacy product images</td><td>BelongsTo products</td></tr>
+          <tr><td>product_sliders</td><td>uuid</td><td>Product image sliders</td><td>BelongsTo products + media_library</td></tr>
+          <tr><td>project_page_info</td><td>uuid</td><td>Singleton: project page header</td><td>—</td></tr>
+          <tr><td>top_sales</td><td>uuid</td><td>Featured sales staff</td><td>—</td></tr>
+          <tr><td>virtual_tour_banners</td><td>uuid</td><td>360 virtual tour banner</td><td>BelongsTo media_library</td></tr>
+          <tr><td>brochures</td><td>uuid</td><td>Downloadable brochure</td><td>—</td></tr>
+          <tr><td>faqs</td><td>uuid</td><td>FAQ items</td><td>—</td></tr>
+          <tr><td>awards</td><td>uuid</td><td>Company awards</td><td>—</td></tr>
+          <tr><td>about_company_info / about_hero / about_mission / about_values / about_achievements</td><td>uuid</td><td>About Us page sections</td><td>—</td></tr>
+          <tr><td>events_page_info / facilities_page_info</td><td>uuid</td><td>Page header singletons</td><td>—</td></tr>
+          <tr><td>sessions / cache / jobs</td><td>string/bigint</td><td>Laravel framework tables</td><td>—</td></tr>
+          <tr><td>personal_access_tokens</td><td>bigint</td><td>Laravel Sanctum tokens</td><td>—</td></tr>
+          <tr><td>password_reset_tokens</td><td>string (email)</td><td>Password reset</td><td>—</td></tr>
+        </tbody>
+      </table></div>
+    </div>
+  </div>
+
+  <h3>Entity Relationship Overview</h3>
+  <div class="flow">
+    <pre style="background:#0f172a;color:#e2e8f0;padding:16px;border-radius:8px;font-size:12px;line-height:1.8;">
+users (1) ──────────── (*) articles
+                              │── article_category_uid → article_categories
+                              └── featured_image_uid → media_library
+
+products (1) ──────── (*) product_sliders → media_library
+products (1) ─────── featured_image_uid, card_image_uid → media_library
+products (1) ─────── gallery_uids[] → media_library[]
+
+media_library (1) ─── (*) media_variants (thumbnail, small, medium, large)
+media_library (1) ─── (*) mediables (polymorphic)
+media_library (1) ─── (*) media_usage
+
+events ──────────── image_uid → media_library
+facilities ────────── image_uids[] → media_library[]
+media_highlights ──── image_uid → media_library, media_uid → media (outlets)
+hero_banners ──────── image_uid, mobile_image_uid → media_library
+construction_progress (1) ── (*) construction_progress_items
+
+contact_submissions (standalone — no FK)
+settings (key-value store — no FK)</pre>
+  </div>
+</div>
+
+<!-- SECTION 7: REPO AUDIT -->
+<div class="section" id="s7">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <h2>Repo Audit Report</h2>
+  </div>
+  <p style="font-size:13px; color:#6b7280; margin-bottom:20px;">Audit dilakukan pada 2026-06-18. File yang ditandai ❌ telah dihapus, ⚠️ telah dipindahkan/diupdate, ✅ dipertahankan as-is.</p>
+
+  <h3>7a. Markdown Files (.md)</h3>
+  <div class="card">
+    <div class="card-body" style="padding:0;">
+
+      <div class="audit-item">
+        <span class="status status-del">❌ HAPUS</span>
+        <span class="audit-file">test-scheduler.md (root)</span>
+        <span class="audit-reason">Duplikat konten dengan SCHEDULER_SETUP.md. Hanya berisi dev testing guide sementara (interval 1 menit). Informasi sudah tercakup di SCHEDULER_SETUP.md yang lebih lengkap.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-del">❌ HAPUS</span>
+        <span class="audit-file">DEPLOYMENT-SUMMARY-DEC-2025.md (root)</span>
+        <span class="audit-reason">Berisi credentials database production (password plaintext). Historical summary yang superseded oleh docs/deployment/PRODUCTION-REDEPLOYMENT-GUIDE.md yang lebih lengkap dan aman.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-warn">⚠️ PINDAH</span>
+        <span class="audit-file">WHATSAPP_SHARING.md (root) → docs/guides/WHATSAPP_SHARING.md</span>
+        <span class="audit-reason">Konten masih relevan (OG tags implementation guide). Dipindahkan dari root ke docs/guides/ untuk struktur yang lebih rapi.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-warn">⚠️ PINDAH</span>
+        <span class="audit-file">FIX-404-PRODUCTION.md (root) → docs/deployment/FIX-404.md</span>
+        <span class="audit-reason">Konten troubleshooting yang masih relevan untuk production ops. Dipindahkan ke docs/deployment/ folder.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">README.md (root)</span>
+        <span class="audit-reason">Dokumen utama proyek. Up-to-date dengan stack Laravel 11 + React 19 + PostgreSQL 16.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">DEPLOYMENT.md (root)</span>
+        <span class="audit-reason">Quick deployment reference. Relevan untuk daily ops di production server.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">SCHEDULER_SETUP.md (root)</span>
+        <span class="audit-reason">Production scheduler setup guide. Masih relevan — mencakup cron job, supervisor, timezone config.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/MEDIA_LIBRARY_GUIDE.md</span>
+        <span class="audit-reason">User guide untuk media library yang aktif digunakan.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/MEDIA_LIBRARY_IMPLEMENTATION_SUMMARY.md</span>
+        <span class="audit-reason">Implementation notes yang masih relevan sebagai referensi arsitektur.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/PRODUCT_FORM_MEDIA_INTEGRATION.md</span>
+        <span class="audit-reason">Dokumentasi integrasi media library ke product form.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/database-migration-guide.md</span>
+        <span class="audit-reason">Migration guide untuk developer baru.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/SEO_CALCULATOR_REVAMP.md</span>
+        <span class="audit-reason">Dokumentasi SEO score calculator yang aktif digunakan di ArticleController.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/SITEMAP_IMPLEMENTATION.md</span>
+        <span class="audit-reason">Dokumentasi SitemapService.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/SECURITY.md</span>
+        <span class="audit-reason">Security notes masih relevan.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/README.md</span>
+        <span class="audit-reason">Index dokumentasi.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/development/LOCAL-SETUP.md + FRONTEND-GUIDE.md</span>
+        <span class="audit-reason">Developer onboarding guides yang aktif.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/guides/SEEDING-GUIDE.md + COMMANDS.md</span>
+        <span class="audit-reason">Operational guides untuk artisan commands dan seeding.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/deployment/ (all files)</span>
+        <span class="audit-reason">Deployment guides lengkap untuk VPS, Docker, dan redeploy.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">docs/archive/ (all files)</span>
+        <span class="audit-reason">Implementation notes historis. Sudah di-archive dengan benar, biarkan sebagai referensi.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">scripts/README.md</span>
+        <span class="audit-reason">Index untuk semua scripts yang terorganisir.</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>7b. Shell Scripts (.sh)</h3>
+  <div class="card">
+    <div class="card-body" style="padding:0;">
+
+      <div class="audit-item">
+        <span class="status status-del">❌ HAPUS</span>
+        <span class="audit-file">fix-products.sh (root)</span>
+        <span class="audit-reason">One-off script untuk re-seed product data yang corrupted. Script ini harusnya sudah dijalankan dan tidak relevan lagi.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-del">❌ HAPUS</span>
+        <span class="audit-file">remove-alert-flash.sh (root)</span>
+        <span class="audit-reason">One-time migration script untuk menghapus Alert components lama (sudah diganti Toaster/sonner). Migration sudah selesai — Alert imports sudah tidak ada di pages.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">deploy-prod.sh (root) — JANGAN DISENTUH</span>
+        <span class="audit-reason">Production deploy script. Dipertahankan di root agar mudah diakses. Tidak dimodifikasi.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">deploy.sh (root)</span>
+        <span class="audit-reason">Docker-based deployment script (docker-compose.prod.yml). Masih digunakan untuk Docker deployment path.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-warn">⚠️ PINDAH</span>
+        <span class="audit-file">fix-permissions-prod.sh (root) → scripts/deployment/fix-permissions.sh</span>
+        <span class="audit-reason">Script yang masih berguna untuk production operations (fix storage/cache permissions). Dipindahkan ke scripts/deployment/.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-warn">⚠️ PINDAH</span>
+        <span class="audit-file">quick-fix-404.sh (root) → scripts/deployment/quick-fix-404.sh</span>
+        <span class="audit-reason">Script debugging 404 yang masih relevan untuk production troubleshooting. Dipindahkan ke scripts/deployment/.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">scripts/deployment/ (all: quick-deploy.sh, first-deploy.sh, deploy-to-docker.sh, build-vite.sh, dll)</span>
+        <span class="audit-reason">Sudah terorganisir dengan baik di subfolder. Semua masih relevan.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">scripts/docker/ (optimize-docker.sh, install-docker.sh)</span>
+        <span class="audit-reason">Docker utilities yang relevan.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">scripts/server-setup/ (install-lemp.sh, setup-nginx.sh, setup-supervisor.sh)</span>
+        <span class="audit-reason">Server setup scripts untuk provisioning VPS baru.</span>
+      </div>
+
+      <div class="audit-item">
+        <span class="status status-ok">✅ KEEP</span>
+        <span class="audit-file">scripts/backup/ (backup-database.sh, backup-files.sh, setup-cron-backup.sh)</span>
+        <span class="audit-reason">Backup automation scripts yang penting untuk production.</span>
+      </div>
+    </div>
+  </div>
+
+  <h3>Summary</h3>
+  <div class="grid3">
+    <div class="card">
+      <div class="card-header" style="background:#dcfce7;"><h4 style="color:#16a34a;">✅ Dipertahankan</h4></div>
+      <div class="card-body" style="font-size:13px;">
+        <strong>Markdown:</strong> 20+ files<br>
+        <strong>Shell Scripts:</strong> 13 files<br>
+        Total: ~33 files tetap
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" style="background:#fef9c3;"><h4 style="color:#854d0e;">⚠️ Dipindahkan</h4></div>
+      <div class="card-body" style="font-size:13px;">
+        <strong>Markdown:</strong> 2 files<br>&nbsp;&nbsp;• WHATSAPP_SHARING.md → docs/guides/<br>&nbsp;&nbsp;• FIX-404-PRODUCTION.md → docs/deployment/<br>
+        <strong>Shell Scripts:</strong> 2 files<br>&nbsp;&nbsp;• fix-permissions-prod.sh → scripts/deployment/<br>&nbsp;&nbsp;• quick-fix-404.sh → scripts/deployment/
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header" style="background:#fee2e2;"><h4 style="color:#dc2626;">❌ Dihapus</h4></div>
+      <div class="card-body" style="font-size:13px;">
+        <strong>Markdown:</strong> 2 files<br>&nbsp;&nbsp;• test-scheduler.md (duplikat)<br>&nbsp;&nbsp;• DEPLOYMENT-SUMMARY-DEC-2025.md (credentials)<br>
+        <strong>Shell Scripts:</strong> 2 files<br>&nbsp;&nbsp;• fix-products.sh (one-off)<br>&nbsp;&nbsp;• remove-alert-flash.sh (one-time migration)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NOTES -->
+<div class="section">
+  <div class="section-header">
+    <div class="section-num" style="background:#6b7280;">N</div>
+    <h2>Notes & Known Items</h2>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h4>Dual Contact System</h4>
+      <p style="font-size:13px; margin:8px 0 16px;">Terdapat dua tabel contact: <code>contacts</code> (legacy, BelongsTo Product) dan <code>contact_submissions</code> (aktif, standalone dengan field residence &amp; project). Frontend Contact form menggunakan <code>contact_submissions</code>. Model <code>Contact</code> kemungkinan tidak lagi digunakan aktif.</p>
+
+      <h4>Legacy vs Media Library Images</h4>
+      <p style="font-size:13px; margin:8px 0 16px;">Beberapa model masih memiliki field <code>image</code> (string path legacy) di samping <code>image_uid</code> (FK ke media_library). Controller dan model handles kedua case via fallback logic. Migrasi ke media library sudah dilakukan secara bertahap.</p>
+
+      <h4>bedrooms Field (Product)</h4>
+      <p style="font-size:13px; margin:8px 0 16px;">Field <code>bedrooms</code> diubah dari <code>integer</code> ke <code>string</code> (migration 2026-06-17) untuk mendukung nilai seperti "2+1". Form menggunakan text input.</p>
+
+      <h4>Timezone</h4>
+      <p style="font-size:13px; margin:8px 0 16px;">Semua datetime menggunakan WIB (Asia/Jakarta). Model Article, Event, MediaHighlight meng-override <code>serializeDate()</code>. Config: <code>config/app.php timezone = Asia/Jakarta</code>.</p>
+
+      <h4>Route Model Binding</h4>
+      <p style="font-size:13px; margin:8px 0;">Semua model dengan custom PK (<code>uid</code>) mendefinisikan <code>getRouteKeyName() { return "uid"; }</code> agar route model binding bekerja dengan benar (misalnya MediaLibrary, Career).</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- end .content -->
+</main>
+</div><!-- end .wrapper -->
+
+<script>
+// Active TOC link on scroll
+const sections = document.querySelectorAll("[id]");
+const navLinks = document.querySelectorAll("nav#toc a");
+window.addEventListener("scroll", () => {
+  let current = "";
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 80) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.classList.remove("active");
+    if (a.getAttribute("href") === "#" + current) a.classList.add("active");
+  });
+});
+// Smooth scroll
+navLinks.forEach(a => {
+  a.addEventListener("click", e => {
+    const id = a.getAttribute("href").slice(1);
+    const el = document.getElementById(id);
+    if (el) { e.preventDefault(); el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+  });
+});
+</script>
+</body>
+</html>

@@ -41,7 +41,17 @@
       "Read(//usr/bin/**)",
       "Read(//opt/homebrew/Cellar/**)",
       "Bash(/usr/bin/php artisan *)",
-      "Bash(php8.2 artisan *)"
+      "Bash(php8.2 artisan *)",
+      "Bash(cat /Users/yayasandarmawan/Documents/wan-lab/skyhouse-dev/WHATSAPP_SHARING.md)",
+      "Bash(cat /Users/yayasandarmawan/Documents/wan-lab/skyhouse-dev/FIX-404-PRODUCTION.md)",
+      "Bash(cat /Users/yayasandarmawan/Documents/wan-lab/skyhouse-dev/fix-permissions-prod.sh)",
+      "Bash(cat /Users/yayasandarmawan/Documents/wan-lab/skyhouse-dev/quick-fix-404.sh)",
+      "Bash(rm test-scheduler.md)",
+      "Bash(rm DEPLOYMENT-SUMMARY-DEC-2025.md)",
+      "Bash(cp /tmp/WA_SHARING_temp.md docs/guides/WHATSAPP_SHARING.md)",
+      "Bash(rm WHATSAPP_SHARING.md)",
+      "Bash(cp /tmp/FIX404_temp.md docs/deployment/FIX-404.md)",
+      "Bash(python3 *)"
     ],
     "deny": [],
     "ask": []
