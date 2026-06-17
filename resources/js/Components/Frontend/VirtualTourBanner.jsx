@@ -8,7 +8,7 @@ const VirtualTourBanner = ({ virtualTour }) => {
   const url = virtualTour?.url || DEFAULT_URL;
 
   return (
-    <section className="w-full">
+    <section className="w-full" data-section="virtual-tour-banner">
       <a
         href={url}
         target="_blank"

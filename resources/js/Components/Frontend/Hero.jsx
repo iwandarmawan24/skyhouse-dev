@@ -126,7 +126,7 @@ const Hero = () => {
   // Show loading state if needed
   if (isLoading) {
     return (
-      <header className="section_hero is-bottom-rounded relative overflow-hidden">
+      <header className="section_hero is-bottom-rounded relative overflow-hidden" data-section="hero-banners">
         <div className="hero_slider_wrapper">
           <div className="hero_slide hero_sky active" />
         </div>
@@ -135,7 +135,7 @@ const Hero = () => {
   }
 
   return (
-    <header className="section_hero is-bottom-rounded relative overflow-hidden">
+    <header className="section_hero is-bottom-rounded relative overflow-hidden" data-section="hero-banners">
       {/* Background Slides with Fade Effect */}
       <div className="hero_slider_wrapper">
         {slides.map((slide, index) => {

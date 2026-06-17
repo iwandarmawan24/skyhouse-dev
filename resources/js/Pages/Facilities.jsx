@@ -104,7 +104,7 @@ export default function Facilities({ facilities: backendFacilities = [], pageInf
         }}
       >
         {/* Top Banner Section */}
-        <section className="news-top-banner">
+        <section className="news-top-banner" data-section="facilities-page-info">
           <div className="news-banner-image-wrapper">
             <img
               src={pageInfo?.banner_image || "/images/banner/Facilities-Banner.webp"}
@@ -123,7 +123,7 @@ export default function Facilities({ facilities: backendFacilities = [], pageInf
         </section>
 
         {/* Facilities Grid with Flip Cards */}
-        <div className="bg-gray-50 py-16 md:py-24">
+        <div className="bg-gray-50 py-16 md:py-24" data-section="facilities">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
               <Heading as="h2" variant="section" color="charcoal" className="mb-4">

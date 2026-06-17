@@ -97,7 +97,7 @@ export default function Project({ projects = [], pageInfo = null }) {
   return (
     <PageLayout>
         {/* Top Banner Section */}
-        <section className="project-top-banner">
+        <section className="project-top-banner" data-section="project-page-info">
           <div className="project-banner-image-wrapper">
             <img
               src={pageInfo?.banner_image || '/images/banner/Project-Banner.webp'}
@@ -116,7 +116,7 @@ export default function Project({ projects = [], pageInfo = null }) {
         </section>
 
         {/* Content Section */}
-        <div className="flex flex-col gap-6 md:gap-12 px-4 md:px-12 mx-auto my-8 md:my-16">
+        <div className="flex flex-col gap-6 md:gap-12 px-4 md:px-12 mx-auto my-8 md:my-16" data-section="products">
           {projects && projects.length > 0 && projects.slice(0, visibleCount).map((project, index) => {
             const isEven = index % 2 === 1;
             

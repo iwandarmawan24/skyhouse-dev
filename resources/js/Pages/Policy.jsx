@@ -176,7 +176,7 @@ export default function Policy({ policy, pageTitle, policyType }) {
                 </section>
 
                 {/* ── Content Section ─────────────────────────── */}
-                <section style={{ background: '#FDFEF0', paddingTop: '4rem', paddingBottom: '6rem' }}>
+                <section style={{ background: '#FDFEF0', paddingTop: '4rem', paddingBottom: '6rem' }} data-section="policies">
                     <div className="padding-global">
                         <div className="container-large">
                             {policy ? (

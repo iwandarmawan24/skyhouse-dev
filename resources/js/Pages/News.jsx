@@ -81,7 +81,7 @@ export default function News({ featured, pageInfo = null }) {
       </Head>
 
       <PageLayout>
-        <section className="news-top-banner">
+        <section className="news-top-banner" data-section="news-page-info">
           <div className="news-banner-image-wrapper">
             <img
               src={pageInfo?.banner_image || "/images/banner/Article-Banner.webp"}
@@ -147,7 +147,7 @@ export default function News({ featured, pageInfo = null }) {
           </section>
         )}
 
-        <section className="news-list-section background-color-cream">
+        <section className="news-list-section background-color-cream" data-section="articles">
           <div className="padding-global">
             <div className="container-large">
               <div className="padding-section-large">

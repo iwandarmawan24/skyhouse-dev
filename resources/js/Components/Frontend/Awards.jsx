@@ -25,7 +25,7 @@ const Awards = () => {
   if (isLoading || !data || !data.image_url) return null;
 
   return (
-    <section className="w-full">
+    <section className="w-full" data-section="awards">
       <img
         src={data.image_url}
         alt="Awards"

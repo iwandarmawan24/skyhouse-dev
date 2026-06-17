@@ -38,6 +38,7 @@ const Location = () => {
   return (
     <section
       className="relative overflow-hidden px-4 md:px-8 lg:px-16 bg-skyhouse-ocean"
+      data-section="location-map"
       style={{
         backgroundImage: `radial-gradient(circle, rgba(245, 216, 127, 0.15) 1px, transparent 2px)`,
         backgroundSize: '20px 20px'

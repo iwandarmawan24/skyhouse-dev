@@ -86,7 +86,7 @@ export default function Event({ events, pageInfo = null }) {
 
             <PageLayout>
                 {/* Top Banner Section */}
-                <section className="news-top-banner">
+                <section className="news-top-banner" data-section="events-page-info">
                     <div className="events-banner-wrapper">
                         <img
                             src={pageInfo?.banner_image || "/images/banner/Event-Banner.webp"}
@@ -109,7 +109,7 @@ export default function Event({ events, pageInfo = null }) {
                 </section>
 
                 {/* Filter Tabs */}
-                <section className="padding-section-large">
+                <section className="padding-section-large" data-section="events">
                     <div className="padding-global">
                         <div className="container-large">
                             <div className="flex gap-4 mb-8 flex-wrap justify-center">

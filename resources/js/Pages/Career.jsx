@@ -34,7 +34,7 @@ export default function Career({ careers }) {
 
             <PageLayout>
                 {/* Top Banner Section */}
-                <section className="news-top-banner">
+                <section className="news-top-banner" data-section="career-settings">
                     <div className="events-banner-wrapper">
                         <div
                             className="events-banner-image"
@@ -63,7 +63,7 @@ export default function Career({ careers }) {
                 </section>
 
                 {/* Career Listings */}
-                <section className="padding-section-large">
+                <section className="padding-section-large" data-section="careers">
                     <div className="padding-global">
                         <div className="container-large">
                             <div className="flex flex-col lg:flex-row lg:items-start gap-10 lg:gap-0">

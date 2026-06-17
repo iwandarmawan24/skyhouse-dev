@@ -227,6 +227,7 @@ const ConstructionProgress = () => {
     <>
       <section
         className="relative overflow-hidden bg-[#1a3a7a] cursor-pointer group"
+        data-section="construction-progress"
         onClick={handleOpenModal}
       >
         {/* Yellow top accent line */}

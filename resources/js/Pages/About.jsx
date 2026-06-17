@@ -130,7 +130,7 @@ export default function About({
     <PageLayout showBackgroundDefault={true}>
       <main className="main-wrapper">
         {/* About Section */}
-        <section className="py-16 md:py-32 px-4 md:px-8 lg:px-16 relative overflow-hidden">
+        <section className="py-16 md:py-32 px-4 md:px-8 lg:px-16 relative overflow-hidden" data-section="about-company-intro">
           <div className="max-w-7xl mx-auto relative z-10 mb-12" ref={mapRef}>
             {/* World Map Container */}
             <div className="relative w-full max-w-6xl mx-auto hidden md:block">
@@ -324,7 +324,7 @@ export default function About({
           </div>
         </section>
         {/* Hero/About Section */}
-        <section className="about-hero background-color-yellow">
+        <section className="about-hero background-color-yellow" data-section="about-hero">
           <div className="padding-global">
             <div className="container-large">
               <div className="padding-section-large">
@@ -345,7 +345,7 @@ export default function About({
         </section>
 
         {/* History Timeline Section */}
-        <section className="about-history background-color-cream">
+        <section className="about-history background-color-cream" data-section="milestones">
           <div className="padding-global">
             <div className="container-large">
               <div className="padding-section-large">
@@ -377,7 +377,7 @@ export default function About({
         </section>
 
         {/* Values & Mission Section */}
-        <section className="about-values background-color-yellow">
+        <section className="about-values background-color-yellow" data-section="about-values">
           <div className="padding-global">
             <div className="container-large">
               <div className="padding-section-large">
@@ -404,7 +404,7 @@ export default function About({
                     </div>
                   ))}
                 </div>
-                <div className="mission-statement">
+                <div className="mission-statement" data-section="about-mission">
                   <h3>{mission?.title || 'Our Mission'}</h3>
                   <p className="whitespace-pre-line">
                     {mission?.statement || "To be Indonesia's premier residential developer by creating exceptional living environments that combine innovative design, quality construction, and sustainable practices, while fostering vibrant communities where families thrive and create lasting memories."}
@@ -416,7 +416,7 @@ export default function About({
         </section>
 
         {/* Achievements Section */}
-        <section className="about-achievements background-color-brown">
+        <section className="about-achievements background-color-brown" data-section="about-achievements">
           <div className="padding-global">
             <div className="container-large">
               <div className="padding-section-medium">

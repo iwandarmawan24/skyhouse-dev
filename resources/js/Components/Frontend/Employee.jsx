@@ -30,7 +30,7 @@ const Employee = ({
   if (displayMembers.length === 0) return null;
 
   return (
-    <section className={`py-16 md:py-24 ${className}`}>
+    <section className={`py-16 md:py-24 ${className}`} data-section="top-sales">
       <div className="container mx-auto px-6 md:px-12">
         <div className="flex flex-col !text-center items-center mb-12">
           <Heading as="h2" variant="section" color="skyhouse-ocean" className="mb-4">

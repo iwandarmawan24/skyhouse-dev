@@ -1,0 +1,167 @@
+{
+  "generated": "2026-06-18",
+  "total": 28,
+  "entries": [
+    {
+      "data-section": "hero-banners",
+      "file": "resources/js/Components/Frontend/Hero.jsx",
+      "line": 129,
+      "note": "Loading state return. Also present at line 138 (main render)."
+    },
+    {
+      "data-section": "hero-banners",
+      "file": "resources/js/Components/Frontend/Hero.jsx",
+      "line": 138,
+      "note": "Main render return of Hero component."
+    },
+    {
+      "data-section": "awards",
+      "file": "resources/js/Components/Frontend/Awards.jsx",
+      "line": 28
+    },
+    {
+      "data-section": "virtual-tour-banner",
+      "file": "resources/js/Components/Frontend/VirtualTourBanner.jsx",
+      "line": 11
+    },
+    {
+      "data-section": "homepage-experience",
+      "file": "resources/js/Components/Frontend/About.jsx",
+      "line": 227
+    },
+    {
+      "data-section": "location-map",
+      "file": "resources/js/Components/Frontend/Location.jsx",
+      "line": 39
+    },
+    {
+      "data-section": "construction-progress",
+      "file": "resources/js/Components/Frontend/ConstructionProgress.jsx",
+      "line": 228
+    },
+    {
+      "data-section": "top-sales",
+      "file": "resources/js/Components/Frontend/Employee.jsx",
+      "line": 33
+    },
+    {
+      "data-section": "about-company-intro",
+      "file": "resources/js/Pages/About.jsx",
+      "line": 133
+    },
+    {
+      "data-section": "about-hero",
+      "file": "resources/js/Pages/About.jsx",
+      "line": 327
+    },
+    {
+      "data-section": "milestones",
+      "file": "resources/js/Pages/About.jsx",
+      "line": 348
+    },
+    {
+      "data-section": "about-values",
+      "file": "resources/js/Pages/About.jsx",
+      "line": 380
+    },
+    {
+      "data-section": "about-mission",
+      "file": "resources/js/Pages/About.jsx",
+      "line": 407,
+      "note": "Nested inside about-values section; placed on mission-statement div."
+    },
+    {
+      "data-section": "about-achievements",
+      "file": "resources/js/Pages/About.jsx",
+      "line": 419
+    },
+    {
+      "data-section": "project-page-info",
+      "file": "resources/js/Pages/Project.jsx",
+      "line": 100
+    },
+    {
+      "data-section": "products",
+      "file": "resources/js/Pages/Project.jsx",
+      "line": 119
+    },
+    {
+      "data-section": "facilities-page-info",
+      "file": "resources/js/Pages/Facilities.jsx",
+      "line": 107
+    },
+    {
+      "data-section": "facilities",
+      "file": "resources/js/Pages/Facilities.jsx",
+      "line": 126
+    },
+    {
+      "data-section": "news-page-info",
+      "file": "resources/js/Pages/News.jsx",
+      "line": 84
+    },
+    {
+      "data-section": "articles",
+      "file": "resources/js/Pages/News.jsx",
+      "line": 150
+    },
+    {
+      "data-section": "media-highlights-page-info",
+      "file": "resources/js/Pages/MediaHighlights.jsx",
+      "line": 92
+    },
+    {
+      "data-section": "media-highlights",
+      "file": "resources/js/Pages/MediaHighlights.jsx",
+      "line": 156
+    },
+    {
+      "data-section": "events-page-info",
+      "file": "resources/js/Pages/Event.jsx",
+      "line": 89
+    },
+    {
+      "data-section": "events",
+      "file": "resources/js/Pages/Event.jsx",
+      "line": 112
+    },
+    {
+      "data-section": "galleries",
+      "file": "resources/js/Pages/Gallery.jsx",
+      "line": 64
+    },
+    {
+      "data-section": "career-settings",
+      "file": "resources/js/Pages/Career.jsx",
+      "line": 37
+    },
+    {
+      "data-section": "careers",
+      "file": "resources/js/Pages/Career.jsx",
+      "line": 66
+    },
+    {
+      "data-section": "policies",
+      "file": "resources/js/Pages/Policy.jsx",
+      "line": 179
+    }
+  ],
+  "skipped": [
+    {
+      "data-section": "instagram-gallery",
+      "reason": "No corresponding component found in resources/js/Components/Frontend/ or Pages/."
+    },
+    {
+      "data-section": "faqs",
+      "reason": "No corresponding component found in resources/js/Components/Frontend/ or Pages/."
+    },
+    {
+      "data-section": "facility-sliders",
+      "reason": "The slider in Facilities.jsx is hardcoded static content (not CMS-managed)."
+    },
+    {
+      "data-section": "brochures",
+      "reason": "No brochures section found in Project.jsx."
+    }
+  ]
+}

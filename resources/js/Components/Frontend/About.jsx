@@ -226,6 +226,7 @@ const About = ({ experience = {}, experienceCards = [] }) => {
       {/* Facilities Section */}
       <section
         className="services-section bg-skyhouse-ocean py-20 px-4 md:px-8 lg:px-16"
+        data-section="homepage-experience"
         style={{
           backgroundImage: 'url(/images/hero/bg-blur.png)'
         }}

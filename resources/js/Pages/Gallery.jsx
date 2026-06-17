@@ -61,7 +61,7 @@ export default function Gallery({ galleries = [] }) {
 
   return (
     <PageLayout showBackgroundDefault={true}>
-      <div className="w-full">
+      <div className="w-full" data-section="galleries">
         {/* Hero Section with Featured Slider */}
         <div className="relative w-full h-96 md:h-[500px] lg:h-[600px] overflow-hidden bg-gray-900">
           <div className="relative h-full">
