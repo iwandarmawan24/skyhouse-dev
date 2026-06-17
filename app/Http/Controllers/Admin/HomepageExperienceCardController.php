@@ -102,10 +102,8 @@ class HomepageExperienceCardController extends Controller
             'main_description' => 'nullable|string|max:1000',
         ]);
 
-        $mainCard = HomepageExperience::first();
-        if ($mainCard) {
-            $mainCard->update($validated);
-        }
+        $mainCard = HomepageExperience::firstOrCreate([]);
+        $mainCard->update($validated);
 
         return back()->with('success', 'Main card updated.');
     }

@@ -206,7 +206,7 @@ const About = ({ experience = {}, experienceCards = [] }) => {
   const cardDailyTitle         = experience.card_daily_title            || 'Effortless Grocery Shopping';
   const cardDailyDescription   = experience.card_daily_description      || 'Groceries made effortless. From everyday essentials to fresh produce, everything you need is just minutes away at AEON Store, All Fresh, Duta Buah, Pasar 8 Alam Sutera, and Rumah Buah.';
   const cardEntTitle           = experience.card_entertainment_title    || 'Urban Lifestyle Living';
-  const cardEntDescription     = experience.card_entertainment_description || 'Enjoy seamless access to Jakarta Premium Outlet, IKEA, Mall @ Alam Sutera, Decathlon at Flavor Bliss, and Living World Alam Sutera. Step outside and immerse yourself in a vibrant lifestyle destination where shopping, dining, leisure, and entertainment are always within reach.';
+  const cardEntDescription     = experience.card_entertainment_description || 'Enjoy seamless access to Jakarta Premium Outlet, IKEA, Mall @ Alam Sutera, Decathlon, Broadway at Flavor Bliss, and Living World Alam Sutera. Step outside and immerse yourself in a vibrant lifestyle destination where shopping, dining, leisure, and entertainment are always within reach.';
   const cardUnivTitle          = experience.card_university_title       || 'Top Universities Nearby';
   const cardUnivDescription    = experience.card_university_description || 'Located near Binus University, Bunda Mulia University, Swiss German University, BINUS ASO School of Engineering, providing access to more than 30,000 students.';
   const cardBizTitle           = experience.card_business_title         || 'Thriving Business Hub';

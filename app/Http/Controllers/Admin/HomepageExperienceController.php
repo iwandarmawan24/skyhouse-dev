@@ -14,7 +14,7 @@ class HomepageExperienceController extends Controller
         'card_daily_title'            => 'Effortless Grocery Shopping',
         'card_daily_description'      => 'Groceries made effortless. From everyday essentials to fresh produce, everything you need is just minutes away at AEON Store, All Fresh, Duta Buah, Pasar 8 Alam Sutera, and Rumah Buah.',
         'card_entertainment_title'    => 'Urban Lifestyle Living',
-        'card_entertainment_description' => 'Enjoy seamless access to Jakarta Premium Outlet, IKEA, Mall @ Alam Sutera, Decathlon at Flavor Bliss, and Living World Alam Sutera. Step outside and immerse yourself in a vibrant lifestyle destination where shopping, dining, leisure, and entertainment are always within reach.',
+        'card_entertainment_description' => 'Enjoy seamless access to Jakarta Premium Outlet, IKEA, Mall @ Alam Sutera, Decathlon, Broadway at Flavor Bliss, and Living World Alam Sutera. Step outside and immerse yourself in a vibrant lifestyle destination where shopping, dining, leisure, and entertainment are always within reach.',
         'card_university_title'       => 'Top Universities Nearby',
         'card_university_description' => 'Located near Binus University, Bunda Mulia University, Swiss German University, BINUS ASO School of Engineering, providing access to more than 30,000 students.',
         'card_business_title'         => 'Thriving Business Hub',
