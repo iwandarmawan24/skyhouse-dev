@@ -158,6 +158,11 @@ export default function AdminLayout({ children }) {
                         href: "/admin/virtual-tour-banner/edit",
                         icon: ImageIcon,
                     },
+                    {
+                        name: "Experience",
+                        href: "/admin/homepage-experience",
+                        icon: ImageIcon,
+                    },
                 ],
             },
             {
@@ -245,6 +250,11 @@ export default function AdminLayout({ children }) {
                         name: "Mission",
                         href: "/admin/about/mission/edit",
                         icon: Target,
+                    },
+                    {
+                        name: "Section Subtitles",
+                        href: "/admin/about/section-info/edit",
+                        icon: FileText,
                     },
                 ],
             },

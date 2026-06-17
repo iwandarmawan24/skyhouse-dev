@@ -120,7 +120,7 @@ const LaunchProjects = ({ facilities: backendFacilities = [] }) => {
             </Button>
           </div>
           <Text size="lg" className="text-gray-600 max-w-2xl mx-auto">
-            Discover exceptional amenities designed for your lifestyle
+            Amenities designed for better living, crafted to complement your routine and enrich your everyday living experience.
           </Text>
         </div>
 
@@ -158,7 +158,7 @@ const LaunchProjects = ({ facilities: backendFacilities = [] }) => {
                 <Heading as="h3" variant="card" className="text-white mb-2">
                   {facility.title}
                 </Heading>
-                <Text size="sm" className="text-white/90">
+                <Text size="sm" className="text-white/90 whitespace-pre-line">
                   {facility.description}
                 </Text>
               </div>

@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import { usePage } from '@inertiajs/react';
 import { Heading, Text } from '@/Components/Frontend/atoms';
 
 const Employee = ({
   title = <>Meet Our <span className="font-bodoni !italic">Team</span></>,
-  subtitle = 'Our dedicated professionals are here to help you find your perfect home',
+  subtitle = null,
   members = [],
   className = 'bg-white',
 }) => {
+  const { settings } = usePage().props;
+  const resolvedSubtitle = subtitle ?? settings?.sections?.top_sales_subtitle ?? 'Meet our top performing sales consultants, ready to assist you every step of the way.';
+
   const [activeIndex, setActiveIndex] = useState(1);
   const [isPaused, setIsPaused] = useState(false);
 
@@ -33,7 +37,7 @@ const Employee = ({
             Top <span className="font-bodoni !italic">Sales</span> of the Month
           </Heading>
           <Text size="lg" color="slate" className="max-w-2xl mx-auto">
-            {subtitle}
+            {resolvedSubtitle}
           </Text>
         </div>
 

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { usePage } from '@inertiajs/react';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import { Heading, Text, Button } from '@/Components/Frontend/atoms';
 import ImagePreviewModal from '@/Components/Frontend/ImagePreviewModal';
@@ -6,6 +7,9 @@ import '@css/frontend.css';
 import '@css/frontend/news-page.css';
 
 export default function Facilities({ facilities: backendFacilities = [], pageInfo = null }) {
+  const { settings } = usePage().props;
+  const facilitiesSubtitle = settings?.sections?.facilities_section_subtitle || 'Click on each card to explore our complete range of facilities';
+
   const [previewFacility, setPreviewFacility] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [cardsPerSlide, setCardsPerSlide] = useState(3);
@@ -126,7 +130,7 @@ export default function Facilities({ facilities: backendFacilities = [], pageInf
                 Explore Our Facilities
               </Heading>
               <Text size="lg" color="slate">
-                Click on a card to view the full image
+                {facilitiesSubtitle}
               </Text>
             </div>
 

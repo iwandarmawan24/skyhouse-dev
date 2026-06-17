@@ -87,7 +87,7 @@ export default function Index({ settings }) {
             );
         }
 
-        if (setting.key.includes('description') || setting.key.includes('address')) {
+        if (setting.key.includes('description') || setting.key.includes('address') || setting.key.includes('subtitle')) {
             return (
                 <textarea
                     value={data[setting.key]}
@@ -202,6 +202,7 @@ export default function Index({ settings }) {
                                     <option value="general">General</option>
                                     <option value="contact">Contact</option>
                                     <option value="social">Social</option>
+                                    <option value="sections">Sections</option>
                                     <option value="calculator">Calculator</option>
                                     <option value="seo">SEO</option>
                                 </select>

@@ -61,7 +61,7 @@ const CTA = () => {
             </Heading>
 
             <Text className="text-white/70 text-lg max-w-md">
-              Feel free to ask anything, and our team will respond to you right away.
+              Connect with our team to learn more about available units, facilities, and exclusive offers at Sky House Alam Sutera+
             </Text>
 
             <div className="flex flex-col sm:flex-row items-start gap-4">

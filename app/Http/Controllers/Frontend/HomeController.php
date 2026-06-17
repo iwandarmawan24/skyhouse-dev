@@ -7,6 +7,8 @@ use App\Models\MediaHighlight;
 use App\Models\TopSales;
 use App\Models\Product;
 use App\Models\Facility;
+use App\Models\HomepageExperience;
+use App\Models\HomepageExperienceCard;
 use App\Models\VirtualTourBanner;
 use Inertia\Inertia;
 
@@ -94,12 +96,27 @@ class HomeController extends Controller
             'url' => $virtualTourBanner?->url ?? 'https://epic.spindonesia.com/skyhousealsut/index.html',
         ];
 
+        $experience = HomepageExperience::first();
+
+        $experienceCards = HomepageExperienceCard::active()->ordered()->get()
+            ->map(fn($c) => ['uid' => $c->uid, 'title' => $c->title, 'description' => $c->description])
+            ->values()
+            ->toArray();
+
         return Inertia::render('Home', [
-            'newsItems' => $newsItems,
-            'topSales' => $topSales,
-            'projects' => $projects,
-            'facilities' => $facilities,
-            'virtualTour' => $virtualTour,
+            'newsItems'       => $newsItems,
+            'topSales'        => $topSales,
+            'projects'        => $projects,
+            'facilities'      => $facilities,
+            'virtualTour'     => $virtualTour,
+            'experience'      => $experience ? $experience->only([
+                'main_description',
+                'card_daily_title', 'card_daily_description',
+                'card_entertainment_title', 'card_entertainment_description',
+                'card_university_title', 'card_university_description',
+                'card_business_title', 'card_business_description',
+            ]) : [],
+            'experienceCards' => $experienceCards,
         ]);
     }
 }

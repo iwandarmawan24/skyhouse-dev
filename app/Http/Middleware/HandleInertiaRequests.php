@@ -58,9 +58,10 @@ class HandleInertiaRequests extends Middleware
                 'error' => $request->session()->get('error'),
             ],
             'settings' => fn () => [
-                'general' => Setting::getGroup('general'),
-                'contact' => Setting::getGroup('contact'),
-                'social' => Setting::getGroup('social'),
+                'general'  => Setting::getGroup('general'),
+                'contact'  => Setting::getGroup('contact'),
+                'social'   => Setting::getGroup('social'),
+                'sections' => Setting::getGroup('sections'),
             ],
         ]);
     }

@@ -149,7 +149,7 @@ const ImagePreviewModal = ({ isOpen, onClose, image, title, description, layout 
                 </h2>
               )}
               {description ? (
-                <p className="text-white/70 text-base leading-relaxed">
+                <p className="text-white/70 text-base leading-relaxed whitespace-pre-line">
                   {description}
                 </p>
               ) : (

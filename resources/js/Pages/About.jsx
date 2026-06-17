@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { usePage } from '@inertiajs/react';
 import Navigation from '@/Components/Frontend/Navigation';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import { Heading, Text } from '@/Components/Frontend/atoms';
@@ -62,6 +63,12 @@ export default function About({
   values: cmsValues = [],
   achievements: cmsAchievements = [],
 }) {
+  const { settings } = usePage().props;
+  const sections = settings?.sections || {};
+  const journeySubtitle = sections.about_journey_subtitle || 'A journey of growth, innovation, and achievement that reflects our commitment to creating exceptional living experiences and sustainable long-term value.';
+  const valuesSubtitle  = sections.about_values_subtitle  || 'Our values serve as the foundation of everything we do, guiding the way we plan, develop, and deliver exceptional living environments that stand the test of time.';
+  const topSalesSubtitle = sections.top_sales_subtitle    || 'Meet our top performing sales consultants, ready to assist you every step of the way.';
+
   const [isMapVisible, setIsMapVisible] = useState(false);
   const mapRef = React.useRef(null);
 
@@ -344,7 +351,7 @@ export default function About({
               <div className="padding-section-large">
                 <div className="section-header">
                   <h2>Our Journey</h2>
-                  <p>A timeline of milestones that shaped Sky House Alam Sutera+</p>
+                  <p>{journeySubtitle}</p>
                 </div>
                 <div className="history-timeline">
                   {historyData.map((item, index) => (
@@ -376,7 +383,7 @@ export default function About({
               <div className="padding-section-large">
                 <div className="section-header">
                   <h2>Our Core Values</h2>
-                  <p>The principles that guide everything we do</p>
+                  <p>{valuesSubtitle}</p>
                 </div>
                 <div className="values-grid">
                   {values.map((value, index) => (
@@ -430,7 +437,7 @@ export default function About({
         {topSales.length > 0 && (
           <Employee
             title={<>Top <span className="font-bodoni !italic">Sales</span></>}
-            subtitle="Meet our best performing sales team"
+            subtitle={topSalesSubtitle}
             members={topSales}
             className="bg-white"
           />

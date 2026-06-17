@@ -1,0 +1,112 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\HomepageExperience;
+use App\Models\HomepageExperienceCard;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
+
+class HomepageExperienceCardController extends Controller
+{
+    public function index()
+    {
+        $cards = HomepageExperienceCard::ordered()->get();
+
+        // Main card (single-record settings)
+        $mainCard = HomepageExperience::first();
+
+        return Inertia::render('Admin/HomepageExperience/Index', [
+            'cards'    => $cards,
+            'mainCard' => $mainCard ? [
+                'main_description' => $mainCard->main_description,
+            ] : null,
+        ]);
+    }
+
+    public function create()
+    {
+        return Inertia::render('Admin/HomepageExperience/Form', [
+            'card' => null,
+        ]);
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string|max:2000',
+            'order'       => 'nullable|integer',
+            'is_active'   => 'boolean',
+        ]);
+
+        $validated['order'] = $validated['order'] ?? HomepageExperienceCard::max('order') + 1;
+
+        HomepageExperienceCard::create($validated);
+
+        return redirect()->route('admin.homepage-experience.index')
+            ->with('success', 'Experience card created successfully.');
+    }
+
+    public function edit(HomepageExperienceCard $card)
+    {
+        return Inertia::render('Admin/HomepageExperience/Form', [
+            'card' => $card,
+        ]);
+    }
+
+    public function update(Request $request, HomepageExperienceCard $card)
+    {
+        $validated = $request->validate([
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string|max:2000',
+            'order'       => 'nullable|integer',
+            'is_active'   => 'boolean',
+        ]);
+
+        $card->update($validated);
+
+        return redirect()->route('admin.homepage-experience.index')
+            ->with('success', 'Experience card updated successfully.');
+    }
+
+    public function destroy(HomepageExperienceCard $card)
+    {
+        $card->delete();
+
+        return redirect()->route('admin.homepage-experience.index')
+            ->with('success', 'Experience card deleted successfully.');
+    }
+
+    public function updateOrder(Request $request)
+    {
+        $validated = $request->validate([
+            'updates'         => 'required|array',
+            'updates.*.uid'   => 'required|string|exists:homepage_experience_cards,uid',
+            'updates.*.order' => 'required|integer',
+        ]);
+
+        foreach ($validated['updates'] as $update) {
+            HomepageExperienceCard::where('uid', $update['uid'])
+                ->update(['order' => $update['order']]);
+        }
+
+        return back()->with('success', 'Order updated.');
+    }
+
+    // Update the main Experience card text
+    public function updateMainCard(Request $request)
+    {
+        $validated = $request->validate([
+            'main_description' => 'nullable|string|max:1000',
+        ]);
+
+        $mainCard = HomepageExperience::first();
+        if ($mainCard) {
+            $mainCard->update($validated);
+        }
+
+        return back()->with('success', 'Main card updated.');
+    }
+}

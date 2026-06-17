@@ -310,11 +310,11 @@ export default function Form({ product }) {
                             </label>
                             <input
                                 id="bedrooms"
-                                type="number"
+                                type="text"
                                 value={data.bedrooms}
                                 onChange={(e) => setData('bedrooms', e.target.value)}
                                 className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                placeholder="0"
+                                placeholder="e.g. 3 or 3+1"
                             />
                         </div>
 

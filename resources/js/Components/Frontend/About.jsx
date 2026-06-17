@@ -201,7 +201,26 @@ const LifestyleSlider = ({ images, children, className = "" }) => {
   );
 };
 
-const About = () => {
+const About = ({ experience = {}, experienceCards = [] }) => {
+  const mainDescription        = experience.main_description            || 'Surrounded by Top Universities, daily conveniences, entertainment destinations, and thriving business hubs, Sky House Alam Sutera+ places everything you need within easy reach.';
+  const cardDailyTitle         = experience.card_daily_title            || 'Effortless Grocery Shopping';
+  const cardDailyDescription   = experience.card_daily_description      || 'Groceries made effortless. From everyday essentials to fresh produce, everything you need is just minutes away at AEON Store, All Fresh, Duta Buah, Pasar 8 Alam Sutera, and Rumah Buah.';
+  const cardEntTitle           = experience.card_entertainment_title    || 'Urban Lifestyle Living';
+  const cardEntDescription     = experience.card_entertainment_description || 'Enjoy seamless access to Jakarta Premium Outlet, IKEA, Mall @ Alam Sutera, Decathlon at Flavor Bliss, and Living World Alam Sutera. Step outside and immerse yourself in a vibrant lifestyle destination where shopping, dining, leisure, and entertainment are always within reach.';
+  const cardUnivTitle          = experience.card_university_title       || 'Top Universities Nearby';
+  const cardUnivDescription    = experience.card_university_description || 'Located near Binus University, Bunda Mulia University, Swiss German University, BINUS ASO School of Engineering, providing access to more than 30,000 students.';
+  const cardBizTitle           = experience.card_business_title         || 'Thriving Business Hub';
+  const cardBizDescription     = experience.card_business_description   || 'A built-in ecosystem of professionals surrounded by Synergy Building, The Prominence, Alfa Tower, Menara Top Food, Prima Sejahtera Building, Kino Tower, and Marks Building.';
+
+  // Dynamic cards override positional defaults when CMS cards exist
+  const getCard = (index, defaultTitle, defaultDesc) => ({
+    title:       experienceCards[index]?.title       || defaultTitle,
+    description: experienceCards[index]?.description || defaultDesc,
+  });
+  const dynEnt  = getCard(0, cardEntTitle, cardEntDescription);
+  const dynUniv = getCard(1, cardUnivTitle, cardUnivDescription);
+  const dynBiz  = getCard(2, cardBizTitle, cardBizDescription);
+
   return (
     <>
       {/* Facilities Section */}
@@ -227,10 +246,10 @@ const About = () => {
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 md:bottom-12 md:left-12">
-                <Heading as="h3" variant="card" color="white" className="mb-2 text-base md:text-xl">Daily Freshness,<br />Effortlessly Close<br /></Heading>
+                <Heading as="h3" variant="card" color="white" className="mb-2 text-base md:text-xl">{cardDailyTitle}</Heading>
                 <br className="hidden md:block" />
                 <Text size="sm" color="white" className="max-w-xs opacity-90 text-xs md:text-sm">
-                  From premium fruit markets to modern grocery stores like AEON and All Fresh, enjoy convenient access to quality ingredients every day.
+                  {cardDailyDescription}
                 </Text>
               </div>
             </LifestyleSlider>
@@ -243,8 +262,8 @@ const About = () => {
                 "/images/experiences/lifestyle/jakarta-premium-outlet.jpg",
                 "/images/experiences/lifestyle/decathlon.jpg",
               ]}
-              title="Endless Entertainment"
-              description="Living World Mall, IKEA, Flavor Bliss, Decathlon, and Jakarta Premium Outlet—all within a short drive from home."
+              title={dynEnt.title}
+              description={dynEnt.description}
               className="order-4"
             />
 
@@ -254,7 +273,7 @@ const About = () => {
               <Heading as="h3" variant="card" bodoni className="mb-3 italic text-lg md:text-xl">Sky House Alam Sutera<span className="font-sans not-italic text-[0.55em] align-super font-semibold">+</span></Heading>
               <div className="block bg-blue-300 h-1 w-16 my-4"></div>
               <Text size="base" color="charcoal" className="text-sm md:text-base">
-                Surrounded by top shopping malls, fresh groceries, leading universities, and thriving business hubs—everything you need is right at your fingertips.
+                {mainDescription}
               </Text>
               <div>
                 <Button
@@ -276,8 +295,8 @@ const About = () => {
                 "/images/experiences/univ/sgu.jpeg",
                 "/images/experiences/univ/ubm.jpeg",
               ]}
-              title="Top Universities Nearby"
-              description="Binus University, Swiss German University, and Universitas Bunda Mulia—ideal for students and academic professionals."
+              title={dynUniv.title}
+              description={dynUniv.description}
               className="order-4"
             />
 
@@ -286,8 +305,8 @@ const About = () => {
                 "/images/experiences/office/alfa-tower.jpg",
                 "/images/experiences/office/kino.jpg",
               ]}
-              title="Thriving Business Hub"
-              description="Synergy Building, Alfa Tower, Kino Tower, and other major offices in Alam Sutera's growing commercial district."
+              title={dynBiz.title}
+              description={dynBiz.description}
               className="order-5"
             />
           </div>

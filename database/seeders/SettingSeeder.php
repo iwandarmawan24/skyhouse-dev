@@ -18,6 +18,8 @@ class SettingSeeder extends Seeder
             ['key' => 'site_tagline', 'value' => 'Living Beyond Expectation', 'type' => 'text', 'group' => 'general'],
             ['key' => 'site_description', 'value' => 'Skyhouse Alam Sutera is a premium residential development offering modern living spaces in the heart of Alam Sutera, Tangerang.', 'type' => 'textarea', 'group' => 'general'],
             ['key' => 'site_logo', 'value' => 'https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png', 'type' => 'text', 'group' => 'general'],
+            ['key' => 'terms_url', 'value' => '/terms', 'type' => 'text', 'group' => 'general'],
+            ['key' => 'privacy_url', 'value' => '/privacy', 'type' => 'text', 'group' => 'general'],
 
             // Contact
             ['key' => 'contact_phone', 'value' => '+62 21 5088 9900', 'type' => 'text', 'group' => 'contact'],
@@ -37,6 +39,12 @@ class SettingSeeder extends Seeder
             ['key' => 'seo_meta_title', 'value' => 'Skyhouse Alamsutera - Living Beyond Expectation', 'type' => 'text', 'group' => 'seo'],
             ['key' => 'seo_meta_description', 'value' => 'Discover premium residential living at Skyhouse Alam Sutera, Tangerang. Modern apartments with world-class facilities.', 'type' => 'textarea', 'group' => 'seo'],
             ['key' => 'seo_og_image', 'value' => '/images/default-og-image.jpg', 'type' => 'text', 'group' => 'seo'],
+
+            // Section Subtitles
+            ['key' => 'about_journey_subtitle', 'value' => 'A journey of growth, innovation, and achievement that reflects our commitment to creating exceptional living experiences and sustainable long-term value.', 'type' => 'textarea', 'group' => 'sections'],
+            ['key' => 'about_values_subtitle', 'value' => 'Our values serve as the foundation of everything we do, guiding the way we plan, develop, and deliver exceptional living environments that stand the test of time.', 'type' => 'textarea', 'group' => 'sections'],
+            ['key' => 'top_sales_subtitle', 'value' => 'Meet our top performing sales consultants, ready to assist you every step of the way.', 'type' => 'textarea', 'group' => 'sections'],
+            ['key' => 'facilities_section_subtitle', 'value' => 'Click on each card to explore our complete range of facilities', 'type' => 'textarea', 'group' => 'sections'],
 
             // KPR Calculator
             ['key' => 'kpr_interest_rate', 'value' => '8.5', 'type' => 'number', 'group' => 'calculator'],

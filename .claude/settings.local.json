@@ -37,7 +37,11 @@
       "Read(//opt/homebrew/bin/**)",
       "Bash(command -v docker)",
       "Bash(composer show *)",
-      "Bash(php8.3 artisan *)"
+      "Bash(php8.3 artisan *)",
+      "Read(//usr/bin/**)",
+      "Read(//opt/homebrew/Cellar/**)",
+      "Bash(/usr/bin/php artisan *)",
+      "Bash(php8.2 artisan *)"
     ],
     "deny": [],
     "ask": []

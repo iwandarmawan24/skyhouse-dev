@@ -104,8 +104,8 @@ const Footer = () => {
           <div className="footer_bottom">
             <Text>&copy; {new Date().getFullYear()} {siteName}. All rights reserved.</Text>
             <div className="footer_bottom-links">
-              <Link href="/terms">Terms and Conditions</Link>
-              <Link href="/privacy">Privacy Policy</Link>
+              <Link href={general.terms_url || '/terms'}>Terms and Conditions</Link>
+              <Link href={general.privacy_url || '/privacy'}>Privacy Policy</Link>
             </div>
           </div>
         </div>

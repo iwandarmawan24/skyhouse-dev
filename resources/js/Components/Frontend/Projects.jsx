@@ -59,8 +59,9 @@ const Projects = ({ projects: backendProjects = [] }) => {
         <div>
           {/* Header with Tabs */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-16 gap-6">
-            <div className="flex flex-col w-full md:flex-row items-start md:items-center gap-6 md:gap-12">
-              <Heading as="h2" variant="section" className="flex-1 w-full">Unit <span className="font-bodoni !italic">Type</span></Heading>
+            <div className="flex flex-col w-full items-start gap-4">
+              <Heading as="h2" variant="section" className="w-full">Room <span className="font-bodoni !italic">Type</span></Heading>
+              <p className="text-gray-500 text-base max-w-2xl">Every unit is designed with intention, maximizing light, airflow, and functionality to create a space that feels natural, practical, and timeless.</p>
             </div>
           </div>
 

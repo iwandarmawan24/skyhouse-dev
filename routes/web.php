@@ -36,10 +36,13 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VirtualTourBannerController;
 use App\Http\Controllers\Admin\ProjectPageInfoController;
 use App\Http\Controllers\Admin\AboutCompanyInfoController;
+use App\Http\Controllers\Admin\HomepageExperienceController;
+use App\Http\Controllers\Admin\HomepageExperienceCardController;
 use App\Http\Controllers\Admin\AboutHeroController;
 use App\Http\Controllers\Admin\AboutMissionController;
 use App\Http\Controllers\Admin\AboutAchievementController;
 use App\Http\Controllers\Admin\AboutValueController;
+use App\Http\Controllers\Admin\AboutSectionInfoController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Frontend\EventController as FrontendEventController;
 use App\Http\Controllers\Frontend\HeroBannerController as FrontendHeroBannerController;
@@ -169,6 +172,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::get('/virtual-tour-banner/edit', [VirtualTourBannerController::class, 'edit'])->name('virtual-tour-banner.edit');
             Route::put('/virtual-tour-banner', [VirtualTourBannerController::class, 'update'])->name('virtual-tour-banner.update');
 
+            // Homepage Experience (CRUD)
+            Route::put('/homepage-experience/main-card', [HomepageExperienceCardController::class, 'updateMainCard'])->name('homepage-experience.main-card.update');
+            Route::post('/homepage-experience/update-order', [HomepageExperienceCardController::class, 'updateOrder'])->name('homepage-experience.update-order');
+            Route::get('/homepage-experience', [HomepageExperienceCardController::class, 'index'])->name('homepage-experience.index');
+            Route::get('/homepage-experience/create', [HomepageExperienceCardController::class, 'create'])->name('homepage-experience.create');
+            Route::post('/homepage-experience', [HomepageExperienceCardController::class, 'store'])->name('homepage-experience.store');
+            Route::get('/homepage-experience/{card}/edit', [HomepageExperienceCardController::class, 'edit'])->name('homepage-experience.edit');
+            Route::put('/homepage-experience/{card}', [HomepageExperienceCardController::class, 'update'])->name('homepage-experience.update');
+            Route::delete('/homepage-experience/{card}', [HomepageExperienceCardController::class, 'destroy'])->name('homepage-experience.destroy');
+
             // Project Page Info
             Route::get('/project-page-info/edit', [ProjectPageInfoController::class, 'edit'])->name('project-page-info.edit');
             Route::put('/project-page-info', [ProjectPageInfoController::class, 'update'])->name('project-page-info.update');
@@ -186,6 +199,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
                 // Mission (singleton)
                 Route::get('/mission/edit', [AboutMissionController::class, 'edit'])->name('mission.edit');
                 Route::put('/mission', [AboutMissionController::class, 'update'])->name('mission.update');
+
+                // Section Subtitles
+                Route::get('/section-info/edit', [AboutSectionInfoController::class, 'edit'])->name('section-info.edit');
+                Route::put('/section-info', [AboutSectionInfoController::class, 'update'])->name('section-info.update');
 
                 // Core Values (repeating)
                 Route::post('/values/update-order', [AboutValueController::class, 'updateOrder'])->name('values.update-order');
