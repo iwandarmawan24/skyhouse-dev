@@ -76,7 +76,7 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
               </div>
 
               <a href="/project" className="navbar2_link">
-                Type
+                Unit Type
               </a>
 
               <a href="/facilities" className="navbar2_link">

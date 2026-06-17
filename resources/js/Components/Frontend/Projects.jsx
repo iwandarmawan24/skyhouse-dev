@@ -60,7 +60,7 @@ const Projects = ({ projects: backendProjects = [] }) => {
           {/* Header with Tabs */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-16 gap-6">
             <div className="flex flex-col w-full md:flex-row items-start md:items-center gap-6 md:gap-12">
-              <Heading as="h2" variant="section" className="flex-1 w-full">Room <span className="font-bodoni !italic">Type</span></Heading>
+              <Heading as="h2" variant="section" className="flex-1 w-full">Unit <span className="font-bodoni !italic">Type</span></Heading>
             </div>
           </div>
 

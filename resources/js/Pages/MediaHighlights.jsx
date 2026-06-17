@@ -208,8 +208,8 @@ export default function MediaHighlights({ featured, pageInfo = null }) {
                   <div className="news-load-more">
                     <button
                       onClick={handleLoadMore}
-                      className="events-load-more-btn"
                       disabled={loading}
+                      className="px-12 py-4 bg-[#1E3A8A] text-white border-none rounded-full text-base font-semibold cursor-pointer transition-all duration-300 shadow-[0_4px_6px_rgba(30,58,138,0.3)] hover:bg-[#1e40af] hover:-translate-y-0.5 hover:shadow-[0_6px_12px_rgba(30,58,138,0.4)] disabled:opacity-60 disabled:cursor-not-allowed"
                     >
                       {loading ? "Loading..." : "Load More"}
                     </button>
