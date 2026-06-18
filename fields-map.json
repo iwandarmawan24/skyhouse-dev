@@ -1,0 +1,1884 @@
+{
+  "generated": "2026-06-17T19:43:19Z",
+  "features": {
+    "hero-banners": {
+      "label": "Hero Banners",
+      "controller": "HeroBannerController",
+      "model": "HeroBanner",
+      "table": "hero_banners",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "reorder",
+        "bulk-delete"
+      ],
+      "fields": [
+        {
+          "name": "image_uid",
+          "label": "Gambar Banner (Desktop)",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library. JPG/PNG/WEBP, max 2MB"
+        },
+        {
+          "name": "mobile_image_uid",
+          "label": "Gambar Banner (Mobile)",
+          "type": "image",
+          "required": false,
+          "notes": "Opsional. Jika kosong, gunakan gambar desktop"
+        },
+        {
+          "name": "banner_link",
+          "label": "Link Banner",
+          "type": "url",
+          "required": false,
+          "notes": "URL tujuan saat banner diklik, max 255 karakter"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "awards": {
+      "label": "Awards",
+      "controller": "AwardController",
+      "model": "Award",
+      "table": "awards",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "image_uid",
+          "label": "Gambar Awards",
+          "type": "image",
+          "required": true,
+          "notes": "Satu gambar yang menampilkan seluruh koleksi award. FK ke media_library"
+        }
+      ]
+    },
+    "construction-progress": {
+      "label": "Construction Progress (Header)",
+      "controller": "ConstructionProgressController",
+      "model": "ConstructionProgress",
+      "table": "construction_progresses",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "title",
+          "label": "Judul Seksi",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi",
+          "type": "textarea",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "image_uid",
+          "label": "Gambar Utama",
+          "type": "image",
+          "required": true,
+          "notes": "FK ke media_library"
+        }
+      ]
+    },
+    "construction-progress-items": {
+      "label": "Construction Progress Items",
+      "controller": "ConstructionProgressItemController",
+      "model": "ConstructionProgressItem",
+      "table": "construction_progress_items",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete"
+      ],
+      "fields": [
+        {
+          "name": "progress_date",
+          "label": "Tanggal Progress",
+          "type": "date",
+          "required": true,
+          "notes": ""
+        },
+        {
+          "name": "image_uid",
+          "label": "Foto Progress",
+          "type": "image",
+          "required": true,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "title",
+          "label": "Judul",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi",
+          "type": "textarea",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "virtual-tour-banner": {
+      "label": "Virtual Tour Banner",
+      "controller": "VirtualTourBannerController",
+      "model": "VirtualTourBanner",
+      "table": "virtual_tour_banners",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "image_uid",
+          "label": "Gambar Banner",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "url",
+          "label": "URL Virtual Tour",
+          "type": "url",
+          "required": false,
+          "notes": "Link ke platform 360 virtual tour, max 500 karakter"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "homepage-experience": {
+      "label": "Homepage Experience Section",
+      "controller": "HomepageExperienceCardController + HomepageExperienceController",
+      "model": "HomepageExperienceCard + HomepageExperience",
+      "table": "homepage_experience_cards + homepage_experience",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "reorder"
+      ],
+      "fields": [
+        {
+          "name": "main_description",
+          "label": "Deskripsi Utama",
+          "type": "textarea",
+          "required": false,
+          "notes": "Teks pengantar seksi experience, max 1000 karakter"
+        },
+        {
+          "name": "card_daily_title",
+          "label": "Judul Kartu Daily",
+          "type": "text",
+          "required": false,
+          "notes": "Static card: Effortless Grocery Shopping"
+        },
+        {
+          "name": "card_daily_description",
+          "label": "Deskripsi Kartu Daily",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 1000 karakter"
+        },
+        {
+          "name": "card_entertainment_title",
+          "label": "Judul Kartu Entertainment",
+          "type": "text",
+          "required": false,
+          "notes": "Static card: Urban Lifestyle Living"
+        },
+        {
+          "name": "card_entertainment_description",
+          "label": "Deskripsi Kartu Entertainment",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 1000 karakter"
+        },
+        {
+          "name": "card_university_title",
+          "label": "Judul Kartu University",
+          "type": "text",
+          "required": false,
+          "notes": "Static card: Top Universities Nearby"
+        },
+        {
+          "name": "card_university_description",
+          "label": "Deskripsi Kartu University",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 1000 karakter"
+        },
+        {
+          "name": "card_business_title",
+          "label": "Judul Kartu Business",
+          "type": "text",
+          "required": false,
+          "notes": "Static card: Thriving Business Hub"
+        },
+        {
+          "name": "card_business_description",
+          "label": "Deskripsi Kartu Business",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 1000 karakter"
+        },
+        {
+          "name": "title",
+          "label": "Judul Kartu Dinamis",
+          "type": "text",
+          "required": true,
+          "notes": "Kartu experience yang bisa ditambah/edit/hapus/reorder, max 255 karakter"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi Kartu Dinamis",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 2000 karakter"
+        },
+        {
+          "name": "order",
+          "label": "Urutan",
+          "type": "number",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": false,
+          "notes": ""
+        }
+      ]
+    },
+    "location-map": {
+      "label": "Location Map",
+      "controller": "LocationMapController",
+      "model": "LocationMap",
+      "table": "location_maps",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "title",
+          "label": "Judul Lokasi",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "image_uid",
+          "label": "Gambar Peta",
+          "type": "image",
+          "required": true,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "google_maps_link",
+          "label": "Link Google Maps",
+          "type": "url",
+          "required": false,
+          "notes": "max 500 karakter"
+        }
+      ]
+    },
+    "instagram-gallery": {
+      "label": "Instagram Gallery",
+      "controller": "InstagramGalleryController",
+      "model": "InstagramGallery",
+      "table": "instagram_galleries",
+      "type": "list",
+      "actions": [
+        "edit",
+        "delete",
+        "toggle-active"
+      ],
+      "note": "6 posisi tetap (1–6). Tidak ada create — update per posisi saja.",
+      "fields": [
+        {
+          "name": "position",
+          "label": "Posisi (1–6)",
+          "type": "number",
+          "required": true,
+          "notes": "min:1, max:6. Masing-masing posisi memiliki 1 slot gambar"
+        },
+        {
+          "name": "image_uid",
+          "label": "Gambar",
+          "type": "image",
+          "required": true,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "top-sales": {
+      "label": "Top Sales",
+      "controller": "TopSalesController",
+      "model": "TopSales",
+      "table": "top_sales",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "reorder"
+      ],
+      "fields": [
+        {
+          "name": "name",
+          "label": "Nama Sales",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "job_title",
+          "label": "Jabatan",
+          "type": "text",
+          "required": false,
+          "notes": "max 32 karakter"
+        },
+        {
+          "name": "position",
+          "label": "Posisi/Urutan",
+          "type": "number",
+          "required": true,
+          "notes": "min:1"
+        },
+        {
+          "name": "image_uid",
+          "label": "Foto",
+          "type": "image",
+          "required": true,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "faqs": {
+      "label": "FAQs",
+      "controller": "FaqController",
+      "model": "Faq",
+      "table": "faqs",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "reorder"
+      ],
+      "fields": [
+        {
+          "name": "question",
+          "label": "Pertanyaan",
+          "type": "text",
+          "required": true,
+          "notes": "max 500 karakter"
+        },
+        {
+          "name": "answer",
+          "label": "Jawaban",
+          "type": "textarea",
+          "required": true,
+          "notes": ""
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "products": {
+      "label": "Products (Unit Properti)",
+      "controller": "ProductController",
+      "model": "Product",
+      "table": "products",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete"
+      ],
+      "fields": [
+        {
+          "name": "name",
+          "label": "Nama Produk",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter. Slug digenerate otomatis"
+        },
+        {
+          "name": "type",
+          "label": "Tipe",
+          "type": "select",
+          "required": true,
+          "notes": "Pilihan: house | apartment | land"
+        },
+        {
+          "name": "short_description",
+          "label": "Deskripsi Singkat",
+          "type": "textarea",
+          "required": true,
+          "notes": "max 500 karakter. Tampil di kartu produk"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi Lengkap",
+          "type": "textarea",
+          "required": true,
+          "notes": "Rich text (TipTap)"
+        },
+        {
+          "name": "price",
+          "label": "Harga",
+          "type": "number",
+          "required": true,
+          "notes": "Desimal, min:0"
+        },
+        {
+          "name": "bedrooms",
+          "label": "Kamar Tidur",
+          "type": "text",
+          "required": false,
+          "notes": "max 20 karakter. Mendukung nilai seperti '2+1'"
+        },
+        {
+          "name": "bathrooms",
+          "label": "Kamar Mandi",
+          "type": "number",
+          "required": false,
+          "notes": "Integer, min:0"
+        },
+        {
+          "name": "living_room",
+          "label": "Ruang Tamu",
+          "type": "boolean",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "is_balcon_exist",
+          "label": "Ada Balkon",
+          "type": "boolean",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "kitchen",
+          "label": "Dapur",
+          "type": "boolean",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "is_furnished",
+          "label": "Furnitur",
+          "type": "select",
+          "required": false,
+          "notes": "Pilihan: furnished | semi-furnished | unfurnished"
+        },
+        {
+          "name": "facilities",
+          "label": "Fasilitas",
+          "type": "json",
+          "required": false,
+          "notes": "Array string fasilitas produk"
+        },
+        {
+          "name": "video_url",
+          "label": "URL Video",
+          "type": "url",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "video_360_url",
+          "label": "URL Video 360",
+          "type": "url",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "is_featured",
+          "label": "Unggulan",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        },
+        {
+          "name": "is_sold",
+          "label": "Terjual",
+          "type": "boolean",
+          "required": true,
+          "notes": "Hanya ada di form edit"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        },
+        {
+          "name": "featured_image_uid",
+          "label": "Gambar Utama",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "card_image_uid",
+          "label": "Gambar Kartu",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library. Tampil di listing"
+        },
+        {
+          "name": "gallery_uids",
+          "label": "Galeri Foto",
+          "type": "json",
+          "required": false,
+          "notes": "Array UID media_library. Tampil di lightbox detail produk"
+        }
+      ],
+      "sub_features": {
+        "product-sliders": {
+          "label": "Product Sliders",
+          "actions": [
+            "create",
+            "edit",
+            "delete",
+            "reorder"
+          ],
+          "fields": [
+            {
+              "name": "image_uid",
+              "label": "Gambar Slider",
+              "type": "image",
+              "required": true,
+              "notes": "FK ke media_library"
+            },
+            {
+              "name": "title",
+              "label": "Judul",
+              "type": "text",
+              "required": false,
+              "notes": "max 255 karakter"
+            },
+            {
+              "name": "description",
+              "label": "Deskripsi",
+              "type": "textarea",
+              "required": false,
+              "notes": ""
+            },
+            {
+              "name": "is_active",
+              "label": "Status Aktif",
+              "type": "boolean",
+              "required": true,
+              "notes": ""
+            }
+          ]
+        }
+      }
+    },
+    "project-page-info": {
+      "label": "Project Page Info (Banner)",
+      "controller": "ProjectPageInfoController",
+      "model": "ProjectPageInfo",
+      "table": "project_page_infos",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "banner_image_uid",
+          "label": "Gambar Banner",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "title",
+          "label": "Judul Banner",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "subtitle",
+          "label": "Subjudul Banner",
+          "type": "text",
+          "required": false,
+          "notes": "max 500 karakter"
+        }
+      ]
+    },
+    "brochures": {
+      "label": "Brochures",
+      "controller": "BrochureController",
+      "model": "Brochure",
+      "table": "brochures",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "note": "Controller hanya memiliki edit/update — managed sebagai singleton (1 brochure aktif).",
+      "fields": [
+        {
+          "name": "file_uid",
+          "label": "File Brosur",
+          "type": "file",
+          "required": true,
+          "notes": "FK ke media_library. Format PDF"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": false,
+          "notes": ""
+        }
+      ]
+    },
+    "facilities": {
+      "label": "Facilities",
+      "controller": "FacilityController",
+      "model": "Facility",
+      "table": "facilities",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "reorder"
+      ],
+      "fields": [
+        {
+          "name": "name",
+          "label": "Nama Fasilitas",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi",
+          "type": "textarea",
+          "required": true,
+          "notes": ""
+        },
+        {
+          "name": "icon",
+          "label": "Icon (CSS class / emoji)",
+          "type": "text",
+          "required": false,
+          "notes": "max 100 karakter"
+        },
+        {
+          "name": "image_uids",
+          "label": "Galeri Foto",
+          "type": "json",
+          "required": false,
+          "notes": "Array UID media_library. Multi-image gallery untuk flip card. Cast: array"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "facility-sliders": {
+      "label": "Facility Sliders",
+      "controller": "FacilitySliderController",
+      "model": "FacilitySlider",
+      "table": "facility_sliders",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "reorder"
+      ],
+      "fields": [
+        {
+          "name": "image_uid",
+          "label": "Gambar Slider",
+          "type": "image",
+          "required": true,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "title",
+          "label": "Judul",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi",
+          "type": "textarea",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "facilities-page-info": {
+      "label": "Facilities Page Info (Banner)",
+      "controller": "FacilitiesPageInfoController",
+      "model": "FacilitiesPageInfo",
+      "table": "facilities_page_infos",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "banner_image_uid",
+          "label": "Gambar Banner",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "title",
+          "label": "Judul Banner",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "subtitle",
+          "label": "Subjudul Banner",
+          "type": "text",
+          "required": false,
+          "notes": "max 500 karakter"
+        }
+      ]
+    },
+    "about-company-intro": {
+      "label": "About Company Info",
+      "controller": "AboutCompanyInfoController",
+      "model": "AboutCompanyInfo",
+      "table": "about_company_infos",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "heading_line_1",
+          "label": "Heading Baris 1",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter. Contoh: 'About'"
+        },
+        {
+          "name": "heading_line_2",
+          "label": "Heading Baris 2",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter. Contoh: 'Company'"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi Perusahaan",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 5000 karakter"
+        }
+      ]
+    },
+    "about-hero": {
+      "label": "About Hero Section",
+      "controller": "AboutHeroController",
+      "model": "AboutHero",
+      "table": "about_heroes",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "title",
+          "label": "Judul Hero",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "subtitle",
+          "label": "Subjudul",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 2000 karakter"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 5000 karakter"
+        }
+      ]
+    },
+    "milestones": {
+      "label": "Milestones / Company History",
+      "controller": "MilestoneController",
+      "model": "Milestone",
+      "table": "milestones",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "reorder"
+      ],
+      "fields": [
+        {
+          "name": "year",
+          "label": "Tahun",
+          "type": "text",
+          "required": true,
+          "notes": "max 10 karakter. Contoh: '2024'"
+        },
+        {
+          "name": "title",
+          "label": "Judul Milestone",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi",
+          "type": "textarea",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "image_uid",
+          "label": "Gambar",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "about-values": {
+      "label": "About Values (Core Values)",
+      "controller": "AboutValueController",
+      "model": "AboutValue",
+      "table": "about_values",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "reorder"
+      ],
+      "fields": [
+        {
+          "name": "icon_emoji",
+          "label": "Emoji Icon",
+          "type": "text",
+          "required": false,
+          "notes": "max 16 karakter. Contoh: '🎯'"
+        },
+        {
+          "name": "icon_uid",
+          "label": "Gambar Icon",
+          "type": "image",
+          "required": false,
+          "notes": "Opsional. Jika ada, menggantikan emoji. FK ke media_library"
+        },
+        {
+          "name": "title",
+          "label": "Judul Value",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 2000 karakter"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "about-achievements": {
+      "label": "About Achievements",
+      "controller": "AboutAchievementController",
+      "model": "AboutAchievement",
+      "table": "about_achievements",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "reorder"
+      ],
+      "fields": [
+        {
+          "name": "number",
+          "label": "Angka / Statistik",
+          "type": "text",
+          "required": true,
+          "notes": "max 64 karakter. Contoh: '5,000+' atau '99%'"
+        },
+        {
+          "name": "label",
+          "label": "Label",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter. Contoh: 'Happy Families'"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "about-mission": {
+      "label": "About Mission Statement",
+      "controller": "AboutMissionController",
+      "model": "AboutMission",
+      "table": "about_missions",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "title",
+          "label": "Judul Misi",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "statement",
+          "label": "Pernyataan Misi",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 5000 karakter"
+        }
+      ]
+    },
+    "about-section-info": {
+      "label": "About Section Subtitles",
+      "controller": "AboutSectionInfoController",
+      "model": "Setting (sections group)",
+      "table": "settings",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "note": "Mengupdate Settings table dengan group='sections'. Field ini mengontrol subtitle di halaman About.",
+      "fields": [
+        {
+          "name": "about_journey_subtitle",
+          "label": "Subtitle Seksi Journey",
+          "type": "text",
+          "required": false,
+          "notes": "max 500 karakter"
+        },
+        {
+          "name": "about_values_subtitle",
+          "label": "Subtitle Seksi Values",
+          "type": "text",
+          "required": false,
+          "notes": "max 500 karakter"
+        },
+        {
+          "name": "top_sales_subtitle",
+          "label": "Subtitle Seksi Top Sales",
+          "type": "text",
+          "required": false,
+          "notes": "max 500 karakter"
+        },
+        {
+          "name": "facilities_section_subtitle",
+          "label": "Subtitle Seksi Facilities",
+          "type": "text",
+          "required": false,
+          "notes": "max 500 karakter"
+        }
+      ]
+    },
+    "articles": {
+      "label": "Articles / News",
+      "controller": "ArticleController",
+      "model": "Article",
+      "table": "articles",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete"
+      ],
+      "fields": [
+        {
+          "name": "title",
+          "label": "Judul Artikel",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "subtitle",
+          "label": "Subjudul",
+          "type": "text",
+          "required": false,
+          "notes": "max 500 karakter"
+        },
+        {
+          "name": "article_category_uid",
+          "label": "Kategori",
+          "type": "relation",
+          "required": true,
+          "notes": "FK ke article_categories.uid"
+        },
+        {
+          "name": "slug",
+          "label": "Slug URL",
+          "type": "text",
+          "required": false,
+          "notes": "Auto-generate dari title jika kosong. max 255 karakter, unique"
+        },
+        {
+          "name": "excerpt",
+          "label": "Ringkasan",
+          "type": "textarea",
+          "required": false,
+          "notes": "Tampil di listing/preview"
+        },
+        {
+          "name": "content",
+          "label": "Konten",
+          "type": "textarea",
+          "required": true,
+          "notes": "Rich text (TipTap WYSIWYG)"
+        },
+        {
+          "name": "featured_image_uid",
+          "label": "Gambar Utama",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "video_url",
+          "label": "URL Video",
+          "type": "url",
+          "required": false,
+          "notes": "max 500 karakter"
+        },
+        {
+          "name": "tags",
+          "label": "Tags",
+          "type": "text",
+          "required": false,
+          "notes": "Comma-separated string"
+        },
+        {
+          "name": "author_uid",
+          "label": "Penulis",
+          "type": "relation",
+          "required": false,
+          "notes": "FK ke users.uid"
+        },
+        {
+          "name": "editor_uid",
+          "label": "Editor",
+          "type": "relation",
+          "required": false,
+          "notes": "FK ke users.uid"
+        },
+        {
+          "name": "meta_title",
+          "label": "Meta Title (SEO)",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "meta_description",
+          "label": "Meta Description (SEO)",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 500 karakter"
+        },
+        {
+          "name": "meta_keywords",
+          "label": "Meta Keywords (SEO)",
+          "type": "text",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "focus_keywords",
+          "label": "Focus Keywords (SEO)",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "status",
+          "label": "Status Publikasi",
+          "type": "select",
+          "required": true,
+          "notes": "Pilihan: draft | scheduled | published"
+        },
+        {
+          "name": "scheduled_at",
+          "label": "Jadwal Publish",
+          "type": "date",
+          "required": false,
+          "notes": "Hanya aktif jika status = scheduled. Sistem auto-publish via cron"
+        }
+      ]
+    },
+    "article-categories": {
+      "label": "Article Categories",
+      "controller": "ArticleCategoryController",
+      "model": "ArticleCategory",
+      "table": "article_categories",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete"
+      ],
+      "fields": [
+        {
+          "name": "name",
+          "label": "Nama Kategori",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter, unique"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi",
+          "type": "textarea",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "news-page-info": {
+      "label": "News Page Info (Banner)",
+      "controller": "NewsPageInfoController",
+      "model": "NewsPageInfo",
+      "table": "news_page_infos",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "banner_image_uid",
+          "label": "Gambar Banner",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "title",
+          "label": "Judul Banner",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "subtitle",
+          "label": "Subjudul Banner",
+          "type": "text",
+          "required": false,
+          "notes": "max 500 karakter"
+        }
+      ]
+    },
+    "media-highlights": {
+      "label": "Media Highlights",
+      "controller": "MediaHighlightController",
+      "model": "MediaHighlight",
+      "table": "media_highlights",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete"
+      ],
+      "fields": [
+        {
+          "name": "media_uid",
+          "label": "Media Outlet",
+          "type": "relation",
+          "required": true,
+          "notes": "FK ke media.uid (tabel outlet berita: Kompas, Tempo, dll)"
+        },
+        {
+          "name": "title",
+          "label": "Judul Artikel Media",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "publish_date",
+          "label": "Tanggal Terbit",
+          "type": "date",
+          "required": true,
+          "notes": "Cast: date"
+        },
+        {
+          "name": "image_uid",
+          "label": "Gambar Thumbnail",
+          "type": "image",
+          "required": true,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "article_url",
+          "label": "URL Artikel Asli",
+          "type": "url",
+          "required": true,
+          "notes": "max 500 karakter. Link ke halaman media eksternal"
+        }
+      ]
+    },
+    "media-highlights-page-info": {
+      "label": "Media Highlights Page Info (Banner)",
+      "controller": "MediaHighlightsPageInfoController",
+      "model": "MediaHighlightsPageInfo",
+      "table": "media_highlights_page_infos",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "banner_image_uid",
+          "label": "Gambar Banner",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "title",
+          "label": "Judul Banner",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "subtitle",
+          "label": "Subjudul Banner",
+          "type": "text",
+          "required": false,
+          "notes": "max 500 karakter"
+        }
+      ]
+    },
+    "events": {
+      "label": "Events",
+      "controller": "EventController",
+      "model": "Event",
+      "table": "events",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete"
+      ],
+      "fields": [
+        {
+          "name": "title",
+          "label": "Judul Event",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "short_description",
+          "label": "Deskripsi Singkat",
+          "type": "textarea",
+          "required": true,
+          "notes": "max 500 karakter"
+        },
+        {
+          "name": "description",
+          "label": "Konten Event",
+          "type": "textarea",
+          "required": true,
+          "notes": "Rich text (TipTap)"
+        },
+        {
+          "name": "event_date",
+          "label": "Tanggal Event",
+          "type": "date",
+          "required": true,
+          "notes": "Cast: datetime. Timezone: Asia/Jakarta"
+        },
+        {
+          "name": "event_time",
+          "label": "Waktu Event",
+          "type": "text",
+          "required": true,
+          "notes": ""
+        },
+        {
+          "name": "location",
+          "label": "Lokasi",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "image_uid",
+          "label": "Gambar Event",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "registration_link",
+          "label": "Link Pendaftaran",
+          "type": "url",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        },
+        {
+          "name": "slug",
+          "label": "Slug URL",
+          "type": "text",
+          "required": false,
+          "notes": "Auto-generate. Unique per event"
+        },
+        {
+          "name": "meta_title",
+          "label": "Meta Title (SEO)",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "meta_description",
+          "label": "Meta Description (SEO)",
+          "type": "textarea",
+          "required": false,
+          "notes": "max 500 karakter"
+        },
+        {
+          "name": "meta_keywords",
+          "label": "Meta Keywords (SEO)",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "focus_keyword",
+          "label": "Focus Keyword (SEO)",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        }
+      ]
+    },
+    "events-page-info": {
+      "label": "Events Page Info (Banner)",
+      "controller": "EventsPageInfoController",
+      "model": "EventsPageInfo",
+      "table": "events_page_infos",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "banner_image_uid",
+          "label": "Gambar Banner",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "title",
+          "label": "Judul Banner",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "subtitle",
+          "label": "Subjudul Banner",
+          "type": "text",
+          "required": false,
+          "notes": "max 500 karakter"
+        }
+      ]
+    },
+    "galleries": {
+      "label": "Gallery",
+      "controller": "GalleryController",
+      "model": "Gallery",
+      "table": "galleries",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "reorder"
+      ],
+      "fields": [
+        {
+          "name": "image_uid",
+          "label": "Gambar",
+          "type": "image",
+          "required": true,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "title",
+          "label": "Judul",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi",
+          "type": "textarea",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "category",
+          "label": "Kategori",
+          "type": "select",
+          "required": false,
+          "notes": "Pilihan: facilities | units | events (filter tab di frontend)"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "careers": {
+      "label": "Career Listings",
+      "controller": "CareerController",
+      "model": "Career",
+      "table": "careers",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "reorder"
+      ],
+      "fields": [
+        {
+          "name": "title",
+          "label": "Judul Posisi",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "position",
+          "label": "Nama Departemen / Divisi",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "body",
+          "label": "Deskripsi Pekerjaan",
+          "type": "textarea",
+          "required": true,
+          "notes": "Rich text (TipTap)"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    },
+    "career-settings": {
+      "label": "Career Settings",
+      "controller": "CareerSettingController",
+      "model": "CareerSetting",
+      "table": "career_settings",
+      "type": "singleton",
+      "actions": [
+        "edit"
+      ],
+      "fields": [
+        {
+          "name": "apply_email",
+          "label": "Email Penerima Lamaran",
+          "type": "text",
+          "required": false,
+          "notes": "Format email, max 255 karakter. Email tujuan saat kandidat melamar"
+        }
+      ]
+    },
+    "media-library": {
+      "label": "Media Library",
+      "controller": "MediaLibraryController",
+      "model": "MediaLibrary",
+      "table": "media_library",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete",
+        "bulk-delete"
+      ],
+      "fields": [
+        {
+          "name": "files",
+          "label": "Upload File",
+          "type": "file",
+          "required": true,
+          "notes": "Multi-upload. Max 100MB per file. JPG/PNG/WEBP/PDF/SVG/MP4"
+        },
+        {
+          "name": "folder",
+          "label": "Folder",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter. Untuk organisasi file"
+        },
+        {
+          "name": "alt_text",
+          "label": "Alt Text",
+          "type": "text",
+          "required": false,
+          "notes": "max 255 karakter. Digunakan untuk SEO & aksesibilitas"
+        },
+        {
+          "name": "caption",
+          "label": "Caption",
+          "type": "text",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "description",
+          "label": "Deskripsi",
+          "type": "textarea",
+          "required": false,
+          "notes": ""
+        },
+        {
+          "name": "tags",
+          "label": "Tags",
+          "type": "json",
+          "required": false,
+          "notes": "Array string untuk pencarian/filter"
+        }
+      ]
+    },
+    "policies": {
+      "label": "Policies (Terms & Privacy)",
+      "controller": "PolicyController",
+      "model": "Policy",
+      "table": "policies",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete"
+      ],
+      "fields": [
+        {
+          "name": "type",
+          "label": "Tipe Kebijakan",
+          "type": "select",
+          "required": true,
+          "notes": "Pilihan: privacy | terms | refund | shipping | other"
+        },
+        {
+          "name": "title",
+          "label": "Judul",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "content",
+          "label": "Konten",
+          "type": "textarea",
+          "required": true,
+          "notes": "Rich text (TipTap). Mendukung headings untuk auto-TOC"
+        },
+        {
+          "name": "version",
+          "label": "Versi",
+          "type": "text",
+          "required": false,
+          "notes": "Tampil di hero banner halaman policy. Contoh: '1.2'"
+        }
+      ]
+    },
+    "contacts": {
+      "label": "Contact Submissions",
+      "controller": "ContactController",
+      "model": "ContactSubmission",
+      "table": "contact_submissions",
+      "type": "list",
+      "actions": [
+        "delete",
+        "export"
+      ],
+      "note": "Read-only untuk melihat submission. Field editable hanya status. Export ke CSV dan XLSX tersedia.",
+      "fields": [
+        {
+          "name": "status",
+          "label": "Status",
+          "type": "select",
+          "required": true,
+          "notes": "Pilihan: new | in_progress | resolved"
+        }
+      ],
+      "readonly_fields": [
+        {
+          "name": "full_name",
+          "label": "Nama Lengkap",
+          "type": "text"
+        },
+        {
+          "name": "email",
+          "label": "Email",
+          "type": "text"
+        },
+        {
+          "name": "phone",
+          "label": "No. Telepon",
+          "type": "text"
+        },
+        {
+          "name": "subject",
+          "label": "Subjek",
+          "type": "text"
+        },
+        {
+          "name": "project",
+          "label": "Proyek Diminati",
+          "type": "text"
+        },
+        {
+          "name": "message",
+          "label": "Pesan",
+          "type": "textarea"
+        },
+        {
+          "name": "residence",
+          "label": "Domisili",
+          "type": "text"
+        }
+      ]
+    },
+    "users": {
+      "label": "Admin Users",
+      "controller": "UserController",
+      "model": "User",
+      "table": "users",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete"
+      ],
+      "note": "User tidak bisa menghapus akun sendiri. Role superadmin diperlukan untuk manajemen user.",
+      "fields": [
+        {
+          "name": "email",
+          "label": "Email",
+          "type": "text",
+          "required": true,
+          "notes": "Unique per user"
+        },
+        {
+          "name": "password",
+          "label": "Password",
+          "type": "text",
+          "required": true,
+          "notes": "Required saat create, opsional saat edit. Min 8 karakter, harus confirmed"
+        },
+        {
+          "name": "username",
+          "label": "Username",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter, unique. Hanya huruf kecil, angka, titik, underscore, strip"
+        },
+        {
+          "name": "full_name",
+          "label": "Nama Lengkap",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "role",
+          "label": "Role",
+          "type": "select",
+          "required": true,
+          "notes": "Pilihan: staff | superadmin. Hierarki: superadmin > admin > staff"
+        },
+        {
+          "name": "status",
+          "label": "Status",
+          "type": "select",
+          "required": true,
+          "notes": "Pilihan: active | inactive"
+        }
+      ]
+    },
+    "media-outlets": {
+      "label": "Media Outlets (Sumber Berita)",
+      "controller": "MediaController",
+      "model": "Media",
+      "table": "media",
+      "type": "list",
+      "actions": [
+        "create",
+        "edit",
+        "delete"
+      ],
+      "note": "Master data outlet media (Kompas, Tempo, dll). Digunakan sebagai FK di media_highlights.",
+      "fields": [
+        {
+          "name": "name",
+          "label": "Nama Outlet Media",
+          "type": "text",
+          "required": true,
+          "notes": "max 255 karakter"
+        },
+        {
+          "name": "logo_uid",
+          "label": "Logo Outlet",
+          "type": "image",
+          "required": false,
+          "notes": "FK ke media_library"
+        },
+        {
+          "name": "is_active",
+          "label": "Status Aktif",
+          "type": "boolean",
+          "required": true,
+          "notes": ""
+        }
+      ]
+    }
+  }
+}

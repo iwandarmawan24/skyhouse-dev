@@ -14,7 +14,9 @@ class SettingController extends Controller
      */
     public function index()
     {
-        $settings = Setting::orderBy('key')->get()->groupBy('group');
+        $settings = Setting::orderBy('key')->get()
+            ->filter(fn($s) => $s->group !== 'sections')
+            ->groupBy('group');
 
         return Inertia::render('Admin/Settings/Index', [
             'settings' => $settings,

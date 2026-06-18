@@ -198,9 +198,12 @@ class ProductController extends Controller
             'gallery_uids.*' => 'exists:media_library,uid',
         ]);
 
-        // Update slug if name changed
+        // Update slug if name changed and results in a different slug
         if ($validated['name'] !== $product->name) {
-            $validated['slug'] = Str::slug($validated['name']);
+            $newSlug = Str::slug($validated['name']);
+            if ($newSlug !== $product->slug) {
+                $validated['slug'] = $newSlug;
+            }
         }
 
         // Handle facilities JSON

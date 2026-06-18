@@ -78,7 +78,7 @@ export default function Index({ settings }) {
         if (setting.key.includes('url') || setting.key.includes('link')) {
             return (
                 <input
-                    type="url"
+                    type="text"
                     value={data[setting.key]}
                     onChange={(e) => setData(setting.key, e.target.value)}
                     className="w-full px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -221,9 +221,27 @@ export default function Index({ settings }) {
                 </div>
             )}
 
+            {/* Section Subtitles notice — managed on dedicated page */}
+            {settings['sections'] && (
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 flex items-start gap-3">
+                    <svg className="w-5 h-5 text-blue-500 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z" />
+                    </svg>
+                    <div>
+                        <p className="text-sm font-medium text-blue-800">Section Subtitles dikelola di halaman tersendiri</p>
+                        <p className="text-sm text-blue-600 mt-0.5">
+                            Subtitle untuk seksi-seksi halaman (About Journey, Core Values, Top Sales, Facilities) dapat diubah di{' '}
+                            <a href="/admin/about/section-info/edit" className="underline font-medium hover:text-blue-800">
+                                About Us → Section Subtitles
+                            </a>.
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Form */}
             <form onSubmit={handleSubmit} className="space-y-6">
-                {Object.keys(settings).map((group) => (
+                {Object.keys(settings).filter(group => group !== 'sections').map((group) => (
                     <div key={group} className="bg-white rounded-xl shadow-sm p-6">
                         <h2 className="text-lg font-semibold text-gray-900 mb-4 capitalize">
                             {group} Settings
