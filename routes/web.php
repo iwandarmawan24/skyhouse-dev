@@ -101,7 +101,9 @@ Route::get('/contact-us', [\App\Http\Controllers\Frontend\ContactController::cla
 Route::post('/contact', [\App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/terms', [\App\Http\Controllers\Frontend\PolicyController::class, 'terms'])->name('terms');
+Route::get('/terms-conditions', [\App\Http\Controllers\Frontend\PolicyController::class, 'terms'])->name('terms-conditions');
 Route::get('/privacy', [\App\Http\Controllers\Frontend\PolicyController::class, 'privacy'])->name('privacy');
+Route::get('/privacy-policy', [\App\Http\Controllers\Frontend\PolicyController::class, 'privacy'])->name('privacy-policy');
 
 // Components Showcase Route
 Route::get('/components', function () {
