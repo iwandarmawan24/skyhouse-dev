@@ -5,7 +5,15 @@ import { Button } from '@/Components/ui/Button';
 import { Card } from '@/Components/ui/Card';
 import { Badge } from '@/Components/ui/Badge';
 import { Input } from '@/Components/ui/Input';
-import { Pagination } from '@/Components/ui/Pagination';
+import {
+    Pagination,
+    PaginationContent,
+    PaginationItem,
+    PaginationLink,
+    PaginationPrevious,
+    PaginationNext,
+    PaginationEllipsis,
+} from '@/Components/ui/Pagination';
 import {
     Table,
     TableBody,
@@ -23,6 +31,78 @@ import {
     DialogTitle,
 } from '@/Components/ui/Dialog';
 import { Search, Mail, Eye, Trash2, Download } from 'lucide-react';
+
+function ContactsPagination({ contacts, filters }) {
+    const { current_page, last_page, from, to, total } = contacts;
+
+    const goToPage = (page) => {
+        if (page < 1 || page > last_page) return;
+        router.get('/admin/contacts', { ...filters, page }, {
+            preserveState: true,
+            preserveScroll: true,
+            only: ['contacts'],
+        });
+    };
+
+    const pageNumbers = () => {
+        const pages = [];
+        const delta = 2;
+        const left = Math.max(2, current_page - delta);
+        const right = Math.min(last_page - 1, current_page + delta);
+
+        pages.push(1);
+        if (left > 2) pages.push('...');
+        for (let i = left; i <= right; i++) pages.push(i);
+        if (right < last_page - 1) pages.push('...');
+        if (last_page > 1) pages.push(last_page);
+
+        return pages;
+    };
+
+    if (last_page <= 1) return null;
+
+    return (
+        <div className="flex items-center justify-between px-4 py-3 border-t border-gray-200">
+            <p className="text-sm text-gray-600">
+                Showing <span className="font-medium">{from}</span>–<span className="font-medium">{to}</span> of{' '}
+                <span className="font-medium">{total}</span> results
+            </p>
+            <Pagination className="w-auto mx-0">
+                <PaginationContent>
+                    <PaginationItem>
+                        <PaginationPrevious
+                            onClick={() => goToPage(current_page - 1)}
+                            className={current_page === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                        />
+                    </PaginationItem>
+
+                    {pageNumbers().map((page, i) => (
+                        <PaginationItem key={i}>
+                            {page === '...' ? (
+                                <PaginationEllipsis />
+                            ) : (
+                                <PaginationLink
+                                    isActive={page === current_page}
+                                    onClick={() => goToPage(page)}
+                                    className="cursor-pointer"
+                                >
+                                    {page}
+                                </PaginationLink>
+                            )}
+                        </PaginationItem>
+                    ))}
+
+                    <PaginationItem>
+                        <PaginationNext
+                            onClick={() => goToPage(current_page + 1)}
+                            className={current_page === last_page ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                        />
+                    </PaginationItem>
+                </PaginationContent>
+            </Pagination>
+        </div>
+    );
+}
 
 export default function Index({ contacts, filters }) {
     const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
@@ -271,8 +351,7 @@ export default function Index({ contacts, filters }) {
                             </TableBody>
                         </Table>
 
-                        {/* Pagination */}
-                        <Pagination data={contacts} />
+                        <ContactsPagination contacts={contacts} filters={localFilters} />
                     </>
                 ) : (
                     <div className="text-center py-12">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Head, useForm, usePage } from "@inertiajs/react";
+import { Head } from "@inertiajs/react";
 import Navigation from "@/Components/Frontend/Navigation";
 import PageLayout from "@/Components/Frontend/PageLayout";
 import Footer from "@/Components/Frontend/Footer";
@@ -9,33 +9,56 @@ import axios from 'axios';
 import "@css/frontend.css";
 import '@css/frontend/contact-page.css';
 
+const emptyForm = (formLoadTime) => ({
+  fullName: "",
+  residence: "",
+  email: "",
+  phone: "",
+  subject: "",
+  room_type: "",
+  message: "",
+  honeypot: "",
+  formLoadTime: formLoadTime || Math.floor(Date.now() / 1000),
+});
+
 export default function Contact({ formLoadTime, products = [] }) {
-  const { flash } = usePage().props;
-  const { data, setData, post, processing, errors, reset } = useForm({
-    fullName: "",
-    residence: "",
-    email: "",
-    phone: "",
-    subject: "",
-    room_type: "",
-    message: "",
-    honeypot: "",
-    formLoadTime: formLoadTime || Math.floor(Date.now() / 1000),
-  });
+  const [data, setData] = useState(emptyForm(formLoadTime));
+  const [processing, setProcessing] = useState(false);
+  const [errors, setErrors] = useState({});
+  const [successMessage, setSuccessMessage] = useState(null);
 
   const [openFaq, setOpenFaq] = useState(null);
   const [faqs, setFaqs] = useState([]);
   const [isLoadingFaqs, setIsLoadingFaqs] = useState(true);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleChange = (field) => (e) => {
+    setData((prev) => ({ ...prev, [field]: e.target.value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: null }));
+  };
 
-    post('/contact', {
-      onSuccess: () => {
-        reset();
-        setData('formLoadTime', Math.floor(Date.now() / 1000));
-      },
-    });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setProcessing(true);
+    setErrors({});
+    setSuccessMessage(null);
+
+    try {
+      const response = await axios.post('/api/contact', data);
+      setSuccessMessage(response.data.message);
+      setData(emptyForm(Math.floor(Date.now() / 1000)));
+      setTimeout(() => setSuccessMessage(null), 5000);
+    } catch (error) {
+      if (error.response?.status === 422) {
+        const serverErrors = error.response.data.errors ?? {};
+        setErrors(serverErrors);
+      } else if (error.response?.data?.errors) {
+        setErrors(error.response.data.errors);
+      } else {
+        setErrors({ general: 'Something went wrong. Please try again.' });
+      }
+    } finally {
+      setProcessing(false);
+    }
   };
 
   // Fetch FAQs from backend
@@ -70,7 +93,7 @@ export default function Contact({ formLoadTime, products = [] }) {
 
       <PageLayout showBackgroundDefault={true}>
         <main className="main-wrapper">
-          {flash?.success && (
+          {successMessage && (
             <div style={{
               position: 'fixed',
               top: '2rem',
@@ -83,7 +106,7 @@ export default function Contact({ formLoadTime, products = [] }) {
               boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
               animation: 'slideInRight 0.3s ease-out'
             }}>
-              {flash.success}
+              {successMessage}
             </div>
           )}
 
@@ -127,7 +150,7 @@ export default function Contact({ formLoadTime, products = [] }) {
                             name="fullName"
                             placeholder="Budi Ramdhan"
                             value={data.fullName}
-                            onChange={(e) => setData('fullName', e.target.value)}
+                            onChange={handleChange('fullName')}
                             required
                           />
                           {errors.fullName && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.fullName}</span>}
@@ -142,7 +165,7 @@ export default function Contact({ formLoadTime, products = [] }) {
                             name="residence"
                             placeholder="Kembangan, Jakarta Barat"
                             value={data.residence}
-                            onChange={(e) => setData('residence', e.target.value)}
+                            onChange={handleChange('residence')}
                             required
                           />
                           {errors.residence && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.residence}</span>}
@@ -160,7 +183,7 @@ export default function Contact({ formLoadTime, products = [] }) {
                             name="email"
                             placeholder="name@gmail.com"
                             value={data.email}
-                            onChange={(e) => setData('email', e.target.value)}
+                            onChange={handleChange('email')}
                             required
                           />
                           {errors.email && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.email}</span>}
@@ -175,7 +198,7 @@ export default function Contact({ formLoadTime, products = [] }) {
                             name="phone"
                             placeholder="0821234567"
                             value={data.phone}
-                            onChange={(e) => setData('phone', e.target.value)}
+                            onChange={handleChange('phone')}
                             required
                           />
                           {errors.phone && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.phone}</span>}
@@ -191,7 +214,7 @@ export default function Contact({ formLoadTime, products = [] }) {
                             id="subject"
                             name="subject"
                             value={data.subject}
-                            onChange={(e) => setData('subject', e.target.value)}
+                            onChange={handleChange('subject')}
                             required
                           >
                             <option value="">
@@ -214,7 +237,7 @@ export default function Contact({ formLoadTime, products = [] }) {
                             id="room_type"
                             name="room_type"
                             value={data.room_type}
-                            onChange={(e) => setData('room_type', e.target.value)}
+                            onChange={handleChange('room_type')}
                             required
                           >
                             <option value="">
@@ -241,7 +264,7 @@ export default function Contact({ formLoadTime, products = [] }) {
                           placeholder="Dear Sky House team, I wanna ask about..."
                           rows="5"
                           value={data.message}
-                          onChange={(e) => setData('message', e.target.value)}
+                          onChange={handleChange('message')}
                           required
                         ></textarea>
                         {errors.message && <span style={{ color: '#ef4444', fontSize: '0.875rem', marginTop: '0.25rem' }}>{errors.message}</span>}
@@ -251,7 +274,7 @@ export default function Contact({ formLoadTime, products = [] }) {
                         type="text"
                         name="honeypot"
                         value={data.honeypot}
-                        onChange={(e) => setData('honeypot', e.target.value)}
+                        onChange={handleChange('honeypot')}
                         style={{
                           position: 'absolute',
                           left: '-9999px',

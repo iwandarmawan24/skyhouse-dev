@@ -10,29 +10,19 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ContactController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
         $query = ContactSubmission::latest();
 
-        // Filter by status
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-
-        // Filter by subject
         if ($request->filled('subject')) {
             $query->where('subject', $request->subject);
         }
-
-        // Filter by project
         if ($request->filled('project')) {
             $query->where('project', $request->project);
         }
-
-        // Search by name, email, or phone
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -46,13 +36,10 @@ class ContactController extends Controller
 
         return Inertia::render('Admin/Contacts/Index', [
             'contacts' => $contacts,
-            'filters' => $request->only(['status', 'subject', 'project', 'search']),
+            'filters'  => $request->only(['status', 'subject', 'project', 'search']),
         ]);
     }
 
-    /**
-     * Export contacts as CSV, respecting active filters.
-     */
     public function export(Request $request): StreamedResponse
     {
         $contacts = $this->filteredQuery($request)->get();
@@ -70,9 +57,6 @@ class ContactController extends Controller
         }, $filename, ['Content-Type' => 'text/csv']);
     }
 
-    /**
-     * Export contacts as proper XLSX, respecting active filters.
-     */
     public function exportExcel(Request $request)
     {
         $contacts = $this->filteredQuery($request)->get();
@@ -93,9 +77,85 @@ class ContactController extends Controller
         ]);
     }
 
+    public function show(ContactSubmission $contact)
+    {
+        if ($contact->status === 'new') {
+            $contact->update(['status' => 'in_progress']);
+        }
+
+        return Inertia::render('Admin/Contacts/Show', [
+            'contact' => $contact,
+        ]);
+    }
+
+    public function markAsRead(Request $request, ContactSubmission $contact)
+    {
+        $validated = $request->validate([
+            'status' => 'required|in:new,in_progress,resolved',
+        ]);
+
+        $contact->update($validated);
+
+        return back()->with('success', 'Contact status updated.');
+    }
+
+    public function destroy(ContactSubmission $contact)
+    {
+        $contact->delete();
+
+        return redirect()->route('admin.contacts.index')
+            ->with('success', 'Contact deleted successfully.');
+    }
+
+    private function filteredQuery(Request $request)
+    {
+        $query = ContactSubmission::latest();
+
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        if ($request->filled('subject')) {
+            $query->where('subject', $request->subject);
+        }
+        if ($request->filled('project')) {
+            $query->where('project', $request->project);
+        }
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('full_name', 'ilike', "%{$search}%")
+                    ->orWhere('email', 'ilike', "%{$search}%")
+                    ->orWhere('phone', 'ilike', "%{$search}%");
+            });
+        }
+
+        return $query;
+    }
+
+    private function contactRow(ContactSubmission $contact): array
+    {
+        $subjectMap = [
+            'inquiry'  => 'General Inquiry',
+            'purchase' => 'Purchase Information',
+            'visit'    => 'Schedule Visit',
+            'other'    => 'Other',
+        ];
+
+        return [
+            $contact->full_name,
+            $contact->email,
+            $contact->phone,
+            $contact->residence,
+            $subjectMap[$contact->subject] ?? $contact->subject,
+            $contact->project === 'kinary' ? 'Kinary House' : ($contact->project ?? ''),
+            $contact->message,
+            $contact->status,
+            $contact->created_at->format('Y-m-d H:i'),
+        ];
+    }
+
     private function buildXlsx(array $rows): string
     {
-        // Collect shared strings
         $strings     = [];
         $stringIndex = [];
         $idx = function (string $val) use (&$strings, &$stringIndex): int {
@@ -106,8 +166,7 @@ class ContactController extends Controller
             return $stringIndex[$val];
         };
 
-        // Build sheet rows XML
-        $cols    = ['A','B','C','D','E','F','G','H','I'];
+        $cols      = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
         $sheetRows = '';
         foreach ($rows as $ri => $row) {
             $rn       = $ri + 1;
@@ -127,7 +186,6 @@ class ContactController extends Controller
             . ' xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">'
             . '<sheetData>' . $sheetRows . '</sheetData></worksheet>';
 
-        // Build shared strings XML
         $count = count($strings);
         $ssXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
             . "<sst xmlns=\"http://schemas.openxmlformats.org/spreadsheetml/2006/main\" count=\"{$count}\" uniqueCount=\"{$count}\">";
@@ -136,7 +194,6 @@ class ContactController extends Controller
         }
         $ssXml .= '</sst>';
 
-        // Pack into ZIP (XLSX = ZIP)
         $tmp = tempnam(sys_get_temp_dir(), 'xlsx_');
         $zip = new \ZipArchive();
         $zip->open($tmp, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
@@ -197,92 +254,5 @@ class ContactController extends Controller
         unlink($tmp);
 
         return $content;
-    }
-
-    private function filteredQuery(Request $request)
-    {
-        $query = ContactSubmission::latest();
-
-        if ($request->filled('status')) {
-            $query->where('status', $request->status);
-        }
-        if ($request->filled('subject')) {
-            $query->where('subject', $request->subject);
-        }
-        if ($request->filled('project')) {
-            $query->where('project', $request->project);
-        }
-        if ($request->filled('search')) {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('full_name', 'ilike', "%{$search}%")
-                    ->orWhere('email', 'ilike', "%{$search}%")
-                    ->orWhere('phone', 'ilike', "%{$search}%");
-            });
-        }
-
-        return $query;
-    }
-
-    private function contactRow(ContactSubmission $contact): array
-    {
-        $subjectMap = [
-            'inquiry'  => 'General Inquiry',
-            'purchase' => 'Purchase Information',
-            'visit'    => 'Schedule Visit',
-            'other'    => 'Other',
-        ];
-
-        return [
-            $contact->full_name,
-            $contact->email,
-            $contact->phone,
-            $contact->residence,
-            $subjectMap[$contact->subject] ?? $contact->subject,
-            $contact->project === 'kinary' ? 'Kinary House' : ($contact->project ?? ''),
-            $contact->message,
-            $contact->status,
-            $contact->created_at->format('Y-m-d H:i'),
-        ];
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(ContactSubmission $contact)
-    {
-        // Mark as in_progress when viewing if still new
-        if ($contact->status === 'new') {
-            $contact->update(['status' => 'in_progress']);
-        }
-
-        return Inertia::render('Admin/Contacts/Show', [
-            'contact' => $contact,
-        ]);
-    }
-
-    /**
-     * Mark contact as read/unread.
-     */
-    public function markAsRead(Request $request, ContactSubmission $contact)
-    {
-        $validated = $request->validate([
-            'status' => 'required|in:new,in_progress,resolved',
-        ]);
-
-        $contact->update($validated);
-
-        return back()->with('success', 'Contact status updated.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ContactSubmission $contact)
-    {
-        $contact->delete();
-
-        return redirect()->route('admin.contacts.index')
-            ->with('success', 'Contact deleted successfully.');
     }
 }

@@ -2,9 +2,9 @@
 
 use App\Http\Controllers\Admin\AboutController;
 use App\Http\Controllers\Admin\ArticleController;
+use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ArticleCategoryController;
 use App\Http\Controllers\Admin\AuthController;
-use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\EventsPageInfoController;
@@ -98,7 +98,6 @@ Route::get('/careers', [FrontendCareerController::class, 'index'])->name('career
 Route::get('/careers/{uid}', [FrontendCareerController::class, 'show'])->name('careers.detail');
 
 Route::get('/contact-us', [\App\Http\Controllers\Frontend\ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [\App\Http\Controllers\Frontend\ContactController::class, 'store'])->name('contact.store');
 
 Route::get('/terms', [\App\Http\Controllers\Frontend\PolicyController::class, 'terms'])->name('terms');
 Route::get('/terms-conditions', [\App\Http\Controllers\Frontend\PolicyController::class, 'terms'])->name('terms-conditions');
