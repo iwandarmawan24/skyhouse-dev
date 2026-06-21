@@ -4,7 +4,7 @@ import '../css/app.css';
 import { createRoot } from 'react-dom/client';
 import { createInertiaApp, router } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { trackPageView, initDelegatedTracking } from '@/tracker';
+import { trackPageView, trackTimeOnPage, initDelegatedTracking, onNavigate } from '@/tracker';
 
 const appName = import.meta.env.VITE_APP_NAME || 'SkyHouse Property';
 
@@ -17,26 +17,30 @@ createInertiaApp({
     const root = createRoot(el);
     root.render(<App {...props} />);
 
-    // Delegated click listener for data-track-* attributes
+    // Single delegated listeners — clicks, forms, copy, tel/mailto, WhatsApp
     initDelegatedTracking();
 
-    // Track the initial hard load — router 'navigate' may not fire for this
-    if (!isAdmin()) {
-      trackPageView();
-    }
+    // Track the initial hard load (direct URL / refresh)
+    if (!isAdmin()) trackPageView();
   },
-  progress: {
-    color: '#3B82F6',
-  },
+  progress: { color: '#3B82F6' },
 });
 
 // Track subsequent SPA navigations
 let initialLoad = true;
 router.on('navigate', () => {
   if (initialLoad) {
-    // Already tracked above in setup(); skip the first navigate event
+    // Initial page_view already fired above in setup()
     initialLoad = false;
     return;
   }
-  if (!isAdmin()) trackPageView();
+  if (!isAdmin()) {
+    onNavigate();     // reset scroll milestones + page timer
+    trackPageView();
+  }
+});
+
+// Send time-on-page just before the user leaves
+router.on('before', () => {
+  if (!isAdmin()) trackTimeOnPage();
 });

@@ -138,6 +138,15 @@ const EVENT_LABELS = {
     contact_click:         { label: 'Unit → Contact',     variant: 'default' },
     article_view:          { label: 'Article View',       variant: 'secondary' },
     media_highlight_click: { label: 'Media Highlight',    variant: 'secondary' },
+    nav_click:             { label: 'Nav Click',          variant: 'secondary' },
+    button_click:          { label: 'Button Click',       variant: 'secondary' },
+    outbound_link:         { label: 'Outbound Link',      variant: 'secondary' },
+    phone_click:           { label: 'Phone Click',        variant: 'success' },
+    email_click:           { label: 'Email Click',        variant: 'success' },
+    form_submit:           { label: 'Form Submit',        variant: 'default' },
+    scroll_depth:          { label: 'Scroll Depth',       variant: 'secondary' },
+    time_on_page:          { label: 'Time on Page',       variant: 'secondary' },
+    copy:                  { label: 'Copy',               variant: 'secondary' },
     click:                 { label: 'Click',              variant: 'secondary' },
 };
 

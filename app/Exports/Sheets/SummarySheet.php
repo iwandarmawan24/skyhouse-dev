@@ -37,7 +37,15 @@ class SummarySheet implements FromArray, WithTitle, WithHeadings, ShouldAutoSize
             'contact_click'         => 'Unit → Contact',
             'article_view'          => 'Article View',
             'media_highlight_click' => 'Media Highlight Click',
-            'click'                 => 'Generic Click',
+            'nav_click'             => 'Internal Nav Click',
+            'button_click'          => 'Button Click',
+            'outbound_link'         => 'Outbound Link',
+            'phone_click'           => 'Phone Click',
+            'email_click'           => 'Email Click',
+            'form_submit'           => 'Form Submit',
+            'scroll_depth'          => 'Scroll Depth Reached',
+            'time_on_page'          => 'Time on Page (event)',
+            'copy'                  => 'Text Copy',
         ];
 
         $rows = [];

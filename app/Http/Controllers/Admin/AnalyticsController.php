@@ -22,6 +22,9 @@ class AnalyticsController extends Controller
             'page_view', 'contact_submit', 'wa_click',
             'download_click', 'contact_click',
             'article_view', 'media_highlight_click',
+            'outbound_link', 'nav_click', 'button_click',
+            'phone_click', 'email_click', 'form_submit',
+            'scroll_depth', 'time_on_page', 'copy',
         ];
 
         $summary = [];
