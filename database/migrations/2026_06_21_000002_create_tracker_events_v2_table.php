@@ -8,6 +8,9 @@ return new class extends Migration
 {
     public function up(): void
     {
+        // Drop the naive first-pass table if it was never cleaned up by 000000
+        Schema::dropIfExists('tracker_events');
+
         Schema::create('tracker_events', function (Blueprint $table) {
             $table->id();
             $table->uuid('session_id')->nullable();
