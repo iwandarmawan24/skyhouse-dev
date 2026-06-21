@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { Link } from '@inertiajs/react';
+import { Head, Link } from '@inertiajs/react';
 import { Button, Heading, Text } from '@/Components/Frontend/atoms';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import '@css/frontend.css';
@@ -95,7 +95,12 @@ export default function Project({ projects = [], pageInfo = null }) {
   };
 
   return (
-    <PageLayout>
+    <>
+      <Head>
+        <title>Units Type - Sky House Alam Sutera</title>
+        <meta name="description" content="Discover the unit types available at Sky House Alam Sutera — thoughtfully designed residences built for modern living." />
+      </Head>
+      <PageLayout>
         {/* Top Banner Section */}
         <section className="project-top-banner" data-section="project-page-info">
           <div className="project-banner-image-wrapper">
@@ -156,6 +161,7 @@ export default function Project({ projects = [], pageInfo = null }) {
           })}
         </div>
     </PageLayout>
+    </>
   );
 }
 

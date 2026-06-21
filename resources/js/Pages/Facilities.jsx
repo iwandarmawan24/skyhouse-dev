@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import { Heading, Text, Button } from '@/Components/Frontend/atoms';
 import ImagePreviewModal from '@/Components/Frontend/ImagePreviewModal';
@@ -93,7 +93,12 @@ export default function Facilities({ facilities: backendFacilities = [], pageInf
   };
 
   return (
-    <PageLayout showBackgroundDefault={true}>
+    <>
+      <Head>
+        <title>Facilities - Sky House Alam Sutera</title>
+        <meta name="description" content="Explore world-class facilities at Sky House Alam Sutera — designed for comfort, security, and modern living." />
+      </Head>
+      <PageLayout showBackgroundDefault={true}>
       <div
         className="w-full"
         style={{ 
@@ -286,5 +291,6 @@ export default function Facilities({ facilities: backendFacilities = [], pageInf
         />
       )}
     </PageLayout>
+    </>
   );
 }

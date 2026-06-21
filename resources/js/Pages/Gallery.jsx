@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { Head } from '@inertiajs/react';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import '@css/frontend.css';
 
@@ -60,7 +61,12 @@ export default function Gallery({ galleries = [] }) {
   };
 
   return (
-    <PageLayout showBackgroundDefault={true}>
+    <>
+      <Head>
+        <title>Gallery - Sky House Alam Sutera</title>
+        <meta name="description" content="Browse the gallery of Sky House Alam Sutera — interior, exterior, and lifestyle photos of our residential development." />
+      </Head>
+      <PageLayout showBackgroundDefault={true}>
       <div className="w-full" data-section="galleries">
         {/* Hero Section with Featured Slider */}
         <div className="relative w-full h-96 md:h-[500px] lg:h-[600px] overflow-hidden bg-gray-900">
@@ -255,5 +261,6 @@ export default function Gallery({ galleries = [] }) {
         </div>
       )}
     </PageLayout>
+    </>
   );
 }

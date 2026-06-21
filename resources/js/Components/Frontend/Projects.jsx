@@ -60,7 +60,7 @@ const Projects = ({ projects: backendProjects = [] }) => {
           {/* Header with Tabs */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 md:mb-16 gap-6">
             <div className="flex flex-col w-full items-start gap-4">
-              <Heading as="h2" variant="section" className="w-full">Room <span className="font-bodoni !italic">Type</span></Heading>
+              <Heading as="h2" variant="section" className="w-full">Unit <span className="font-bodoni !italic">Type</span></Heading>
               <p className="text-gray-500 text-base max-w-2xl">Every unit is designed with intention, maximizing light, airflow, and functionality to create a space that feels natural, practical, and timeless.</p>
             </div>
           </div>
@@ -93,7 +93,7 @@ const Projects = ({ projects: backendProjects = [] }) => {
                       title={project.title}
                       description={project.description}
                       status={project.status}
-                      href={`/project/${project.id}`}
+                      href={project.id && typeof project.id === 'string' ? `/project/${project.id}` : null}
                     />
                   </SwiperSlide>
                 ))}

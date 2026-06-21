@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from '@inertiajs/react';
 
 const ProjectCard = ({
   image,
@@ -10,7 +11,7 @@ const ProjectCard = ({
   status,
   href
 }) => {
-  const CardWrapper = href ? 'a' : 'div';
+  const CardWrapper = href ? Link : 'div';
   const isUnavailable = status === 'sold-out';
 
   // Strip HTML tags and create excerpt

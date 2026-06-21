@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { usePage } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
 import Navigation from '@/Components/Frontend/Navigation';
 import PageLayout from '@/Components/Frontend/PageLayout';
 import { Heading, Text } from '@/Components/Frontend/atoms';
@@ -127,7 +127,12 @@ export default function About({
 
 
   return (
-    <PageLayout showBackgroundDefault={true}>
+    <>
+      <Head>
+        <title>About Us - Sky House Alam Sutera</title>
+        <meta name="description" content="Learn about Sky House Alam Sutera — our story, vision, and the team behind one of Indonesia's premier residential developments." />
+      </Head>
+      <PageLayout showBackgroundDefault={true}>
       <main className="main-wrapper">
         {/* About Section */}
         <section className="py-16 md:py-32 px-4 md:px-8 lg:px-16 relative overflow-hidden" data-section="about-company-intro">
@@ -444,5 +449,6 @@ export default function About({
         )}
       </main>
     </PageLayout>
+    </>
   );
 }
