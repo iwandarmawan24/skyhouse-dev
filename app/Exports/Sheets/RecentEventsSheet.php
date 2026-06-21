@@ -3,15 +3,14 @@
 namespace App\Exports\Sheets;
 
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class RecentEventsSheet implements FromQuery, WithTitle, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class RecentEventsSheet implements FromArray, WithTitle, WithHeadings, ShouldAutoSize, WithStyles
 {
     public function title(): string
     {
@@ -26,7 +25,7 @@ class RecentEventsSheet implements FromQuery, WithTitle, WithHeadings, WithMappi
         ];
     }
 
-    public function query()
+    public function array(): array
     {
         return DB::table('tracker_events')
             ->leftJoin('tracker_sessions', 'tracker_events.session_id', '=', 'tracker_sessions.id')
@@ -44,25 +43,23 @@ class RecentEventsSheet implements FromQuery, WithTitle, WithHeadings, WithMappi
                 'tracker_sessions.browser',
                 'tracker_sessions.os',
             )
-            ->orderByDesc('tracker_events.created_at');
-    }
-
-    public function map($row): array
-    {
-        return [
-            $row->id,
-            $row->created_at,
-            $row->event_type,
-            $row->event_target  ?? '—',
-            $row->target_id     ?? '—',
-            $row->target_label  ?? '—',
-            $row->page_url      ?? '—',
-            $row->referrer      ?? '—',
-            $row->device_type   ?? '—',
-            $row->browser       ?? '—',
-            $row->os            ?? '—',
-            $row->properties    ?? '—',
-        ];
+            ->orderByDesc('tracker_events.created_at')
+            ->get()
+            ->map(fn($r) => [
+                $r->id,
+                $r->created_at,
+                $r->event_type,
+                $r->event_target  ?? '—',
+                $r->target_id     ?? '—',
+                $r->target_label  ?? '—',
+                $r->page_url      ?? '—',
+                $r->referrer      ?? '—',
+                $r->device_type   ?? '—',
+                $r->browser       ?? '—',
+                $r->os            ?? '—',
+                is_string($r->properties) ? $r->properties : json_encode($r->properties),
+            ])
+            ->toArray();
     }
 
     public function styles(Worksheet $sheet): array

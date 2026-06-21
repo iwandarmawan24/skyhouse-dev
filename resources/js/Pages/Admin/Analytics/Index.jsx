@@ -223,16 +223,7 @@ export default function Analytics({
                 <StatCard icon={MousePointerClick} label="Media Clicks"    today={s.media_highlight_click?.today} week={s.media_highlight_click?.week} month={s.media_highlight_click?.month} color="text-pink-600"   bg="bg-pink-50" />
             </div>
 
-            {/* Sankey — Visitor Journey */}
-            <Card className="overflow-hidden mb-8">
-                <div className="px-5 py-4 border-b border-gray-100">
-                    <h2 className="font-semibold text-gray-900">Visitor Journey (last 30 days)</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">How users move between events within a session — width of each flow = number of unique sessions</p>
-                </div>
-                <div className="p-5">
-                    <SankeyChart nodes={sankeyData?.nodes ?? []} links={sankeyData?.links ?? []} />
-                </div>
-            </Card>
+            {/* Sankey — Visitor Journey (hidden until enough data is collected) */}
 
             {/* Top Pages + Event Breakdown + Device Breakdown */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">

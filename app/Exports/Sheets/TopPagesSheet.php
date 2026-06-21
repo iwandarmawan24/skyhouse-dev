@@ -3,15 +3,14 @@
 namespace App\Exports\Sheets;
 
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class TopPagesSheet implements FromQuery, WithTitle, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class TopPagesSheet implements FromArray, WithTitle, WithHeadings, ShouldAutoSize, WithStyles
 {
     public function title(): string
     {
@@ -20,37 +19,33 @@ class TopPagesSheet implements FromQuery, WithTitle, WithHeadings, WithMapping, 
 
     public function headings(): array
     {
-        return ['Page URL', 'Total Views', 'Last 30 Days', 'Last 7 Days', 'Today'];
+        return ['Page URL', 'All Time', '30 Days', '7 Days', 'Today'];
     }
 
-    public function query()
+    public function array(): array
     {
-        return DB::table('tracker_events')
-            ->where('event_type', 'page_view')
-            ->whereNotNull('page_url')
-            ->select('page_url', DB::raw('count(*) as total'))
-            ->groupBy('page_url')
-            ->orderByDesc('total');
-    }
+        $rows = DB::select("
+            SELECT
+                page_url,
+                COUNT(*) AS total,
+                COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '30 days') AS month,
+                COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '7 days')  AS week,
+                COUNT(*) FILTER (WHERE created_at >= DATE_TRUNC('day', NOW()))   AS today
+            FROM tracker_events
+            WHERE event_type = 'page_view'
+              AND page_url IS NOT NULL
+            GROUP BY page_url
+            ORDER BY total DESC
+            LIMIT 100
+        ");
 
-    public function map($row): array
-    {
-        $now   = now();
-        $today = $now->copy()->startOfDay();
-        $week  = $now->copy()->subDays(7);
-        $month = $now->copy()->subDays(30);
-
-        $base = DB::table('tracker_events')
-            ->where('event_type', 'page_view')
-            ->where('page_url', $row->page_url);
-
-        return [
-            $row->page_url,
-            $row->total,
-            (clone $base)->where('created_at', '>=', $month)->count(),
-            (clone $base)->where('created_at', '>=', $week)->count(),
-            (clone $base)->where('created_at', '>=', $today)->count(),
-        ];
+        return array_map(fn($r) => [
+            $r->page_url,
+            $r->total,
+            $r->month,
+            $r->week,
+            $r->today,
+        ], $rows);
     }
 
     public function styles(Worksheet $sheet): array

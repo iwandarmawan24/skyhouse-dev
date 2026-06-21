@@ -8,6 +8,8 @@ import { trackPageView, initDelegatedTracking } from '@/tracker';
 
 const appName = import.meta.env.VITE_APP_NAME || 'SkyHouse Property';
 
+const isAdmin = () => window.location.pathname.startsWith('/admin');
+
 createInertiaApp({
   title: (title) => `${title} - ${appName}`,
   resolve: (name) => resolvePageComponent(`./Pages/${name}.jsx`, import.meta.glob('./Pages/**/*.jsx')),
@@ -15,16 +17,26 @@ createInertiaApp({
     const root = createRoot(el);
     root.render(<App {...props} />);
 
-    // Single delegated click listener for data-track-* attributes
+    // Delegated click listener for data-track-* attributes
     initDelegatedTracking();
+
+    // Track the initial hard load — router 'navigate' may not fire for this
+    if (!isAdmin()) {
+      trackPageView();
+    }
   },
   progress: {
     color: '#3B82F6',
   },
 });
 
-// Fire page_view on every Inertia navigation (skip admin)
+// Track subsequent SPA navigations
+let initialLoad = true;
 router.on('navigate', () => {
-  if (window.location.pathname.startsWith('/admin')) return;
-  trackPageView();
+  if (initialLoad) {
+    // Already tracked above in setup(); skip the first navigate event
+    initialLoad = false;
+    return;
+  }
+  if (!isAdmin()) trackPageView();
 });

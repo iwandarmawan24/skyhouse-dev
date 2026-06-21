@@ -19,40 +19,32 @@ class EventBreakdownSheet implements FromArray, WithTitle, WithHeadings, ShouldA
 
     public function headings(): array
     {
-        return ['Event Type', 'Event Target', 'Count (30d)', 'Count (7d)', 'Count (Today)', 'Count (All Time)'];
+        return ['Event Type', 'Target', 'All Time', '30 Days', '7 Days', 'Today'];
     }
 
     public function array(): array
     {
-        $now   = now();
-        $today = $now->copy()->startOfDay();
-        $week  = $now->copy()->subDays(7);
-        $month = $now->copy()->subDays(30);
+        $rows = DB::select("
+            SELECT
+                event_type,
+                COALESCE(event_target, '—') AS event_target,
+                COUNT(*) AS total,
+                COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '30 days') AS month,
+                COUNT(*) FILTER (WHERE created_at >= NOW() - INTERVAL '7 days')  AS week,
+                COUNT(*) FILTER (WHERE created_at >= DATE_TRUNC('day', NOW()))   AS today
+            FROM tracker_events
+            GROUP BY event_type, event_target
+            ORDER BY total DESC
+        ");
 
-        $rows = DB::table('tracker_events')
-            ->select('event_type', 'event_target', DB::raw('count(*) as total'))
-            ->groupBy('event_type', 'event_target')
-            ->orderByDesc('total')
-            ->get();
-
-        return $rows->map(function ($row) use ($today, $week, $month) {
-            $base = DB::table('tracker_events')
-                ->where('event_type', $row->event_type)
-                ->where(function ($q) use ($row) {
-                    $row->event_target
-                        ? $q->where('event_target', $row->event_target)
-                        : $q->whereNull('event_target');
-                });
-
-            return [
-                $row->event_type,
-                $row->event_target ?? '—',
-                (clone $base)->where('created_at', '>=', $month)->count(),
-                (clone $base)->where('created_at', '>=', $week)->count(),
-                (clone $base)->where('created_at', '>=', $today)->count(),
-                $row->total,
-            ];
-        })->toArray();
+        return array_map(fn($r) => [
+            $r->event_type,
+            $r->event_target,
+            $r->total,
+            $r->month,
+            $r->week,
+            $r->today,
+        ], $rows);
     }
 
     public function styles(Worksheet $sheet): array

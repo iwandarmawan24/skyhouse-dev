@@ -3,15 +3,14 @@
 namespace App\Exports\Sheets;
 
 use Illuminate\Support\Facades\DB;
-use Maatwebsite\Excel\Concerns\FromQuery;
+use Maatwebsite\Excel\Concerns\FromArray;
 use Maatwebsite\Excel\Concerns\ShouldAutoSize;
 use Maatwebsite\Excel\Concerns\WithHeadings;
-use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Concerns\WithStyles;
 use Maatwebsite\Excel\Concerns\WithTitle;
 use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 
-class SessionsSheet implements FromQuery, WithTitle, WithHeadings, WithMapping, ShouldAutoSize, WithStyles
+class SessionsSheet implements FromArray, WithTitle, WithHeadings, ShouldAutoSize, WithStyles
 {
     public function title(): string
     {
@@ -28,26 +27,25 @@ class SessionsSheet implements FromQuery, WithTitle, WithHeadings, WithMapping, 
         ];
     }
 
-    public function query()
+    public function array(): array
     {
-        return DB::table('tracker_sessions')->orderByDesc('first_seen');
-    }
-
-    public function map($row): array
-    {
-        return [
-            $row->id,
-            $row->device_type ?? '—',
-            $row->browser     ?? '—',
-            $row->os          ?? '—',
-            $row->landing_page ?? '—',
-            $row->referrer     ?? '—',
-            $row->utm_source   ?? '—',
-            $row->utm_medium   ?? '—',
-            $row->utm_campaign ?? '—',
-            $row->first_seen,
-            $row->last_seen,
-        ];
+        return DB::table('tracker_sessions')
+            ->orderByDesc('first_seen')
+            ->get()
+            ->map(fn($r) => [
+                $r->id,
+                $r->device_type  ?? '—',
+                $r->browser      ?? '—',
+                $r->os           ?? '—',
+                $r->landing_page ?? '—',
+                $r->referrer     ?? '—',
+                $r->utm_source   ?? '—',
+                $r->utm_medium   ?? '—',
+                $r->utm_campaign ?? '—',
+                $r->first_seen,
+                $r->last_seen,
+            ])
+            ->toArray();
     }
 
     public function styles(Worksheet $sheet): array
