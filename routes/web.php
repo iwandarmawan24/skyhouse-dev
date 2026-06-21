@@ -135,6 +135,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
         Route::get('/analytics', [AnalyticsController::class, 'index'])->middleware('role:superadmin,admin')->name('analytics.index');
+        Route::get('/analytics/export', [AnalyticsController::class, 'export'])->middleware('role:superadmin,admin')->name('analytics.export');
 
         // Routes accessible by all authenticated users (superadmin, admin, staff)
         Route::middleware('role:superadmin,admin,staff')->group(function () {

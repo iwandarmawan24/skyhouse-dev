@@ -7,7 +7,7 @@ import {
 } from '@/Components/ui/Table';
 import {
     Eye, MessageSquare, Phone, FileDown,
-    Home, Users, TrendingUp, MousePointerClick, Monitor, Smartphone, Tablet,
+    Home, Users, TrendingUp, MousePointerClick, Monitor, Smartphone, Tablet, Download,
 } from 'lucide-react';
 
 // ─── Sankey SVG renderer (zero dependencies) ─────────────────────────────────
@@ -179,9 +179,18 @@ export default function Analytics({
 
     return (
         <AdminLayout>
-            <div className="mb-6">
-                <h1 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h1>
-                <p className="text-gray-500 mt-1">Visitor behaviour and engagement tracking</p>
+            <div className="mb-6 flex items-start justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl font-bold text-gray-900">Analytics Dashboard</h1>
+                    <p className="text-gray-500 mt-1">Visitor behaviour and engagement tracking</p>
+                </div>
+                <a
+                    href="/admin/analytics/export"
+                    className="inline-flex items-center gap-2 px-4 py-2 bg-[#1E3A8A] text-white text-sm font-medium rounded-lg hover:bg-[#1e40af] transition-colors shrink-0"
+                >
+                    <Download className="h-4 w-4" />
+                    Download Excel
+                </a>
             </div>
 
             {/* Unique Sessions */}

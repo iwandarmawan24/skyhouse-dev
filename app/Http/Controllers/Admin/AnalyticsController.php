@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Exports\AnalyticsExport;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AnalyticsController extends Controller
 {
@@ -140,5 +142,12 @@ class AnalyticsController extends Controller
             'sankeyData'      => $sankeyData,
             'recentEvents'    => $recentEvents,
         ]);
+    }
+
+    public function export()
+    {
+        $filename = 'analytics-' . now()->format('Y-m-d_His') . '.xlsx';
+
+        return Excel::download(new AnalyticsExport(), $filename);
     }
 }
