@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Head, Link } from "@inertiajs/react";
+import useTracker from "@/hooks/useTracker";
 import Navigation from "@/Components/Frontend/Navigation";
 import PageLayout from "@/Components/Frontend/PageLayout";
 import Footer from "@/Components/Frontend/Footer";
@@ -9,6 +10,12 @@ import "@css/frontend/article-detail.css";
 import { Calendar, Tag } from "lucide-react";
 
 export default function ArticleDetail({ article, relatedArticles, seo }) {
+    const { track } = useTracker();
+
+    useEffect(() => {
+        track('article_view', { title: article.title, slug: article.slug });
+    }, [article.slug]);
+
     // Generate structured data for SEO
     const structuredData = {
         "@context": "https://schema.org",

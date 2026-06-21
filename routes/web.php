@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\ArticleController;
 use App\Http\Controllers\Admin\ContactController;
 use App\Http\Controllers\Admin\ArticleCategoryController;
 use App\Http\Controllers\Admin\AuthController;
+use App\Http\Controllers\Admin\AnalyticsController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\EventController;
 use App\Http\Controllers\Admin\EventsPageInfoController;
@@ -133,6 +134,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware('auth')->group(function () {
         Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        Route::get('/analytics', [AnalyticsController::class, 'index'])->middleware('role:superadmin,admin')->name('analytics.index');
 
         // Routes accessible by all authenticated users (superadmin, admin, staff)
         Route::middleware('role:superadmin,admin,staff')->group(function () {

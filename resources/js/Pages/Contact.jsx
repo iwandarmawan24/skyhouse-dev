@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Head, usePage } from "@inertiajs/react";
+import useTracker from "@/hooks/useTracker";
 import Navigation from "@/Components/Frontend/Navigation";
 import PageLayout from "@/Components/Frontend/PageLayout";
 import Footer from "@/Components/Frontend/Footer";
@@ -9,13 +10,13 @@ import axios from 'axios';
 import "@css/frontend.css";
 import '@css/frontend/contact-page.css';
 
-const emptyForm = (formLoadTime) => ({
+const emptyForm = (formLoadTime, params = {}) => ({
   fullName: "",
   residence: "",
   email: "",
   phone: "",
-  subject: "",
-  room_type: "",
+  subject: params.subject || "",
+  room_type: params.room_type || "",
   message: "",
   honeypot: "",
   formLoadTime: formLoadTime || Math.floor(Date.now() / 1000),
@@ -28,7 +29,14 @@ export default function Contact({ formLoadTime, products = [] }) {
   const phone   = contactSettings.contact_phone   || '+62 21 5088 9900';
   const address = contactSettings.contact_address || 'Jl. Alamsutera Boulevard No.88, Pakulonan Barat, Kelapa Dua, Tangerang, Banten 15810';
 
-  const [data, setData] = useState(emptyForm(formLoadTime));
+  const { track } = useTracker();
+  const urlParams = new URLSearchParams(window.location.search);
+  const referringProject = urlParams.get('utm_content');
+
+  const [data, setData] = useState(() => emptyForm(formLoadTime, {
+    subject:   urlParams.get('subject')   || "",
+    room_type: urlParams.get('room_type') || "",
+  }));
   const [processing, setProcessing] = useState(false);
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState(null);
@@ -50,8 +58,9 @@ export default function Contact({ formLoadTime, products = [] }) {
 
     try {
       const response = await axios.post('/api/contact', data);
+      track('contact_submit', { subject: data.subject, room_type: data.room_type, utm_source: urlParams.get('utm_source') || null });
       setSuccessMessage(response.data.message);
-      setData(emptyForm(Math.floor(Date.now() / 1000)));
+      setData(emptyForm(Math.floor(Date.now() / 1000), {}));
       setTimeout(() => setSuccessMessage(null), 5000);
     } catch (error) {
       if (error.response?.status === 422) {
@@ -99,39 +108,6 @@ export default function Contact({ formLoadTime, products = [] }) {
 
       <PageLayout showBackgroundDefault={true}>
         <main className="main-wrapper">
-          {successMessage && (
-            <div style={{
-              position: 'fixed',
-              top: '2rem',
-              right: '2rem',
-              zIndex: 9999,
-              background: '#10b981',
-              color: 'white',
-              padding: '1rem 1.5rem',
-              borderRadius: '8px',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
-              animation: 'slideInRight 0.3s ease-out'
-            }}>
-              {successMessage}
-            </div>
-          )}
-
-          {errors.general && (
-            <div style={{
-              position: 'fixed',
-              top: '2rem',
-              right: '2rem',
-              zIndex: 9999,
-              background: '#ef4444',
-              color: 'white',
-              padding: '1rem 1.5rem',
-              borderRadius: '8px',
-              boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
-            }}>
-              {errors.general}
-            </div>
-          )}
-
           <section className="contact-section">
             <div className="padding-global">
               <div className="contact-container">
@@ -145,6 +121,26 @@ export default function Contact({ formLoadTime, products = [] }) {
                       onSubmit={handleSubmit}
                       className="contact-form"
                     >
+                      {referringProject && (
+                        <div style={{
+                          marginBottom: '1.25rem',
+                          padding: '0.875rem 1.125rem',
+                          borderRadius: '8px',
+                          border: '1px solid #bfdbfe',
+                          background: '#eff6ff',
+                          color: '#1e40af',
+                          fontSize: '0.875rem',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.625rem',
+                        }}>
+                          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" style={{ flexShrink: 0 }}>
+                            <path d="M3 9L12 2L21 9V20C21 20.5304 20.7893 21.0391 20.4142 21.4142C20.0391 21.7893 19.5304 22 19 22H5C4.46957 22 3.96086 21.7893 3.58579 21.4142C3.21071 21.0391 3 20.5304 3 20V9Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                          <span>Enquiring about: <strong>{referringProject}</strong></span>
+                        </div>
+                      )}
+
                       <div className="form-row">
                         <div className="form-group">
                           <label htmlFor="fullName">
@@ -302,6 +298,48 @@ export default function Contact({ formLoadTime, products = [] }) {
                       >
                         {processing ? 'Submitting...' : 'Submit'}
                       </Button>
+
+                      {successMessage && (
+                        <div style={{
+                          marginTop: '1rem',
+                          padding: '1rem 1.25rem',
+                          borderRadius: '8px',
+                          border: '1px solid #bfdbfe',
+                          background: '#eff6ff',
+                          color: '#1e3a5f',
+                          fontSize: '0.9rem',
+                          lineHeight: '1.5',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '0.625rem',
+                        }}>
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0, marginTop: '1px' }}>
+                            <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm4.707 7.707-5.5 5.5a1 1 0 0 1-1.414 0l-2.5-2.5a1 1 0 1 1 1.414-1.414L8.5 11.086l4.793-4.793a1 1 0 0 1 1.414 1.414z" fill="#1d4ed8"/>
+                          </svg>
+                          <span>{successMessage}</span>
+                        </div>
+                      )}
+
+                      {errors.general && (
+                        <div style={{
+                          marginTop: '1rem',
+                          padding: '1rem 1.25rem',
+                          borderRadius: '8px',
+                          border: '1px solid #fca5a5',
+                          background: '#fef2f2',
+                          color: '#991b1b',
+                          fontSize: '0.9rem',
+                          lineHeight: '1.5',
+                          display: 'flex',
+                          alignItems: 'flex-start',
+                          gap: '0.625rem',
+                        }}>
+                          <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ flexShrink: 0, marginTop: '1px' }}>
+                            <path d="M10 0C4.477 0 0 4.477 0 10s4.477 10 10 10 10-4.477 10-10S15.523 0 10 0zm1 15H9v-2h2v2zm0-4H9V5h2v6z" fill="#ef4444"/>
+                          </svg>
+                          <span>{errors.general}</span>
+                        </div>
+                      )}
                     </form>
                   </div>
                 </div>

@@ -3,9 +3,11 @@ import PageLayout from '@/Components/Frontend/PageLayout';
 import { Heading, Text } from '@/Components/Frontend/atoms';
 import Button from '@/Components/Frontend/atoms/Button';
 import axios from 'axios';
+import useTracker from '@/hooks/useTracker';
 import '@css/frontend.css';
 
 export default function ProjectDetail({ project }) {
+  const { track } = useTracker();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalImageIndex, setModalImageIndex] = useState(0);
@@ -354,7 +356,10 @@ export default function ProjectDetail({ project }) {
                   Schedule a viewing or get more information about this property. Contact us to know more about pricing, availability, and special offers.
                 </Text>
 
-                <a href="/contact-us">
+                <a
+                  href={`/contact-us?utm_source=project_detail&utm_medium=cta&subject=purchase&room_type=${encodeURIComponent(project.name)}&utm_content=${encodeURIComponent(project.name)}`}
+                  onClick={() => track('unit_contact', { unit_name: project.name })}
+                >
                   <Button
                     variant="sunshine"
                     size="md"
@@ -370,7 +375,10 @@ export default function ProjectDetail({ project }) {
                     variant="terracota"
                     size="md"
                     fullWidth
-                    onClick={handleDownloadBrochure}
+                    onClick={() => {
+                      track('unit_brochure', { unit_name: project.name });
+                      handleDownloadBrochure();
+                    }}
                     disabled={isLoadingBrochure}
                   >
                     {isLoadingBrochure ? 'Loading...' : 'Download Brochure'}

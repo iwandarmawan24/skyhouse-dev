@@ -2,8 +2,10 @@ import React from "react";
 import Navigation from "./Navigation";
 import CTA from "./CTA";
 import Footer from "./Footer";
+import useTracker from "@/hooks/useTracker";
 
 const PageLayout = ({ showBackgroundDefault = false, hideLogoOnTop = false, children }) => {
+  const { track } = useTracker();
   const whatsappUrl = "https://api.whatsapp.com/send/?phone=6281387887986&text=Halo%2C+saya+dapat+info+dari+website.+Tolong+contact+saya+untuk+detail+SKY+HOUSE+ALAM+SUTERA%2B+%3F&type=phone_number&app_absent=0";
 
   return (
@@ -11,12 +13,13 @@ const PageLayout = ({ showBackgroundDefault = false, hideLogoOnTop = false, chil
       <Navigation hideLogoOnTop={hideLogoOnTop} showBackgroundDefault={showBackgroundDefault} />
       <main className="main-wrapper">{children}</main>
       <Footer />
-      
+
       {/* WhatsApp Floating Button */}
       <a
         href={whatsappUrl}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={() => track('whatsapp_click')}
         className="fixed bottom-4 right-4 w-14 h-14 md:bottom-6 md:right-6 md:w-[78px] md:h-[78px] bg-[#25D366] rounded-full flex items-center justify-center shadow-[0_4px_12px_rgba(37,211,102,0.4)] hover:shadow-[0_6px_16px_rgba(37,211,102,0.6)] hover:scale-110 active:scale-95 transition-all duration-300 ease-in-out z-[1000]"
         aria-label="Contact us on WhatsApp"
       >
