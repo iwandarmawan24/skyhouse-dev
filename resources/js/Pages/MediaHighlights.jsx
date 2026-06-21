@@ -5,10 +5,8 @@ import "@css/frontend.css";
 import "@css/frontend/news-page.css";
 import "@css/frontend/events-page.css";
 import axios from "axios";
-import useTracker from "@/hooks/useTracker";
 
 export default function MediaHighlights({ featured, pageInfo = null }) {
-  const { track } = useTracker();
   const pageTitle = "Media Highlights - Skyhouse Alamsutera";
   const pageDescription = "Stay informed with our latest media coverage and press releases from Skyhouse Alamsutera.";
   const pageImage = featured?.image || window.location.origin + "/images/default-og-image.jpg";
@@ -122,7 +120,9 @@ export default function MediaHighlights({ featured, pageInfo = null }) {
                 rel="noopener noreferrer"
                 className="news-hero-content"
                 style={{ textDecoration: 'none', color: 'inherit' }}
-                onClick={() => track('media_highlight_click', { title: featuredNews.title, url: featuredNews.url })}
+                data-track-type="media"
+                data-track-action="click"
+                data-track-label={featuredNews.title}
               >
                 <div className="news-hero-image">
                   <img
@@ -176,7 +176,10 @@ export default function MediaHighlights({ featured, pageInfo = null }) {
                       target="_blank"
                       rel="noopener noreferrer"
                       className="news-card"
-                      onClick={() => track('media_highlight_click', { title: item.title, url: item.url })}
+                      data-track-type="media"
+                      data-track-action="click"
+                      data-track-id={String(item.id)}
+                      data-track-label={item.title}
                     >
                       <div className="news-card-image">
                         <img

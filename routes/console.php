@@ -17,3 +17,6 @@ Schedule::command('articles:publish-scheduled')
     ->everyMinute()
     ->withoutOverlapping()
     ->runInBackground();
+
+// Prune tracker data older than 90 days (privacy retention policy)
+Schedule::command('tracker:prune')->daily();

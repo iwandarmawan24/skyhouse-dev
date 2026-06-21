@@ -27,7 +27,14 @@ const ProjectCard = ({
   const displayText = short_description || getPlainTextExcerpt(description);
 
   return (
-    <CardWrapper href={href} className="project-card">
+    <CardWrapper
+      href={href}
+      className="project-card"
+      data-track-type="unit"
+      data-track-action="click"
+      data-track-id={href ? href.split('/').pop() : undefined}
+      data-track-label={title}
+    >
       <div className="project-card-image" style={{ position: 'relative' }}>
         <img src={image} alt={title} />
         {isUnavailable && (

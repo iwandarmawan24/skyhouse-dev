@@ -165,6 +165,10 @@ export default function News({ featured, pageInfo = null }) {
                       key={item.id}
                       href={`/articles/${item.slug}`}
                       className="news-card"
+                      data-track-type="article"
+                      data-track-action="click"
+                      data-track-id={item.slug}
+                      data-track-label={item.title}
                     >
                       <div className="news-card-image">
                         <img
