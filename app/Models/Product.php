@@ -34,6 +34,7 @@ class Product extends Model
         'is_featured',
         'is_sold',
         'is_active',
+        'order',
     ];
 
     protected $casts = [

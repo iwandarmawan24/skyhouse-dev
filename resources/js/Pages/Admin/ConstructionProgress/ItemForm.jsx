@@ -14,18 +14,44 @@ import { Label } from "@/Components/ui/Label";
 import { Switch } from "@/Components/ui/switch";
 import { MediaPicker } from "@/Components/MediaPicker";
 
+const MONTHS = [
+    { value: "01", label: "January" },
+    { value: "02", label: "February" },
+    { value: "03", label: "March" },
+    { value: "04", label: "April" },
+    { value: "05", label: "May" },
+    { value: "06", label: "June" },
+    { value: "07", label: "July" },
+    { value: "08", label: "August" },
+    { value: "09", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" },
+];
+
+const currentYear = new Date().getFullYear();
+const YEARS = Array.from({ length: 20 }, (_, i) => currentYear - 10 + i);
+
 export default function ItemForm({ item }) {
     const isEdit = item !== null;
+
+    const initialDate = item?.progress_date ? item.progress_date.substring(0, 7) : "";
+    const [selectedMonth, setSelectedMonth] = useState(initialDate ? initialDate.split("-")[1] : "");
+    const [selectedYear, setSelectedYear] = useState(initialDate ? initialDate.split("-")[0] : "");
+
     const { data, setData, post, processing, errors } = useForm({
-        progress_date: item?.progress_date
-            ? item.progress_date.substring(0, 7)
-            : "",
+        progress_date: initialDate,
         image_uid: item?.image_uid || null,
         title: item?.title || "",
         description: item?.description || "",
         is_active: item?.is_active ?? true,
         _method: isEdit ? "PUT" : "POST",
     });
+
+    const handleMonthYearChange = (month, year) => {
+        const value = month && year ? `${year}-${month}` : "";
+        setData("progress_date", value);
+    };
 
     const [showMediaPicker, setShowMediaPicker] = useState(false);
     const [selectedMedia, setSelectedMedia] = useState(
@@ -86,24 +112,38 @@ export default function ItemForm({ item }) {
                         <CardContent className="space-y-6">
                             {/* Month/Year */}
                             <div className="space-y-2">
-                                <Label htmlFor="progress_date">
+                                <Label>
                                     Month & Year{" "}
                                     <span className="text-destructive">*</span>
                                 </Label>
-                                <input
-                                    type="month"
-                                    id="progress_date"
-                                    value={data.progress_date}
-                                    onChange={(e) =>
-                                        setData("progress_date", e.target.value)
-                                    }
-                                    required
-                                    className={`flex h-10 w-full max-w-xs rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 ${
-                                        errors.progress_date
-                                            ? "border-destructive"
-                                            : ""
-                                    }`}
-                                />
+                                <div className="flex gap-3">
+                                    <select
+                                        value={selectedMonth}
+                                        onChange={(e) => {
+                                            setSelectedMonth(e.target.value);
+                                            handleMonthYearChange(e.target.value, selectedYear);
+                                        }}
+                                        className={`flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${errors.progress_date ? "border-destructive" : ""}`}
+                                    >
+                                        <option value="">Month</option>
+                                        {MONTHS.map((m) => (
+                                            <option key={m.value} value={m.value}>{m.label}</option>
+                                        ))}
+                                    </select>
+                                    <select
+                                        value={selectedYear}
+                                        onChange={(e) => {
+                                            setSelectedYear(e.target.value);
+                                            handleMonthYearChange(selectedMonth, e.target.value);
+                                        }}
+                                        className={`flex h-10 rounded-md border border-input bg-background px-3 py-2 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${errors.progress_date ? "border-destructive" : ""}`}
+                                    >
+                                        <option value="">Year</option>
+                                        {YEARS.map((y) => (
+                                            <option key={y} value={y}>{y}</option>
+                                        ))}
+                                    </select>
+                                </div>
                                 {errors.progress_date && (
                                     <p className="text-sm text-destructive">
                                         {errors.progress_date}

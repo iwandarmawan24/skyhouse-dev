@@ -23,7 +23,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with('featuredImage')->latest();
+        $query = Product::with('featuredImage')->orderBy('order');
 
         // Filter by multiple types
         if ($request->filled('types')) {
@@ -107,8 +107,11 @@ class ProductController extends Controller
      */
     public function create()
     {
+        $nextOrder = (Product::max('order') ?? -1) + 1;
+
         return Inertia::render('Admin/Products/Form', [
             'product' => null,
+            'nextOrder' => $nextOrder,
         ]);
     }
 
@@ -143,6 +146,9 @@ class ProductController extends Controller
         // Generate slug
         $validated['slug'] = Str::slug($validated['name']);
 
+        // Auto-set order to next available
+        $validated['order'] = (Product::max('order') ?? -1) + 1;
+
         // Handle facilities JSON
         if (isset($validated['facilities'])) {
             $validated['facilities'] = json_encode($validated['facilities']);
@@ -152,6 +158,34 @@ class ProductController extends Controller
 
         return redirect()->route('admin.products.index')
             ->with('success', 'Product created successfully.');
+    }
+
+    /**
+     * Move product up or down in order
+     */
+    public function reorder(Request $request, Product $product)
+    {
+        $request->validate(['direction' => 'required|in:up,down']);
+
+        $currentOrder = $product->order;
+
+        if ($request->direction === 'up') {
+            $swap = Product::where('order', '<', $currentOrder)
+                ->orderBy('order', 'desc')
+                ->first();
+        } else {
+            $swap = Product::where('order', '>', $currentOrder)
+                ->orderBy('order', 'asc')
+                ->first();
+        }
+
+        if ($swap) {
+            $swapOrder = $swap->order;
+            $product->update(['order' => $swapOrder]);
+            $swap->update(['order' => $currentOrder]);
+        }
+
+        return back()->with('success', 'Product order updated.');
     }
 
     /**

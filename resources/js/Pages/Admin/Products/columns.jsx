@@ -2,6 +2,8 @@ import { Link } from "@inertiajs/react";
 import { useState } from "react";
 import {
     ArrowUpDown,
+    ChevronUp,
+    ChevronDown,
     Eye,
     Pencil,
     Trash2,
@@ -24,7 +26,7 @@ import {
     DialogDescription,
 } from "@/Components/ui/Dialog";
 
-export const createColumns = (setShowDeleteConfirm, setViewProduct) => [
+export const createColumns = (setShowDeleteConfirm, setViewProduct, onReorder) => [
     {
         accessorKey: "name",
         header: ({ column }) => {
@@ -158,6 +160,40 @@ export const createColumns = (setShowDeleteConfirm, setViewProduct) => [
                             Featured
                         </Badge>
                     )}
+                </div>
+            );
+        },
+    },
+    {
+        id: "order",
+        header: () => <div className="text-center">Order</div>,
+        cell: ({ row, table }) => {
+            const product = row.original;
+            const rows = table.getRowModel().rows;
+            const isFirst = row.index === 0;
+            const isLast = row.index === rows.length - 1;
+
+            return (
+                <div className="flex flex-col items-center gap-0.5">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 disabled:opacity-30"
+                        disabled={isFirst}
+                        onClick={() => onReorder(product.uid, 'up')}
+                    >
+                        <ChevronUp className="h-4 w-4" />
+                    </Button>
+                    <span className="text-xs text-muted-foreground w-6 text-center">{product.order}</span>
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-6 w-6 disabled:opacity-30"
+                        disabled={isLast}
+                        onClick={() => onReorder(product.uid, 'down')}
+                    >
+                        <ChevronDown className="h-4 w-4" />
+                    </Button>
                 </div>
             );
         },

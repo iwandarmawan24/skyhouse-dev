@@ -124,7 +124,7 @@ export default function Form({ topSales, availablePositions }) {
                                     <img
                                         src={imagePreview}
                                         alt="Profile"
-                                        className="w-32 h-32 object-cover rounded-full"
+                                        className="w-48 h-48 object-cover rounded-lg"
                                     />
                                     <div className="absolute inset-0 flex items-center justify-center">
                                         <button
@@ -143,7 +143,7 @@ export default function Form({ topSales, availablePositions }) {
 
                             {!imagePreview && (
                                 <div className="mb-4 flex justify-center">
-                                    <div className="w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center">
+                                    <div className="w-48 h-48 bg-gray-100 rounded-lg flex items-center justify-center">
                                         <User className="w-16 h-16 text-gray-400" />
                                     </div>
                                 </div>
@@ -211,7 +211,7 @@ export default function Form({ topSales, availablePositions }) {
                 multiple={false}
                 accept="image"
                 folder="top-sales"
-                recommendedSize="400 × 400px"
+                recommendedSize="800 × 800px"
             />
         </AdminLayout>
     );

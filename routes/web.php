@@ -219,6 +219,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
             // Products
             Route::resource('products', ProductController::class)->except(['show']);
+            Route::post('/products/{product}/reorder', [ProductController::class, 'reorder'])->name('products.reorder');
             Route::post('/products/{product}/update-image-order', [ProductController::class, 'updateImageOrder'])->name('products.update-image-order');
             Route::post('/products/{product}/set-primary-image', [ProductController::class, 'setPrimaryImage'])->name('products.set-primary-image');
 

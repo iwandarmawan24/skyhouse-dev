@@ -197,7 +197,13 @@ export default function Index({ products, filters, filterOptions }) {
         localFilters.min_price !== safeFilterOptions.priceRange.min ||
         localFilters.max_price !== safeFilterOptions.priceRange.max;
 
-    const columns = createColumns(setShowDeleteConfirm, setViewProduct);
+    const handleReorder = (uid, direction) => {
+        router.post(`/admin/products/${uid}/reorder`, { direction }, {
+            preserveScroll: true,
+        });
+    };
+
+    const columns = createColumns(setShowDeleteConfirm, setViewProduct, handleReorder);
 
     return (
         <AdminLayout>

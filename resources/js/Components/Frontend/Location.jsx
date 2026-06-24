@@ -81,7 +81,7 @@ const Location = () => {
             <img
               src={locationData.image_url}
               alt={locationData.title}
-              className="w-full h-auto block"
+              className="w-full h-auto block max-w-[600px] mx-auto"
             />
           </div>
         </div>
