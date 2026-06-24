@@ -75,7 +75,7 @@ class HomeController extends Controller
 
         // Fetch active projects for Projects component
         $projects = Product::with('featuredImage', 'cardImage')
-            ->latest()
+            ->orderBy('order')
             ->get()
             ->map(function ($product) {
                 return [

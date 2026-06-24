@@ -57,14 +57,14 @@ class ProjectController extends Controller
         $featuredProject = Product::with('featuredImage')
             ->active()
             ->featured()
-            ->latest()
+            ->orderBy('order')
             ->first();
 
         // If no featured project exists, use the first available project
         if (!$featuredProject && $projects->isNotEmpty()) {
             $featuredProject = Product::with('featuredImage')
                 ->active()
-                ->latest()
+                ->orderBy('order')
                 ->first();
         }
 
