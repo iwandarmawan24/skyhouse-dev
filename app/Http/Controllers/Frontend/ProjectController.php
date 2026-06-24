@@ -19,7 +19,7 @@ class ProjectController extends Controller
         // Fetch active products (projects) from database — include sold, just mark as Not Available
         $projects = Product::with('featuredImage')
             ->where('is_active', true)
-            ->latest()
+            ->orderBy('order')
             ->get()
             ->map(function ($product) {
                 $status = $product->is_sold ? 'Not Available' : 'Available';

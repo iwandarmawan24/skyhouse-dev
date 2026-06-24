@@ -25,11 +25,12 @@ const Awards = () => {
   if (isLoading || !data || !data.image_url) return null;
 
   return (
-    <section className="w-full" data-section="awards">
+    <section className="w-full overflow-hidden"  data-section="awards">
       <img
         src={data.image_url}
         alt="Awards"
-        className="w-full h-auto block"
+        style={{ maxHeight: '380px' }}
+        className="w-full h-full object-cover object-center block"
       />
     </section>
   );
