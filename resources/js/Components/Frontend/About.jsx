@@ -293,8 +293,10 @@ const About = ({ experience = {}, experienceCards = [] }) => {
               images={[
                 "/images/experiences/univ/binus-alsut.jpg",
                 "/images/experiences/univ/binus-aso.jpg",
+                "/images/experiences/univ/Bunda Mulia.jpg",
                 "/images/experiences/univ/sgu.jpeg",
-                "/images/experiences/univ/ubm.jpeg",
+                "/images/experiences/univ/UBM.jpeg",
+                "/images/experiences/univ/Binus.jpg",
               ]}
               title={dynUniv.title}
               description={dynUniv.description}
