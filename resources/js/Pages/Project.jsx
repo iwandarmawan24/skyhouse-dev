@@ -122,7 +122,7 @@ export default function Project({ projects = [], pageInfo = null }) {
 
         {/* Content Section */}
         <div className="flex flex-col gap-6 md:gap-12 px-4 md:px-12 mx-auto my-8 md:my-16" data-section="products">
-          {projects && projects.length > 0 && projects.slice(0, visibleCount).map((project, index) => {
+          {projects && projects.length > 0 && projects.map((project, index) => {
             const isEven = index % 2 === 1;
             
             return (
