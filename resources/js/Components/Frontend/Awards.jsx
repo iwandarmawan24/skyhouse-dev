@@ -29,7 +29,6 @@ const Awards = () => {
       <img
         src={data.image_url}
         alt="Awards"
-        style={{ maxHeight: '380px' }}
         className="w-full h-full object-cover object-center block"
       />
     </section>
