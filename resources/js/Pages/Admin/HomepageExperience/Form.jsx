@@ -1,5 +1,5 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import { useForm, Link } from "@inertiajs/react";
+import { useForm, Link, router } from "@inertiajs/react";
 import { useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Button } from "@/Components/ui/Button";
@@ -9,52 +9,65 @@ import { X, Plus } from "lucide-react";
 export default function Form({ card }) {
     const isEdit = !!card;
 
-    const { data, setData, post, processing, errors } = useForm({
-        title:           card?.title       || '',
-        description:     card?.description || '',
-        order:           card?.order       ?? 0,
-        is_active:       card?.is_active   ?? true,
-        existing_images: card?.images      || [],
-        new_images:      [],
-        removed_images:  [],
-        _method:         isEdit ? 'PUT' : 'POST',
+    const { data, setData, errors } = useForm({
+        title:       card?.title       || '',
+        description: card?.description || '',
+        order:       card?.order       ?? 0,
+        is_active:   card?.is_active   ?? true,
     });
 
-    const [newPreviews, setNewPreviews] = useState([]);
+    const [existingImages, setExistingImages] = useState(card?.images || []);
+    const [removedImages,  setRemovedImages]  = useState([]);
+    const [newFiles,       setNewFiles]       = useState([]);
+    const [newPreviews,    setNewPreviews]    = useState([]);
+    const [processing,     setProcessing]     = useState(false);
+
     const fileInputRef = useRef(null);
 
     const handleFileChange = (e) => {
         const files = Array.from(e.target.files);
         if (!files.length) return;
-
-        setData('new_images', [...data.new_images, ...files]);
-        const previews = files.map((f) => URL.createObjectURL(f));
-        setNewPreviews((prev) => [...prev, ...previews]);
+        setNewFiles((prev) => [...prev, ...files]);
+        setNewPreviews((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))]);
         e.target.value = '';
     };
 
     const removeExisting = (path) => {
-        setData((prev) => ({
-            ...prev,
-            existing_images: prev.existing_images.filter((p) => p !== path),
-            removed_images: path.startsWith('/storage/')
-                ? [...prev.removed_images, path]
-                : prev.removed_images,
-        }));
+        setExistingImages((prev) => prev.filter((p) => p !== path));
+        if (path.startsWith('/storage/')) {
+            setRemovedImages((prev) => [...prev, path]);
+        }
     };
 
     const removeNew = (index) => {
         URL.revokeObjectURL(newPreviews[index]);
         setNewPreviews((prev) => prev.filter((_, i) => i !== index));
-        setData('new_images', data.new_images.filter((_, i) => i !== index));
+        setNewFiles((prev) => prev.filter((_, i) => i !== index));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        setProcessing(true);
+
+        const formData = new FormData();
+        formData.append('_method', isEdit ? 'PUT' : 'POST');
+        formData.append('title',       data.title);
+        formData.append('description', data.description);
+        formData.append('order',       data.order);
+        formData.append('is_active',   data.is_active ? '1' : '0');
+
+        existingImages.forEach((path) => formData.append('existing_images[]', path));
+        removedImages.forEach((path)  => formData.append('removed_images[]',  path));
+        newFiles.forEach((file)       => formData.append('new_images[]',       file));
+
         const url = isEdit
             ? `/admin/homepage-experience/${card.uid}`
             : '/admin/homepage-experience';
-        post(url);
+
+        router.post(url, formData, {
+            forceFormData: true,
+            onFinish: () => setProcessing(false),
+        });
     };
 
     return (
@@ -131,16 +144,19 @@ export default function Form({ card }) {
                                     />
                                 </div>
 
-                                {/* Existing images */}
-                                {data.existing_images.length > 0 && (
+                                {existingImages.length === 0 && newPreviews.length === 0 ? (
+                                    <div
+                                        className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors"
+                                        onClick={() => fileInputRef.current?.click()}
+                                    >
+                                        <Plus size={20} className="mx-auto text-gray-400 mb-1" />
+                                        <p className="text-sm text-gray-500">Click to add images</p>
+                                    </div>
+                                ) : (
                                     <div className="grid grid-cols-3 gap-2">
-                                        {data.existing_images.map((path) => (
+                                        {existingImages.map((path) => (
                                             <div key={path} className="relative group rounded-lg overflow-hidden aspect-video bg-gray-100">
-                                                <img
-                                                    src={path}
-                                                    alt=""
-                                                    className="w-full h-full object-cover"
-                                                />
+                                                <img src={path} alt="" className="w-full h-full object-cover" />
                                                 <button
                                                     type="button"
                                                     onClick={() => removeExisting(path)}
@@ -150,41 +166,18 @@ export default function Form({ card }) {
                                                 </button>
                                             </div>
                                         ))}
-                                    </div>
-                                )}
-
-                                {/* New image previews */}
-                                {newPreviews.length > 0 && (
-                                    <div className="space-y-1">
-                                        <p className="text-xs text-gray-500 font-medium">New uploads</p>
-                                        <div className="grid grid-cols-3 gap-2">
-                                            {newPreviews.map((src, i) => (
-                                                <div key={i} className="relative group rounded-lg overflow-hidden aspect-video bg-gray-100 ring-2 ring-blue-400">
-                                                    <img
-                                                        src={src}
-                                                        alt=""
-                                                        className="w-full h-full object-cover"
-                                                    />
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => removeNew(i)}
-                                                        className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                                                    >
-                                                        <X size={12} />
-                                                    </button>
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-                                )}
-
-                                {data.existing_images.length === 0 && newPreviews.length === 0 && (
-                                    <div
-                                        className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors"
-                                        onClick={() => fileInputRef.current?.click()}
-                                    >
-                                        <Plus size={20} className="mx-auto text-gray-400 mb-1" />
-                                        <p className="text-sm text-gray-500">Click to add images</p>
+                                        {newPreviews.map((src, i) => (
+                                            <div key={i} className="relative group rounded-lg overflow-hidden aspect-video bg-gray-100 ring-2 ring-blue-400">
+                                                <img src={src} alt="" className="w-full h-full object-cover" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeNew(i)}
+                                                    className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <X size={12} />
+                                                </button>
+                                            </div>
+                                        ))}
                                     </div>
                                 )}
                             </div>
