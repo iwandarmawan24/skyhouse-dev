@@ -212,14 +212,31 @@ const About = ({ experience = {}, experienceCards = [] }) => {
   const cardBizTitle           = experience.card_business_title         || 'Thriving Business Hub';
   const cardBizDescription     = experience.card_business_description   || 'A built-in ecosystem of professionals surrounded by Synergy Building, The Prominence, Alfa Tower, Menara Top Food, Prima Sejahtera Building, Kino Tower, and Marks Building.';
 
-  // Dynamic cards override positional defaults when CMS cards exist
-  const getCard = (index, defaultTitle, defaultDesc) => ({
+  const getCard = (index, defaultTitle, defaultDesc, defaultImages) => ({
     title:       experienceCards[index]?.title       || defaultTitle,
     description: experienceCards[index]?.description || defaultDesc,
+    images:      experienceCards[index]?.images?.length ? experienceCards[index].images : defaultImages,
   });
-  const dynEnt  = getCard(0, cardEntTitle, cardEntDescription);
-  const dynUniv = getCard(1, cardUnivTitle, cardUnivDescription);
-  const dynBiz  = getCard(2, cardBizTitle, cardBizDescription);
+
+  const dynEnt = getCard(0, cardEntTitle, cardEntDescription, [
+    '/images/experiences/lifestyle/living-world-alamsutera.jpg',
+    '/images/experiences/lifestyle/ikea-alam-sutera.webp',
+    '/images/experiences/lifestyle/flavor-bliss.jpg',
+    '/images/experiences/lifestyle/jakarta-premium-outlet.jpg',
+    '/images/experiences/lifestyle/decathlon.jpg',
+  ]);
+  const dynUniv = getCard(1, cardUnivTitle, cardUnivDescription, [
+    '/images/experiences/univ/binus-alsut.jpg',
+    '/images/experiences/univ/binus-aso.jpg',
+    '/images/experiences/univ/Bunda Mulia.jpg',
+    '/images/experiences/univ/sgu.jpeg',
+    '/images/experiences/univ/UBM.jpg',
+    '/images/experiences/univ/Binus.jpg',
+  ]);
+  const dynBiz = getCard(2, cardBizTitle, cardBizDescription, [
+    '/images/experiences/office/alfa-tower.jpg',
+    '/images/experiences/office/kino.jpg',
+  ]);
 
   return (
     <>
@@ -256,13 +273,7 @@ const About = ({ experience = {}, experienceCards = [] }) => {
             </LifestyleSlider>
 
             <FacilityCard
-              images={[
-                "/images/experiences/lifestyle/living-world-alamsutera.jpg",
-                "/images/experiences/lifestyle/ikea-alam-sutera.webp",
-                "/images/experiences/lifestyle/flavor-bliss.jpg",
-                "/images/experiences/lifestyle/jakarta-premium-outlet.jpg",
-                "/images/experiences/lifestyle/decathlon.jpg",
-              ]}
+              images={dynEnt.images}
               title={dynEnt.title}
               description={dynEnt.description}
               className="order-4"
@@ -290,24 +301,14 @@ const About = ({ experience = {}, experienceCards = [] }) => {
             </div>
 
             <FacilityCard
-              images={[
-                "/images/experiences/univ/binus-alsut.jpg",
-                "/images/experiences/univ/binus-aso.jpg",
-                "/images/experiences/univ/Bunda Mulia.jpg",
-                "/images/experiences/univ/sgu.jpeg",
-                "/images/experiences/univ/UBM.jpeg",
-                "/images/experiences/univ/Binus.jpg",
-              ]}
+              images={dynUniv.images}
               title={dynUniv.title}
               description={dynUniv.description}
               className="order-4"
             />
 
             <FacilityCard
-              images={[
-                "/images/experiences/office/alfa-tower.jpg",
-                "/images/experiences/office/kino.jpg",
-              ]}
+              images={dynBiz.images}
               title={dynBiz.title}
               description={dynBiz.description}
               className="order-5"

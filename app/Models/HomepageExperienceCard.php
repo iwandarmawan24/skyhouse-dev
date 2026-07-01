@@ -15,13 +15,15 @@ class HomepageExperienceCard extends Model
     protected $fillable = [
         'title',
         'description',
+        'images',
         'order',
         'is_active',
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
-        'order' => 'integer',
+        'order'     => 'integer',
+        'images'    => 'array',
     ];
 
     protected static function boot()

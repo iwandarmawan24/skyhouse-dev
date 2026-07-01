@@ -99,7 +99,12 @@ class HomeController extends Controller
         $experience = HomepageExperience::first();
 
         $experienceCards = HomepageExperienceCard::active()->ordered()->get()
-            ->map(fn($c) => ['uid' => $c->uid, 'title' => $c->title, 'description' => $c->description])
+            ->map(fn($c) => [
+                'uid'         => $c->uid,
+                'title'       => $c->title,
+                'description' => $c->description,
+                'images'      => $c->images ?? [],
+            ])
             ->values()
             ->toArray();
 

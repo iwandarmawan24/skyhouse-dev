@@ -1,26 +1,60 @@
 import AdminLayout from "@/Layouts/AdminLayout";
 import { useForm, Link } from "@inertiajs/react";
+import { useRef, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Button } from "@/Components/ui/Button";
 import { Label } from "@/Components/ui/Label";
+import { X, Plus } from "lucide-react";
 
 export default function Form({ card }) {
     const isEdit = !!card;
 
-    const { data, setData, post, put, processing, errors } = useForm({
-        title:       card?.title       || '',
-        description: card?.description || '',
-        order:       card?.order       ?? 0,
-        is_active:   card?.is_active   ?? true,
+    const { data, setData, post, processing, errors } = useForm({
+        title:           card?.title       || '',
+        description:     card?.description || '',
+        order:           card?.order       ?? 0,
+        is_active:       card?.is_active   ?? true,
+        existing_images: card?.images      || [],
+        new_images:      [],
+        removed_images:  [],
+        _method:         isEdit ? 'PUT' : 'POST',
     });
+
+    const [newPreviews, setNewPreviews] = useState([]);
+    const fileInputRef = useRef(null);
+
+    const handleFileChange = (e) => {
+        const files = Array.from(e.target.files);
+        if (!files.length) return;
+
+        setData('new_images', [...data.new_images, ...files]);
+        const previews = files.map((f) => URL.createObjectURL(f));
+        setNewPreviews((prev) => [...prev, ...previews]);
+        e.target.value = '';
+    };
+
+    const removeExisting = (path) => {
+        setData((prev) => ({
+            ...prev,
+            existing_images: prev.existing_images.filter((p) => p !== path),
+            removed_images: path.startsWith('/storage/')
+                ? [...prev.removed_images, path]
+                : prev.removed_images,
+        }));
+    };
+
+    const removeNew = (index) => {
+        URL.revokeObjectURL(newPreviews[index]);
+        setNewPreviews((prev) => prev.filter((_, i) => i !== index));
+        setData('new_images', data.new_images.filter((_, i) => i !== index));
+    };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (isEdit) {
-            put(`/admin/homepage-experience/${card.uid}`);
-        } else {
-            post('/admin/homepage-experience');
-        }
+        const url = isEdit
+            ? `/admin/homepage-experience/${card.uid}`
+            : '/admin/homepage-experience';
+        post(url);
     };
 
     return (
@@ -73,6 +107,86 @@ export default function Form({ card }) {
                                     placeholder="Short description shown on the card..."
                                 />
                                 {errors.description && <p className="text-sm text-red-600">{errors.description}</p>}
+                            </div>
+
+                            {/* Images */}
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between">
+                                    <Label>Images</Label>
+                                    <button
+                                        type="button"
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium"
+                                    >
+                                        <Plus size={16} />
+                                        Add Images
+                                    </button>
+                                    <input
+                                        ref={fileInputRef}
+                                        type="file"
+                                        accept="image/*"
+                                        multiple
+                                        className="hidden"
+                                        onChange={handleFileChange}
+                                    />
+                                </div>
+
+                                {/* Existing images */}
+                                {data.existing_images.length > 0 && (
+                                    <div className="grid grid-cols-3 gap-2">
+                                        {data.existing_images.map((path) => (
+                                            <div key={path} className="relative group rounded-lg overflow-hidden aspect-video bg-gray-100">
+                                                <img
+                                                    src={path}
+                                                    alt=""
+                                                    className="w-full h-full object-cover"
+                                                />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeExisting(path)}
+                                                    className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                                >
+                                                    <X size={12} />
+                                                </button>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {/* New image previews */}
+                                {newPreviews.length > 0 && (
+                                    <div className="space-y-1">
+                                        <p className="text-xs text-gray-500 font-medium">New uploads</p>
+                                        <div className="grid grid-cols-3 gap-2">
+                                            {newPreviews.map((src, i) => (
+                                                <div key={i} className="relative group rounded-lg overflow-hidden aspect-video bg-gray-100 ring-2 ring-blue-400">
+                                                    <img
+                                                        src={src}
+                                                        alt=""
+                                                        className="w-full h-full object-cover"
+                                                    />
+                                                    <button
+                                                        type="button"
+                                                        onClick={() => removeNew(i)}
+                                                        className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                                    >
+                                                        <X size={12} />
+                                                    </button>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {data.existing_images.length === 0 && newPreviews.length === 0 && (
+                                    <div
+                                        className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors"
+                                        onClick={() => fileInputRef.current?.click()}
+                                    >
+                                        <Plus size={20} className="mx-auto text-gray-400 mb-1" />
+                                        <p className="text-sm text-gray-500">Click to add images</p>
+                                    </div>
+                                )}
                             </div>
 
                             {/* Order */}
