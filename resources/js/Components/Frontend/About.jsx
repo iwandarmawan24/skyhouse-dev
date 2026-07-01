@@ -218,14 +218,23 @@ const About = ({ experience = {}, experienceCards = [] }) => {
     images:      experienceCards[index]?.images?.length ? experienceCards[index].images : defaultImages,
   });
 
-  const dynEnt = getCard(0, cardEntTitle, cardEntDescription, [
+  // experienceCards ordered: [0]=grocery, [1]=lifestyle, [2]=univ, [3]=biz
+  const dynGrocery = getCard(0, cardDailyTitle, cardDailyDescription, [
+    '/images/experiences/lifestyle/mall @ alam sutera.jpg',
+    '/images/experiences/lifestyle/revaeon.jpg',
+    '/images/experiences/lifestyle/revallfresh.jpg',
+    '/images/experiences/lifestyle/revdutabuah.jpg',
+    '/images/experiences/lifestyle/revpasar8.jpg',
+    '/images/experiences/lifestyle/revrumahbuah.jpg',
+  ]);
+  const dynEnt = getCard(1, cardEntTitle, cardEntDescription, [
     '/images/experiences/lifestyle/living-world-alamsutera.jpg',
     '/images/experiences/lifestyle/ikea-alam-sutera.webp',
     '/images/experiences/lifestyle/flavor-bliss.jpg',
     '/images/experiences/lifestyle/jakarta-premium-outlet.jpg',
     '/images/experiences/lifestyle/decathlon.jpg',
   ]);
-  const dynUniv = getCard(1, cardUnivTitle, cardUnivDescription, [
+  const dynUniv = getCard(2, cardUnivTitle, cardUnivDescription, [
     '/images/experiences/univ/binus-alsut.jpg',
     '/images/experiences/univ/binus-aso.jpg',
     '/images/experiences/univ/Bunda Mulia.jpg',
@@ -233,7 +242,7 @@ const About = ({ experience = {}, experienceCards = [] }) => {
     '/images/experiences/univ/UBM.jpg',
     '/images/experiences/univ/Binus.jpg',
   ]);
-  const dynBiz = getCard(2, cardBizTitle, cardBizDescription, [
+  const dynBiz = getCard(3, cardBizTitle, cardBizDescription, [
     '/images/experiences/office/alfa-tower.jpg',
     '/images/experiences/office/kino.jpg',
   ]);
@@ -250,24 +259,17 @@ const About = ({ experience = {}, experienceCards = [] }) => {
       >
         <div className="max-w-7xl mx-auto">
           <div className="services-grid grid grid-cols-1 lg:grid-cols-2 gap-6 lg:grid-rows-3">
-            {/* Left Top - Lifestyle Card */}
+            {/* Left Top - Grocery Card */}
             <LifestyleSlider
-              images={[
-                "/images/experiences/lifestyle/mall @ alam sutera.jpg",
-                "/images/experiences/lifestyle/revaeon.jpg",
-                "/images/experiences/lifestyle/revallfresh.jpg",
-                "/images/experiences/lifestyle/revdutabuah.jpg",
-                "/images/experiences/lifestyle/revpasar8.jpg",
-                "/images/experiences/lifestyle/revrumahbuah.jpg",
-              ]}
+              images={dynGrocery.images}
               className="min-h-[350px] lg:row-span-2 order-1 lg:order-1"
             >
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
               <div className="absolute bottom-6 left-6 md:bottom-12 md:left-12">
-                <Heading as="h3" variant="card" color="white" className="mb-2 text-base md:text-xl">{cardDailyTitle}</Heading>
+                <Heading as="h3" variant="card" color="white" className="mb-2 text-base md:text-xl">{dynGrocery.title}</Heading>
                 <br className="hidden md:block" />
                 <Text size="sm" color="white" className="max-w-xs opacity-90 text-xs md:text-sm">
-                  {cardDailyDescription}
+                  {dynGrocery.description}
                 </Text>
               </div>
             </LifestyleSlider>
