@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\HomepageExperience;
 use App\Models\HomepageExperienceCard;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class HomepageExperienceCardController extends Controller
@@ -35,33 +34,20 @@ class HomepageExperienceCardController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title'            => 'required|string|max:255',
-            'description'      => 'nullable|string|max:2000',
-            'order'            => 'nullable|integer',
-            'is_active'        => 'boolean',
-            'existing_images'  => 'nullable|array',
-            'existing_images.*' => 'string',
-            'new_images'       => 'nullable|array',
-            'new_images.*'     => 'image|mimes:jpeg,png,jpg,webp,gif|max:5120',
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string|max:2000',
+            'order'       => 'nullable|integer',
+            'is_active'   => 'boolean',
+            'images'      => 'nullable|array',
+            'images.*'    => 'string',
         ]);
-
-        $uploadedPaths = [];
-        foreach ($request->file('new_images', []) as $file) {
-            $path = $file->store('experience-cards', 'public');
-            $uploadedPaths[] = '/storage/' . $path;
-        }
-
-        $images = array_values(array_merge(
-            $request->input('existing_images', []),
-            $uploadedPaths
-        ));
 
         HomepageExperienceCard::create([
             'title'       => $request->title,
             'description' => $request->description,
             'order'       => $request->order ?? HomepageExperienceCard::max('order') + 1,
             'is_active'   => $request->boolean('is_active', true),
-            'images'      => $images,
+            'images'      => $request->input('images', []),
         ]);
 
         return redirect()->route('admin.homepage-experience.index')
@@ -78,41 +64,20 @@ class HomepageExperienceCardController extends Controller
     public function update(Request $request, HomepageExperienceCard $card)
     {
         $request->validate([
-            'title'             => 'required|string|max:255',
-            'description'       => 'nullable|string|max:2000',
-            'order'             => 'nullable|integer',
-            'is_active'         => 'boolean',
-            'existing_images'   => 'nullable|array',
-            'existing_images.*' => 'string',
-            'new_images'        => 'nullable|array',
-            'new_images.*'      => 'image|mimes:jpeg,png,jpg,webp,gif|max:5120',
-            'removed_images'    => 'nullable|array',
-            'removed_images.*'  => 'string',
+            'title'       => 'required|string|max:255',
+            'description' => 'nullable|string|max:2000',
+            'order'       => 'nullable|integer',
+            'is_active'   => 'boolean',
+            'images'      => 'nullable|array',
+            'images.*'    => 'string',
         ]);
-
-        foreach ($request->input('removed_images', []) as $path) {
-            if (str_starts_with($path, '/storage/')) {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $path));
-            }
-        }
-
-        $uploadedPaths = [];
-        foreach ($request->file('new_images', []) as $file) {
-            $path = $file->store('experience-cards', 'public');
-            $uploadedPaths[] = '/storage/' . $path;
-        }
-
-        $images = array_values(array_merge(
-            $request->input('existing_images', []),
-            $uploadedPaths
-        ));
 
         $card->update([
             'title'       => $request->title,
             'description' => $request->description,
             'order'       => $request->order ?? $card->order,
             'is_active'   => $request->boolean('is_active', true),
-            'images'      => $images,
+            'images'      => $request->input('images', []),
         ]);
 
         return redirect()->route('admin.homepage-experience.index')
@@ -121,12 +86,6 @@ class HomepageExperienceCardController extends Controller
 
     public function destroy(HomepageExperienceCard $card)
     {
-        foreach ($card->images ?? [] as $path) {
-            if (str_starts_with($path, '/storage/')) {
-                Storage::disk('public')->delete(str_replace('/storage/', '', $path));
-            }
-        }
-
         $card->delete();
 
         return redirect()->route('admin.homepage-experience.index')

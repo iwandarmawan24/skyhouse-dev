@@ -1,73 +1,42 @@
 import AdminLayout from "@/Layouts/AdminLayout";
-import { useForm, Link, router } from "@inertiajs/react";
-import { useRef, useState } from "react";
+import { useForm, Link } from "@inertiajs/react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/Components/ui/Card";
 import { Button } from "@/Components/ui/Button";
 import { Label } from "@/Components/ui/Label";
-import { X, Plus } from "lucide-react";
+import { MediaPicker } from "@/Components/MediaPicker";
+import { Plus, X } from "lucide-react";
 
 export default function Form({ card }) {
     const isEdit = !!card;
 
-    const { data, setData, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         title:       card?.title       || '',
         description: card?.description || '',
         order:       card?.order       ?? 0,
         is_active:   card?.is_active   ?? true,
+        images:      card?.images      || [],
+        _method:     isEdit ? 'PUT' : 'POST',
     });
 
-    const [existingImages, setExistingImages] = useState(card?.images || []);
-    const [removedImages,  setRemovedImages]  = useState([]);
-    const [newFiles,       setNewFiles]       = useState([]);
-    const [newPreviews,    setNewPreviews]    = useState([]);
-    const [processing,     setProcessing]     = useState(false);
+    const [showMediaPicker, setShowMediaPicker] = useState(false);
 
-    const fileInputRef = useRef(null);
-
-    const handleFileChange = (e) => {
-        const files = Array.from(e.target.files);
-        if (!files.length) return;
-        setNewFiles((prev) => [...prev, ...files]);
-        setNewPreviews((prev) => [...prev, ...files.map((f) => URL.createObjectURL(f))]);
-        e.target.value = '';
+    const handleMediaSelect = (media) => {
+        const selected = Array.isArray(media) ? media : [media];
+        setData('images', [...data.images, ...selected.map((m) => m.url)]);
+        setShowMediaPicker(false);
     };
 
-    const removeExisting = (path) => {
-        setExistingImages((prev) => prev.filter((p) => p !== path));
-        if (path.startsWith('/storage/')) {
-            setRemovedImages((prev) => [...prev, path]);
-        }
-    };
-
-    const removeNew = (index) => {
-        URL.revokeObjectURL(newPreviews[index]);
-        setNewPreviews((prev) => prev.filter((_, i) => i !== index));
-        setNewFiles((prev) => prev.filter((_, i) => i !== index));
+    const removeImage = (url) => {
+        setData('images', data.images.filter((u) => u !== url));
     };
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        setProcessing(true);
-
-        const formData = new FormData();
-        formData.append('_method', isEdit ? 'PUT' : 'POST');
-        formData.append('title',       data.title);
-        formData.append('description', data.description);
-        formData.append('order',       data.order);
-        formData.append('is_active',   data.is_active ? '1' : '0');
-
-        existingImages.forEach((path) => formData.append('existing_images[]', path));
-        removedImages.forEach((path)  => formData.append('removed_images[]',  path));
-        newFiles.forEach((file)       => formData.append('new_images[]',       file));
-
         const url = isEdit
             ? `/admin/homepage-experience/${card.uid}`
             : '/admin/homepage-experience';
-
-        router.post(url, formData, {
-            forceFormData: true,
-            onFinish: () => setProcessing(false),
-        });
+        post(url);
     };
 
     return (
@@ -93,6 +62,7 @@ export default function Form({ card }) {
                             <CardTitle>Card Details</CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-5">
+
                             {/* Title */}
                             <div className="space-y-2">
                                 <Label htmlFor="title">Title <span className="text-red-500">*</span></Label>
@@ -124,54 +94,16 @@ export default function Form({ card }) {
 
                             {/* Images */}
                             <div className="space-y-3">
-                                <div className="flex items-center justify-between">
-                                    <Label>Images</Label>
-                                    <button
-                                        type="button"
-                                        onClick={() => fileInputRef.current?.click()}
-                                        className="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-700 font-medium"
-                                    >
-                                        <Plus size={16} />
-                                        Add Images
-                                    </button>
-                                    <input
-                                        ref={fileInputRef}
-                                        type="file"
-                                        accept="image/*"
-                                        multiple
-                                        className="hidden"
-                                        onChange={handleFileChange}
-                                    />
-                                </div>
+                                <Label>Images (Slider)</Label>
 
-                                {existingImages.length === 0 && newPreviews.length === 0 ? (
-                                    <div
-                                        className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center cursor-pointer hover:border-blue-400 transition-colors"
-                                        onClick={() => fileInputRef.current?.click()}
-                                    >
-                                        <Plus size={20} className="mx-auto text-gray-400 mb-1" />
-                                        <p className="text-sm text-gray-500">Click to add images</p>
-                                    </div>
-                                ) : (
+                                {data.images.length > 0 && (
                                     <div className="grid grid-cols-3 gap-2">
-                                        {existingImages.map((path) => (
-                                            <div key={path} className="relative group rounded-lg overflow-hidden aspect-video bg-gray-100">
-                                                <img src={path} alt="" className="w-full h-full object-cover" />
+                                        {data.images.map((url) => (
+                                            <div key={url} className="relative group rounded-lg overflow-hidden aspect-video bg-gray-100">
+                                                <img src={url} alt="" className="w-full h-full object-cover" />
                                                 <button
                                                     type="button"
-                                                    onClick={() => removeExisting(path)}
-                                                    className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                                                >
-                                                    <X size={12} />
-                                                </button>
-                                            </div>
-                                        ))}
-                                        {newPreviews.map((src, i) => (
-                                            <div key={i} className="relative group rounded-lg overflow-hidden aspect-video bg-gray-100 ring-2 ring-blue-400">
-                                                <img src={src} alt="" className="w-full h-full object-cover" />
-                                                <button
-                                                    type="button"
-                                                    onClick={() => removeNew(i)}
+                                                    onClick={() => removeImage(url)}
                                                     className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                                                 >
                                                     <X size={12} />
@@ -180,6 +112,15 @@ export default function Form({ card }) {
                                         ))}
                                     </div>
                                 )}
+
+                                <button
+                                    type="button"
+                                    onClick={() => setShowMediaPicker(true)}
+                                    className="w-full h-24 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center hover:border-blue-500 transition-colors group"
+                                >
+                                    <Plus className="h-6 w-6 text-gray-400 group-hover:text-blue-500 transition-colors" />
+                                    <p className="mt-1 text-sm text-gray-500 group-hover:text-blue-600">Add from Media Library</p>
+                                </button>
                             </div>
 
                             {/* Order */}
@@ -195,7 +136,7 @@ export default function Form({ card }) {
                                 <p className="text-xs text-gray-500">Lower number = shown first.</p>
                             </div>
 
-                            {/* Active toggle */}
+                            {/* Active */}
                             <div className="flex items-center gap-3">
                                 <input
                                     id="is_active"
@@ -219,6 +160,16 @@ export default function Form({ card }) {
                     </Card>
                 </form>
             </div>
+
+            <MediaPicker
+                open={showMediaPicker}
+                onClose={() => setShowMediaPicker(false)}
+                onSelect={handleMediaSelect}
+                multiple={true}
+                accept="image"
+                folder="experiences"
+                recommendedSize="1200 × 800px"
+            />
         </AdminLayout>
     );
 }
