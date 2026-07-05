@@ -6,7 +6,6 @@ import Location from '@/Components/Frontend/Location';
 import LaunchProjects from '@/Components/Frontend/LaunchProjects';
 import Benefits from '@/Components/Frontend/Benefits';
 import Projects from '@/Components/Frontend/Projects';
-import ShowMoreBanner from '@/Components/Frontend/ShowMoreBanner';
 import Quiz from '@/Components/Frontend/Quiz';
 import Employee from '@/Components/Frontend/Employee';
 import Characters from '@/Components/Frontend/Characters';
@@ -38,7 +37,6 @@ export default function Home({ newsItems = [], facilities = [], projects = [], t
       <Location />
       <LaunchProjects facilities={facilities} />
       <Projects projects={projects} />
-      <ShowMoreBanner />
       <VirtualTourBanner virtualTour={virtualTour} />
       <News newsItems={newsItems} />
       <Awards />

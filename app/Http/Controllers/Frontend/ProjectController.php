@@ -115,23 +115,23 @@ class ProjectController extends Controller
         // Format price
         $price = $product->price ? 'Rp ' . number_format($product->price, 0, ',', '.') : 'Contact us for price';
 
-        // Format gallery images (using accessor)
+        // Format gallery images (using accessor), each with its caption (e.g. "Kitchen", "Bedroom")
         $gallery = $product->gallery_images->map(function ($media) {
-            return $media->url;
+            return ['url' => $media->url, 'caption' => $media->gallery_caption ?? null];
         })->toArray();
 
         // Add featured image to gallery if not already there
         $featuredImageUrl = $product->featuredImage ? $product->featuredImage->url : null;
-        if ($featuredImageUrl && !in_array($featuredImageUrl, $gallery)) {
-            array_unshift($gallery, $featuredImageUrl);
+        if ($featuredImageUrl && !in_array($featuredImageUrl, array_column($gallery, 'url'))) {
+            array_unshift($gallery, ['url' => $featuredImageUrl, 'caption' => null]);
         }
 
         // If no gallery images, use placeholder
         if (empty($gallery)) {
             $gallery = [
-                'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop',
-                'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop',
-                'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&h=800&fit=crop',
+                ['url' => 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=1200&h=800&fit=crop', 'caption' => null],
+                ['url' => 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop', 'caption' => null],
+                ['url' => 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=1200&h=800&fit=crop', 'caption' => null],
             ];
         }
 

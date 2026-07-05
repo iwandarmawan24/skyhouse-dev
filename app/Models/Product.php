@@ -102,7 +102,11 @@ class Product extends Model
     }
 
     /**
-     * Get gallery images from media library
+     * Get gallery images from media library, each annotated with its
+     * gallery-specific caption (e.g. "Kitchen", "Bedroom").
+     *
+     * gallery_uids entries support both the legacy plain-uid-string format
+     * and the newer {uid, caption} object format.
      */
     public function getGalleryImagesAttribute()
     {
@@ -110,11 +114,27 @@ class Product extends Model
             return collect();
         }
 
-        return MediaLibrary::whereIn('uid', $this->gallery_uids)
-            ->get()
-            ->sortBy(function ($media) {
-                return array_search($media->uid, $this->gallery_uids);
+        $entries = collect($this->gallery_uids)
+            ->map(function ($entry) {
+                return is_array($entry)
+                    ? ['uid' => $entry['uid'] ?? null, 'caption' => $entry['caption'] ?? null]
+                    : ['uid' => $entry, 'caption' => null];
             })
+            ->filter(fn ($entry) => !empty($entry['uid']))
+            ->values();
+
+        $media = MediaLibrary::whereIn('uid', $entries->pluck('uid'))->get()->keyBy('uid');
+
+        return $entries
+            ->map(function ($entry) use ($media) {
+                $item = $media->get($entry['uid']);
+                if (!$item) {
+                    return null;
+                }
+                $item->setAttribute('gallery_caption', $entry['caption']);
+                return $item;
+            })
+            ->filter()
             ->values();
     }
 

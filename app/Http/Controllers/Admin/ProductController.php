@@ -140,7 +140,8 @@ class ProductController extends Controller
             'featured_image_uid' => 'nullable|exists:media_library,uid',
             'card_image_uid' => 'nullable|exists:media_library,uid',
             'gallery_uids' => 'nullable|array',
-            'gallery_uids.*' => 'exists:media_library,uid',
+            'gallery_uids.*.uid' => 'required|string|exists:media_library,uid',
+            'gallery_uids.*.caption' => 'nullable|string|max:255',
         ]);
 
         // Generate slug
@@ -229,7 +230,8 @@ class ProductController extends Controller
             'featured_image_uid' => 'nullable|exists:media_library,uid',
             'card_image_uid' => 'nullable|exists:media_library,uid',
             'gallery_uids' => 'nullable|array',
-            'gallery_uids.*' => 'exists:media_library,uid',
+            'gallery_uids.*.uid' => 'required|string|exists:media_library,uid',
+            'gallery_uids.*.caption' => 'nullable|string|max:255',
         ]);
 
         // Update slug if name changed and results in a different slug

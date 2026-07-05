@@ -32,7 +32,7 @@ export default function Form({ product }) {
         is_active: product?.is_active ?? true,
         featured_image_uid: product?.featured_image_uid || null,
         card_image_uid: product?.card_image_uid || null,
-        gallery_uids: product?.gallery_uids || [],
+        gallery_uids: (product?.gallery_images || []).map((img) => ({ uid: img.uid, caption: img.gallery_caption || '' })),
         _method: isEdit ? 'PUT' : 'POST',
     });
 
@@ -43,7 +43,9 @@ export default function Form({ product }) {
     // Preview state for MediaLibrary images
     const [featuredImagePreview, setFeaturedImagePreview] = useState(product?.featured_image || null);
     const [cardImagePreview, setCardImagePreview] = useState(product?.card_image || null);
-    const [galleryPreviews, setGalleryPreviews] = useState(product?.gallery_images || []);
+    const [galleryPreviews, setGalleryPreviews] = useState(
+        (product?.gallery_images || []).map((img) => ({ ...img, caption: img.gallery_caption || '' }))
+    );
 
     // Slider management state
     const [sliders, setSliders] = useState(product?.sliders || []);
@@ -503,7 +505,7 @@ export default function Form({ product }) {
                                 <div key={image.uid || index} className="relative group">
                                     <img
                                         src={image.thumbnail_url || image.url}
-                                        alt={image.alt_text || `Gallery ${index + 1}`}
+                                        alt={image.caption || image.alt_text || `Gallery ${index + 1}`}
                                         className="w-full aspect-square object-cover rounded-lg border-2 border-gray-300"
                                     />
                                     <button
@@ -511,12 +513,26 @@ export default function Form({ product }) {
                                         onClick={() => {
                                             const newGallery = galleryPreviews.filter((_, i) => i !== index);
                                             setGalleryPreviews(newGallery);
-                                            setData('gallery_uids', newGallery.map(img => img.uid));
+                                            setData('gallery_uids', newGallery.map(img => ({ uid: img.uid, caption: img.caption || '' })));
                                         }}
                                         className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1.5 hover:bg-red-600 opacity-0 group-hover:opacity-100 transition"
                                     >
                                         <X className="h-4 w-4" />
                                     </button>
+                                    <input
+                                        type="text"
+                                        value={image.caption || ''}
+                                        onChange={(e) => {
+                                            const newCaption = e.target.value;
+                                            const newGallery = galleryPreviews.map((img, i) =>
+                                                i === index ? { ...img, caption: newCaption } : img
+                                            );
+                                            setGalleryPreviews(newGallery);
+                                            setData('gallery_uids', newGallery.map(img => ({ uid: img.uid, caption: img.caption || '' })));
+                                        }}
+                                        placeholder="e.g. Kitchen, Bedroom"
+                                        className="mt-1 w-full px-2 py-1 text-xs rounded border border-gray-300 focus:ring-1 focus:ring-blue-500 focus:border-transparent"
+                                    />
                                 </div>
                             ))}
 
@@ -767,9 +783,9 @@ export default function Form({ product }) {
                     } else if (mediaPickerMode === 'gallery') {
                         // Multiple images for gallery
                         const mediaArray = Array.isArray(media) ? media : [media];
-                        const newGallery = [...galleryPreviews, ...mediaArray];
+                        const newGallery = [...galleryPreviews, ...mediaArray.map(img => ({ ...img, caption: '' }))];
                         setGalleryPreviews(newGallery);
-                        setData('gallery_uids', newGallery.map(img => img.uid));
+                        setData('gallery_uids', newGallery.map(img => ({ uid: img.uid, caption: img.caption || '' })));
                     } else if (mediaPickerMode === 'slider') {
                         // Single image for slider
                         setSliderImagePreview(media);

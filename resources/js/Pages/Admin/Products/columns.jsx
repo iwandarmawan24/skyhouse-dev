@@ -334,6 +334,11 @@ export function ViewProductDialog({ product, open, onOpenChange }) {
                                                     <Eye className="w-6 h-6" />
                                                 </div>
                                             </div>
+                                            {mainImage?.gallery_caption && (
+                                                <div className="absolute bottom-3 left-3 px-3 py-1 bg-black/70 text-white text-sm rounded-full">
+                                                    {mainImage.gallery_caption}
+                                                </div>
+                                            )}
                                         </>
                                     ) : (
                                         <div className="w-full h-full bg-muted flex items-center justify-center">

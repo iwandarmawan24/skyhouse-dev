@@ -39,7 +39,24 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
         }}
       >
         <div className="navbar_container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative' }}>
-          <div className="navbar_menu" style={{ flex: '1', justifyContent: 'flex-start' }}>
+          <a
+            href="/"
+            className="navbar_logo-link"
+            aria-label="home"
+            style={{
+              opacity: hideLogoOnTop && !isScrolled ? 0 : 1,
+              visibility: hideLogoOnTop && !isScrolled ? 'hidden' : 'visible',
+              transition: 'opacity 0.3s ease-in-out, visibility 0.3s ease-in-out'
+            }}
+          >
+            <img
+              src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
+              alt="Sky House Alamsutera"
+              className="navbar_logo"
+            />
+          </a>
+
+          <div className="navbar_menu" style={{ flex: '1', justifyContent: 'center' }}>
             <div className="navbar-menu_wrapper ml-4">
               <div 
                 className="relative"
@@ -83,11 +100,7 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                 Facilities
               </a>
 
-              <a href="/events" className="navbar2_link">
-                Events
-              </a>
-
-              <div 
+              <div
                 className="relative"
                 onMouseEnter={() => setIsNewsDropdownOpen(true)}
                 onMouseLeave={() => setIsNewsDropdownOpen(false)}
@@ -98,9 +111,9 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </div>
-                
+
                 {isNewsDropdownOpen && (
-                  <div 
+                  <div
                     className="absolute top-full left-0 w-48 rounded-lg shadow-lg py-2 z-50"
                     style={{
                       backgroundColor: 'rgba(255, 255, 255, 0.8)',
@@ -108,6 +121,9 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                       WebkitBackdropFilter: 'blur(12px)',
                     }}
                   >
+                    <a href="/events" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
+                      360 VR Tour
+                    </a>
                     <a href="/media-highlights" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
                       Media Highlights
                     </a>
@@ -119,26 +135,6 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
               </div>
             </div>
           </div>
-
-          <a 
-            href="/" 
-            className="navbar_logo-link" 
-            aria-label="home" 
-            style={{ 
-              position: 'absolute', 
-              left: '50%', 
-              transform: 'translateX(-50%)',
-              opacity: hideLogoOnTop && !isScrolled ? 0 : 1,
-              visibility: hideLogoOnTop && !isScrolled ? 'hidden' : 'visible',
-              transition: 'opacity 0.3s ease-in-out, visibility 0.3s ease-in-out'
-            }}
-          >
-            <img
-              src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
-              alt="Sky House Alamsutera"
-              className="navbar_logo"
-            />
-          </a>
 
           <div className="hidden lg:block">
             <Button
@@ -174,7 +170,7 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
             <a href="/gallery" className="mobile-menu-link">Gallery</a>
             <a href="/about" className="mobile-menu-link">About</a>
             <a href="/careers" className="mobile-menu-link">Careers</a>
-            <a href="/events" className="mobile-menu-link">Events</a>
+            <a href="/events" className="mobile-menu-link">360 VR Tour</a>
             <a href="/media-highlights" className="mobile-menu-link">Media Highlights</a>
             <a href="/news" className="mobile-menu-link">News Articles</a>
             <a href="/contact-us" className="mobile-menu-link">Contact Us</a>

@@ -274,11 +274,17 @@ export default function ProjectDetail({ project }) {
                     className="relative w-full h-96 md:h-[500px] overflow-hidden rounded-lg bg-gray-100 cursor-pointer group"
                     onClick={() => openModal(currentImageIndex)}
                   >
-                    <img 
-                      src={project.gallery[currentImageIndex]} 
-                      alt={`${project.name} - Image ${currentImageIndex + 1}`}
+                    <img
+                      src={project.gallery[currentImageIndex].url}
+                      alt={project.gallery[currentImageIndex].caption || `${project.name} - Image ${currentImageIndex + 1}`}
                       className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                     />
+                    {/* Caption */}
+                    {project.gallery[currentImageIndex].caption && (
+                      <div className="absolute bottom-4 left-4 px-4 py-2 bg-black/70 text-white text-sm font-medium rounded-full">
+                        {project.gallery[currentImageIndex].caption}
+                      </div>
+                    )}
                     {/* Click to Enlarge Hint */}
                     <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center">
                       <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-white/90 px-4 py-2 rounded-full">
@@ -327,17 +333,22 @@ export default function ProjectDetail({ project }) {
                           setCurrentImageIndex(index);
                           openModal(index);
                         }}
-                        className={`flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden transition-all hover:scale-105 cursor-pointer ${
-                          currentImageIndex === index 
-                            ? 'ring-4 ring-blue-500 scale-105' 
+                        className={`relative flex-shrink-0 w-24 h-24 rounded-lg overflow-hidden transition-all hover:scale-105 cursor-pointer ${
+                          currentImageIndex === index
+                            ? 'ring-4 ring-blue-500 scale-105'
                             : 'ring-2 ring-gray-200 hover:ring-gray-300'
                         }`}
                       >
-                        <img 
-                          src={image} 
-                          alt={`Thumbnail ${index + 1}`}
+                        <img
+                          src={image.url}
+                          alt={image.caption || `Thumbnail ${index + 1}`}
                           className="w-full h-full object-cover"
                         />
+                        {image.caption && (
+                          <div className="absolute inset-x-0 bottom-0 px-1.5 py-0.5 bg-black/60 text-white text-[10px] leading-tight text-center truncate">
+                            {image.caption}
+                          </div>
+                        )}
                       </button>
                     ))}
                   </div>
@@ -412,11 +423,16 @@ export default function ProjectDetail({ project }) {
             className="relative max-w-7xl max-h-[90vh] w-full"
             onClick={(e) => e.stopPropagation()}
           >
-            <img 
-              src={project.gallery[modalImageIndex]} 
-              alt={`${project.name} - Image ${modalImageIndex + 1}`}
+            <img
+              src={project.gallery[modalImageIndex].url}
+              alt={project.gallery[modalImageIndex].caption || `${project.name} - Image ${modalImageIndex + 1}`}
               className="w-full h-full object-contain rounded-lg"
             />
+            {project.gallery[modalImageIndex].caption && (
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 px-5 py-2 bg-black/70 backdrop-blur-sm text-white text-base font-medium rounded-full">
+                {project.gallery[modalImageIndex].caption}
+              </div>
+            )}
 
             {/* Navigation Arrows */}
             <button 
