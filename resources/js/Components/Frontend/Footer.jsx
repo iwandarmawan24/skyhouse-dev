@@ -75,7 +75,7 @@ const Footer = () => {
 
             <div className="footer_section">
               <Heading as="h4" variant="subsection">Company</Heading>
-              <a href="/about">About</a>
+              <a href="/about">About Us</a>
               <a href="/careers">Careers</a>
               <a href="/news">News</a>
             </div>
