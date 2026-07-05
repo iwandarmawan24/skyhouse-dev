@@ -429,7 +429,7 @@ export default function ProjectDetail({ project }) {
               className="w-full h-full object-contain rounded-lg"
             />
             {project.gallery[modalImageIndex].caption && (
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 px-5 py-2 bg-black/70 backdrop-blur-sm text-white text-base font-medium rounded-full">
+              <div className="absolute bottom-20 left-1/2 -translate-x-1/2 px-5 py-2 bg-black/70 backdrop-blur-sm text-white text-base font-medium rounded-full whitespace-nowrap">
                 {project.gallery[modalImageIndex].caption}
               </div>
             )}

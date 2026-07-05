@@ -50,9 +50,9 @@ const Employee = ({
             <div
               key={member.id || index}
               onClick={() => setActiveIndex(index)}
-              className={`relative overflow-hidden rounded-3xl shadow-xl transition-all duration-700 ease-out will-change-[flex-grow] group cursor-pointer ${
+              className={`relative overflow-hidden rounded-3xl shadow-xl transition-[flex-grow,flex-basis] duration-700 ease-out will-change-[flex-grow,flex-basis] group cursor-pointer ${
                 index === activeIndex
-                  ? 'flex-[3] md:flex-none aspect-square md:h-full'
+                  ? 'flex-[3] md:flex-[0_0_500px]'
                   : 'flex-1 hover:flex-[1.5]'
               }`}
             >
