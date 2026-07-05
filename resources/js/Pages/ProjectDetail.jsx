@@ -403,14 +403,14 @@ export default function ProjectDetail({ project }) {
 
       {/* Image Modal */}
       {isModalOpen && (
-        <div 
-          className="fixed inset-0 z-50 bg-black/95 flex items-center justify-center p-4"
+        <div
+          className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center p-4"
           onClick={closeModal}
         >
           {/* Close Button */}
           <button
             onClick={closeModal}
-            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all z-50"
+            className="absolute top-4 right-4 p-2 bg-white/10 hover:bg-white/20 rounded-full transition-all"
             aria-label="Close modal"
           >
             <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

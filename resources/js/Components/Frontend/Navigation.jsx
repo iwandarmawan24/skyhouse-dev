@@ -102,6 +102,10 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                 Facilities
               </a>
 
+              <a href={virtualTourUrl} target="_blank" rel="noopener noreferrer" className="navbar2_link">
+                360 VR Tour
+              </a>
+
               <div
                 className="relative"
                 onMouseEnter={() => setIsNewsDropdownOpen(true)}
@@ -123,9 +127,6 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                       WebkitBackdropFilter: 'blur(12px)',
                     }}
                   >
-                    <a href={virtualTourUrl} target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
-                      360 VR Tour
-                    </a>
                     <a href="/events" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
                       Events
                     </a>

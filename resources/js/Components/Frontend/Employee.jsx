@@ -50,7 +50,7 @@ const Employee = ({
             <div
               key={member.id || index}
               onClick={() => setActiveIndex(index)}
-              className={`relative overflow-hidden rounded-3xl shadow-xl transition-all duration-700 ease-in-out group cursor-pointer ${
+              className={`relative overflow-hidden rounded-3xl shadow-xl transition-all duration-700 ease-out will-change-[flex-grow] group cursor-pointer ${
                 index === activeIndex
                   ? 'flex-[3] md:flex-none aspect-square md:h-full'
                   : 'flex-1 hover:flex-[1.5]'
@@ -71,20 +71,18 @@ const Employee = ({
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent"></div>
-              <div className={`absolute bottom-0 left-0 right-0 p-6 lg:p-8 transition-opacity duration-500 ${
-                index === activeIndex ? 'opacity-100' : 'opacity-0 lg:opacity-100'
+              <div className={`absolute bottom-0 left-0 right-0 p-6 lg:p-8 transition-all duration-500 ease-out ${
+                index === activeIndex
+                  ? 'opacity-100 translate-y-0 delay-200'
+                  : 'opacity-0 translate-y-2 lg:opacity-100 lg:translate-y-0'
               }`}>
-                {index === activeIndex && (
-                  <>
-                    <Heading as="h3" className="mb-2" color="white">
-                      {member.name}
-                    </Heading>
-                    {(member.role || member.position) && (
-                      <Text size="sm" color="white" className="mb-4 opacity-90">
-                        {member.role || member.position}
-                      </Text>
-                    )}
-                  </>
+                <Heading as="h3" className="mb-2" color="white">
+                  {member.name}
+                </Heading>
+                {(member.role || member.position) && (
+                  <Text size="sm" color="white" className="mb-4 opacity-90">
+                    {member.role || member.position}
+                  </Text>
                 )}
               </div>
             </div>
