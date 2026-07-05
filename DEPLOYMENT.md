@@ -1,5 +1,34 @@
 # Deployment Guide
 
+Server stack: **nginx + PHP-FPM** (bare metal, no Docker in production).
+
+## Deploy ke Domain Baru
+
+Hanya 2 tempat yang perlu diganti — semua URL/asset lain otomatis mengikuti karena diturunkan dari `APP_URL`:
+
+1. **`nginx-config-example.conf`** (copy ke `/etc/nginx/sites-available/`) — ganti `YOUR_DOMAIN` jadi domain aslinya:
+   ```
+   server_name YOUR_DOMAIN www.YOUR_DOMAIN;
+   ```
+2. **`.env`** di server — set `APP_URL` ke domain yang sama:
+   ```
+   APP_URL=https://YOUR_DOMAIN
+   ```
+   (tanpa trailing slash)
+
+Lalu:
+```bash
+sudo ln -s /etc/nginx/sites-available/YOUR_DOMAIN.conf /etc/nginx/sites-enabled/
+sudo nginx -t && sudo systemctl reload nginx
+
+# Aktifkan HTTPS (akan otomatis menambahkan SSL server block ke config nginx di atas)
+sudo certbot --nginx -d YOUR_DOMAIN -d www.YOUR_DOMAIN
+
+php artisan config:clear && php artisan config:cache
+```
+
+Tidak perlu ubah kode apapun — tidak ada domain yang di-hardcode di `app/`, `resources/`, atau `routes/`.
+
 ## Setelah Update Routes atau Code
 
 Jalankan command berikut di **production server**:
