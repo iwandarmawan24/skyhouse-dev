@@ -52,7 +52,7 @@ const Employee = ({
               onClick={() => setActiveIndex(index)}
               className={`relative overflow-hidden rounded-3xl shadow-xl transition-all duration-700 ease-in-out group cursor-pointer ${
                 index === activeIndex
-                  ? 'flex-[3] md:flex-[4] lg:flex-[5]'
+                  ? 'flex-[3] md:flex-none aspect-square md:h-full'
                   : 'flex-1 hover:flex-[1.5]'
               }`}
             >

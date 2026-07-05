@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Models\Setting;
+use App\Models\VirtualTourBanner;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -63,6 +64,8 @@ class HandleInertiaRequests extends Middleware
                 'social'   => Setting::getGroup('social'),
                 'sections' => Setting::getGroup('sections'),
             ],
+            'virtualTourUrl' => fn () => VirtualTourBanner::active()->first()?->url
+                ?? 'https://epic.spindonesia.com/skyhousealsut/index.html',
         ]);
     }
 }

@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
+import { usePage } from '@inertiajs/react';
 import Button from '@/Components/Frontend/atoms/Button';
 
 const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) => {
+  const { virtualTourUrl } = usePage().props;
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProjectsDropdownOpen, setIsProjectsDropdownOpen] = useState(false);
@@ -121,8 +123,11 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                       WebkitBackdropFilter: 'blur(12px)',
                     }}
                   >
-                    <a href="/events" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
+                    <a href={virtualTourUrl} target="_blank" rel="noopener noreferrer" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
                       360 VR Tour
+                    </a>
+                    <a href="/events" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
+                      Events
                     </a>
                     <a href="/media-highlights" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
                       Media Highlights
@@ -170,7 +175,8 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
             <a href="/gallery" className="mobile-menu-link">Gallery</a>
             <a href="/about" className="mobile-menu-link">About</a>
             <a href="/careers" className="mobile-menu-link">Careers</a>
-            <a href="/events" className="mobile-menu-link">360 VR Tour</a>
+            <a href={virtualTourUrl} target="_blank" rel="noopener noreferrer" className="mobile-menu-link">360 VR Tour</a>
+            <a href="/events" className="mobile-menu-link">Events</a>
             <a href="/media-highlights" className="mobile-menu-link">Media Highlights</a>
             <a href="/news" className="mobile-menu-link">News Articles</a>
             <a href="/contact-us" className="mobile-menu-link">Contact Us</a>
