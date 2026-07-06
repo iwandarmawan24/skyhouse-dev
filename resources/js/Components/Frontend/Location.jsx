@@ -9,6 +9,7 @@ const Location = () => {
     google_maps_link: 'https://maps.app.goo.gl/Ru7myaVcPCSgNspo7'
   });
   const [isLoading, setIsLoading] = useState(true);
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   // Fetch location map data from backend
   useEffect(() => {
@@ -76,16 +77,42 @@ const Location = () => {
           </div>
 
           <div
-            className="w-full lg:w-2/3 px-4 lg:px-0 mb-8 md:mb-12 bg-white rounded-[30px] lg:rounded-[50px] p-3 lg:p-5 shadow-2xl overflow-hidden"
+            className="w-full lg:w-2/3 px-4 lg:px-0 mb-8 md:mb-12 bg-white rounded-[30px] lg:rounded-[50px] p-3 lg:p-5 shadow-2xl overflow-hidden cursor-pointer group"
+            onClick={() => setIsLightboxOpen(true)}
           >
             <img
               src={locationData.image_url}
               alt={locationData.title}
-              className="w-full h-auto block max-w-[600px] mx-auto"
+              className="w-full h-auto block max-w-[600px] mx-auto transition-transform duration-300 group-hover:scale-[1.02]"
             />
           </div>
         </div>
       </div>
+
+      {/* Fullscreen Lightbox */}
+      {isLightboxOpen && (
+        <div
+          className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center p-4"
+          onClick={() => setIsLightboxOpen(false)}
+        >
+          <button
+            onClick={() => setIsLightboxOpen(false)}
+            className="absolute top-4 right-4 p-2 text-white hover:text-gray-300 transition-colors"
+            aria-label="Close fullscreen image"
+          >
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+
+          <img
+            src={locationData.image_url}
+            alt={locationData.title}
+            className="max-w-full max-h-[90vh] object-contain rounded-lg"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
     </section>
   );
 };

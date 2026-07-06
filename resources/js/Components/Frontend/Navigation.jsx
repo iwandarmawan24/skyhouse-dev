@@ -134,7 +134,7 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
                       Media Highlights
                     </a>
                     <a href="/news" className="block px-4 py-2 text-skyhouse-ocean hover:bg-skyhouse-ocean hover:text-white transition-colors">
-                      News Articles
+                      Articles
                     </a>
                   </div>
                 )}
