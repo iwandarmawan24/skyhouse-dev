@@ -17,7 +17,7 @@ class SettingSeeder extends Seeder
             ['key' => 'site_name', 'value' => 'Skyhouse Alamsutera', 'type' => 'text', 'group' => 'general'],
             ['key' => 'site_tagline', 'value' => 'Living Beyond Expectation', 'type' => 'text', 'group' => 'general'],
             ['key' => 'site_description', 'value' => 'Skyhouse Alam Sutera is a premium residential development offering modern living spaces in the heart of Alam Sutera, Tangerang.', 'type' => 'textarea', 'group' => 'general'],
-            ['key' => 'site_logo', 'value' => 'https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png', 'type' => 'text', 'group' => 'general'],
+            ['key' => 'site_logo', 'value' => '/images/logo.png', 'type' => 'text', 'group' => 'general'],
             ['key' => 'terms_url', 'value' => '/terms', 'type' => 'text', 'group' => 'general'],
             ['key' => 'privacy_url', 'value' => '/privacy', 'type' => 'text', 'group' => 'general'],
 

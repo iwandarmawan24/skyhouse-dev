@@ -404,7 +404,7 @@ export default function AdminLayout({ children }) {
                 <Link href="/admin/dashboard" className="block">
                     <div className="flex h-16 items-center gap-3 px-4 border-b hover:bg-accent/50 transition-colors">
                         <img
-                            src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
+                            src="/images/logo.png"
                             alt="SkyHouse Property Logo"
                             className="h-10 w-auto"
                             onError={(e) => {

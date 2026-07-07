@@ -50,7 +50,7 @@ export default function Login() {
                 <div className="text-center mb-8 space-y-2">
                     <div className="inline-flex items-center justify-center mb-4">
                         <img
-                            src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
+                            src="/images/logo.png"
                             alt="SkyHouse Property Logo"
                             className="h-20 w-auto"
                         />

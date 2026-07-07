@@ -69,7 +69,7 @@ const PageLoader = ({ children }) => {
           {/* Logo Container */}
           <div className="loader-logo-container">
             <img
-              src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
+              src="/images/logo.png"
               alt="Skyhouse"
               className="loader-logo"
             />

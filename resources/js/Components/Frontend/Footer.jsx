@@ -11,7 +11,7 @@ const Footer = () => {
   const social = settings?.social || {};
 
   const siteName = general.site_name || 'Sky House Alam Sutera+';
-  const siteLogo = general.site_logo || 'https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png';
+  const siteLogo = general.site_logo || '/images/logo.png';
   const address = contact.contact_address || 'Jl. Alamsutera Boulevard No.88, Pakulonan Barat, Kelapa Dua, Tangerang, Banten 15810';
   const phone = contact.contact_phone || '+62 21 5088 9900';
   const email = contact.contact_email || 'info@skyhousealamsutera.com';

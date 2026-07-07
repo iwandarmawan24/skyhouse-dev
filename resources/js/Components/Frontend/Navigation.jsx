@@ -52,7 +52,7 @@ const Navigation = ({ hideLogoOnTop = false, showBackgroundDefault = false }) =>
             }}
           >
             <img
-              src="https://www.skyhousealamsutera.id/wp-content/uploads/2020/12/logo.png"
+              src="/images/logo.png"
               alt="Sky House Alamsutera"
               className="navbar_logo"
             />
