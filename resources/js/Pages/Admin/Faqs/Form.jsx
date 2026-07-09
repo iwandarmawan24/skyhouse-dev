@@ -13,7 +13,7 @@ import { Label } from "@/Components/ui/Label";
 import { Textarea } from "@/Components/ui/Textarea";
 
 export default function Form({ faq }) {
-    const isEdit = faq !== null;
+    const isEdit = Boolean(faq?.uid);
 
     const { data, setData, post, processing, errors } = useForm({
         question: faq?.question || "",

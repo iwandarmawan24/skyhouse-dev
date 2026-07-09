@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import {
     ChevronRight,
-    BarChart2,
     LayoutDashboard,
     Image as ImageIcon,
     Images,
@@ -130,12 +129,6 @@ export default function AdminLayout({ children }) {
                 name: "Dashboard",
                 href: "/admin/dashboard",
                 icon: LayoutDashboard,
-            },
-            {
-                name: "Analytics",
-                href: "/admin/analytics",
-                icon: BarChart2,
-                roles: ["superadmin", "admin"],
             },
         ],
         website: [
