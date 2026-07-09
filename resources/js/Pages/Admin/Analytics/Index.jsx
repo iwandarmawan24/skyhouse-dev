@@ -132,6 +132,7 @@ function SankeyChart({ nodes, links }) {
 
 const EVENT_LABELS = {
     page_view:             { label: 'Page View',          variant: 'secondary' },
+    page_view_server:      { label: 'Page View (Server)', variant: 'secondary' },
     contact_submit:        { label: 'Contact Submit',     variant: 'default' },
     wa_click:              { label: 'WhatsApp',           variant: 'success' },
     download_click:        { label: 'Brochure Download',  variant: 'secondary' },
@@ -265,6 +266,7 @@ export default function Analytics({
 
             {/* Stat Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+                <StatCard icon={Eye}            label="Page Views (Server)" today={s.page_view_server?.today} week={s.page_view_server?.week} month={s.page_view_server?.month} color="text-blue-600" bg="bg-blue-50" />
                 <StatCard icon={MessageSquare}  label="Contact Submits"  today={s.contact_submit?.today} week={s.contact_submit?.week} month={s.contact_submit?.month} color="text-indigo-600" bg="bg-indigo-50" />
                 <StatCard icon={Phone}          label="WhatsApp Clicks"  today={s.wa_click?.today}       week={s.wa_click?.week}       month={s.wa_click?.month}       color="text-green-600"  bg="bg-green-50" />
                 <StatCard icon={FileDown}       label="Brochure Downloads" today={s.download_click?.today} week={s.download_click?.week} month={s.download_click?.month} color="text-orange-600" bg="bg-orange-50" />

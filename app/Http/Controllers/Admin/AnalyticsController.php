@@ -19,7 +19,7 @@ class AnalyticsController extends Controller
 
         // --- Stat cards (frontend visitor traffic only — admin dashboard clicks excluded) ---
         $eventTypes = [
-            'page_view', 'contact_submit', 'wa_click',
+            'page_view', 'page_view_server', 'contact_submit', 'wa_click',
             'download_click', 'contact_click',
             'article_view', 'media_highlight_click',
             'outbound_link', 'nav_click', 'button_click',

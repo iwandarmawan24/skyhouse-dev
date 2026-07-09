@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Helpers\UserAgentParser;
 use App\Http\Controllers\Controller;
 use App\Models\TrackerEvent;
 use App\Models\TrackerSession;
+use App\Services\VisitorSessionResolver;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 
 class TrackerController extends Controller
 {
@@ -46,38 +45,11 @@ class TrackerController extends Controller
 
     private function resolveSession(Request $request, array $validated): TrackerSession
     {
-        $sid = $request->cookie('tracker_sid');
-
-        if ($sid) {
-            $session = TrackerSession::find($sid);
-            if ($session) {
-                $session->update(['last_seen' => now()]);
-                return $session;
-            }
-        }
-
-        // Hash IP with a daily-rotating salt — raw IP never touches the DB or logs
-        $dailySalt = hash('sha256', date('Y-m-d') . config('app.key'));
-        $ipHash    = hash('sha256', ($request->ip() ?? '') . $dailySalt);
-
-        // Parse UA, discard the raw string immediately after
-        $ua = UserAgentParser::parse($request->userAgent() ?? '');
-
-        $props = $validated['properties'] ?? [];
-
-        return TrackerSession::create([
-            'id'           => Str::uuid()->toString(),
-            'ip_hash'      => $ipHash,
-            'device_type'  => $ua['device_type'],
-            'browser'      => $ua['browser'],
-            'os'           => $ua['os'],
-            'landing_page' => $validated['page_url'] ?? null,
-            'referrer'     => $validated['referrer'] ?? null,
-            'utm_source'   => $props['utm_source'] ?? null,
-            'utm_medium'   => $props['utm_medium'] ?? null,
-            'utm_campaign' => $props['utm_campaign'] ?? null,
-            'first_seen'   => now(),
-            'last_seen'    => now(),
-        ]);
+        return VisitorSessionResolver::resolve(
+            $request,
+            $validated['page_url'] ?? null,
+            $validated['referrer'] ?? null,
+            $validated['properties'] ?? [],
+        );
     }
 }
