@@ -177,7 +177,7 @@ export default function MediaHighlights({ featured, pageInfo = null }) {
                       rel="noopener noreferrer"
                       className="news-card"
                       data-track-type="media"
-                      data-track-action="click"
+                      data-track-action="media_highlight_click"
                       data-track-id={String(item.id)}
                       data-track-label={item.title}
                     >
