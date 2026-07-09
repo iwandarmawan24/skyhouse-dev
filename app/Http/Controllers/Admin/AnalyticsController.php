@@ -51,9 +51,9 @@ class AnalyticsController extends Controller
             'month' => (clone $frontendSessions)->where('first_seen', '>=', $month)->count(),
         ];
 
-        // --- Top pages (frontend only) ---
+        // --- Top pages (frontend only, counts either page_view source) ---
         $topPages = DB::table('tracker_events')
-            ->where('event_type', 'page_view')
+            ->whereIn('event_type', ['page_view', 'page_view_server'])
             ->whereNotNull('page_url')
             ->where('page_url', 'not like', '/admin%')
             ->select('page_url', DB::raw('count(*) as count'))
