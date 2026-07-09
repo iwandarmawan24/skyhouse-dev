@@ -121,7 +121,7 @@ export default function MediaHighlights({ featured, pageInfo = null }) {
                 className="news-hero-content"
                 style={{ textDecoration: 'none', color: 'inherit' }}
                 data-track-type="media"
-                data-track-action="click"
+                data-track-action="media_highlight_click"
                 data-track-label={featuredNews.title}
               >
                 <div className="news-hero-image">
