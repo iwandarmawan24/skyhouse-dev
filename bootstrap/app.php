@@ -17,6 +17,11 @@ return Application::configure(basePath: dirname(__DIR__))
             \App\Http\Middleware\TrackPageViewServerSide::class,
         ]);
 
+        // tracker_sid is a plain UUID read by both the 'web' group (server-side
+        // page_view middleware) and the 'api' group (/api/track, which doesn't
+        // run EncryptCookies) — must stay unencrypted so both sides agree on it.
+        $middleware->encryptCookies(except: ['tracker_sid']);
+
         // Redirect guests to admin login
         $middleware->redirectGuestsTo('/admin/login');
 

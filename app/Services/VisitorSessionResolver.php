@@ -18,7 +18,7 @@ class VisitorSessionResolver
     {
         $sid = $request->cookie('tracker_sid');
 
-        if ($sid) {
+        if ($sid && Str::isUuid($sid)) {
             $session = TrackerSession::find($sid);
             if ($session) {
                 $session->update(['last_seen' => now()]);
