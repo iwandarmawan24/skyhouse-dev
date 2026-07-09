@@ -7,7 +7,7 @@ import {
 } from '@/Components/ui/Table';
 import {
     Eye, MessageSquare, Phone, FileDown,
-    Home, Users, TrendingUp, MousePointerClick, Monitor, Smartphone, Tablet, Download,
+    Home, Users, TrendingUp, Monitor, Smartphone, Tablet, Download,
 } from 'lucide-react';
 
 // ─── Sankey SVG renderer (zero dependencies) ─────────────────────────────────
@@ -271,10 +271,9 @@ export default function Analytics({
                 <StatCard icon={Phone}          label="WhatsApp Clicks"  today={s.wa_click?.today}       week={s.wa_click?.week}       month={s.wa_click?.month}       color="text-green-600"  bg="bg-green-50" />
                 <StatCard icon={FileDown}       label="Brochure Downloads" today={s.download_click?.today} week={s.download_click?.week} month={s.download_click?.month} color="text-orange-600" bg="bg-orange-50" />
             </div>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+            <div className="grid grid-cols-2 lg:grid-cols-2 gap-4 mb-8">
                 <StatCard icon={Home}              label="Unit → Contact"  today={s.contact_click?.today}  week={s.contact_click?.week}  month={s.contact_click?.month}  color="text-sky-600"    bg="bg-sky-50" />
                 <StatCard icon={Eye}               label="Article Views"   today={s.article_view?.today}   week={s.article_view?.week}   month={s.article_view?.month}   color="text-violet-600" bg="bg-violet-50" />
-                <StatCard icon={MousePointerClick} label="Media Clicks"    today={s.media_highlight_click?.today} week={s.media_highlight_click?.week} month={s.media_highlight_click?.month} color="text-pink-600"   bg="bg-pink-50" />
             </div>
 
             {/* Sankey — Visitor Journey (hidden until enough data is collected) */}
