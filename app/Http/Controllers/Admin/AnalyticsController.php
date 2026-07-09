@@ -17,7 +17,7 @@ class AnalyticsController extends Controller
         $week  = $now->copy()->subDays(7);
         $month = $now->copy()->subDays(30);
 
-        // --- Stat cards ---
+        // --- Stat cards (frontend visitor traffic only — admin dashboard clicks excluded) ---
         $eventTypes = [
             'page_view', 'contact_submit', 'wa_click',
             'download_click', 'contact_click',
@@ -29,7 +29,9 @@ class AnalyticsController extends Controller
 
         $summary = [];
         foreach ($eventTypes as $type) {
-            $q = DB::table('tracker_events')->where('event_type', $type);
+            $q = DB::table('tracker_events')
+                ->where('event_type', $type)
+                ->where('page_url', 'not like', '/admin%');
             $summary[$type] = [
                 'today' => (clone $q)->where('created_at', '>=', $today)->count(),
                 'week'  => (clone $q)->where('created_at', '>=', $week)->count(),
@@ -37,34 +39,44 @@ class AnalyticsController extends Controller
             ];
         }
 
-        // --- Unique sessions ---
+        // --- Unique sessions (frontend visitors — landing page not an admin route) ---
+        $frontendSessions = DB::table('tracker_sessions')
+            ->where(function ($q) {
+                $q->whereNull('landing_page')->orWhere('landing_page', 'not like', '/admin%');
+            });
+
         $uniqueSessions = [
-            'today' => DB::table('tracker_sessions')->where('first_seen', '>=', $today)->count(),
-            'week'  => DB::table('tracker_sessions')->where('first_seen', '>=', $week)->count(),
-            'month' => DB::table('tracker_sessions')->where('first_seen', '>=', $month)->count(),
+            'today' => (clone $frontendSessions)->where('first_seen', '>=', $today)->count(),
+            'week'  => (clone $frontendSessions)->where('first_seen', '>=', $week)->count(),
+            'month' => (clone $frontendSessions)->where('first_seen', '>=', $month)->count(),
         ];
 
-        // --- Top pages ---
+        // --- Top pages (frontend only) ---
         $topPages = DB::table('tracker_events')
             ->where('event_type', 'page_view')
             ->whereNotNull('page_url')
+            ->where('page_url', 'not like', '/admin%')
             ->select('page_url', DB::raw('count(*) as count'))
             ->groupBy('page_url')
             ->orderByDesc('count')
             ->limit(10)
             ->get();
 
-        // --- Event breakdown (30 days) ---
+        // --- Event breakdown (30 days, frontend only) ---
         $eventBreakdown = DB::table('tracker_events')
             ->where('created_at', '>=', $month)
+            ->where('page_url', 'not like', '/admin%')
             ->select('event_type', DB::raw('count(*) as count'))
             ->groupBy('event_type')
             ->orderByDesc('count')
             ->get();
 
-        // --- Device breakdown (sessions) ---
+        // --- Device breakdown (frontend sessions only) ---
         $deviceBreakdown = DB::table('tracker_sessions')
             ->whereNotNull('device_type')
+            ->where(function ($q) {
+                $q->whereNull('landing_page')->orWhere('landing_page', 'not like', '/admin%');
+            })
             ->select('device_type', 'browser', 'os', DB::raw('count(*) as count'))
             ->groupBy('device_type', 'browser', 'os')
             ->orderByDesc('count')
@@ -82,6 +94,7 @@ class AnalyticsController extends Controller
                     ) AS prev_node
                 FROM tracker_events
                 WHERE created_at >= NOW() - INTERVAL '30 days'
+                  AND page_url NOT LIKE '/admin%'
             ),
             flows AS (
                 SELECT
