@@ -118,8 +118,8 @@ class AnalyticsController extends Controller
             ], $sankeyRaw),
         ];
 
-        // --- Recent events ---
-        $recentEvents = DB::table('tracker_events')
+        // --- Recent events (split: frontend visitors vs admin dashboard activity) ---
+        $recentEventsBase = DB::table('tracker_events')
             ->leftJoin('tracker_sessions', 'tracker_events.session_id', '=', 'tracker_sessions.id')
             ->select(
                 'tracker_events.id',
@@ -132,18 +132,27 @@ class AnalyticsController extends Controller
                 'tracker_sessions.device_type',
                 'tracker_sessions.browser',
                 'tracker_sessions.os',
-            )
+            );
+
+        $recentEvents = (clone $recentEventsBase)
+            ->where('tracker_events.page_url', 'not like', '/admin%')
             ->orderByDesc('tracker_events.created_at')
-            ->paginate(20);
+            ->paginate(20, ['*'], 'frontend_page');
+
+        $recentAdminEvents = (clone $recentEventsBase)
+            ->where('tracker_events.page_url', 'like', '/admin%')
+            ->orderByDesc('tracker_events.created_at')
+            ->paginate(20, ['*'], 'admin_page');
 
         return Inertia::render('Admin/Analytics/Index', [
-            'summary'         => $summary,
-            'uniqueSessions'  => $uniqueSessions,
-            'topPages'        => $topPages,
-            'eventBreakdown'  => $eventBreakdown,
-            'deviceBreakdown' => $deviceBreakdown,
-            'sankeyData'      => $sankeyData,
-            'recentEvents'    => $recentEvents,
+            'summary'           => $summary,
+            'uniqueSessions'    => $uniqueSessions,
+            'topPages'          => $topPages,
+            'eventBreakdown'    => $eventBreakdown,
+            'deviceBreakdown'   => $deviceBreakdown,
+            'sankeyData'        => $sankeyData,
+            'recentEvents'      => $recentEvents,
+            'recentAdminEvents' => $recentAdminEvents,
         ]);
     }
 

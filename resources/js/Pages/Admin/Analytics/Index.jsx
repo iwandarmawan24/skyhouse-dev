@@ -180,9 +180,53 @@ const DEVICE_ICONS = { desktop: Monitor, mobile: Smartphone, tablet: Tablet };
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
+function RecentEventsTable({ title, subtitle, events }) {
+    return (
+        <Card className="overflow-hidden">
+            <div className="px-5 py-4 border-b border-gray-100">
+                <h2 className="font-semibold text-gray-900">{title}</h2>
+                <p className="text-xs text-gray-500 mt-0.5">{subtitle}</p>
+            </div>
+            <Table>
+                <TableHeader>
+                    <TableRow>
+                        <TableHead>Time</TableHead>
+                        <TableHead>Event</TableHead>
+                        <TableHead>Target</TableHead>
+                        <TableHead>Page</TableHead>
+                        <TableHead>Device</TableHead>
+                    </TableRow>
+                </TableHeader>
+                <TableBody>
+                    {(events?.data ?? []).map((event) => (
+                        <TableRow key={event.id}>
+                            <TableCell className="whitespace-nowrap text-xs text-gray-500">{formatDate(event.created_at)}</TableCell>
+                            <TableCell>
+                                <Badge variant={EVENT_LABELS[event.event_type]?.variant ?? 'secondary'}>
+                                    {EVENT_LABELS[event.event_type]?.label ?? event.event_type}
+                                </Badge>
+                            </TableCell>
+                            <TableCell className="text-xs text-gray-600 max-w-[140px] truncate">
+                                {event.target_label ?? event.event_target ?? '—'}
+                            </TableCell>
+                            <TableCell className="text-xs text-gray-600 max-w-[160px] truncate">{event.page_url ?? '—'}</TableCell>
+                            <TableCell className="text-xs text-gray-500 whitespace-nowrap">
+                                {[event.device_type, event.browser].filter(Boolean).join(' / ') || '—'}
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                    {!(events?.data?.length) && (
+                        <TableRow><TableCell colSpan={5} className="text-center text-gray-400 py-12">No events recorded yet</TableCell></TableRow>
+                    )}
+                </TableBody>
+            </Table>
+        </Card>
+    );
+}
+
 export default function Analytics({
     summary, uniqueSessions, topPages, eventBreakdown,
-    deviceBreakdown, sankeyData, recentEvents,
+    deviceBreakdown, sankeyData, recentEvents, recentAdminEvents,
 }) {
     const s = summary ?? {};
 
@@ -221,7 +265,6 @@ export default function Analytics({
 
             {/* Stat Cards */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-                <StatCard icon={Eye}            label="Page Views"       today={s.page_view?.today}      week={s.page_view?.week}      month={s.page_view?.month}      color="text-blue-600"   bg="bg-blue-50" />
                 <StatCard icon={MessageSquare}  label="Contact Submits"  today={s.contact_submit?.today} week={s.contact_submit?.week} month={s.contact_submit?.month} color="text-indigo-600" bg="bg-indigo-50" />
                 <StatCard icon={Phone}          label="WhatsApp Clicks"  today={s.wa_click?.today}       week={s.wa_click?.week}       month={s.wa_click?.month}       color="text-green-600"  bg="bg-green-50" />
                 <StatCard icon={FileDown}       label="Brochure Downloads" today={s.download_click?.today} week={s.download_click?.week} month={s.download_click?.month} color="text-orange-600" bg="bg-orange-50" />
@@ -331,46 +374,19 @@ export default function Analytics({
                 </Card>
             </div>
 
-            {/* Recent Events */}
-            <Card className="overflow-hidden">
-                <div className="px-5 py-4 border-b border-gray-100">
-                    <h2 className="font-semibold text-gray-900">Recent Events</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">Latest {recentEvents?.data?.length ?? 0} events</p>
-                </div>
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            <TableHead>Time</TableHead>
-                            <TableHead>Event</TableHead>
-                            <TableHead>Target</TableHead>
-                            <TableHead>Page</TableHead>
-                            <TableHead>Device</TableHead>
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {(recentEvents?.data ?? []).map((event) => (
-                            <TableRow key={event.id}>
-                                <TableCell className="whitespace-nowrap text-xs text-gray-500">{formatDate(event.created_at)}</TableCell>
-                                <TableCell>
-                                    <Badge variant={EVENT_LABELS[event.event_type]?.variant ?? 'secondary'}>
-                                        {EVENT_LABELS[event.event_type]?.label ?? event.event_type}
-                                    </Badge>
-                                </TableCell>
-                                <TableCell className="text-xs text-gray-600 max-w-[140px] truncate">
-                                    {event.target_label ?? event.event_target ?? '—'}
-                                </TableCell>
-                                <TableCell className="text-xs text-gray-600 max-w-[160px] truncate">{event.page_url ?? '—'}</TableCell>
-                                <TableCell className="text-xs text-gray-500 whitespace-nowrap">
-                                    {[event.device_type, event.browser].filter(Boolean).join(' / ') || '—'}
-                                </TableCell>
-                            </TableRow>
-                        ))}
-                        {!(recentEvents?.data?.length) && (
-                            <TableRow><TableCell colSpan={5} className="text-center text-gray-400 py-12">No events recorded yet</TableCell></TableRow>
-                        )}
-                    </TableBody>
-                </Table>
-            </Card>
+            {/* Recent Events — split frontend visitors vs admin dashboard activity */}
+            <div className="space-y-6">
+                <RecentEventsTable
+                    title="Recent Events — Frontend"
+                    subtitle={`Latest ${recentEvents?.data?.length ?? 0} visitor events`}
+                    events={recentEvents}
+                />
+                <RecentEventsTable
+                    title="Recent Events — Dashboard"
+                    subtitle={`Latest ${recentAdminEvents?.data?.length ?? 0} admin activity events`}
+                    events={recentAdminEvents}
+                />
+            </div>
         </AdminLayout>
     );
 }
