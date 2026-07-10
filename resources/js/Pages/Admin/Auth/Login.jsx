@@ -224,41 +224,6 @@ export default function Login() {
                             </Button>
                         </form>
                     </CardContent>
-
-                    <CardFooter className="flex flex-col space-y-4">
-                        {/* Divider */}
-                        <div className="relative w-full">
-                            <div className="absolute inset-0 flex items-center">
-                                <span className="w-full border-t" />
-                            </div>
-                            <div className="relative flex justify-center text-xs uppercase">
-                                <span className="bg-background px-2 text-muted-foreground">
-                                    Demo Credentials
-                                </span>
-                            </div>
-                        </div>
-
-                        {/* Demo Credentials */}
-                        <div className="rounded-lg bg-muted/50 p-3 text-center space-y-1">
-                            <p className="text-xs text-muted-foreground">
-                                Use these credentials to login:
-                            </p>
-                            <div className="flex items-center justify-center gap-4 text-xs font-mono">
-                                <div className="flex items-center gap-1">
-                                    <Mail className="h-3 w-3" />
-                                    <span className="font-medium">
-                                        admin@skyhouse.com
-                                    </span>
-                                </div>
-                                <div className="flex items-center gap-1">
-                                    <Lock className="h-3 w-3" />
-                                    <span className="font-medium">
-                                        password
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </CardFooter>
                 </Card>
 
                 {/* Copyright Footer */}
