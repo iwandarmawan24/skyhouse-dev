@@ -286,9 +286,12 @@ const About = ({ experience = {}, experienceCards = [] }) => {
               <Heading as="h3" variant="card" className="mb-3 text-lg md:text-xl">Experience</Heading>
               <Heading as="h3" variant="card" bodoni className="mb-3 italic text-lg md:text-xl">Sky House Alam Sutera<span className="font-sans not-italic text-[0.55em] align-super font-semibold">+</span></Heading>
               <div className="block bg-blue-300 h-1 w-16 my-4"></div>
-              <Text size="base" color="charcoal" className="text-sm md:text-base">
-                {mainDescription}
-              </Text>
+              <Text
+                size="base"
+                color="charcoal"
+                className="text-sm md:text-base"
+                dangerouslySetInnerHTML={{ __html: mainDescription }}
+              />
               <div>
                 <Button
                   href="/project"

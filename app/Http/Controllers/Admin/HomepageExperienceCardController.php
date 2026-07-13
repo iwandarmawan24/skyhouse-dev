@@ -111,7 +111,7 @@ class HomepageExperienceCardController extends Controller
     public function updateMainCard(Request $request)
     {
         $validated = $request->validate([
-            'main_description' => 'nullable|string|max:1000',
+            'main_description' => 'nullable|string|max:5000',
         ]);
 
         $mainCard = HomepageExperience::firstOrCreate([]);

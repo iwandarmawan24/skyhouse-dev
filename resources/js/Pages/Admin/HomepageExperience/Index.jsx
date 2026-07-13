@@ -3,6 +3,7 @@ import { useForm, usePage, Link } from "@inertiajs/react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/Components/ui/Card";
 import { Button } from "@/Components/ui/Button";
 import { Label } from "@/Components/ui/Label";
+import RichTextEditor from "@/Components/RichTextEditor";
 
 export default function Index({ cards = [], mainCard }) {
     const { flash } = usePage().props;
@@ -42,12 +43,9 @@ export default function Index({ cards = [], mainCard }) {
                         <form onSubmit={handleMainCardSubmit} className="space-y-4">
                             <div className="space-y-2">
                                 <Label htmlFor="main_description">Description</Label>
-                                <textarea
-                                    id="main_description"
-                                    rows={3}
+                                <RichTextEditor
                                     value={data.main_description}
-                                    onChange={(e) => setData('main_description', e.target.value)}
-                                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                                    onChange={(content) => setData('main_description', content)}
                                     placeholder="Description shown under the Experience heading..."
                                 />
                             </div>
