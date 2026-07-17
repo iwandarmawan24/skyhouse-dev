@@ -51,7 +51,12 @@
       "Bash(cp /tmp/WA_SHARING_temp.md docs/guides/WHATSAPP_SHARING.md)",
       "Bash(rm WHATSAPP_SHARING.md)",
       "Bash(cp /tmp/FIX404_temp.md docs/deployment/FIX-404.md)",
-      "Bash(python3 *)"
+      "Bash(python3 *)",
+      "Bash(mdfind \"kMDItemFSName == 'php'\")",
+      "Bash(mdfind -name Herd)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)"
     ],
     "deny": [],
     "ask": []

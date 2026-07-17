@@ -1,5 +1,7 @@
 # 🚀 SkyHouse CMS - Production Deployment Guide
 
+> **⚠️ DEPRECATED:** Production sekarang bare-metal nginx + PHP-FPM, bukan Docker. Lihat **[../../DEPLOYMENT.md](../../DEPLOYMENT.md)**. Dokumen ini historis aja.
+
 Panduan lengkap untuk deploy SkyHouse CMS ke **production VPS** menggunakan Docker.
 
 > **💡 For local development**, use Laravel Sail instead. See [Local Setup Guide](../development/LOCAL-SETUP.md).

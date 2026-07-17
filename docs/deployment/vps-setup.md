@@ -1,5 +1,7 @@
 # 🖥️ VPS Setup Guide - SkyHouse CMS
 
+> **⚠️ PARTIALLY DEPRECATED:** Langkah Docker install (section 4) gak dipakai lagi — production sekarang bare-metal nginx + PHP-FPM, lihat **[../../DEPLOYMENT.md](../../DEPLOYMENT.md)**. Langkah OS/security/nginx/PostgreSQL lain di sini masih relevan.
+
 Panduan step-by-step untuk setup VPS dari awal sampai siap production.
 
 ## 📋 Requirements

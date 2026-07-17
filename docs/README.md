@@ -14,19 +14,16 @@ docs/
 
 ## 🚀 Deployment
 
-**Location:** `docs/deployment/`
+**Current production method:** bare-metal nginx + PHP-FPM. See **[../DEPLOYMENT.md](../DEPLOYMENT.md)** — domain setup, deploy/update flow, troubleshooting.
 
-Production deployment guides untuk berbagai skenario.
+**Location:** `docs/deployment/` (⚠️ mostly historical — Docker-based, superseded)
 
-- **[Deployment Overview](deployment/README.md)** - Decision tree & comparison
-- **[Docker Deployment](deployment/docker-deployment.md)** - Full Docker stack (2GB+ RAM)
-- **[Lightweight Deployment](deployment/lightweight-deployment.md)** - Resource-limited options
-- **[VPS Setup Guide](deployment/vps-setup.md)** - Server setup from scratch
-
-**Quick Links:**
-- [Which deployment method should I use?](deployment/README.md#decision-tree)
-- [Resource comparison](deployment/README.md#comparison-table)
-- [Pre-deployment checklist](deployment/README.md#pre-deployment-checklist)
+- **[Deployment Overview](deployment/README.md)** - old decision tree & comparison (Docker-focused)
+- **[Docker Deployment](deployment/docker-deployment.md)** - deprecated, kept for reference
+- **[Lightweight Deployment](deployment/lightweight-deployment.md)** - Option 1 (Traditional LEMP) still relevant, Docker options deprecated
+- **[VPS Setup Guide](deployment/vps-setup.md)** - initial server setup (Docker step deprecated)
+- **[Fix 404 Error](deployment/FIX-404.md)** - production 404 troubleshooting
+- **[Production Re-Deployment Guide](deployment/PRODUCTION-REDEPLOYMENT-GUIDE.md)** - full redeploy from scratch
 
 ## 💻 Development
 
@@ -53,6 +50,11 @@ How-to guides dan command references.
 
 - **[Seeding Guide](guides/SEEDING-GUIDE.md)** - Database seeding & sample data
 - **[Commands Reference](guides/COMMANDS.md)** - Available artisan commands
+- **[WhatsApp Sharing](guides/WHATSAPP_SHARING.md)** - Open Graph tags untuk share thumbnail
+- **[Media Library Guide](guides/MEDIA_LIBRARY_GUIDE.md)** - WordPress-like media management usage
+- **[Sitemap Implementation](guides/SITEMAP_IMPLEMENTATION.md)** - XML sitemap via spatie/laravel-sitemap
+- **[Security](guides/SECURITY.md)** - Data security features (API resources, dll)
+- **[Database Migration Guide](guides/database-migration-guide.md)** - Perubahan database tanpa kehilangan data
 
 ## 📦 Archive
 
@@ -64,6 +66,11 @@ Implementation notes dan historical documentation. Useful untuk reference tapi b
 - `COMPLETE_ARTICLE_SYSTEM.md` - Complete article feature documentation
 - `WYSIWYG_IMPLEMENTATION_COMPLETE.md` - Rich text editor implementation
 - `HIDDEN_REGISTRATION.md` - Hidden admin registration feature
+- `TOAST_MIGRATION_GUIDE.md` - Sonner toast migration notes
+- `REORGANIZATION.md` - Docs/scripts reorganization notes (2025-01-26)
+- `MEDIA_LIBRARY_IMPLEMENTATION_SUMMARY.md` - Media library build notes (completed)
+- `PRODUCT_FORM_MEDIA_INTEGRATION.md` - MediaPicker integration example (now live across all admin forms)
+- `SEO_CALCULATOR_REVAMP.md` - SEO calculator revamp notes (December 2025, completed)
 
 ## 🔍 Quick Find
 
@@ -124,4 +131,4 @@ Jika menemukan error atau ingin improve documentation:
 
 ---
 
-**Last Updated:** 2025-01-26
+**Last Updated:** 2026-07-17

@@ -1,5 +1,7 @@
 # 🚀 SkyHouse CMS - Deployment Guide
 
+> **⚠️ DEPRECATED:** Production sekarang pakai **bare-metal nginx + PHP-FPM**, bukan Docker. Ikuti **[../../DEPLOYMENT.md](../../DEPLOYMENT.md)** buat current production deployment/update flow. Docker options di bawah ditinggal buat referensi historis aja.
+
 Panduan deployment SkyHouse CMS untuk **production server**.
 
 > **💡 For local development**, see [Local Setup Guide](../development/LOCAL-SETUP.md) instead.
@@ -173,6 +175,6 @@ Switch to [optimized Docker setup](lightweight-deployment.md#option-0-optimize-e
 
 ## 📞 Need Help?
 
-- Check [Troubleshooting Guide](../guides/troubleshooting.md)
+- Check [Troubleshooting](../../DEPLOYMENT.md#troubleshooting) or [Fix 404 Guide](FIX-404.md)
 - Review [Commands Reference](../guides/COMMANDS.md)
 - Open an issue on GitHub

@@ -1,5 +1,7 @@
 # 🚀 SkyHouse CMS - Lightweight Deployment Guide
 
+> **⚠️ PARTIALLY DEPRECATED:** Production sekarang pakai bare-metal nginx + PHP-FPM (Option 1: Traditional LEMP Stack di bawah masih relevan). Docker-related options (0, Docker Optimized) udah ditinggal. Update flow terkini ada di **[../../DEPLOYMENT.md](../../DEPLOYMENT.md)**.
+
 Panduan deployment untuk VPS/Shared Hosting dengan **resource terbatas** (minimal 512MB RAM, 1 CPU core).
 
 ## 📊 Perbandingan: Docker Standard vs Docker Optimized vs Traditional

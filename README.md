@@ -81,16 +81,14 @@ Visit: `http://localhost:8000/admin/dashboard`
 - **[Commands Reference](docs/guides/COMMANDS.md)** - Available artisan commands
 
 ### 🚀 Production Deployment
-- **[Deployment Guide](docs/deployment/)** - Production deployment options
-  - [Production Re-Deployment](docs/deployment/PRODUCTION-REDEPLOYMENT-GUIDE.md) - Complete redeploy from scratch
-  - [Docker Deployment](docs/deployment/docker-deployment.md) - Full Docker stack
-  - [Lightweight Deployment](docs/deployment/lightweight-deployment.md) - Resource-limited VPS
-  - [VPS Setup Guide](docs/deployment/vps-setup.md) - Server setup from scratch
+- **[Deployment Guide](DEPLOYMENT.md)** - Current method: bare-metal nginx + PHP-FPM (domain setup, update/deploy flow, troubleshooting)
+- **[Production Re-Deployment](docs/deployment/PRODUCTION-REDEPLOYMENT-GUIDE.md)** - Complete redeploy from scratch
+- **[Fix 404 Error](docs/deployment/FIX-404.md)** - Production 404 troubleshooting
+- Older Docker-based guides in `docs/deployment/` (docker-deployment.md, lightweight-deployment.md, vps-setup.md) are deprecated — kept for reference only
 
 ### 🛠️ Scripts
 All deployment and utility scripts are organized in `scripts/`:
-- **[scripts/deployment/](scripts/deployment/)** - Deployment automation
-- **[scripts/docker/](scripts/docker/)** - Docker utilities
+- **[scripts/deployment/](scripts/deployment/)** - Deployment automation (Docker scripts stale, see `scripts/README.md`)
 - **[scripts/server-setup/](scripts/server-setup/)** - Server configuration
 - **[scripts/backup/](scripts/backup/)** - Backup automation
 
